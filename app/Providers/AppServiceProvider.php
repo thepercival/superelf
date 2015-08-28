@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace SuperElf\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
