@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2f9b4c25665457daac08a4610c042750",
+    "hash": "3778028d773538efc2cc49f8efbb6b35",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1704,6 +1704,51 @@
             "time": "2015-07-28 15:18:12"
         },
         {
+            "name": "thepercival/voetbal",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thepercival/voetbal.git",
+                "reference": "e6b6859f434fcf70fe9446fe5e186409b1a31aa4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thepercival/voetbal/zipball/e6b6859f434fcf70fe9446fe5e186409b1a31aa4",
+                "reference": "e6b6859f434fcf70fe9446fe5e186409b1a31aa4",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/config": "~5.0",
+                "illuminate/support": "~5.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Voetbal\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Coen Dunnink",
+                    "email": "coendunnink@gmail.com"
+                }
+            ],
+            "description": "laravel package and library for competitions, players, rankings, seasons, etc.",
+            "keywords": [
+                "Voetbal",
+                "laravel"
+            ],
+            "time": "2015-08-28 07:23:41"
+        },
+        {
             "name": "twbs/bootstrap",
             "version": "v3.3.5",
             "source": {
@@ -3031,7 +3076,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "phpmailer/phpmailer": 20
+        "phpmailer/phpmailer": 20,
+        "thepercival/voetbal": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
