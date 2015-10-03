@@ -106,6 +106,7 @@ return [
     | request to your application. Feel free to add your own services to
     | this array to grant expanded functionality to your applications.
     |
+    |
     */
 
     'providers' => [
@@ -143,6 +144,8 @@ return [
         SuperElf\Providers\AppServiceProvider::class,
         SuperElf\Providers\EventServiceProvider::class,
         SuperElf\Providers\RouteServiceProvider::class,
+
+        Voetbal\ServiceProvider::class
 
     ],
 
