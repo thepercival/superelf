@@ -1,0 +1,10 @@
+.form-control-search-name {
+    max-width: 200px;
+}
+
+app-home-shell {
+    display:table-row; 
+    box-sizing:inherit;
+}
+
+tr:first-child>td { border-top:0; }

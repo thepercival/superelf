@@ -1,0 +1,111 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+      <app-tournament-title [tournament]="tournament">
+      </app-tournament-title>
+      <div>
+        <h2>
+          <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsor
+        </h2>
+        <h2 *ngIf="processing" class="text-center">
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+      </div>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="name" class="col-form-label">naam</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
+              formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="url" class="col-form-label">url</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': form.controls.url.invalid, 'is-valid': form.controls.url.valid }" type="text"
+              formControlName="url" placeholder="max. {{validations.maxlengthurl}} karakters">
+          </div>
+        </div>
+        <!-- <div class="form-group row">
+          <div class="col-3">
+            <label for="logo" class="col-form-label">logo</label>
+          </div>
+          <div class="col-9">
+            <div class="btn-group" role="group">
+              <button type="button" (click)="toggleLogoInput()" class="btn btn-outline-secondary">
+                <fa-icon *ngIf="logoInput === logoInputUrl" [icon]="['fas', 'check-circle']"></fa-icon> via url
+              </button>
+              <button type="button" (click)="toggleLogoInput()" class="btn btn-outline-secondary">
+                <fa-icon *ngIf="logoInput === logoInputUpload" [icon]="['fas', 'check-circle']"></fa-icon> via upload
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="logoInput === logoInputUrl" class="form-group row">
+          <div class="col-3">
+            <label for="log">via url</label>
+          </div>
+          <div class="col-9">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': form.controls.logourl.invalid, 'is-valid': form.controls.logourl.valid }"
+              type="text" formControlName="logourl"
+              placeholder="max. {{validations.maxlengthurl}} karakters">
+          </div>
+        </div> -->
+        <div *ngIf="logoInput === logoInputUpload" class="form-group row">
+          <div class="col-3">
+            <label for="logouploadother" popoverClass="popover-small" class="pointer" container="body" placement="right"
+              [ngbPopover]="getLogoUploadDescription()">logo
+              <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+            </label>
+          </div>
+          <div class="col-9">
+            <div class="custom-file">
+              <input type="file" accept='image/*' class="custom-file-input" (change)="onFileChange($event)" #fileInput>
+              <label class="custom-file-label" for="logoupload">kies plaatje</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3">
+            <label for="screennr" class="col-form-label">scherm nummer</label>
+          </div>
+          <div class="col-9">
+            <select formControlName="screennr" class="form-control"
+              [ngClass]="{ 'is-invalid': form.controls.screennr.invalid, 'is-valid': form.controls.screennr.valid }"
+              required>
+              <option *ngFor="let screenNr of rangeScreenNrs" [ngValue]="screenNr">
+                {{screenNr}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row justify-content-end">
+          <div class="col-9">
+            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+              <span>{{sponsor !== undefined ? 'wijzigen' : 'toevoegen'}}</span>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="base64Logo || form.controls.logourl.value" class="form-group row">
+          <div class="col-3">
+            <label for="log">preview</label>
+          </div>
+          <div class="col-9">
+            <img *ngIf="base64Logo" [src]="base64Logo" width="150px;" height="150px;">
+            <img *ngIf="!base64Logo && form.controls.logourl.value" [src]="form.controls.logourl.value" width="150px;"
+              height="150px;">
+          </div>
+        </div>
+        <!-- <button *ngIf="form.controls.logourl" type="button" class="btn btn-sm btn-outline-secondary"
+                (click)="clearFile()">logo weghalen</button> -->
+      </form>
+    </div>
+  </div>
+</div>

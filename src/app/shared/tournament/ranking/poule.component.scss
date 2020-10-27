@@ -1,0 +1,27 @@
+table.fixed {
+    table-layout: fixed;
+}
+
+col.width-25 {
+    width:25%;
+}
+
+col.width-30 {
+    width:30%;
+}
+
+th.place {
+    overflow-wrap: break-word;
+}
+
+td.place {
+    overflow-wrap: break-word;
+}
+
+td.score, td.unitdiff, td.rankingnr {
+    white-space: nowrap;
+}
+
+.card-header-poule {
+    margin-top: -8px;
+}

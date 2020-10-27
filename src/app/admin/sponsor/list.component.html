@@ -1,0 +1,91 @@
+<div class="row justify-content-center no-gutters">
+  <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+    <app-tournament-title [tournament]="tournament" [admin]="true">
+    </app-tournament-title>
+    <div *ngIf="!processing" class="d-flex justify-content-between">
+      <h2 class="mr-auto">
+        <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsoren
+      </h2>
+
+      <button *ngIf="tournament" type="button" class="btn btn-outline-info mr-2" (click)="openHelpModal(contentInfo)">
+        <fa-icon [icon]=" ['fas', 'info-circle' ]"></fa-icon> info
+      </button>
+
+
+      <button *ngIf="sponsors.length > 0" [routerLink]="['/public/liveboard', tournament.getId()]"
+        [queryParams]="{screenfilter:'sponsors'}" type="button" class="btn btn-secondary">
+        <fa-icon [icon]="['fas', 'eye']"></fa-icon>
+        <span> preview</span>
+      </button>
+
+    </div>
+    <div *ngIf="processing">
+      <h2 class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+    </div>
+    <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+    <table *ngIf="!processing" class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>naam</th>
+          <th class="text-center">scherm nummer</th>
+          <th class="d-none d-lg-table-cell">url</th>
+          <th class="text-right">
+            <button type="button" class="btn btn-sm btn-primary" (click)="addSponsor()"
+              *ngIf="sponsors.length < sponsorScreenService.getMaxNrOfSponsors()">
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sponsor of sponsors; let last = last;">
+          <td>
+            <button type="button" class="btn btn-sm btn-primary" (click)="editSponsor(sponsor)">
+              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+            </button>
+          </td>
+          <td>
+            <span>{{sponsor.getName()}}</span>
+          </td>
+          <td class="text-center">
+            <span>{{sponsor.getScreenNr()}}</span>
+          </td>
+          <td class="d-none d-lg-table-cell">
+            <span>{{sponsor.getUrl()}}</span>
+          </td>
+          <td class="text-right">
+            <button type="button" class="btn btn-sm btn-danger" (click)="removeSponsor(sponsor);">
+              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #contentInfo let-modal>
+  <div class="modal-header border-bottom-0">
+    <h4 class="modal-title">sponsoren info</h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group">
+      <li class="list-group-item border-info">Het aantal sponsoren dat getoond wordt per scherm is 1 of 4.
+      </li>
+      <li class="list-group-item border-info">Het maximum aantal schermen is 4.
+      </li>
+      <li class="list-group-item border-info">Op het live scorebord worden per cyclus alle sponsorenschermen getoond.
+      </li>
+    </ul>
+  </div>
+  <div class="modal-footer justify-content-reverse border-top-0">
+    <button type="submit" class="btn btn-outline-secondary" data-dismiss="modal"
+      (click)="modal.dismiss('close')">sluiten</button>
+  </div>
+</ng-template>

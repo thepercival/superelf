@@ -1,0 +1,23 @@
+<div class="d-flex justify-content-around">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="text-right">pl</th>
+        <th></th>
+        <th>deelnemers</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rankingItem of items">
+        <td class="text-right">
+          <span [ngClass]="{ 'favitem': isFavorite(rankingItem.getName()) }">{{rankingItem.getRank()}}</span>
+        </td>
+        <td>
+          <fa-icon *ngIf="hasMedal(rankingItem.getRank())" [icon]="['fas', 'medal']"
+            class="{{getMedalColor(rankingItem.getRank())}}"></fa-icon>
+        </td>
+        <td [ngClass]="{ 'favitem': isFavorite(rankingItem.getName()) }">{{rankingItem.getName()}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

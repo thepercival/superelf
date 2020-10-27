@@ -1,0 +1,102 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <app-tournament-sport-select *ngIf="chooseSport" class="col-xs-12 col-sm-10 col-md-6 col-lg-4"
+      (sendSport)="onGetSport($event)">
+    </app-tournament-sport-select>
+    <!-- <app-tournament-sport-select *ngIf="chooseSport" class="col-xs-12 col-sm-10 col-md-6 col-lg-4"
+      (sendSport)="onGetSport($event)" staticInfo="later kun je meerdere sporten maken">
+    </app-tournament-sport-select> -->
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6" *ngIf="!chooseSport">
+      <div class="d-flex justify-content-between mb-4">
+        <h1>nieuw toernooi</h1>
+        <h1 class="mr-1">
+          <button *ngIf="!processing" [routerLink]="['']" type="button" class="btn btn-outline-secondary">
+            <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+            <span class="ml-1 d-none d-md-inline"> terug</span>
+          </button>
+        </h1>
+      </div>
+
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">
+        {{ alert.message }}</ngb-alert>
+
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+
+      <form *ngIf="!processing" name="form" (ngSubmit)="create()" [formGroup]="form" novalidate>
+        <div class="form-group row">
+          <label for="name" class="col-4 col-form-label">naam</label>
+          <div class="col-8">
+            <input class="form-control"
+              [ngClass]="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
+              formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="sportname" class="col-4 col-form-label">sport</label>
+          <div class="col-8">
+            <div class="input-group pointer" (click)="chooseSport = true">
+              <input class="form-control" [ngClass]="{ 'is-invalid': !sport, 'is-valid': sport }"
+                formControlName="sportname">
+              <div class="input-group-append">
+                <span class="input-group-text">kies</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="nroffields" class="col-4 col-form-label">{{getFieldsDescription()}}</label>
+          <div class="col-8">
+            <input type="number" class="form-control"
+              [ngClass]="{ 'is-invalid': form.controls.nroffields.invalid, 'is-valid': form.controls.nroffields.valid}"
+              formControlName="nroffields" [min]="validations.minnroffields" [max]="validations.maxnroffields">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="dp" class="col-4 col-form-label">startdatum</label>
+          <div class="col-8">
+            <div class="input-group input-group-date">
+              <input class="form-control"
+                [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
+                placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker"
+                [minDate]="minDateStruct" container="body">
+              <div class="input-group-append">
+                <span class="input-group-text pointer" (click)="d.toggle()">
+                  <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="starttime" class="col-4 col-form-label">starttijd</label>
+          <div class="col-8">
+            <ngb-timepicker formControlName="time" [spinners]="false" required>
+            </ngb-timepicker>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="publicnotthesame" class="col-4 col-form-label pointer" popoverClass="popover-small"
+            container="newForm" placement="right" ngbPopover="Publieke toernooien zijn te bekijken door anderen. Standen, uitslagen, etc. zijn live te bekijken, 
+            niet publieke toernooien zijn alleen voor jou beschikbaar.">publiek
+            <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+          </label>
+          <div class="form-check col-8">
+            <label class="custom-control custom-checkbox col-form-label pl-0">
+              <input type="checkbox" class="custom-control-input form-check-input" formControlName="public">
+              <span class="custom-control-indicator"></span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group row justify-content-end">
+          <div class="col-8">
+            <button [disabled]="form.invalid || sport === undefined" type="submit" class="btn btn-primary">
+              ga naar de opzet
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

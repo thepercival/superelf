@@ -1,0 +1,46 @@
+<div class="container-fluid px-0">
+  <div class="row justify-content-around no-gutters">
+    <div class="col-12 col-lg-10">
+      <app-tournament-title [tournament]="tournament">
+      </app-tournament-title>
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+      <div class="text-center mb-3">
+        <button *ngIf="!processing && tournament && isAdmin()" [routerLink]="['/admin', tournament.getId()]"
+          type="button" class="btn btn-warning w-100">
+          naar het beheergedeelte
+        </button>
+      </div>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+      <div *ngIf="!processing && tournament && structure">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+          <li [ngbNavItem]="1">
+            <a ngbNavLink>poulestanden</a>
+            <ng-template ngbNavContent>
+              <app-tournament-ranking-roundnumber [roundNumber]="structure.getFirstRoundNumber()"
+                [tournament]="tournament">
+              </app-tournament-ranking-roundnumber>
+            </ng-template>
+          </li>
+          <li [ngbNavItem]="2">
+            <a ngbNavLink>eindstand</a>
+            <ng-template ngbNavContent>
+              <app-tournament-endranking [favorites]="competitors" [structure]="structure"></app-tournament-endranking>
+            </ng-template>
+          </li>
+          <li [ngbNavItem]="3">
+            <a ngbNavLink>regels</a>
+            <ng-template ngbNavContent>
+              <div class="m-3">
+                <h4>rangschikking</h4>
+                <app-ranking-rules [ruleSet]="tournament.getCompetition().getRuleSet()"></app-ranking-rules>
+              </div>
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav"></div>
+      </div>
+    </div>
+  </div>
+</div>

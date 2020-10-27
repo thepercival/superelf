@@ -1,0 +1,49 @@
+<div *ngIf="!round.hasBegun()" class="d-flex justify-content-around mb-3">
+  <!-- start vertical-->
+  <div *ngIf="round.isRoot() || round.getNrOfPlaces() >= 4" class="d-sm-none btn-group-vertical" role="group"
+    aria-label="aantal poules">
+    <button type="button" disabled class="btn btn-outline-secondary">poules</button>
+    <div class="btn-group" role="group" aria-label="aantal poules">
+      <button type="button" class="btn btn-outline-primary" (click)="removePoule()">
+        <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+      </button>
+      <button *ngIf="round.getPoules().length < 8" type="button" class="btn btn-outline-primary" (click)="addPoule()">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="round.isRoot()" class="d-sm-none btn-group-vertical" role="group" aria-label="aantal deelnemers">
+    <button type="button" disabled class="btn btn-outline-secondary">deelnemers</button>
+    <div class="btn-group" role="group" aria-label="aantal deelnemers">
+      <button type="button" class="btn btn-outline-primary" (click)="removePlace()">
+        <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+      </button>
+      <button type="button" class="btn btn-outline-primary" (click)="addPlace()">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <!-- end vertical-->
+
+  <!-- start horizontal-->
+  <div *ngIf="round.isRoot() || round.getNrOfPlaces() >= 4" class="d-none d-sm-inline-flex btn-group" role="group"
+    aria-label="aantal poules">
+    <button type="button" class="btn btn-outline-primary" (click)="removePoule()">
+      <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+    </button>
+    <button type="button" disabled class="btn btn-outline-secondary">poules</button>
+    <button type="button" class="btn btn-outline-primary" (click)="addPoule()">
+      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+    </button>
+  </div>
+  <div *ngIf="round.isRoot()" class="d-none d-sm-inline-flex btn-group" role="group" aria-label="aantal deelnemers">
+    <button type="button" class="btn btn-outline-primary" (click)="removePlace()">
+      <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+    </button>
+    <button type="button" disabled class="btn btn-outline-secondary">deelnemers</button>
+    <button type="button" class="btn btn-outline-primary" (click)="addPlace()">
+      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+    </button>
+  </div>
+  <!-- end horizontal-->
+</div>

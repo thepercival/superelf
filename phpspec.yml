@@ -1,5 +1,0 @@
-suites:
-    main:
-        namespace: SuperElf
-        psr4_prefix: SuperElf
-        src_path: app

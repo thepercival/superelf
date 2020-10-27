@@ -1,0 +1,33 @@
+table.liveboard {
+    table-layout: fixed;
+    font-size: 28px;
+}
+
+td {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+td.firstrow {
+    border-top: 0;
+}
+
+th.width-14 {
+    width:14%;
+}
+
+th.width-40 {
+    width:40%;
+}
+
+th.width-8 {
+    width:8%;
+}
+
+th.width-30 {
+    width:30%;
+}
+
+td.score, td.unitdiff, td.rankingnr {
+    white-space: nowrap;
+}

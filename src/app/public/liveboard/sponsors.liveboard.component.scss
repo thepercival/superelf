@@ -1,0 +1,44 @@
+h1 > span.smaller {
+    font-size: 80%;
+}
+h1 > small {
+    font-size: 60%;
+}
+h1 > i.smaller {
+    font-size: 80%;
+}
+.liveboard {
+    font-size: 28px;
+}
+
+.sponsor-wrapper {
+    height: 85vh;
+}
+.sponsor-row-1 {
+    height: 100%;
+    font-size: 4em;
+}
+.sponsor-row-2 {
+    height: 50%;
+    font-size: 2em;
+}
+.sponsor-url {
+    font-size: 1em;
+}
+.sponsor-cell {
+    height:100%;
+}
+
+.sponsor-card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.sponsor-img {
+    height: 100%;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+}
