@@ -12,7 +12,7 @@
       </ul>
       <div *ngIf="alert" class="alert alert-{{alert.type}}">{{alert.message}}</div>
       <div class="d-flex justify-content-center">
-        <button name="btn-create-tournament" type="button" class="btn btn-primary" [routerLink]="['/public/prenew']">zet
+        <button name="btn-create-pool" type="button" class="btn btn-primary" [routerLink]="['/public/prenew']">zet
           je
           eerste toernooi op</button>
       </div>
@@ -21,7 +21,7 @@
       <div *ngIf="alert" class="alert alert-{{alert.type}}">{{alert.message}}</div>
       <div class="d-flex justify-content-between">
         <h1>mijn toernooien</h1>
-        <button name="btn-create-tournament" type="button" class="btn btn-primary" (click)="linkToNew()">
+        <button name="btn-create-pool" type="button" class="btn btn-primary" (click)="linkToNew()">
           <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> toernooi opzetten
         </button>
       </div>
@@ -29,7 +29,7 @@
 
     <table *ngIf="!processingWithRole && shellsWithRoleTillX.length > 0" class="table mt-2">
       <tbody>
-        <app-home-shell class="pointer" (click)="linkToTournament(shell)" *ngFor="let shell of shellsWithRoleTillX"
+        <app-home-shell class="pointer" (click)="linkToPool(shell)" *ngFor="let shell of shellsWithRoleTillX"
           [shell]="shell" [linethroughDate]="linethroughDate" [showPublic]="true"></app-home-shell>
         <tr *ngIf="!showingAllWithRole && shellsWithRoleFromX.length > 0"
           (click)="showingAllWithRole = !showingAllWithRole" class="pointer">
@@ -40,7 +40,7 @@
           </td>
         </tr>
         <ng-template ngFor let-shell [ngForOf]="shellsWithRoleFromX">
-          <app-home-shell *ngIf="showingAllWithRole" class="pointer" (click)="linkToTournament(shell)" [shell]="shell"
+          <app-home-shell *ngIf="showingAllWithRole" class="pointer" (click)="linkToPool(shell)" [shell]="shell"
             [linethroughDate]="linethroughDate" [showPublic]="true">
           </app-home-shell>
         </ng-template>
@@ -49,19 +49,19 @@
     <div class="d-flex justify-content-between mt-5">
       <h1>publieke toernooien</h1>
       <button *ngIf="!searchFilterActive" type="button" class="btn btn-secondary" (click)="enableSearchFilter()"
-        aria-label="search tournaments">
+        aria-label="search pools">
         <fa-icon [icon]="['fas', 'search']"></fa-icon>
         <span class="ml-1 d-none d-sm-inline"> zoeken</span>
       </button>
       <button *ngIf="searchFilterActive" type="button" class="btn btn-secondary" (click)="disableSearchFilter()"
-        aria-label="reset search tournaments">
+        aria-label="reset search pools">
         <fa-icon [icon]="['fas', 'search']"></fa-icon>
         <span class="ml-1 d-none d-sm-inline"> herstel</span>
       </button>
     </div>
     <form *ngIf="searchFilterActive" onsubmit="return false">
       <input type="text" class="form-control form-control-search" #inputsearchname (keyup)="onSearchChanges()"
-        aria-labelledby="btn-search-tournaments" placeholder="zoek op toernooinaam">
+        aria-labelledby="btn-search-pools" placeholder="zoek op toernooinaam">
     </form>
     <table *ngIf="!publicProcessing" class="table">
       <tbody>

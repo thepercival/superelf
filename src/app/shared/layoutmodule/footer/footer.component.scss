@@ -1,0 +1,15 @@
+@import 'sass/bootswatch/variables';
+
+footer.footer {
+    bottom: 0;
+    width: 100%;
+    text-align: center;    
+}
+
+li {
+    padding-top: 1rem;
+}
+
+a {
+    color: $secondary
+}

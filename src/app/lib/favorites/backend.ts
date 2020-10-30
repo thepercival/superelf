@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Tournament } from '../pool';
+import { Pool } from '../pool';
 import { JsonFavorites } from './json';
 
 @Injectable()
@@ -11,15 +11,14 @@ export class FavoritesBackEnd {
 
     constructor() { }
 
-    get(tournament: Tournament): JsonFavorites {
+    get(pool: Pool): JsonFavorites {
         this.readAll();
 
-        let jsonFavorites: JsonFavorites = this.find(tournament.getId());
+        let jsonFavorites: JsonFavorites = this.find(pool.getId());
         if (jsonFavorites === undefined) {
             jsonFavorites = {
-                tournamentId: tournament.getId(),
-                competitorIds: [],
-                refereeIds: []
+                poolId: pool.getId(),
+                competitorIds: []
             };
         }
         return jsonFavorites;
@@ -31,10 +30,10 @@ export class FavoritesBackEnd {
         this.writeAll();
     }
 
-    remove(tournamentId: number) {
+    remove(poolId: number) {
         this.readAll();
 
-        const oldItem = this.find(tournamentId);
+        const oldItem = this.find(poolId);
         if (oldItem === undefined) {
             return;
         }
@@ -46,8 +45,8 @@ export class FavoritesBackEnd {
         this.writeAll();
     }
 
-    protected find(tournamentId: number): JsonFavorites {
-        return this.json.find(jsonFavorites => jsonFavorites.tournamentId === tournamentId);
+    protected find(poolId: number): JsonFavorites {
+        return this.json.find(jsonFavorites => jsonFavorites.poolId === poolId);
     }
 
     protected readAll() {

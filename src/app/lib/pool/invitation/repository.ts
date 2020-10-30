@@ -4,16 +4,16 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { Tournament } from '../../pool';
-import { TournamentInvitationMapper, JsonTournamentInvitation } from './mapper';
-import { TournamentInvitation } from '../invitation';
+import { Pool } from '../../pool';
+import { PoolInvitationMapper, JsonPoolInvitation } from './mapper';
+import { PoolInvitation } from '../invitation';
 
 @Injectable()
-export class TournamentInvitationRepository extends APIRepository {
+export class PoolInvitationRepository extends APIRepository {
 
     constructor(
         private http: HttpClient,
-        private mapper: TournamentInvitationMapper) {
+        private mapper: PoolInvitationMapper) {
         super();
     }
 
@@ -22,40 +22,40 @@ export class TournamentInvitationRepository extends APIRepository {
     }
 
 
-    getUrl(tournament: Tournament): string {
-        return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
+    getUrl(pool: Pool): string {
+        return super.getApiUrl() + 'pools/' + pool.getId() + '/' + this.getUrlpostfix();
     }
 
-    getObjects(tournament: Tournament): Observable<TournamentInvitation[]> {
-        return this.http.get(this.getUrl(tournament), this.getOptions()).pipe(
-            map((jsonInvitations: JsonTournamentInvitation[]) => jsonInvitations.map(jsonInvitation => {
-                return this.mapper.toObject(jsonInvitation, tournament);
+    getObjects(pool: Pool): Observable<PoolInvitation[]> {
+        return this.http.get(this.getUrl(pool), this.getOptions()).pipe(
+            map((jsonInvitations: JsonPoolInvitation[]) => jsonInvitations.map(jsonInvitation => {
+                return this.mapper.toObject(jsonInvitation, pool);
             })),
             catchError((err) => this.handleError(err))
         );
     }
 
-    createObject(json: JsonTournamentInvitation, tournament: Tournament): Observable<TournamentInvitation> {
-        return this.http.post(this.getUrl(tournament), json, this.getOptions()).pipe(
-            map((res: JsonTournamentInvitation) => this.mapper.toObject(res, tournament)),
+    createObject(json: JsonPoolInvitation, pool: Pool): Observable<PoolInvitation> {
+        return this.http.post(this.getUrl(pool), json, this.getOptions()).pipe(
+            map((res: JsonPoolInvitation) => this.mapper.toObject(res, pool)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    editObject(invitation: TournamentInvitation): Observable<TournamentInvitation> {
-        const tournament = invitation.getTournament();
-        const url = this.getUrl(tournament) + '/' + invitation.getId();
+    editObject(invitation: PoolInvitation): Observable<PoolInvitation> {
+        const pool = invitation.getPool();
+        const url = this.getUrl(pool) + '/' + invitation.getId();
         return this.http.put(url, this.mapper.toJson(invitation), this.getOptions()).pipe(
-            map((res: JsonTournamentInvitation) => this.mapper.toObject(res, tournament)),
+            map((res: JsonPoolInvitation) => this.mapper.toObject(res, pool)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    removeObject(invitation: TournamentInvitation): Observable<JsonTournamentInvitation> {
-        const tournament = invitation.getTournament();
-        const url = this.getUrl(tournament) + '/' + invitation.getId();
+    removeObject(invitation: PoolInvitation): Observable<JsonPoolInvitation> {
+        const pool = invitation.getPool();
+        const url = this.getUrl(pool) + '/' + invitation.getId();
         return this.http.delete(url, this.getOptions()).pipe(
-            map((res: JsonTournamentInvitation) => res),
+            map((res: JsonPoolInvitation) => res),
             catchError((err) => this.handleError(err))
         );
     }

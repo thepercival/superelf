@@ -27,15 +27,14 @@ import { RoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthService } from './lib/auth/auth.service';
 import { AuthguardService } from './lib/auth/authguard.service';
-import { GlobalEventsManager } from './shared/common/eventmanager';
-import { MyNavigation } from './shared/common/navigation';
-import { CommonSharedModule } from './shared/common/shared.module';
+import { MyNavigation } from './shared/commonmodule/navigation';
+import { CommonSharedModule } from './shared/commonmodule/common.module';
 import { HomeComponent } from './home/home.component';
 import { HomeShellComponent } from './home/shell.component';
-import { TournamentUserMapper } from './lib/pool/user/mapper';
-import { TournamentShellRepository } from './lib/pool/shell/repository';
+import { CompetitorMapper } from './lib/competitor/mapper';
+import { PoolShellRepository } from './lib/pool/shell/repository';
 import { UserMapper } from './lib/user/mapper';
-import { LayoutModule } from './shared/layout/layout.module';
+import { LayoutSharedModule } from './shared/layoutmodule/layout.module';
 import { facDarts, facSoccerField, facTennis, facBadminton, facHockey, facSquash, facKorfball, facFavicon } from './lib/icons';
 import { SportIconCustomComponent } from './home/sport/customicon.component';
 
@@ -53,15 +52,14 @@ import { SportIconCustomComponent } from './home/sport/customicon.component';
     CommonSharedModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     FontAwesomeModule,
-    LayoutModule
+    LayoutSharedModule
   ],
   providers: [
     AuthService,
     AuthguardService,
-    TournamentShellRepository,
-    TournamentUserMapper,
+    PoolShellRepository,
+    CompetitorMapper,
     UserMapper,
-    GlobalEventsManager,
     MyNavigation
   ],
   bootstrap: [AppComponent]

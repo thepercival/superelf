@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { MyNavigation } from './shared/common/navigation';
+import { MyNavigation } from './shared/commonmodule/navigation';
 
 @Component({
   selector: 'app-root',

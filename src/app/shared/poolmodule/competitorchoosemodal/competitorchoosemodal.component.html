@@ -1,0 +1,35 @@
+<div class="modal-header border-bottom-0">
+    <h4 class="modal-title"><span>selecteer deelnemers</span></h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="activeModal.dismiss('close')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <ngb-alert *ngIf="!hasSelectableCompetitors()" type="danger" [dismissible]="false">er zijn geen deelnemers
+        die je kunt kiezen</ngb-alert>
+
+    <table *ngIf="places.length > 0" class="table">
+        <tbody>
+            <ng-template ngFor let-competitorListItem [ngForOf]="competitorListItems">
+                <tr *ngIf="competitorListItem.competitor">
+                    <td>{{competitorListItem.placeName}}</td>
+                    <td>
+                        {{competitorListItem.competitor.getName()}}
+                    </td>
+                    <td class="text-right">
+                        <fa-icon class="text-primary pointer" (click)="toggle(competitorListItem)"
+                            [icon]="['far', (competitorListItem.selected ? 'check-' : '') + 'square']" size="2x">
+                        </fa-icon>
+                    </td>
+                </tr>
+                <tr *ngIf="!competitorListItem.competitor">
+                    <td colspan="3">{{competitorListItem.placeName}}</td>
+                </tr>
+            </ng-template>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer border-top-0 align-items-end">
+    <button type="submit" class="btn btn-outline-primary" data-dismiss="modal"
+        (click)="activeModal.close(getSelectedCompetitors())">opslaan</button>
+</div>

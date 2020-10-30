@@ -28,115 +28,132 @@ $green:   #93C54B !default;
 $teal:    #20c997 !default;
 $cyan:    #29ABE0 !default;
 
-$primary:       $blue !default;
-$secondary:     $gray-600 !default;
-$success:       $green !default;
-$info:          $cyan !default;
-$warning:       $orange !default;
-$danger:        $red !default;
-$light:         $gray-200 !default;
-$dark:          $gray-800 !default;
+/*! `Custom` Bootstrap 4 theme */
+@import url(https://fonts.googleapis.com/css?family=Oswald:200,300,400,700);
+$font-family-base:Oswald;
+@import url(https://fonts.googleapis.com/css?family=Fugaz+One:200,300,400,700);
+$headings-font-family:Fugaz One;
+
+$enable-grid-classes:false;
+$primary:#507b58 !default;
+$secondary:#799163 !default;
+$success:#28a745 !default;
+$danger:#dc3545 !default;
+$info:#17a2b8 !default;
+$warning:#ffc107 !default;
+$light:#ede0a6 !default;
+$dark:#540202 !default;
+
+// $primary:       $blue !default;
+// $secondary:     $gray-600 !default;
+// $success:       $green !default;
+// $info:          $cyan !default;
+// $warning:       $orange !default;
+// $danger:        $red !default;
+// $light:         $gray-200 !default;
+// $dark:          $gray-800 !default;
 
 $yiq-contrasted-threshold:  170 !default;
 
 // Body
 
-$body-color:                $gray-800 !default;
+$body-color:                $dark !default;
+$body-bg:                $light !default;
 
-// Links
+// // Links
 
-$link-color:                $success !default;
+// $link-color:                $success !default;
 
-// Fonts
+// // Fonts
 
-$font-family-sans-serif:      "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
+// $font-family-sans-serif:      "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
 
-$font-size-base:              0.875rem !default;
+// $font-size-base:              0.875rem !default;
 
-$headings-font-weight:        400 !default;
+// $headings-font-weight:        400 !default;
 
-// Dropdowns
+// // Dropdowns
 
-$dropdown-link-color:               $gray-600 !default;
-$dropdown-link-hover-color:         $dropdown-link-color !default;
-$dropdown-link-hover-bg:            $gray-200 !default;
+// $dropdown-link-color:               $gray-600 !default;
+// $dropdown-link-hover-color:         $dropdown-link-color !default;
+// $dropdown-link-hover-bg:            $gray-200 !default;
 
-$dropdown-link-active-color:        $dropdown-link-color !default;
-$dropdown-link-active-bg:           $dropdown-link-hover-bg !default;
+// $dropdown-link-active-color:        $dropdown-link-color !default;
+// $dropdown-link-active-bg:           $dropdown-link-hover-bg !default;
 
-// Navs
+// // Navs
 
-$nav-link-padding-x:                0.9rem !default;
-$nav-link-disabled-color:           $gray-300 !default;
+// $nav-link-padding-x:                0.9rem !default;
+// $nav-link-disabled-color:           $gray-300 !default;
 
-$nav-tabs-border-color:             $gray-300 !default;
-$nav-tabs-link-hover-border-color:  $gray-300 !default;
-$nav-tabs-link-active-bg:           $white !default;
+// $nav-tabs-border-color:             $gray-300 !default;
+// $nav-tabs-link-hover-border-color:  $gray-300 !default;
+// $nav-tabs-link-active-bg:           $white !default;
 
-$nav-pills-link-active-color:       $gray-600 !default;
-$nav-pills-link-active-bg:          $gray-200 !default;
+// $nav-pills-link-active-color:       $gray-600 !default;
+// $nav-pills-link-active-bg:          $gray-200 !default;
 
-// Navbar
+// // Navbar
 
-$navbar-dark-hover-color:           $white !default;
+// $navbar-dark-hover-color:           $white !default;
 
-$navbar-light-hover-color:          $black !default;
-$navbar-light-active-color:         $black !default;
+// $navbar-light-hover-color:          $black !default;
+// $navbar-light-active-color:         $black !default;
 
-// Pagination
+// // Pagination
 
-$pagination-color:                  $gray-600 !default;
-$pagination-bg:                     $gray-200 !default;
-$pagination-border-color:           $gray-300 !default;
+// $pagination-color:                  $gray-600 !default;
+// $pagination-bg:                     $gray-200 !default;
+// $pagination-border-color:           $gray-300 !default;
 
-$pagination-hover-color:            $pagination-color !default;
+// $pagination-hover-color:            $pagination-color !default;
 
-$pagination-active-color:           $pagination-color !default;
-$pagination-active-bg:              $gray-300 !default;
-$pagination-active-border-color:    $gray-300 !default;
+// $pagination-active-color:           $pagination-color !default;
+// $pagination-active-bg:              $gray-300 !default;
+// $pagination-active-border-color:    $gray-300 !default;
 
-$pagination-disabled-color:         $gray-300 !default;
-$pagination-disabled-bg:            $gray-200 !default;
-$pagination-disabled-border-color:  $pagination-border-color !default;
+// $pagination-disabled-color:         $gray-300 !default;
+// $pagination-disabled-bg:            $gray-200 !default;
+// $pagination-disabled-border-color:  $pagination-border-color !default;
 
-// Cards
+// // Cards
 
-$card-border-color:                 rgba($gray-300, .75) !default;
-$card-cap-bg:                       rgba($gray-200, .25) !default;
+// $card-border-color:                 rgba($gray-300, .75) !default;
+// $card-cap-bg:                       rgba($gray-200, .25) !default;
 
-// Popovers
+// // Popovers
 
-$popover-header-bg:                 $gray-200 !default;
+// $popover-header-bg:                 $gray-200 !default;
 
-// Modals
+// // Modals
 
-$modal-content-border-color:        $gray-300 !default;
+// $modal-content-border-color:        $gray-300 !default;
 
-$modal-header-border-color:         $modal-content-border-color !default;
+// $modal-header-border-color:         $modal-content-border-color !default;
 
-// Progress bars
+// // Progress bars
 
-$progress-bg:                       $gray-300 !default;
-$progress-border-radius:            10px !default;
-$progress-bar-color:                $primary !default;
+// $progress-bg:                       $gray-300 !default;
+// $progress-border-radius:            10px !default;
+// $progress-bar-color:                $primary !default;
 
-// List group
+// // List group
 
-$list-group-border-color:           $gray-300 !default;
+// $list-group-border-color:           $gray-300 !default;
 
-$list-group-hover-bg:               $gray-200 !default;
-$list-group-active-color:           $body-color !default;
-$list-group-active-bg:              $gray-200 !default;
-$list-group-active-border-color:    $gray-300 !default;
+// $list-group-hover-bg:               $gray-200 !default;
+// $list-group-active-color:           $body-color !default;
+// $list-group-active-bg:              $gray-200 !default;
+// $list-group-active-border-color:    $gray-300 !default;
 
-$list-group-disabled-color:         $gray-500 !default;
-$list-group-disabled-bg:            $white !default;
+// $list-group-disabled-color:         $gray-500 !default;
+// $list-group-disabled-bg:            $white !default;
 
-$list-group-action-color:           $list-group-active-color !default;
+// $list-group-action-color:           $list-group-active-color !default;
 
-$list-group-action-active-color:    $list-group-active-color !default;
-$list-group-action-active-bg:       $gray-300 !default;
+// $list-group-action-active-color:    $list-group-active-color !default;
+// $list-group-action-active-bg:       $gray-300 !default;
 
-// Close
+// // Close
 
-$close-text-shadow:                 none !default;
+// $close-text-shadow:                 none !default;

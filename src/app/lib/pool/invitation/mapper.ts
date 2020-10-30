@@ -1,32 +1,27 @@
 import { Injectable } from '@angular/core';
 
-import { Tournament } from '../../pool';
-import { TournamentInvitation } from '../invitation';
+import { Pool } from '../../pool';
+import { PoolInvitation } from '../invitation';
 
-/**
- * Created by coen on 10-10-17.
- */
 @Injectable()
-export class TournamentInvitationMapper {
+export class PoolInvitationMapper {
     constructor() { }
 
-    toObject(json: JsonTournamentInvitation, tournament: Tournament): TournamentInvitation {
-        const invitation = new TournamentInvitation(tournament, json.emailaddress, json.roles);
+    toObject(json: JsonPoolInvitation, pool: Pool): PoolInvitation {
+        const invitation = new PoolInvitation(pool, json.emailaddress);
         invitation.setId(json.id);
         return invitation;
     }
 
-    toJson(invitation: TournamentInvitation): JsonTournamentInvitation {
+    toJson(invitation: PoolInvitation): JsonPoolInvitation {
         return {
             id: invitation.getId(),
-            emailaddress: invitation.getEmailaddress(),
-            roles: invitation.getRoles()
+            emailaddress: invitation.getEmailaddress()
         };
     }
 }
 
-export interface JsonTournamentInvitation {
+export interface JsonPoolInvitation {
     id?: number;
     emailaddress: string;
-    roles: number;
 }

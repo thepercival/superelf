@@ -5,10 +5,10 @@ import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule) },
-  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
-  { path: 'public', loadChildren: () => import('./public/public.module').then(m => m.PublicModule) },
-  { path: ':id', redirectTo: '/public/:id', pathMatch: 'full' },
+  // { path: 'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule) },
+  { path: 'pooladmin', loadChildren: () => import('./pooladminmodule/pooladmin.module').then(m => m.PoolAdminModule) },
+  { path: 'pool', loadChildren: () => import('./poolmodule/pool.module').then(m => m.PoolModule) },
+  // { path: ':id', redirectTo: '/public/:id', pathMatch: 'full' },
   /*{ path: '', redirectTo: '/home', pathMatch: 'full' },*/
   // otherwise redirect to home
   { path: '**', redirectTo: '' }

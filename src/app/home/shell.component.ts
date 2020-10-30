@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { TournamentShell } from '../lib/pool/shell/repository';
+import { PoolShell } from '../lib/pool/shell/repository';
 
 @Component({
   selector: 'app-home-shell',
@@ -8,7 +8,7 @@ import { TournamentShell } from '../lib/pool/shell/repository';
   styleUrls: ['./shell.component.css']
 })
 export class HomeShellComponent implements OnInit {
-  @Input() shell: TournamentShell;
+  @Input() shell: PoolShell;
   @Input() showPublic: boolean;
   @Input() linethroughDate: Date;
 

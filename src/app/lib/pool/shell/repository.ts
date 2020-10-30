@@ -4,11 +4,8 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
 
-/**
- * Created by coen on 1-10-17.
- */
 @Injectable()
-export class TournamentShellRepository extends APIRepository {
+export class PoolShellRepository extends APIRepository {
 
     private url: string;
 
@@ -25,26 +22,26 @@ export class TournamentShellRepository extends APIRepository {
         return super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix(withRole);
     }
 
-    getObjects(filter?: TournamentShellFilter): Observable<TournamentShell[]> {
+    getObjects(filter?: PoolShellFilter): Observable<PoolShell[]> {
         const options = {
             headers: super.getHeaders(),
             params: this.getHttpParams(filter)
         };
         const withRole: boolean = filter ? filter.roles > 0 : false;
-        return this.http.get<TournamentShell[]>(this.getUrl(withRole), options).pipe(
-            map((jsonShells: TournamentShell[]) => this.convertObjects(jsonShells)),
+        return this.http.get<PoolShell[]>(this.getUrl(withRole), options).pipe(
+            map((jsonShells: PoolShell[]) => this.convertObjects(jsonShells)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    private convertObjects(jsonArray: TournamentShell[]): TournamentShell[] {
+    private convertObjects(jsonArray: PoolShell[]): PoolShell[] {
         for (const jsonShell of jsonArray) {
             jsonShell.startDateTime = new Date(jsonShell.startDateTime);
         }
         return jsonArray;
     }
 
-    private getHttpParams(filter?: TournamentShellFilter): HttpParams {
+    private getHttpParams(filter?: PoolShellFilter): HttpParams {
         let httpParams = new HttpParams();
         if (filter === undefined) {
             return httpParams;
@@ -65,16 +62,15 @@ export class TournamentShellRepository extends APIRepository {
     }
 }
 
-export interface TournamentShell {
-    tournamentId: number;
-    sportCustomId: number;
+export interface PoolShell {
+    poolId: number;
     name: string;
     startDateTime: Date;
     roles: number;
     public: boolean;
 }
 
-export interface TournamentShellFilter {
+export interface PoolShellFilter {
     startDate?: Date;
     endDate?: Date;
     name?: string;

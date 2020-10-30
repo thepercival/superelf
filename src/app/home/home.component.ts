@@ -1,12 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-// import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
-import { IAlert } from '../shared/common/alert';
-import { TournamentShell, TournamentShellFilter, TournamentShellRepository } from '../lib/pool/shell/repository';
+import { IAlert } from '../shared/commonmodule/alert';
+import { PoolShell, PoolShellFilter, PoolShellRepository } from '../lib/pool/shell/repository';
 import { Role } from '../lib/role';
-import { resolveSanitizationFn } from '@angular/compiler/src/render3/view/template';
 
 @Component({
   selector: 'app-home',
@@ -19,12 +17,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   @ViewChild('inputsearchname') private searchElementRef: ElementRef;
 
-  shellsWithRoleTillX: TournamentShell[];
-  shellsWithRoleFromX: TournamentShell[];
+  shellsWithRoleTillX: PoolShell[];
+  shellsWithRoleFromX: PoolShell[];
   shellsWithRoleX = 5;
   linethroughDate: Date;
   showingAllWithRole = false;
-  publicShells: TournamentShell[];
+  publicShells: PoolShell[];
   showingFuture = false;
   alert: IAlert;
   processingWithRole = true;
@@ -42,7 +40,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private tournamentShellRepos: TournamentShellRepository
+    private PoolShellRepos: PoolShellRepository
   ) {
     this.checkFirstTimeVisit();
     this.linethroughDate = new Date();
@@ -76,7 +74,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
 
     const filter = { roles: Role.ALL };
-    this.tournamentShellRepos.getObjects(filter)
+    this.PoolShellRepos.getObjects(filter)
       .subscribe(
           /* happy path */ myShells => {
           this.sortShellsByDateDesc(myShells);
@@ -98,9 +96,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   addToPublicShells(pastFuture: number, hoursToAdd: number) {
     this.publicProcessing = true;
     const searchFilter = this.extendHourRange(pastFuture, hoursToAdd);
-    this.tournamentShellRepos.getObjects(searchFilter)
+    this.PoolShellRepos.getObjects(searchFilter)
       .subscribe(
-          /* happy path */(shellsRes: TournamentShell[]) => {
+          /* happy path */(shellsRes: PoolShell[]) => {
           this.sortShellsByDateAsc(shellsRes);
           if (pastFuture === HomeComponent.PAST) {
             this.publicShells = shellsRes.concat(this.publicShells);
@@ -114,13 +112,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
       );
   }
 
-  protected sortShellsByDateAsc(shells: TournamentShell[]) {
+  protected sortShellsByDateAsc(shells: PoolShell[]) {
     shells.sort((ts1, ts2) => {
       return (ts1.startDateTime > ts2.startDateTime ? 1 : -1);
     });
   }
 
-  protected sortShellsByDateDesc(shells: TournamentShell[]) {
+  protected sortShellsByDateDesc(shells: PoolShell[]) {
     shells.sort((ts1, ts2) => {
       return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
     });
@@ -151,15 +149,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  linkToView(shell: TournamentShell) {
+  linkToView(shell: PoolShell) {
     this.publicProcessing = true;
-    this.router.navigate(['/public', shell.tournamentId]);
+    this.router.navigate(['/public', shell.poolId]);
   }
 
-  linkToTournament(shell: TournamentShell) {
+  linkToPool(shell: PoolShell) {
     this.processingWithRole = true;
-    const module = shell.roles > 0 && shell.roles !== Role.REFEREE ? '/admin' : '/public';
-    this.router.navigate([module, shell.tournamentId]);
+    const module = shell.roles > 0 ? '/admin' : '/public';
+    this.router.navigate([module, shell.poolId]);
   }
 
   enableSearchFilter() {
@@ -190,7 +188,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.addToPublicShells(HomeComponent.FUTURE, this.hourRange.end);
   }
 
-  private extendHourRange(pastFuture: number, hoursToAdd: number): TournamentShellFilter {
+  private extendHourRange(pastFuture: number, hoursToAdd: number): PoolShellFilter {
     const startDate = new Date(), endDate = new Date();
     if (pastFuture === HomeComponent.PAST) {
       endDate.setHours(endDate.getHours() + this.hourRange.start);
@@ -204,7 +202,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     return this.getSearchFilter(startDate, endDate, undefined);
   }
 
-  private getSearchFilter(startDate: Date, endDate: Date, name: string): TournamentShellFilter {
+  private getSearchFilter(startDate: Date, endDate: Date, name: string): PoolShellFilter {
     return { startDate: startDate, endDate: endDate, name: name };
   }
 
@@ -214,9 +212,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
     this.publicProcessing = true;
     const searchFilter = this.getSearchFilter(undefined, undefined, searchFilterName);
-    this.tournamentShellRepos.getObjects(searchFilter)
+    this.PoolShellRepos.getObjects(searchFilter)
       .subscribe(
-        /* happy path */(shellsRes: TournamentShell[]) => {
+        /* happy path */(shellsRes: PoolShell[]) => {
           this.publicShells = shellsRes;
           this.publicProcessing = false;
         },

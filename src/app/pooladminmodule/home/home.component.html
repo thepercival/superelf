@@ -1,0 +1,101 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      <div class="d-flex justify-content-between mb-4">
+        <span></span>
+        <h1 *ngIf="pool" class="text-truncate pointer" (click)="openModalName()">
+          <button *ngIf="isAdmin()" type="button" class="btn btn-outline-secondary btn-sm mr-1">
+            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+          </button>
+          <span>{{pool.getName()}}</span></h1>
+        <h1 class="mr-1">
+          <button [routerLink]="['']" type="button" class="btn btn-outline-secondary">
+            <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+            <span class="ml-1 d-none d-md-inline"> terug</span>
+          </button>
+        </h1>
+      </div>
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+      <ngb-alert *ngIf="alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+      <ngb-alert *ngIf="oldStructure && !oldStructureRequested" type="info" [dismissible]="false">Wanneer je de
+        opzet toch nog wilt bekijken,
+        dan
+        kunnen we de opzet handmatig omzetten.
+      </ngb-alert>
+      <ngb-alert *ngIf="!processing && pool && isAdmin() && !isManualMessageReadOnDevice()" type="info"
+        [dismissible]="true" (close)="manualMessageReadOnDevice()">gedetailleerde
+        informatie kun je vinden onderaan de pagina via de handleiding-link</ngb-alert>
+      <div *ngIf="!processing && structure && isAdmin()" class="row d-flex justify-content-center">
+
+        <div *ngIf="isAdmin()" class="card border-secondary pointer mt-3 mx-2"
+          [routerLink]="['/admin/competitors', pool.getId()]">
+          <div class="card-body">
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
+            </h5>
+            <p class="card-text" *ngIf="allPlacesAssigned()">
+              <span *ngIf="!someCompetitorsRegistered()">
+                <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> alle namen ingevuld
+              </span>
+              <span *ngIf="someCompetitorsRegistered()">
+                <fa-icon [icon]="['fas', 'check-circle']" class="text-warning"></fa-icon> deelnemers aanmelden
+              </span>
+            </p>
+            <p class="card-text" *ngIf="!allPlacesAssigned()">
+              <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> vul de namen in
+              ({{getNrOfCompetitors()}}/{{getNrOfPlaces()}})
+            </p>
+          </div>
+        </div>
+        <div *ngIf="structure.getRootRound().hasBegun()" class="card border-secondary pointer mt-3 mx-2"
+          [routerLink]="['/public/ranking', pool.getId()]">
+          <div class="card-body">
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'list-ol']"></fa-icon> standen
+            </h5>
+            <p class="card-text">
+              poule- en eindstanden
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!processing && pool && pool.getPublic()" class="text-center mt-3">
+    <button [routerLink]="['/public', pool.getId()]" type="button" class="btn btn-outline-secondary w-100">
+      naar het publieke gedeelte <fa-icon [icon]="['fas', 'eye']"></fa-icon>
+    </button>
+  </div>
+  <div *ngIf="!processing && structure" class="row d-flex justify-content-center">
+    <div *ngIf="isAdmin() || isRoleAdmin()" class="card border-secondary mt-3 mx-2">
+      <div class="card-body d-flex justify-content-between">
+        <div *ngIf="isAdmin()" (click)="openModalRemove(contentremove)" class="text-center pointer">
+          <div>
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+            </h5>
+          </div>
+          <div><span>verwijderen</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #contentremove let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">toernooi verwijderen</h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Weet je zeker dat je het toernooi wilt verwijderen?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="modal.close('remove')">nu
+      verwijderen</button>
+  </div>
+</ng-template>

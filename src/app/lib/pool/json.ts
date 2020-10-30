@@ -1,9 +1,11 @@
-import { JsonCompetition } from 'ngx-sport';
+import { JsonCompetition, JsonSeason } from 'ngx-sport';
 import { JsonPoolCompetitor } from '../competitor/json';
+import { JsonPoolCollection } from './collection/json';
 
 export interface JsonPool {
     id?: number;
-    competition: JsonCompetition;
-    public: boolean;
+    collection: JsonPoolCollection;
+    season: JsonSeason;
+    competitions: JsonCompetition[];
     competitors: JsonPoolCompetitor[];
 }
