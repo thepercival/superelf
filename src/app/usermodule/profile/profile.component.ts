@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { IAlert } from '../../shared/common/alert';
+import { IAlert } from '../../shared/commonmodule/alert';
 import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 import { UserRepository } from '../../lib/user/repository';
 import { AuthService } from '../../lib/auth/auth.service';
-import { MyNavigation } from '../../shared/common/navigation';
+import { MyNavigation } from '../../shared/commonmodule/navigation';
 
 @Component({
   selector: 'app-profile',

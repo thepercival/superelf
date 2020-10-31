@@ -3,7 +3,9 @@ import { Pool } from './pool';
 import { User } from './user';
 
 export class PoolCompetitor extends CompetitorBase implements Competitor {
-    constructor(private pool: Pool, competition: Competition, private user: User, pouleNr: number, placeNr: number, private admin: boolean) {
+    private admin: boolean;
+
+    constructor(private pool: Pool, competition: Competition, private user: User, pouleNr: number, placeNr: number) {
         super(competition, pouleNr, placeNr);
         this.pool.getCompetitors().push(this);
     }
@@ -14,6 +16,10 @@ export class PoolCompetitor extends CompetitorBase implements Competitor {
 
     getAdmin(): boolean {
         return this.admin;
+    }
+
+    setAdmin(admin: boolean) {
+        this.admin = admin;;
     }
 
     getUser(): User {

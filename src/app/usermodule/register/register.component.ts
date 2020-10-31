@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
-import { IAlert } from '../../shared/common/alert';
+import { IAlert } from '../../shared/commonmodule/alert';
 import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 
@@ -22,6 +22,8 @@ export class RegisterComponent implements OnInit {
   validations: UserValidations = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
     maxlengthemailaddress: User.MAX_LENGTH_EMAIL,
+    minlengthname: User.MIN_LENGTH_NAME,
+    maxlengthname: User.MAX_LENGTH_NAME,
     minlengthpassword: User.MIN_LENGTH_PASSWORD,
     maxlengthpassword: User.MAX_LENGTH_PASSWORD
   };
@@ -37,6 +39,11 @@ export class RegisterComponent implements OnInit {
         Validators.required,
         Validators.minLength(this.validations.minlengthemailaddress),
         Validators.maxLength(this.validations.maxlengthemailaddress)
+      ])],
+      name: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(this.validations.minlengthname),
+        Validators.maxLength(this.validations.maxlengthname)
       ])],
       password: ['', Validators.compose([
         Validators.required,
@@ -73,11 +80,12 @@ export class RegisterComponent implements OnInit {
     this.processing = true;
     this.setAlert('info', 'de registratie wordt opgeslagen');
 
-    const emailaddress = this.form.controls.emailaddress.value;
-    const password = this.form.controls.password.value;
-
     // this.activationmessage = undefined;
-    this.authService.register({ emailaddress: emailaddress, password: password })
+    this.authService.register({
+      emailaddress: this.form.controls.emailaddress.value,
+      name: this.form.controls.name.value,
+      password: this.form.controls.password.value
+    })
       .subscribe(
             /* happy path */ registered => {
           this.registered = registered;
@@ -93,6 +101,8 @@ export class RegisterComponent implements OnInit {
 export interface UserValidations {
   minlengthemailaddress: number;
   maxlengthemailaddress: number;
+  minlengthname: number;
+  maxlengthname: number;
   minlengthpassword: number;
   maxlengthpassword: number;
 }

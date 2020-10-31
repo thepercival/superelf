@@ -14,8 +14,9 @@ import { Pool } from '../../../lib/pool';
 export class PouleRankingComponent implements OnInit {
   public rankingItems: RankedRoundItem[];
   @Input() poule: Poule;
+  @Input() placeLocationMap: PlaceLocationMap;
   @Input() header: boolean;
-  public placeLocationMap: PlaceLocationMap;
+  // public placeLocationMap: PlaceLocationMap;
   public nameService: NameService;
   public showDifferenceDetail = false;
   favorites: Favorites;
@@ -28,12 +29,11 @@ export class PouleRankingComponent implements OnInit {
 
   ngOnInit() {
     this.processing = true;
-    const competition = this.poule.getCompetition().getTeamCompetitors();
-    this.placeLocationMap = new PlaceLocationMap(this.pool.getCompetitors());
-    this.nameService = new NameService(this.placeLocationMap);
-    this.favorites = this.favRepository.getObject(this.pool);
-    const ranking = new RankingService(this.poule.getRound(), this.pool.getCompetition().getRuleSet());
-    this.rankingItems = ranking.getItemsForPoule(this.poule);
+    // this. = new (this.pool.getCompetitors());
+    // this.nameService = new NameService(this.placeLocationMap);
+    // this.favorites = this.favRepository.getObject(this.pool);
+    // const ranking = new RankingService(this.poule.getRound(), this.pool.getCompetition().getRuleSet());
+    // this.rankingItems = ranking.getItemsForPoule(this.poule);
     this.processing = false;
   }
 

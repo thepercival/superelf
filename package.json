@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port=4202",
+    "start": "ng serve --port=4203",
     "start:nl": "ng serve --configuration=nl",
     "build": "ng build --prod && npm run split-critical-css",
     "build-acc": "ng build --configuration=acc && npm run split-critical-css",

@@ -1,10 +1,13 @@
 export class Role {
-    static readonly ADMIN = 1;
-    static readonly SYSADMIN = 2;
-    static readonly ALL = 3;
+    static readonly COMPETITOR = 1;
+    static readonly ADMIN = 2;
+    static readonly SYSADMIN = 4;
+    static readonly ALL = 7;
 
     static getName(role: number): string {
-        if (role === Role.ADMIN) {
+        if (role === Role.COMPETITOR) {
+            return 'pool-deelnemer';
+        } else if (role === Role.ADMIN) {
             return 'pool-beheerder';
         } else if (role === Role.SYSADMIN) {
             return 'systeem-beheerder';

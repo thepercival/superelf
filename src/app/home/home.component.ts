@@ -143,9 +143,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   linkToNew() {
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/admin/new']);
+      this.router.navigate(['/pooladmin/new']);
     } else {
-      this.router.navigate(['/public/prenew']);
+      this.router.navigate(['/pool/prenew']);
     }
   }
 
@@ -182,10 +182,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const pastHoursToAdd = this.hourRange.start === this.defaultHourRange.start
       ? this.defaultHourRange.start + this.defaultHourRange.end : -this.hourRange.start;
     this.addToPublicShells(HomeComponent.PAST, pastHoursToAdd);
-  }
-
-  expandFutureDays() {
-    this.addToPublicShells(HomeComponent.FUTURE, this.hourRange.end);
   }
 
   private extendHourRange(pastFuture: number, hoursToAdd: number): PoolShellFilter {

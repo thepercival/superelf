@@ -25,7 +25,6 @@ import {
   faClipboardCheck,
   faListOl,
 } from '@fortawesome/free-solid-svg-icons';
-import { ClipboardModule } from 'ngx-clipboard';
 import {
   CompetitionMapper,
   GameMapper,
@@ -61,15 +60,15 @@ import { PoolModule } from '../poolmodule/pool.module';
 import { PoolInvitationRepository } from '../lib/pool/invitation/repository';
 import { PoolInvitationMapper } from '../lib/pool/invitation/mapper';
 import { CompetitorMapper } from '../lib/competitor/mapper';
+import { PoolSharedModule } from '../shared/poolmodule/pool.module';
 
 @NgModule({
   imports: [
-    ClipboardModule,
     CommonModule,
     RoutingModule,
     ReactiveFormsModule,
     FontAwesomeModule,
-    CommonSharedModule, PoolModule
+    CommonSharedModule, PoolSharedModule
   ],
   declarations: [
     NewComponent,

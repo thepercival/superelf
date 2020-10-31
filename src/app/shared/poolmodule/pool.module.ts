@@ -12,7 +12,6 @@ import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, Ng
 import { CommonSharedModule } from '../commonmodule/common.module';
 import { NameModalComponent } from './namemodal/namemodal.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CompetitorChooseModalComponent } from './competitorchoosemodal/competitorchoosemodal.component';
 import { RouterModule } from '@angular/router';
 import { RankingRulesComponent } from './rankingrules/rankingrules.component';
 import { facStructure, facReferee, facScoreboard } from './icons';
@@ -20,7 +19,6 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
 
 @NgModule({
   declarations: [
-    CompetitorChooseModalComponent,
     NameModalComponent,
     EndRankingComponent,
     PouleRankingComponent,

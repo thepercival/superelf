@@ -1,6 +1,8 @@
 export class User {
     static readonly MIN_LENGTH_EMAIL = 6;
     static readonly MAX_LENGTH_EMAIL = 100;
+    static readonly MIN_LENGTH_NAME = 2;
+    static readonly MAX_LENGTH_NAME = 15;
     static readonly MIN_LENGTH_PASSWORD = 3;
     static readonly MAX_LENGTH_PASSWORD = 50;
 

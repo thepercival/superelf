@@ -58,8 +58,8 @@
       </div>
       <div class="text-center mt-3">
         <button *ngIf="!processing && pool && competitors.length > 0" [routerLink]="['/public/filter', pool.getId()]"
-          type="button" class="btn btn-outline-{{favorites.hasItems() ? 'primary' : 'secondary'}} w-100"
-          [innerHTML]="filterDescription() | keepHtml"></button>
+          type="button"
+          class="btn btn-outline-{{favorites.hasCompetitors() ? 'primary' : 'secondary'}} w-100">???</button>
       </div>
     </div>
   </div>

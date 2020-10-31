@@ -47,16 +47,9 @@ hr {
 .table th {
   border-top-width: 0px;
 }
-
 html {
   position: relative;
 }
-// h1 {
-//   font-size: 2.5rem;
-// }
-// h2 {
-//   font-size: 1.5rem;
-// }
 app-root {
   display: flex;
   min-height: 100vh;
@@ -64,9 +57,6 @@ app-root {
   flex-direction: column;
 }
 .content-wrapper {
-  flex: 1 0 auto;
-}
-footer {
   flex: 1 0 auto;
 }
 .batch-striped-row {
