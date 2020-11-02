@@ -73,7 +73,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const filter = { roles: Role.ALL };
+    const filter = { roles: Role.COMPETITOR + Role.ADMIN };
     this.PoolShellRepos.getObjects(filter)
       .subscribe(
           /* happy path */ myShells => {
@@ -114,13 +114,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   protected sortShellsByDateAsc(shells: PoolShell[]) {
     shells.sort((ts1, ts2) => {
-      return (ts1.startDateTime > ts2.startDateTime ? 1 : -1);
+      return (ts1.seasonName > ts2.seasonName ? 1 : -1);
     });
   }
 
   protected sortShellsByDateDesc(shells: PoolShell[]) {
     shells.sort((ts1, ts2) => {
-      return (ts1.startDateTime < ts2.startDateTime ? 1 : -1);
+      return (ts1.seasonName < ts2.seasonName ? 1 : -1);
     });
   }
 

@@ -5,17 +5,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../lib/auth/auth.service';
 import { IAlert } from '../../shared/commonmodule/alert';
 import { User } from '../../lib/user';
+import { AuthComponent } from '../component';
 
 @Component({
   selector: 'app-passwordreset',
   templateUrl: './passwordreset.component.html',
   styleUrls: ['./passwordreset.component.css']
 })
-export class PasswordresetComponent implements OnInit {
-
-  alert: IAlert;
+export class PasswordresetComponent extends AuthComponent implements OnInit {
   codeSend = false;
-  processing = true;
   form: FormGroup;
 
   validations: any = {
@@ -24,11 +22,10 @@ export class PasswordresetComponent implements OnInit {
   };
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService,
+    authService: AuthService,
     fb: FormBuilder
   ) {
+    super(authService);
     this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,
@@ -40,14 +37,6 @@ export class PasswordresetComponent implements OnInit {
 
   ngOnInit() {
     this.processing = false;
-  }
-
-  protected setAlert(type: string, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert() {
-    this.alert = undefined;
   }
 
   isLoggedIn() {

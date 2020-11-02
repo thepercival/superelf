@@ -29,16 +29,8 @@ export class PoolShellRepository extends APIRepository {
         };
         const withRole: boolean = filter ? filter.roles > 0 : false;
         return this.http.get<PoolShell[]>(this.getUrl(withRole), options).pipe(
-            map((jsonShells: PoolShell[]) => this.convertObjects(jsonShells)),
             catchError((err) => this.handleError(err))
         );
-    }
-
-    private convertObjects(jsonArray: PoolShell[]): PoolShell[] {
-        for (const jsonShell of jsonArray) {
-            jsonShell.startDateTime = new Date(jsonShell.startDateTime);
-        }
-        return jsonArray;
     }
 
     private getHttpParams(filter?: PoolShellFilter): HttpParams {
@@ -65,9 +57,8 @@ export class PoolShellRepository extends APIRepository {
 export interface PoolShell {
     poolId: number;
     name: string;
-    startDateTime: Date;
+    seasonName: string;
     roles: number;
-    public: boolean;
 }
 
 export interface PoolShellFilter {

@@ -5,17 +5,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../lib/auth/auth.service';
 import { IAlert } from '../../shared/commonmodule/alert';
 import { User } from '../../lib/user';
+import { AuthComponent } from '../component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
-
-  alert: IAlert;
+export class LoginComponent extends AuthComponent implements OnInit {
   registered = false;
-  processing = true;
   form: FormGroup;
 
   validations: any = {
@@ -28,9 +26,10 @@ export class LoginComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private authService: AuthService,
+    authService: AuthService,
     fb: FormBuilder
   ) {
+    super(authService);
     this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,
@@ -57,7 +56,7 @@ export class LoginComponent implements OnInit {
           this.setAlert('info', param.message);
         }
       });
-    if (this.isLoggedIn() === true) {
+    if (this.isLoggedIn()) {
       this.setAlert('danger', 'je bent al ingelogd');
     }
     this.processing = false;

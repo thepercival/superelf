@@ -8,7 +8,7 @@ import {
 import { EndRankingComponent } from './ranking/end.component';
 import { PouleRankingComponent } from './ranking/poule.component';
 import { TitleComponent } from './title/title.component';
-import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule, NgbModalConfig, NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CommonSharedModule } from '../commonmodule/common.module';
 import { NameModalComponent } from './namemodal/namemodal.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -48,12 +48,13 @@ import { FavoritesRepository } from '../../lib/favorites/repository';
   ]
 })
 export class PoolSharedModule {
-  constructor(library: FaIconLibrary, modalConfig: NgbModalConfig) {
+  constructor(library: FaIconLibrary, modalConfig: NgbModalConfig/*, alertConfig: NgbAlertConfig*/) {
     library.addIcons(faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
       faMedal, faSpinner, faLevelUpAlt, faMinus, faDoorClosed, faPlus,
       facStructure, facReferee, facScoreboard);
     modalConfig.centered = true;
     modalConfig.scrollable = true;
     modalConfig.size = 'lg';
+    // alertConfig.dismissible = false;
   }
 }

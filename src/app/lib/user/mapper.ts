@@ -13,14 +13,18 @@ export class UserMapper {
             user = new User(json.id);
             UserMapper.users[user.getId()] = user;
         }
-        user.setEmailaddress(json.emailaddress)
+        user.setEmailaddress(json.emailaddress);
+        if (json.name !== undefined) {
+            user.setName(json.name);
+        }
         return user;
     }
 
     toJson(user: User): JsonUser {
         return {
             id: user.getId(),
-            emailaddress: user.getEmailaddress()
+            emailaddress: user.getEmailaddress(),
+            name: user.getName()
         };
     }
 }
@@ -28,4 +32,5 @@ export class UserMapper {
 export interface JsonUser {
     id: number;
     emailaddress?: string;
+    name?: string;
 }

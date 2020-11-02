@@ -22,7 +22,6 @@ import { AuthguardService } from './lib/auth/authguard.service';
 import { MyNavigation } from './shared/commonmodule/navigation';
 import { CommonSharedModule } from './shared/commonmodule/common.module';
 import { HomeComponent } from './home/home.component';
-import { HomeShellComponent } from './home/shell.component';
 import { CompetitorMapper } from './lib/competitor/mapper';
 import { PoolShellRepository } from './lib/pool/shell/repository';
 import { UserMapper } from './lib/user/mapper';
@@ -32,8 +31,7 @@ import { facSoccerField, facFavicon } from './lib/icons';
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    HomeShellComponent
+    HomeComponent
   ],
   imports: [
     BrowserModule,

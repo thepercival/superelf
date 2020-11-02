@@ -2,21 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { IAlert } from '../../shared/commonmodule/alert';
 import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 import { UserRepository } from '../../lib/user/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
+import { AuthComponent } from '../component';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
-  alert: IAlert;
-  processing = true;
+export class ProfileComponent extends AuthComponent implements OnInit {
   user: User;
   form: FormGroup;
 
@@ -28,11 +26,12 @@ export class ProfileComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService,
+    authService: AuthService,
     private userRepository: UserRepository,
     public myNavigation: MyNavigation,
     fb: FormBuilder
   ) {
+    super(authService);
     this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,
@@ -51,22 +50,11 @@ export class ProfileComponent implements OnInit {
                 /* happy path */(user: User) => {
             this.user = user;
             this.form.controls.emailaddress.setValue(this.user.getEmailaddress());
-            // this.processing = false;
           },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
             /* onComplete */() => this.processing = false
         );
     });
-
-
-  }
-
-  protected setAlert(type: string, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert() {
-    this.alert = undefined;
   }
 
   save(): boolean {

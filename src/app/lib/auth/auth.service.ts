@@ -39,8 +39,6 @@ export class AuthService extends APIRepository {
     return true;
   }
 
-
-
   getUrl(): string {
     return super.getApiUrl() + 'auth';
   }
@@ -49,8 +47,17 @@ export class AuthService extends APIRepository {
     return super.getApiUrl() + 'public/auth';
   }
 
-  register(newUser: any): Observable<boolean> {
-    return this.http.post(this.getPublicUrl() + '/register', newUser, { headers: super.getHeaders() }).pipe(
+  register(emailaddress: string, name: string, password: string): Observable<void> {
+    const jsonUser = {
+      emailaddress, name, password
+    };
+    return this.http.post(this.getPublicUrl() + '/register', jsonUser, { headers: super.getHeaders() }).pipe(
+      catchError((err) => this.handleError(err))
+    );
+  }
+
+  validate(emailaddress: string, key: string): Observable<boolean> {
+    return this.http.post(this.getPublicUrl() + '/validate', { emailaddress, key }, { headers: super.getHeaders() }).pipe(
       map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
       catchError((err) => this.handleError(err))
     );

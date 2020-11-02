@@ -1,0 +1,22 @@
+<div class="d-flex justify-content-between mb-4">
+  <h1>
+    <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> valideren
+  </h1>
+  <div class="ml-3 mr-1">
+    <button [routerLink]="['']" type="button" class="btn btn-dark">
+      <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
+      <span class="ml-1 d-none d-md-inline"> terug</span>
+    </button>
+  </div>
+</div>
+<h2 *ngIf="processing" class="text-center">
+  <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</h2>
+<ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+<div *ngIf="!processing && validated" class="card card-body text-center mx-auto bg-faded form-validate mt-3">
+  <button [routerLink]="['']" type="button" class="btn btn-primary">
+    <span class="ml-1 d-none d-md-inline"> ga naar de home-pagina om een pool op te zetten</span>
+  </button>
+  <p>OF</p>
+  <p>Gebruik de link in de uitnodigings-email om mee te doen met een pool.</p>
+</div>

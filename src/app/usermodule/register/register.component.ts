@@ -1,22 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
-import { IAlert } from '../../shared/commonmodule/alert';
 import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
+import { AuthComponent } from '../component';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
-
-  alert: IAlert;
+export class RegisterComponent extends AuthComponent implements OnInit {
   registered = false;
-  processing = true;
   form: FormGroup;
 
   validations: UserValidations = {
@@ -29,11 +25,10 @@ export class RegisterComponent implements OnInit {
   };
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService,
+    authService: AuthService,
     fb: FormBuilder
   ) {
+    super(authService);
     this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,
@@ -64,31 +59,24 @@ export class RegisterComponent implements OnInit {
     this.processing = false;
   }
 
-  protected setAlert(type: string, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert() {
-    this.alert = undefined;
-  }
-
   isLoggedIn() {
     return this.authService.isLoggedIn();
   }
 
   register(): boolean {
+    this.registered = false;
     this.processing = true;
-    this.setAlert('info', 'de registratie wordt opgeslagen');
+    this.setAlert('info', 'je wordt geregistreerd');
 
     // this.activationmessage = undefined;
-    this.authService.register({
-      emailaddress: this.form.controls.emailaddress.value,
-      name: this.form.controls.name.value,
-      password: this.form.controls.password.value
-    })
+    this.authService.register(
+      this.form.controls.emailaddress.value,
+      this.form.controls.name.value,
+      this.form.controls.password.value
+    )
       .subscribe(
-            /* happy path */ registered => {
-          this.registered = registered;
+            /* happy path */() => {
+          this.registered = true;
           this.resetAlert();
         },
             /* error path */ e => { this.setAlert('danger', 'het registreren is niet gelukt: ' + e); this.processing = false; },

@@ -6,17 +6,15 @@ import { AuthService } from '../../lib/auth/auth.service';
 import { IAlert } from '../../shared/commonmodule/alert';
 import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
+import { AuthComponent } from '../component';
 
 @Component({
   selector: 'app-passwordchange',
   templateUrl: './passwordchange.component.html',
   styleUrls: ['./passwordchange.component.css']
 })
-export class PasswordchangeComponent implements OnInit {
-
-  alert: IAlert;
+export class PasswordchangeComponent extends AuthComponent implements OnInit {
   passwordChanged = false;
-  processing = true;
   form: FormGroup;
 
   validations: any = {
@@ -29,11 +27,10 @@ export class PasswordchangeComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService,
+    authService: AuthService,
     fb: FormBuilder
   ) {
+    super(authService);
     this.form = fb.group({
       code: ['', Validators.compose([
         Validators.required,
@@ -60,14 +57,6 @@ export class PasswordchangeComponent implements OnInit {
       this.emailaddress = params.get('emailaddress');
     });
     this.processing = false;
-  }
-
-  protected setAlert(type: string, message: string) {
-    this.alert = { 'type': type, 'message': message };
-  }
-
-  protected resetAlert() {
-    this.alert = undefined;
   }
 
   isLoggedIn() {

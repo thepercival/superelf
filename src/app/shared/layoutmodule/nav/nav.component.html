@@ -11,6 +11,7 @@
   <button *ngIf="authService.isLoggedIn()" [routerLink]="['/user/profile', authService.getUser().getId()]"
     class="btn btn-light border-0 p-0 pt-1" role="button" tabindex="-1" aria-label="account">
     <fa-icon [icon]="[ 'fas', 'user-circle']" size="3x"></fa-icon>
+    {{authService.getUser().getName()}}
   </button>
 
   <!-- <button class="navbar-toggler navbar-toggler-right pointer" type="button" data-toggle="collapse
