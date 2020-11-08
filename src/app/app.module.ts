@@ -18,11 +18,10 @@ import { environment } from '../environments/environment';
 import { RoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthService } from './lib/auth/auth.service';
-import { AuthguardService } from './lib/auth/authguard.service';
+import { AuthUserGuardService } from './lib/auth/guard/userguard.service';
 import { MyNavigation } from './shared/commonmodule/navigation';
 import { CommonSharedModule } from './shared/commonmodule/common.module';
 import { HomeComponent } from './home/home.component';
-import { CompetitorMapper } from './lib/competitor/mapper';
 import { PoolShellRepository } from './lib/pool/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { LayoutSharedModule } from './shared/layoutmodule/layout.module';
@@ -44,9 +43,8 @@ import { facSoccerField, facFavicon } from './lib/icons';
   ],
   providers: [
     AuthService,
-    AuthguardService,
+    AuthUserGuardService,
     PoolShellRepository,
-    CompetitorMapper,
     UserMapper,
     MyNavigation
   ],
@@ -54,7 +52,7 @@ import { facSoccerField, facFavicon } from './lib/icons';
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faPlusCircle, faSpinner, faSearch, faAngleDoubleDown
+    library.addIcons(faPlusCircle, faSpinner, faAngleDoubleDown
       , faUserShield, faUserFriends, faSave, faUserCircle,
       facSoccerField, facFavicon
     );

@@ -1,34 +1,43 @@
 import { Injectable } from '@angular/core';
-import { CompetitionMapper, SeasonMapper } from 'ngx-sport';
+import { CompetitionMapper, FormationMapper, SeasonMapper } from 'ngx-sport';
 
 import { Pool } from '../pool';
 import { JsonPool } from './json';
-import { CompetitorMapper } from '../competitor/mapper';
 import { UserMapper } from '../user/mapper';
 import { PoolCollectionMapper } from './collection/mapper';
+import { PoolPeriodMapper } from './period/mapper';
+import { PoolScoreUnitMapper } from './scoreUnit/mapper';
+import { PoolUserMapper } from './user/mapper';
 
 @Injectable()
 export class PoolMapper {
     constructor(
         private collectionMapper: PoolCollectionMapper,
         private seasonMapper: SeasonMapper,
+        private poolPeriodMapper: PoolPeriodMapper,
+        private poolScoreUnitMapper: PoolScoreUnitMapper,
         private competitionMapper: CompetitionMapper,
-        private competitorMapper: CompetitorMapper,
-        private userMapper: UserMapper) { }
+        private poolUserMapper: PoolUserMapper,
+        private formationMapper: FormationMapper) { }
 
     toObject(json: JsonPool): Pool {
         const pool = new Pool(this.collectionMapper.toObject(json.collection), this.seasonMapper.toObject(json.season));
         json.competitions.forEach(jsonCompetition => {
-            const competition = this.competitionMapper.toObject(jsonCompetition);
-            json.competitors.forEach(jsonCompetitor => {
-                if (competition.getLeague().getName() === Pool.LeagueSuperCup && !jsonCompetitor.supercup) {
-                    return;
-                }
-                const user = this.userMapper.toObject(jsonCompetitor.user);
-                this.competitorMapper.toObject(jsonCompetitor, pool, competition, user);
-            });
+            pool.getCompetitions().push(this.competitionMapper.toObject(jsonCompetition));
         });
-
+        const defaultSport = pool.getCompetition().getSportConfig().getSport();
+        json.formations.forEach(jsonFormation => {
+            pool.getFormations().push(this.formationMapper.toObject(jsonFormation, defaultSport));
+        });
+        json.periods.forEach(jsonPoolPeriod => {
+            this.poolPeriodMapper.toObject(jsonPoolPeriod, pool);
+        });
+        json.scoreUnits.forEach(jsonPoolScoreUnit => {
+            this.poolScoreUnitMapper.toObject(jsonPoolScoreUnit, pool);
+        });
+        json.users.forEach(jsonPoolUser => {
+            this.poolUserMapper.toObject(jsonPoolUser, pool);
+        });
         pool.setId(json.id);
         return pool;
     }
@@ -39,7 +48,8 @@ export class PoolMapper {
             collection: this.collectionMapper.toJson(pool.getCollection()),
             season: this.seasonMapper.toJson(pool.getSeason()),
             competitions: pool.getCompetitions().map(competition => this.competitionMapper.toJson(competition)),
-            competitors: pool.getCompetitors().map(competitor => this.competitorMapper.toJson(competitor)),
+            formations: pool.getFormations().map(formation => this.formationMapper.toJson(formation)),
+            users: pool.getUsers().map(poolUser => this.poolUserMapper.toJson(poolUser)),
         };
     }
 }

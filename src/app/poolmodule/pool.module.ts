@@ -2,9 +2,17 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { ClipboardModule } from 'ngx-clipboard';
 import {
   faListOl,
   faChevronRight,
+  faEnvelope,
+  faClipboardCheck,
+  faUsers,
+  faTimesCircle,
+  faCheckCircle,
+  faTrashAlt,
+  faInfoCircle
 } from '@fortawesome/free-solid-svg-icons';
 import {
   CompetitionMapper,
@@ -28,7 +36,9 @@ import {
   PlanningConfigMapper,
   LeagueMapper,
   FieldMapper,
-  AssociationMapper
+  AssociationMapper,
+  FormationLineMapper,
+  FormationMapper
 } from 'ngx-sport';
 
 import { CSSService } from '../shared/commonmodule/cssservice';
@@ -39,6 +49,20 @@ import { RoutingModule } from './pool-routing.module';
 import { PoolRepository } from '../lib/pool/repository';
 import { PoolMapper } from '../lib/pool/mapper';
 import { PoolSharedModule } from '../shared/poolmodule/pool.module';
+import { NewComponent } from './new/new.component';
+import { PoolCollectionMapper } from '../lib/pool/collection/mapper';
+import { ScoreUnitMapper } from '../lib/scoreUnit/mapper';
+import { PoolScoreUnitMapper } from '../lib/pool/scoreUnit/mapper';
+import { PoolPeriodMapper } from '../lib/pool/period/mapper';
+import { RulesComponent } from './rules/rules.component';
+import { JoinComponent } from './join/join.component';
+import { PoolUserMapper } from '../lib/pool/user/mapper';
+import { PoolCompetitorMapper } from '../lib/pool/competitor/mapper';
+import { PoolUsersComponent } from './poolusers/poolusers.component';
+import { PoolUserRepository } from '../lib/pool/user/repository';
+import { PoolUserRemoveApprovalModalComponent } from './poolusers/removeapprovalmodal.component';
+import { InviteComponent } from './invite/invite.component';
+import { ScoutingComponent } from './scouting/scouting.component';
 
 @NgModule({
   imports: [
@@ -47,18 +71,27 @@ import { PoolSharedModule } from '../shared/poolmodule/pool.module';
     ReactiveFormsModule,
     FontAwesomeModule,
     CommonSharedModule,
-    PoolSharedModule
+    PoolSharedModule,
+    ClipboardModule
   ],
   declarations: [
     PreNewComponent,
+    NewComponent,
     HomeComponent,
-  ], /*
-  entryComponents: [PouleRankingModalComponent],*/
+    InviteComponent,
+    JoinComponent,
+    PoolUsersComponent,
+    RulesComponent,
+    ScoutingComponent
+  ],
+  entryComponents: [PoolUserRemoveApprovalModalComponent],
   providers: [
     AssociationMapper,
     CompetitionMapper,
     CSSService,
     FieldMapper,
+    FormationMapper,
+    FormationLineMapper,
     GameMapper,
     GamePlaceMapper,
     GameScoreMapper,
@@ -79,16 +112,23 @@ import { PoolSharedModule } from '../shared/poolmodule/pool.module';
     SportScoreConfigMapper,
     StructureMapper,
     PoolRepository,
-    PoolMapper
+    PoolMapper,
+    PoolCollectionMapper,
+    PoolPeriodMapper,
+    PoolScoreUnitMapper,
+    PoolUserRepository,
+    PoolUserMapper,
+    PoolCompetitorMapper,
+    ScoreUnitMapper
   ]
 })
 export class PoolModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
-      faListOl, faChevronRight
-      /*faMoneyBillAlt, faTrashAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
+      faListOl, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
+      , faInfoCircle/*faMoneyBillAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
-      faInfoCircle, faMedal, faUsers, faQrcode, faCopy, faDotCircle, faSync*/
+      , faMedal, , faQrcode, faCopy, faDotCircle, faSync*/
     );
     /*library.addIcons(
       faProductHunt

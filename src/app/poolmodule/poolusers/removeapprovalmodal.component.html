@@ -1,0 +1,13 @@
+<div class="modal-header border-bottom-0">
+    <h4 class="modal-title">deelnemer verwijderen</h4>
+    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <p>Weet je zeker dat je deelnemer {{poolUser.getName()}} wilt verwijderen?
+</div>
+<div class="modal-footer justify-content-reverse border-top-0">
+    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="modal.close('remove')">nu
+        verwijderen</button>
+</div>

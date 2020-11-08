@@ -6,7 +6,7 @@ import { HomeComponent } from './home/home.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'user', loadChildren: () => import('./usermodule/user.module').then(m => m.UserModule) },
-  { path: 'pooladmin', loadChildren: () => import('./pooladminmodule/pooladmin.module').then(m => m.PoolAdminModule) },
+  // { path: 'pooladmin', loadChildren: () => import('./pooladminmodule/pooladmin.module').then(m => m.PoolAdminModule) },
   { path: 'pool', loadChildren: () => import('./poolmodule/pool.module').then(m => m.PoolModule) },
   // { path: ':id', redirectTo: '/public/:id', pathMatch: 'full' },
   /*{ path: '', redirectTo: '/home', pathMatch: 'full' },*/

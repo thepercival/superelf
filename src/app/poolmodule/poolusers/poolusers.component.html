@@ -1,0 +1,47 @@
+<app-pool-title [pool]="pool">
+</app-pool-title>
+
+<h2>
+  <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
+</h2>
+
+<h2 *ngIf="processing" class="text-center">
+  <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</h2>
+
+<ngb-alert *ngIf="alert" [type]="alert.type">
+  {{ alert.message }}</ngb-alert>
+
+<table *ngIf="!processing" class="table">
+  <thead>
+    <tr>
+      <th>naam</th>
+      <th *ngIf="pool.beforeTransferPeriod()" class="text-center">
+        gekozen spelers
+      </th>
+      <th *ngIf="pool.inTransferPeriod()" class="text-center">
+        transfers
+      </th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let poolUser of pool.getUsers()">
+      <td>
+        {{poolUser.getName()}}
+      </td>
+      <td *ngIf="pool.beforeTransferPeriod()" class="text-center">
+        0/15 success/warning
+      </td>
+      <td *ngIf="pool.inTransferPeriod()" class="text-center">
+        0/2
+      </td>
+      <td class="text-right">
+        <button *ngIf="!poolUser.getAdmin() && pool.beforeTransferPeriod()" type="button" class="btn btn-sm btn-danger"
+          [disabled]="processing" (click)="openRemoveApprovalModal(poolUser)">
+          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

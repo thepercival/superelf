@@ -1,0 +1,38 @@
+<app-pool-title [pool]="pool">
+</app-pool-title>
+
+<h2>
+  <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
+</h2>
+
+<h2 *ngIf="processing" class="text-center">
+  <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</h2>
+
+<ngb-alert *ngIf="alert" [type]="alert.type">
+  {{ alert.message }}</ngb-alert>
+
+<button type="button" class="btn btn-secondary btn-block">
+  <fa-icon [icon]="['fas', 'search']"></fa-icon> spelers zoeken
+</button>
+
+<div>4 buttons met de linies</div>
+
+<table *ngIf="!processing" class="table">
+  <tbody>
+    <tr>
+      <td>
+        Linie 1 letter
+      </td>
+      <td class="text-center">
+        Voorletter + Achternaam
+      </td>
+      <td class="text-center">
+        logo + clubnaam(afkorting op xs)
+      </td>
+      <td class="text-right">
+        knop "verplaats naar team", wanneer in chooseplayersperiod
+      </td>
+    </tr>
+  </tbody>
+</table>

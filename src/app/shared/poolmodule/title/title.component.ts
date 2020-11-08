@@ -18,7 +18,7 @@ export class TitleComponent {
 
   navigateBack() {
     if (this.admin && this.pool) {
-      this.router.navigate(['/admin', this.pool.getId()]);
+      this.router.navigate(['/pool', this.pool.getId()]);
     } else {
       this.myNavigation.back();
     }

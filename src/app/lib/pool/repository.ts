@@ -62,10 +62,17 @@ export class PoolRepository extends APIRepository {
         );
     }
 
-    copyObject(pool: Pool, newStartDateTime: Date): Observable<number> {
-        const url = this.getUrl(pool) + '/copy';
-        return this.http.post(url, { startdatetime: newStartDateTime }, this.getOptions()).pipe(
-            map((id: number) => id),
+    getJoinUrl(pool: Pool): Observable<string> {
+        const baseUrl = super.getApiUrl() + this.getUrlpostfix() + '/' + pool.getId();
+        return this.http.get(baseUrl + '/joinurl', { headers: super.getHeaders() }).pipe(
+            map((json: any) => json.url),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    join(pool: Pool, key: string): Observable<void> {
+        const baseUrl = super.getApiUrl() + this.getUrlpostfix() + '/' + pool.getId();
+        return this.http.post(baseUrl + '/join', { key }, { headers: super.getHeaders() }).pipe(
             catchError((err) => this.handleError(err))
         );
     }

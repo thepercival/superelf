@@ -9,33 +9,30 @@ import { User } from '../user';
 
 @Injectable()
 export class AuthService extends APIRepository {
-  private user: User
-  private authItem: JsonAuthItem;
+  private auth: JsonAuth;
 
   constructor(private userMapper: UserMapper, private http: HttpClient) {
     super();
-    const authItem = JSON.parse(localStorage.getItem('auth'));
-    authItem ? this.setAuthItem(authItem) : this.clearAuthItem();
+    const jsonAuth = JSON.parse(localStorage.getItem('auth'));
+    jsonAuth ? this.setAuth(jsonAuth) : this.clearAuthItem();
   }
 
   isLoggedIn(): boolean {
-    return this.authItem !== undefined;
+    return this.auth !== undefined;
   }
 
   getUser(): User {
-    return this.user;
+    return this.userMapper.toObject(this.auth.user);
   }
 
   protected clearAuthItem() {
-    this.authItem = undefined;
-    this.user = undefined;
+    this.auth = undefined;
     localStorage.removeItem('auth');
   }
 
-  setAuthItem(authItem: JsonAuthItem): boolean {
-    this.authItem = authItem;
-    this.user = this.userMapper.toObject({ id: this.authItem.userId });
-    localStorage.setItem('auth', JSON.stringify(authItem));
+  setAuth(jsonAuth: JsonAuth): boolean {
+    this.auth = jsonAuth;
+    localStorage.setItem('auth', JSON.stringify(this.auth));
     return true;
   }
 
@@ -58,14 +55,15 @@ export class AuthService extends APIRepository {
 
   validate(emailaddress: string, key: string): Observable<boolean> {
     return this.http.post(this.getPublicUrl() + '/validate', { emailaddress, key }, { headers: super.getHeaders() }).pipe(
-      map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
+      map((jsonAuth: JsonAuth) => this.setAuth(jsonAuth)),
       catchError((err) => this.handleError(err))
     );
   }
 
+
   extendToken() {
     this.http.post(this.getUrl() + '/extendtoken', undefined, { headers: super.getHeaders() }).pipe(
-      map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
+      map((jsonAuth: JsonAuth) => this.setAuth(jsonAuth)),
       catchError((err) => this.handleError(err))
     ).subscribe();
   }
@@ -79,7 +77,7 @@ export class AuthService extends APIRepository {
   login(emailaddress: string, password: string): Observable<boolean> {
     const json = { emailaddress: emailaddress, password: password };
     return this.http.post(this.getPublicUrl() + '/login', json, this.getOptions()).pipe(
-      map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
+      map((jsonAuth: JsonAuth) => this.setAuth(jsonAuth)),
       catchError((err) => this.handleError(err))
     );
   }
@@ -97,7 +95,7 @@ export class AuthService extends APIRepository {
   passwordChange(emailaddress: string, password: string, code: string): Observable<boolean> {
     const json = { emailaddress: emailaddress, password: password, code: code };
     return this.http.post(this.getPublicUrl() + '/passwordchange', json, this.getOptions()).pipe(
-      map((authItem: JsonAuthItem) => this.setAuthItem(authItem)),
+      map((jsonAuth: JsonAuth) => this.setAuth(jsonAuth)),
       catchError((err) => this.handleError(err))
     );
   }
@@ -107,7 +105,7 @@ export class AuthService extends APIRepository {
   }
 }
 
-interface JsonAuthItem {
+interface JsonAuth {
   token: string;
-  userId: number;
+  user: JsonUser;
 }

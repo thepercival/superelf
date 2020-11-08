@@ -9,9 +9,6 @@ $enable-responsive-font-sizes: true !default;
     app-pouleranking {       
         margin: 10px;
     }
-    .card-deck-wrapper {
-        padding: 10px;
-    }
     .popover-small {  
       max-width: 400px;
     }
@@ -27,17 +24,24 @@ $enable-responsive-font-sizes: true !default;
     .popover {
       max-width: 300px;
     } 
-    .card-deck-wrapper {
-     padding: 0;
-    }
     app-pouleranking {       
       margin-top: 10px;
     }
 }
 
-.favitem {
+.current-user {
     @extend .text-primary;
     @extend .font-weight-bold;
+}
+
+.cards-no-border > .card {
+  @extend .mx-2;
+}
+.cards-no-border > .card:first-child {
+  @extend .ml-0;
+}
+.cards-no-border > .card:last-child {
+  @extend .mr-0;
 }
 
 hr {

@@ -19,23 +19,22 @@ export class PoolComponent {
     ) {
     }
 
-    myNgOnInit(callback?: DataProcessCallBack, noStructure?: boolean) {
+    myNgOnInit(callback?: DataProcessCallBack) {
         this.route.params.subscribe(params => {
-            this.setData(+params['id'], callback, noStructure);
+            this.setData(+params['id'], callback);
         });
     }
 
-    setData(poolId: number, callback?: DataProcessCallBack, noStructure?: boolean) {
+    setData(poolId: number, callback?: DataProcessCallBack) {
         this.poolRepository.getObject(poolId)
             .subscribe(
                 /* happy path */(pool: Pool) => {
                     this.pool = pool;
-                    if (noStructure === true) {
-                        if (callback !== undefined) {
-                            callback();
-                        }
-                        return;
+                    if (callback !== undefined) {
+                        callback();
                     }
+                    return;
+
                 },
                 /* error path */(e: string) => {
                     this.setAlert('danger', e); this.processing = false;

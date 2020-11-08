@@ -13,7 +13,7 @@
   <div class="d-flex justify-content-between">
     <h1>mijn pools</h1>
     <button name="btn-create-pool" type="button" class="btn btn-primary" (click)="linkToNew()">
-      <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> toernooi opzetten
+      <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> pool opzetten
     </button>
   </div>
 </div>
@@ -61,7 +61,7 @@
 </form>
 <table *ngIf="!publicProcessing" class="table">
   <tbody>
-    <tr class="pointer" (click)="linkToView(shell)" *ngFor="let shell of publicShells">
+    <tr class="pointer" (click)="linkToPool(shell)" *ngFor="let shell of publicShells">
       <td>{{shell.name}}</td>
       <td>{{shell.seasonName}}</td>
     </tr>

@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, RankedRoundItem, RankingService, PlaceLocationMap } from 'ngx-sport';
+import { NameService, Poule, RankedRoundItem, RankingService, PlaceLocationMap, Place } from 'ngx-sport';
+import { AuthService } from '../../../lib/auth/auth.service';
+import { PoolCompetitor } from '../../../lib/pool/competitor';
 
 import { CSSService } from '../../commonmodule/cssservice';
-import { Favorites } from '../../../lib/favorites';
-import { FavoritesRepository } from '../../../lib/favorites/repository';
-import { Pool } from '../../../lib/pool';
 
 @Component({
   selector: 'app-pouleranking',
@@ -19,12 +18,11 @@ export class PouleRankingComponent implements OnInit {
   // public placeLocationMap: PlaceLocationMap;
   public nameService: NameService;
   public showDifferenceDetail = false;
-  favorites: Favorites;
   public processing = true;
 
   constructor(
-    public cssService: CSSService,
-    public favRepository: FavoritesRepository) {
+    public authService: AuthService,
+    public cssService: CSSService) {
   }
 
   ngOnInit() {
@@ -41,5 +39,14 @@ export class PouleRankingComponent implements OnInit {
     return this.poule.getRound().getNumber().getValidSportScoreConfigs().some(sportScoreConfig => {
       return sportScoreConfig.useSubScore();
     });
+  }
+
+  isCurrentUser(place: Place): boolean {
+    if (!this.authService.isLoggedIn()) {
+      return false;
+    }
+    const poolCompetitor = <PoolCompetitor>this.placeLocationMap.getCompetitor(place);
+    return poolCompetitor?.getUser() === this.authService.getUser();
+
   }
 }

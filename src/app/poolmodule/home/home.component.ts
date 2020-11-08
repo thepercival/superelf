@@ -7,9 +7,7 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { TranslateService } from '../../lib/translate';
 import { PoolRepository } from '../../lib/pool/repository';
-import { FavoritesRepository } from '../../lib/favorites/repository';
-import { Favorites } from '../../lib/favorites';
-import { PoolCompetitor } from '../../lib/competitor';
+import { PoolPeriod } from '../../lib/pool/period';
 
 @Component({
     selector: 'app-pool-public',
@@ -18,16 +16,14 @@ import { PoolCompetitor } from '../../lib/competitor';
 })
 export class HomeComponent extends PoolComponent implements OnInit {
     translate: TranslateService;
-    competitors: PoolCompetitor[];
-    favorites: Favorites;
+    scoutedPersons: ScoutedPerson[] = [];
 
     constructor(
         route: ActivatedRoute,
         public cssService: CSSService,
         router: Router,
         private authService: AuthService,
-        poolRepository: PoolRepository,
-        public favRepository: FavoritesRepository
+        poolRepository: PoolRepository
     ) {
         super(route, router, poolRepository);
         this.translate = new TranslateService();
@@ -38,12 +34,19 @@ export class HomeComponent extends PoolComponent implements OnInit {
     }
 
     postNgOnInit() {
-        this.competitors = this.pool.getCompetitors();
-        this.favorites = this.favRepository.getObject(this.pool);
+
         this.processing = false;
     }
 
-    isAnAdmin(): boolean {
-        return this.pool.getCompetitor(this.authService.getUser())?.getAdmin();
+    isAdmin(): boolean {
+        return this.pool.getUser(this.authService.getUser())?.getAdmin();
+    }
+
+    allUsersHaveCompletedTeamChoice(): boolean {
+        return false;
+    }
+
+    allUsersHaveCompletedTransfers(): boolean {
+        return false;
     }
 }

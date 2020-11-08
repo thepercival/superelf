@@ -143,21 +143,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   linkToNew() {
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/pooladmin/new']);
+      this.router.navigate(['/pool/new']);
     } else {
       this.router.navigate(['/pool/prenew']);
     }
   }
 
-  linkToView(shell: PoolShell) {
-    this.publicProcessing = true;
-    this.router.navigate(['/public', shell.poolId]);
-  }
-
   linkToPool(shell: PoolShell) {
     this.processingWithRole = true;
-    const module = shell.roles > 0 ? '/admin' : '/public';
-    this.router.navigate([module, shell.poolId]);
+    this.router.navigate(['/pool', shell.poolId]);
   }
 
   enableSearchFilter() {
