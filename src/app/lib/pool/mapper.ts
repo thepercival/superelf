@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CompetitionMapper, FormationMapper, SeasonMapper } from 'ngx-sport';
+import { Competition, CompetitionMapper, FormationMapper, SeasonMapper } from 'ngx-sport';
 
 import { Pool } from '../pool';
 import { JsonPool } from './json';
-import { UserMapper } from '../user/mapper';
 import { PoolCollectionMapper } from './collection/mapper';
 import { PoolPeriodMapper } from './period/mapper';
 import { PoolScoreUnitMapper } from './scoreUnit/mapper';
@@ -20,8 +19,11 @@ export class PoolMapper {
         private poolUserMapper: PoolUserMapper,
         private formationMapper: FormationMapper) { }
 
-    toObject(json: JsonPool): Pool {
-        const pool = new Pool(this.collectionMapper.toObject(json.collection), this.seasonMapper.toObject(json.season));
+    toObject(json: JsonPool, sourceCompetition: Competition): Pool {
+        const pool = new Pool(
+            this.collectionMapper.toObject(json.collection),
+            sourceCompetition,
+            this.seasonMapper.toObject(json.season));
         json.competitions.forEach(jsonCompetition => {
             pool.getCompetitions().push(this.competitionMapper.toObject(jsonCompetition));
         });

@@ -1,6 +1,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
     "downlevelIteration": true,
     "importHelpers": true,
     "outDir": "./dist/out-tsc",
@@ -17,6 +20,7 @@
     ]
   },
   "angularCompilerOptions": {
+    "strictTemplates": true,
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true
   }

@@ -25,7 +25,7 @@ export class RulesComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.myNgOnInit(() => {
+    super.parentNgOnInit(() => {
       this.processing = false;
     });
   }

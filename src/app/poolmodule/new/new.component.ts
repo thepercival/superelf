@@ -7,6 +7,11 @@ import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
 import { JsonPool } from '../../lib/pool/json';
 import { PoolCollection } from '../../lib/pool/collection';
+import { ActiveConfigRepository } from '../../lib/activeConfig/repository';
+import { JsonActiveConfig, JsonCompetitionShell } from '../../lib/activeConfig/json';
+import { ActiveConfig } from '../../lib/pool/activeConfig';
+import { CompetitionRepository } from '../../lib/ngx-sport/competition/repository';
+import { Competition } from 'ngx-sport';
 
 
 @Component({
@@ -22,11 +27,14 @@ export class NewComponent implements OnInit {
     minlengthname: PoolCollection.MIN_LENGTH_NAME,
     maxlengthname: PoolCollection.MAX_LENGTH_NAME,
   };
-  message: string;
+  activeConfig: ActiveConfig;
+  activeSourceCompetitionShell: JsonCompetitionShell;
 
   constructor(
     private router: Router,
+    private activeConfigRepository: ActiveConfigRepository,
     private poolRepository: PoolRepository,
+    private competitionRepository: CompetitionRepository,
     fb: FormBuilder
   ) {
     this.form = fb.group({
@@ -39,7 +47,28 @@ export class NewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = false;
+    this.activeConfigRepository.getObject()
+      .subscribe(
+        /* happy path */(config: ActiveConfig) => {
+          this.activeConfig = config;
+          if (!this.inCreateAndJoinPeriod()) {
+            this.setAlert('danger', 'het opzetten van een pool kan alleen van x tot y');
+          }
+          else if (this.activeConfig.getCompetitions().length !== 1) {
+            this.setAlert('danger', 'het aantal actieve broncompetities moet altijd 1 zijn');
+          } else {
+            this.activeSourceCompetitionShell = this.activeConfig.getCompetitions().pop();
+          }
+
+        },
+        /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
+        /* onComplete */() => this.processing = false
+      );
+  }
+
+  protected inCreateAndJoinPeriod(): boolean {
+    const now = new Date();
+    return this.activeConfig.getCreateAndJoinPeriod().isIn(now);
   }
 
   create(): boolean {
@@ -53,20 +82,24 @@ export class NewComponent implements OnInit {
       collection: { association: { name } },
       season: {
         name: 'dummy',
-        startDateTime: (new Date()).toISOString(),
-        endDateTime: (new Date()).toISOString(),
+        start: (new Date()).toISOString(),
+        end: (new Date()).toISOString(),
       },
       competitions: [],
       users: []
     };
 
-    this.poolRepository.createObject(jsonPool)
+    this.competitionRepository.getObject(this.activeSourceCompetitionShell.id)
       .subscribe(
-        /* happy path */(pool: Pool) => {
-          this.router.navigate(['/pooladmin', pool.getId()]);
-        },
-        /* error path */ e => { this.setAlert('danger', 'de pool kon niet worden aangemaakt: ' + e); this.processing = false; },
-        /* onComplete */() => { this.processing = false; }
+          /* happy path */(sourceCompetition: Competition) => {
+          this.poolRepository.createObject(jsonPool, sourceCompetition)
+            .subscribe(
+              /* happy path */(pool: Pool) => {
+                this.router.navigate(['/pool', pool.getId()]);
+              },
+              /* error path */ e => { this.setAlert('danger', 'de pool kon niet worden aangemaakt: ' + e); this.processing = false; },
+            );
+        }
       );
     return false;
   }

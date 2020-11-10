@@ -8,6 +8,7 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 import { TranslateService } from '../../lib/translate';
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolPeriod } from '../../lib/pool/period';
+import { ScoutedPerson } from '../../lib/scoutedPerson';
 
 @Component({
     selector: 'app-pool-public',
@@ -30,7 +31,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
     }
 
     ngOnInit() {
-        super.myNgOnInit(() => this.postNgOnInit());
+        super.parentNgOnInit(() => this.postNgOnInit());
     }
 
     postNgOnInit() {

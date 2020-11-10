@@ -1,3 +1,4 @@
+import { Person } from 'ngx-sport';
 
 export class ScoutedPerson {
 

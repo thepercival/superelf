@@ -12,7 +12,8 @@ import {
   faTimesCircle,
   faCheckCircle,
   faTrashAlt,
-  faInfoCircle
+  faInfoCircle,
+  faSearch
 } from '@fortawesome/free-solid-svg-icons';
 import {
   CompetitionMapper,
@@ -63,6 +64,13 @@ import { PoolUserRepository } from '../lib/pool/user/repository';
 import { PoolUserRemoveApprovalModalComponent } from './poolusers/removeapprovalmodal.component';
 import { InviteComponent } from './invite/invite.component';
 import { ScoutingComponent } from './scouting/scouting.component';
+import { ScoutedPersonRepository } from '../lib/scoutedPerson/repository';
+import { ScoutedPersonMapper } from '../lib/scoutedPerson/mapper';
+import { ChoosePersonsComponent } from './chooseplayers/choosepersons.component';
+import { PersonRepository } from '../lib/ngx-sport/person/repository';
+import { ActiveConfigRepository } from '../lib/activeConfig/repository';
+import { ActiveConfigMapper } from '../lib/activeConfig/mapper';
+import { CompetitionRepository } from '../lib/ngx-sport/competition/repository';
 
 @NgModule({
   imports: [
@@ -82,7 +90,8 @@ import { ScoutingComponent } from './scouting/scouting.component';
     JoinComponent,
     PoolUsersComponent,
     RulesComponent,
-    ScoutingComponent
+    ScoutingComponent,
+    ChoosePersonsComponent
   ],
   entryComponents: [PoolUserRemoveApprovalModalComponent],
   providers: [
@@ -119,14 +128,21 @@ import { ScoutingComponent } from './scouting/scouting.component';
     PoolUserRepository,
     PoolUserMapper,
     PoolCompetitorMapper,
-    ScoreUnitMapper
+    ScoreUnitMapper,
+    ScoutedPersonRepository,
+    ScoutedPersonMapper,
+    PersonRepository,
+    ActiveConfigRepository,
+    ActiveConfigMapper,
+    CompetitionRepository,
+    CompetitionMapper
   ]
 })
 export class PoolModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
       faListOl, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
-      , faInfoCircle/*faMoneyBillAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
+      , faInfoCircle, faSearch/*faMoneyBillAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
       , faMedal, , faQrcode, faCopy, faDotCircle, faSync*/
     );

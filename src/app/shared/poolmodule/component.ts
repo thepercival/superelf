@@ -19,13 +19,13 @@ export class PoolComponent {
     ) {
     }
 
-    myNgOnInit(callback?: DataProcessCallBack) {
+    protected parentNgOnInit(callback?: DataProcessCallBack) {
         this.route.params.subscribe(params => {
-            this.setData(+params['id'], callback);
+            this.setPool(+params['id'], callback);
         });
     }
 
-    setData(poolId: number, callback?: DataProcessCallBack) {
+    protected setPool(poolId: number, callback?: DataProcessCallBack) {
         this.poolRepository.getObject(poolId)
             .subscribe(
                 /* happy path */(pool: Pool) => {

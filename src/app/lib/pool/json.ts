@@ -11,6 +11,7 @@ export interface JsonPool {
     collection: JsonPoolCollection;
     season: JsonSeason;
     competitions: JsonCompetition[];
+    sourceCompetitionId?: number;
     users: JsonPoolUser[];
     scoreUnits?: JsonPoolScoreUnit[];
     periods?: JsonPoolPeriod[];

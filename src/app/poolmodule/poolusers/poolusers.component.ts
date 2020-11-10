@@ -29,7 +29,7 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.myNgOnInit(() => {
+    super.parentNgOnInit(() => {
       this.processing = false;
     });
   }

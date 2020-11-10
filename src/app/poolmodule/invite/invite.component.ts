@@ -34,7 +34,7 @@ export class InviteComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.myNgOnInit(() => {
+    super.parentNgOnInit(() => {
       this.setAlert('info', 'gebruik de link om mensen uit te nodigen');
       this.initUrl();
     });

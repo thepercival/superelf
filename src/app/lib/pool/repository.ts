@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Competition } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { CompetitionRepository } from '../ngx-sport/competition/repository';
 
 import { Pool } from '../pool';
 import { APIRepository } from '../repository';
@@ -16,7 +18,8 @@ export class PoolRepository extends APIRepository {
 
     constructor(
         private http: HttpClient,
-        private mapper: PoolMapper) {
+        private mapper: PoolMapper,
+        private competitionRepository: CompetitionRepository) {
         super();
         this.url = super.getApiUrl() + this.getUrlpostfix();
     }
@@ -31,36 +34,53 @@ export class PoolRepository extends APIRepository {
 
     getObject(id: number): Observable<Pool> {
         const url = super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix() + '/' + id;
-        return this.http.get<JsonPool>(url, { headers: super.getHeaders() }).pipe(
-            map((jsonPool: JsonPool) => this.mapper.toObject(jsonPool)),
-            catchError((err) => this.handleError(err))
-        );
-    }
+        return this.http.get(url, { headers: super.getHeaders() }).pipe(
+            map((jsonPool: JsonPool) => {
+                return this.getObjectHelper(jsonPool, this.competitionRepository.getObject(jsonPool.sourceCompetitionId));
+                // let pool;
+                // this.competitionRepository.getObject(jsonPool.sourceCompetitionId)
+                //     .subscribe(
+                //             /* happy path */(sourceCompetition: Competition) => {
+                //             pool = this.mapper.toObject(jsonPool, sourceCompetition);
+                //         },
+                //     );
+                // return pool;
 
-    createObject(json: JsonPool): Observable<Pool> {
-        return this.http.post(this.url, json, { headers: super.getHeaders() }).pipe(
-            map((jsonPool: JsonPool) => this.mapper.toObject(jsonPool)),
-            catchError((err) => this.handleError(err))
-        );
-    }
-
-    editObject(pool: Pool): Observable<Pool> {
-        const url = this.getUrl(pool);
-        return this.http.put(url, this.mapper.toJson(pool), { headers: super.getHeaders() }).pipe(
-            map((res: JsonPool) => {
-                return this.mapper.toObject(res);
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    removeObject(pool: Pool): Observable<boolean> {
-        const url = this.getUrl(pool);
-        return this.http.delete(url, { headers: super.getHeaders() }).pipe(
-            map((res) => true),
+    getObjectHelper(jsonPool: JsonPool, obsCompetition: Observable<Competition>): Observable<Pool> {
+        return obsCompetition.pipe(
+            map((sourceCompetition: Competition) => this.mapper.toObject(jsonPool, sourceCompetition))
+        );
+    }
+
+    createObject(json: JsonPool, sourceCompetition: Competition): Observable<Pool> {
+        return this.http.post(this.url + '/' + sourceCompetition.getId(), json, { headers: super.getHeaders() }).pipe(
+            map((jsonPool: JsonPool) => this.mapper.toObject(jsonPool, sourceCompetition)),
             catchError((err) => this.handleError(err))
         );
     }
+
+    // editObject(pool: Pool): Observable<Pool> {
+    //     const url = this.getUrl(pool);
+    //     return this.http.put(url, this.mapper.toJson(pool), { headers: super.getHeaders() }).pipe(
+    //         map((res: JsonPool) => {
+    //             return this.mapper.toObject(res);
+    //         }),
+    //         catchError((err) => this.handleError(err))
+    //     );
+    // }
+
+    // removeObject(pool: Pool): Observable<boolean> {
+    //     const url = this.getUrl(pool);
+    //     return this.http.delete(url, { headers: super.getHeaders() }).pipe(
+    //         map((res) => true),
+    //         catchError((err) => this.handleError(err))
+    //     );
+    // }
 
     getJoinUrl(pool: Pool): Observable<string> {
         const baseUrl = super.getApiUrl() + this.getUrlpostfix() + '/' + pool.getId();

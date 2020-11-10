@@ -7,7 +7,6 @@ import {
   faAngleDoubleDown,
   faPlusCircle,
   faSave,
-  faSearch,
   faSpinner,
   faUserCircle,
   faUserFriends,
@@ -52,8 +51,7 @@ import { facSoccerField, facFavicon } from './lib/icons';
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faPlusCircle, faSpinner, faAngleDoubleDown
-      , faUserShield, faUserFriends, faSave, faUserCircle,
+    library.addIcons(faPlusCircle, faSpinner, faAngleDoubleDown, faUserShield, faUserFriends, faSave, faUserCircle,
       facSoccerField, facFavicon
     );
   }

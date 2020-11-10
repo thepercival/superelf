@@ -3,26 +3,27 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
-import { PoolCollection } from '../../lib/pool/collection';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
-import { ScoutedPerson } from '../../lib/scoutedPerson';
+import { Person, Team } from 'ngx-sport';
+import { PersonRepository } from '../../lib/ngx-sport/person/repository';
 
 
 @Component({
-  selector: 'app-pool-scouting',
-  templateUrl: './scouting.component.html',
-  styleUrls: ['./scouting.component.scss']
+  selector: 'app-pool-chooseplayers',
+  templateUrl: './choosepersons.component.html',
+  styleUrls: ['./choosepersons.component.scss']
 })
-export class ScoutingComponent extends PoolComponent implements OnInit {
+export class ChoosePersonsComponent extends PoolComponent implements OnInit {
   form: FormGroup;
-  scoutedPersons: ScoutedPerson[];
+  foundPersons: Person[];
+  teamFilter: Team;
+  lineFilter: number;
 
   constructor(
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
-    protected scoutedPersonRepository: ScoutedPersonRepository,
+    protected personRepository: PersonRepository,
     fb: FormBuilder
   ) {
     super(route, router, poolRepository);
@@ -34,15 +35,15 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
 
   ngOnInit() {
     super.parentNgOnInit(() => {
-      this.initScoutedPersons();
+      this.searchPersons();
     });
   }
 
-  initScoutedPersons() {
-    this.scoutedPersonRepository.getObjects(this.pool)
+  searchPersons() {
+    this.personRepository.getObjects(this.pool.getSourceCompetition(), this.teamFilter, this.lineFilter)
       .subscribe(
-          /* happy path */(scoutedPersons: ScoutedPerson[]) => {
-          this.scoutedPersons = scoutedPersons;
+          /* happy path */(foundPersons: Person[]) => {
+          this.foundPersons = foundPersons;
 
         },
         /* error path */(e: string) => {
@@ -52,9 +53,5 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
       );
 
 
-  }
-
-  showCopiedToClipboard() {
-    this.setAlert('success', 'de link is gekopieerd naar het klembord');
   }
 }

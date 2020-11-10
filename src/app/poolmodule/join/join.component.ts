@@ -26,7 +26,7 @@ export class JoinComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.myNgOnInit(() => {
+    super.parentNgOnInit(() => {
       this.join();
     });
   }

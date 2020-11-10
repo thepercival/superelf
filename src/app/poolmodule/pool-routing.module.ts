@@ -11,6 +11,7 @@ import { AuthUserGuardService } from '../lib/auth/guard/userguard.service';
 import { PoolUsersComponent } from './poolusers/poolusers.component';
 import { InviteComponent } from './invite/invite.component';
 import { ScoutingComponent } from './scouting/scouting.component';
+import { ChoosePersonsComponent } from './chooseplayers/choosepersons.component';
 
 const routes: Routes = [
   { path: 'prenew', component: PreNewComponent },
@@ -20,6 +21,8 @@ const routes: Routes = [
   { path: 'join/:id/:key', component: JoinComponent, canActivate: [AuthUserGuardService] },
   { path: 'users/:id', component: PoolUsersComponent, canActivate: [AuthUserGuardService] },
   { path: 'scouting/:id', component: ScoutingComponent, canActivate: [AuthUserGuardService] },
+  { path: 'choosepersons/:id', component: ChoosePersonsComponent, canActivate: [AuthUserGuardService] },
+
   { path: 'rules/:id', component: RulesComponent },
 
 ];

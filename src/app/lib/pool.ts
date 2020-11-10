@@ -1,4 +1,4 @@
-import { Competition, Formation, PlaceRange, Season } from 'ngx-sport';
+import { Association, Competition, Formation, PlaceRange, Season } from 'ngx-sport';
 
 import { PoolCollection } from './pool/collection';
 import { PoolPeriod } from './pool/period';
@@ -18,7 +18,7 @@ export class Pool {
         { min: 1, max: 1, placesPerPoule: { min: 2, max: 40 } }
     ];
 
-    constructor(protected collection: PoolCollection, protected season: Season) {
+    constructor(protected collection: PoolCollection, protected sourceCompetition: Competition, protected season: Season) {
     }
 
     getId(): number {
@@ -56,6 +56,14 @@ export class Pool {
     getCompetition(leagueNr?: number): Competition {
         const leagueName = this.getCollection().getLeagueName(leagueNr);
         return this.getCompetitions().find(competition => competition.getLeague().getName() === leagueName);
+    }
+
+    getSourceCompetition(): Competition {
+        return this.sourceCompetition;
+    }
+
+    getAssociation(): Association {
+        return this.getCompetition().getLeague().getAssociation();
     }
 
     getPeriods(periodType?: number): PoolPeriod[] {

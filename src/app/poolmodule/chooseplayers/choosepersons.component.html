@@ -2,7 +2,7 @@
 </app-pool-title>
 
 <h2>
-  <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
+  <fa-icon [icon]="['fas', 'users']"></fa-icon> spelers kiezen
 </h2>
 
 <h2 *ngIf="processing" class="text-center">
@@ -12,14 +12,10 @@
 <ngb-alert *ngIf="alert" [type]="alert.type">
   {{ alert.message }}</ngb-alert>
 
-<button *ngIf="!processing" [routerLink]="['/pool/choosepersons', pool.getId()]" type="button"
-  class="btn btn-secondary btn-block">
-  <fa-icon [icon]="['fas', 'search']"></fa-icon> spelers zoeken
-</button>
 
-<div>4 buttons met de linies</div>
+<div>combobox met clubs en 1 met linies</div>
 
-<table *ngIf="!processing && scoutedPersons" class="table">
+<table *ngIf="!processing && foundPersons" class="table">
   <tbody>
     <tr>
       <td>
