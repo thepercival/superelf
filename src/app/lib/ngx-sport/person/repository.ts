@@ -35,7 +35,7 @@ export class PersonRepository extends APIRepository {
             teamId: team?.getId(),
             line: line
         };
-        return this.http.post(this.getUrl(), jsonFilter, this.getOptions()).pipe(
+        return this.http.post<JsonPerson[]>(this.getUrl(), jsonFilter, this.getOptions()).pipe(
             map((jsonPersons: JsonPerson[]) => jsonPersons.map(jsonPerson => {
                 return this.mapper.toObject(jsonPerson, sourceCompetition.getLeague().getAssociation());
             })),

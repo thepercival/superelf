@@ -10,8 +10,8 @@ import { Pool } from '../../../lib/pool';
 })
 export class TitleComponent {
 
-  @Input() pool: Pool;
-  @Input() admin: boolean;
+  @Input() pool: Pool | undefined;
+  @Input() admin: boolean | undefined;
 
   constructor(private router: Router, private myNavigation: MyNavigation) {
   }

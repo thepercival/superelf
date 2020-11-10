@@ -4,8 +4,8 @@ import { Pool } from '../pool';
 import { User } from '../user';
 
 export class PoolUser {
-    private id: number
-    private admin: boolean;
+    private id: number = 0;
+    private admin: boolean = false;
     protected competitors: PoolCompetitor[] = [];
 
     constructor(protected pool: Pool, protected user: User) {
@@ -33,7 +33,7 @@ export class PoolUser {
         return this.user;
     }
 
-    getName(): string {
+    getName(): string | undefined {
         return this.user.getName();
     }
 
@@ -49,7 +49,7 @@ export class PoolUser {
         return this.competitors;
     }
 
-    getCompetitor(competition: Competition): PoolCompetitor {
+    getCompetitor(competition: Competition): PoolCompetitor | undefined {
         return this.competitors.find(competitor => competitor.getCompetition() === competition);
     }
 }

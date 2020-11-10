@@ -16,13 +16,16 @@ export class PoolUserMapper {
         poolUser.setId(json.id);
         json.competitors.forEach(jsonPoolCompetitor => {
             const competition = pool.getCompetitions().find(competition => competition.getId() === jsonPoolCompetitor.competitionId);
-            this.poolCompetitorMapper.toObject(jsonPoolCompetitor, poolUser, competition);
+            if (competition) {
+                this.poolCompetitorMapper.toObject(jsonPoolCompetitor, poolUser, competition);
+            }
         });
         return poolUser;
     }
 
     toJson(poolUser: PoolUser): JsonPoolUser {
         return {
+            id: poolUser.getId(),
             user: this.userMapper.toJson(poolUser.getUser()),
             admin: poolUser.getAdmin(),
             competitors: poolUser.getCompetitors().map(competitor => this.poolCompetitorMapper.toJson(competitor)),

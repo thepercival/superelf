@@ -15,7 +15,7 @@ import { AuthComponent } from '../component';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent extends AuthComponent implements OnInit {
-  user: User;
+  user: User | undefined;
   form: FormGroup;
 
   validations: UserValidations = {
@@ -58,6 +58,9 @@ export class ProfileComponent extends AuthComponent implements OnInit {
   }
 
   save(): boolean {
+    if (!this.user) {
+      return false;
+    }
     this.processing = true;
     const emailaddress = this.form.controls.emailaddress.value;
     this.userRepository.editObject({ id: this.user.getId(), emailaddress: emailaddress })
@@ -74,6 +77,9 @@ export class ProfileComponent extends AuthComponent implements OnInit {
   }
 
   remove() {
+    if (!this.user) {
+      return false;
+    }
     this.processing = true;
     this.userRepository.removeObject(this.user.getId())
       .subscribe(

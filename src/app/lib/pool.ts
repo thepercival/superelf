@@ -7,7 +7,7 @@ import { PoolUser } from './pool/user';
 import { User } from './user';
 
 export class Pool {
-    protected id: number;
+    protected id: number = 0;
     protected competitions: Competition[] = [];
     protected periods: PoolPeriod[] = [];
     protected scoreUnits: PoolScoreUnit[] = [];
@@ -53,7 +53,7 @@ export class Pool {
         return this.competitions;
     }
 
-    getCompetition(leagueNr?: number): Competition {
+    getCompetition(leagueNr?: number): Competition | undefined {
         const leagueName = this.getCollection().getLeagueName(leagueNr);
         return this.getCompetitions().find(competition => competition.getLeague().getName() === leagueName);
     }
@@ -62,8 +62,8 @@ export class Pool {
         return this.sourceCompetition;
     }
 
-    getAssociation(): Association {
-        return this.getCompetition().getLeague().getAssociation();
+    getAssociation(): Association | undefined {
+        return this.getCompetition()?.getLeague().getAssociation();
     }
 
     getPeriods(periodType?: number): PoolPeriod[] {
@@ -73,15 +73,15 @@ export class Pool {
         return this.periods.filter(poolPeriod => (poolPeriod.getType() & periodType) === poolPeriod.getType());
     }
 
-    protected getPeriod(periodType: number): PoolPeriod {
+    protected getPeriod(periodType: number): PoolPeriod | undefined {
         return this.periods.find(poolPeriod => poolPeriod.getType() === periodType);
     }
 
-    getChoosePlayersPeriod(): PoolPeriod {
+    getChoosePlayersPeriod(): PoolPeriod | undefined {
         return this.getPeriod(PoolPeriod.ChoosePlayers);
     }
 
-    getTransferPeriod(): PoolPeriod {
+    getTransferPeriod(): PoolPeriod | undefined {
         return this.getPeriod(PoolPeriod.Transfer);
     }
 
@@ -103,7 +103,7 @@ export class Pool {
     //     return this.competitors.filter(competitor => competitor.getCompetition() === competition);
     // }
 
-    getUser(user: User): PoolUser {
+    getUser(user: User): PoolUser | undefined {
         return this.users.find(poolUser => poolUser.getUser() === user);
     }
 
@@ -112,24 +112,18 @@ export class Pool {
     // }
 
     inPeriod(periodType: number, date?: Date): boolean {
-        if (date === undefined) {
-            date = new Date();
-        }
-        return this.getPeriods(periodType).some(period => period.isIn(date));
+        const checkDate = date ? date : new Date();
+        return this.getPeriods(periodType).some(period => period.isIn(checkDate));
     }
 
     beforePeriod(periodType: number, date?: Date): boolean {
-        if (date === undefined) {
-            date = new Date();
-        }
-        return this.getPeriods(periodType).some(period => date.getTime() < period.getStartDateTime().getTime());
+        const checkDate = date ? date : new Date();
+        return this.getPeriods(periodType).some(period => checkDate.getTime() < period.getStartDateTime().getTime());
     }
 
     afterPeriod(periodType: number, date?: Date): boolean {
-        if (date === undefined) {
-            date = new Date();
-        }
-        return this.getPeriods(periodType).some(period => date.getTime() > period.getEndDateTime().getTime());
+        const checkDate = date ? date : new Date();
+        return this.getPeriods(periodType).some(period => checkDate.getTime() > period.getEndDateTime().getTime());
     }
 
     inCreateAndJoinPeriod(date?: Date): boolean {

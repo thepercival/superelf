@@ -9,7 +9,8 @@ export class PoolCompetitor extends CompetitorBase implements Competitor {
     }
 
     getName(): string {
-        return this.poolUser.getName();
+        const name = this.poolUser.getName();
+        return name ? name : '';
     }
 
     getPoolUser(): PoolUser {

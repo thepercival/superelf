@@ -1,7 +1,7 @@
 import { Association } from 'ngx-sport';
 
 export class PoolCollection {
-    protected id: number;
+    protected id: number = 0;
     static readonly MIN_LENGTH_NAME = 3;
     static readonly MAX_LENGTH_NAME = 20;
 
@@ -28,7 +28,7 @@ export class PoolCollection {
         return this.association;
     }
 
-    getLeagueName(leagueNr: number): string {
+    getLeagueName(leagueNr?: number): string {
         if (leagueNr === PoolCollection.League_Cup) {
             return "beker";
         } else if (leagueNr === PoolCollection.League_SuperCup) {

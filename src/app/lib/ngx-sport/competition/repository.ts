@@ -23,7 +23,7 @@ export class CompetitionRepository extends APIRepository {
     }
 
     getObject(id: number | string): Observable<Competition> {
-        return this.http.get(this.getUrl(id), { headers: super.getHeaders() }).pipe(
+        return this.http.get<JsonCompetition>(this.getUrl(id), { headers: super.getHeaders() }).pipe(
             map((json: JsonCompetition) => this.mapper.toObject(json)),
             catchError((err) => this.handleError(err))
         );

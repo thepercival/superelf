@@ -3,26 +3,6 @@ import { Sport, SportCustom, SportScoreConfig } from 'ngx-sport';
 export class TranslateService {
     static readonly language = 'nl';
 
-    getSportName(customId: number): string {
-        switch (customId) {
-            case SportCustom.Badminton: { return 'badminton'; }
-            case SportCustom.Basketball: { return 'basketbal'; }
-            case SportCustom.Darts: { return 'darten'; }
-            case SportCustom.ESports: { return 'e-sporten'; }
-            case SportCustom.Hockey: { return 'hockey'; }
-            case SportCustom.Baseball: { return 'honkbal'; }
-            case SportCustom.Korfball: { return 'korfbal'; }
-            case SportCustom.Chess: { return 'schaken'; }
-            case SportCustom.Squash: { return 'squash'; }
-            case SportCustom.TableTennis: { return 'tafeltennis'; }
-            case SportCustom.Tennis: { return 'tennis'; }
-            case SportCustom.Football: { return 'voetbal'; }
-            case SportCustom.Volleyball: { return 'volleybal'; }
-            case SportCustom.IceHockey: { return 'ijshockey'; }
-        }
-        return undefined;
-    }
-
     getScoreNameSingular(sportScoreConfig: SportScoreConfig): string {
         const customId = sportScoreConfig.getSport().getCustomId();
         if (sportScoreConfig.isFirst()) {
@@ -101,7 +81,7 @@ export class TranslateService {
             case SportScoreConfig.UPWARDS: { return 'naar'; }
             case SportScoreConfig.DOWNWARDS: { return 'vanaf'; }
         }
-        return undefined;
+        return '';
     }
 
     getFieldNameSingular(sport?: Sport): string {

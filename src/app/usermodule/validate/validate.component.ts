@@ -10,8 +10,8 @@ import { AuthComponent } from '../component';
   styleUrls: ['./validate.component.css']
 })
 export class ValidateComponent extends AuthComponent implements OnInit {
-  protected emailaddress: string;
-  protected key: string;
+  protected emailaddress: string | undefined;
+  protected key: string | undefined;
   public validated = false;
 
   constructor(
@@ -39,7 +39,9 @@ export class ValidateComponent extends AuthComponent implements OnInit {
 
   validate(): boolean {
     this.setAlert('info', 'je emailadres wordt gevalideerd');
-
+    if (this.emailaddress === undefined || this.key === undefined) {
+      return false;
+    }
     this.authService.validate(this.emailaddress, this.key)
       .subscribe(
             /* happy path */(validated) => {

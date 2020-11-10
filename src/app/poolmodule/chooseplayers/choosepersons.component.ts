@@ -15,9 +15,9 @@ import { PersonRepository } from '../../lib/ngx-sport/person/repository';
 })
 export class ChoosePersonsComponent extends PoolComponent implements OnInit {
   form: FormGroup;
-  foundPersons: Person[];
-  teamFilter: Team;
-  lineFilter: number;
+  foundPersons: Person[] | undefined;
+  teamFilter: Team | undefined;
+  lineFilter: number | undefined;
 
   constructor(
     route: ActivatedRoute,
@@ -40,6 +40,10 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit {
   }
 
   searchPersons() {
+    if (!this.pool) {
+      this.processing = false;
+      return;
+    }
     this.personRepository.getObjects(this.pool.getSourceCompetition(), this.teamFilter, this.lineFilter)
       .subscribe(
           /* happy path */(foundPersons: Person[]) => {

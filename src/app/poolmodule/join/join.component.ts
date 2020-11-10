@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { IAlert } from '../../shared/commonmodule/alert';
 import { PoolRepository } from '../../lib/pool/repository';
-import { PoolCollection } from '../../lib/pool/collection';
 import { PoolComponent } from '../../shared/poolmodule/component';
 
 
@@ -14,7 +11,7 @@ import { PoolComponent } from '../../shared/poolmodule/component';
   styleUrls: ['./join.component.scss']
 })
 export class JoinComponent extends PoolComponent implements OnInit {
-  key: string;
+  key: string | undefined;
   joined: boolean = false;
 
   constructor(
@@ -35,6 +32,10 @@ export class JoinComponent extends PoolComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.key = params['key'];
     });
+    if (!this.pool || !this.key) {
+      this.processing = false;
+      return;
+    }
     this.poolRepository.join(this.pool, this.key)
       .subscribe(
           /* happy path */() => {

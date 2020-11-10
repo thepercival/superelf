@@ -22,13 +22,13 @@ import { Competition } from 'ngx-sport';
 export class NewComponent implements OnInit {
   form: FormGroup;
   processing = true;
-  alert: IAlert;
+  alert: IAlert | undefined;
   validations: any = {
     minlengthname: PoolCollection.MIN_LENGTH_NAME,
     maxlengthname: PoolCollection.MAX_LENGTH_NAME,
   };
-  activeConfig: ActiveConfig;
-  activeSourceCompetitionShell: JsonCompetitionShell;
+  activeConfig: ActiveConfig | undefined;
+  activeSourceCompetitionShell: JsonCompetitionShell | undefined;
 
   constructor(
     private router: Router,
@@ -68,7 +68,7 @@ export class NewComponent implements OnInit {
 
   protected inCreateAndJoinPeriod(): boolean {
     const now = new Date();
-    return this.activeConfig.getCreateAndJoinPeriod().isIn(now);
+    return this.activeConfig ? this.activeConfig.getCreateAndJoinPeriod().isIn(now) : false;
   }
 
   create(): boolean {
@@ -78,21 +78,14 @@ export class NewComponent implements OnInit {
 
     const name = this.form.controls.name.value;
 
-    const jsonPool: JsonPool = {
-      collection: { association: { name } },
-      season: {
-        name: 'dummy',
-        start: (new Date()).toISOString(),
-        end: (new Date()).toISOString(),
-      },
-      competitions: [],
-      users: []
-    };
+    if (!this.activeSourceCompetitionShell) {
+      return false;
+    }
 
     this.competitionRepository.getObject(this.activeSourceCompetitionShell.id)
       .subscribe(
           /* happy path */(sourceCompetition: Competition) => {
-          this.poolRepository.createObject(jsonPool, sourceCompetition)
+          this.poolRepository.createObject(name, sourceCompetition)
             .subscribe(
               /* happy path */(pool: Pool) => {
                 this.router.navigate(['/pool', pool.getId()]);

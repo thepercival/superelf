@@ -15,36 +15,28 @@ export class HomeComponent implements OnInit, AfterViewInit {
   static readonly FUTURE: number = 1;
   static readonly PAST: number = 2;
 
-  @ViewChild('inputsearchname') private searchElementRef: ElementRef;
-
-  shellsWithRoleTillX: PoolShell[];
-  shellsWithRoleFromX: PoolShell[];
+  shellsWithRoleTillX: PoolShell[] = [];
+  shellsWithRoleFromX: PoolShell[] = [];
   shellsWithRoleX = 5;
-  linethroughDate: Date;
+  // linethroughDate: Date;
   showingAllWithRole = false;
-  publicShells: PoolShell[];
+  publicShells: PoolShell[] = [];
   showingFuture = false;
-  alert: IAlert;
+  alert: IAlert | undefined;
   processingWithRole = true;
   publicProcessing = true;
-  public firstTimeVisit;
-  private defaultHourRange: HourRange = {
-    start: -4, end: 168
-  };
-  private hourRange: HourRange;
-  searchFilterActive = false;
-  searchFilterName: string;
-  hasSearched = false;
+  public firstTimeVisit: boolean | undefined;
+  private nrOfSeasonsBack: number = 3;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private PoolShellRepos: PoolShellRepository
+    private poolShellRepos: PoolShellRepository
   ) {
     this.checkFirstTimeVisit();
-    this.linethroughDate = new Date();
-    this.linethroughDate.setHours(this.linethroughDate.getHours() + this.defaultHourRange.start);
+    // this.linethroughDate = new Date();
+    // this.linethroughDate.setHours(this.linethroughDate.getHours() + this.defaultHourRange.start);
   }
 
   ngOnInit() {
@@ -56,33 +48,27 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.disableSearchFilter();
     this.setShellsWithRole();
   }
 
-  onSearchChanges(): void {
-    this.changeSearchFilterName(this.searchElementRef.nativeElement.value);
-  }
-
   setShellsWithRole() {
-    this.shellsWithRoleTillX = [];
-    this.shellsWithRoleFromX = [];
-
     if (!this.authService.isLoggedIn()) {
       this.processingWithRole = false;
       return;
     }
 
     const filter = { roles: Role.COMPETITOR + Role.ADMIN };
-    this.PoolShellRepos.getObjects(filter)
+    this.poolShellRepos.getObjects(filter)
       .subscribe(
           /* happy path */ myShells => {
           this.sortShellsByDateDesc(myShells);
           while (myShells.length > 0) {
             if (this.shellsWithRoleTillX.length < this.shellsWithRoleX) {
-              this.shellsWithRoleTillX.push(myShells.shift());
+              const myShell = myShells.shift();
+              myShell ? this.shellsWithRoleTillX.push(myShell) : undefined;
             } else {
-              this.shellsWithRoleFromX.push(myShells.shift());
+              const myShell = myShells.shift();
+              myShell ? this.shellsWithRoleFromX.push(myShell) : undefined;
             }
           }
           this.processingWithRole = false;
@@ -96,7 +82,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   addToPublicShells(pastFuture: number, hoursToAdd: number) {
     this.publicProcessing = true;
     const searchFilter = this.extendHourRange(pastFuture, hoursToAdd);
-    this.PoolShellRepos.getObjects(searchFilter)
+    this.poolShellRepos.getObjects(searchFilter)
       .subscribe(
           /* happy path */(shellsRes: PoolShell[]) => {
           this.sortShellsByDateAsc(shellsRes);
@@ -154,66 +140,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/pool', shell.poolId]);
   }
 
-  enableSearchFilter() {
-    this.searchFilterActive = true;
-    setTimeout(() => { // this will make the execution after the above boolean has changed
-      this.searchElementRef.nativeElement.scrollIntoView(true);
-      this.searchElementRef.nativeElement.focus();
-    }, 0);
-    this.publicShells = [];
-  }
-
-
-  disableSearchFilter() {
-    this.searchFilterActive = false;
-    this.publicShells = [];
-    this.hourRange = { start: this.defaultHourRange.start, end: this.defaultHourRange.start };
-    // this.searchForm.controls.filterName.setValue(undefined);
-    this.addToPublicShells(HomeComponent.FUTURE, this.defaultHourRange.end - this.defaultHourRange.start);
-  }
-
-  expandPastDays() {
-    const pastHoursToAdd = this.hourRange.start === this.defaultHourRange.start
-      ? this.defaultHourRange.start + this.defaultHourRange.end : -this.hourRange.start;
-    this.addToPublicShells(HomeComponent.PAST, pastHoursToAdd);
-  }
-
   private extendHourRange(pastFuture: number, hoursToAdd: number): PoolShellFilter {
     const startDate = new Date(), endDate = new Date();
-    if (pastFuture === HomeComponent.PAST) {
-      endDate.setHours(endDate.getHours() + this.hourRange.start);
-      this.hourRange.start -= hoursToAdd;
-      startDate.setHours(startDate.getHours() + this.hourRange.start);
-    } else if (pastFuture === HomeComponent.FUTURE) {
-      startDate.setHours(startDate.getHours() + this.hourRange.end);
-      this.hourRange.end += hoursToAdd;
-      endDate.setHours(endDate.getHours() + this.hourRange.end);
-    }
     return this.getSearchFilter(startDate, endDate, undefined);
   }
 
-  private getSearchFilter(startDate: Date, endDate: Date, name: string): PoolShellFilter {
+  private getSearchFilter(startDate: Date, endDate: Date, name: string | undefined): PoolShellFilter {
     return { startDate: startDate, endDate: endDate, name: name };
   }
-
-  changeSearchFilterName(searchFilterName: string) {
-    if (searchFilterName === undefined || searchFilterName.length < 2) {
-      return;
-    }
-    this.publicProcessing = true;
-    const searchFilter = this.getSearchFilter(undefined, undefined, searchFilterName);
-    this.PoolShellRepos.getObjects(searchFilter)
-      .subscribe(
-        /* happy path */(shellsRes: PoolShell[]) => {
-          this.publicShells = shellsRes;
-          this.publicProcessing = false;
-        },
-      /* error path */ e => { this.setAlert('danger', e); this.publicProcessing = false; }
-      );
-  }
-}
-
-interface HourRange {
-  start: number;
-  end: number;
 }

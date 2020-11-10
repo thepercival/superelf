@@ -23,7 +23,7 @@ export class ActiveConfigRepository extends APIRepository {
     }
 
     getObject(): Observable<ActiveConfig> {
-        return this.http.get(this.url, { headers: super.getHeaders() }).pipe(
+        return this.http.get<JsonActiveConfig>(this.url, { headers: super.getHeaders() }).pipe(
             map((jsonActiveConfig: JsonActiveConfig) => this.mapper.toObject(jsonActiveConfig)),
             catchError((err) => this.handleError(err))
         );

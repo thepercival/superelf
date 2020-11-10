@@ -20,6 +20,7 @@
     "build-bundle-report": "ng build --prod --stats-json"
   },
   "private": true,
+  "sideEffects": false,
   "dependencies": {
     "@angular/common": "^10.2.0",
     "@angular/compiler": "^10.2.0",

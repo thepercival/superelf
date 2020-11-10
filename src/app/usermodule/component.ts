@@ -2,7 +2,7 @@ import { IAlert } from '../shared/commonmodule/alert';
 import { AuthService } from '../lib/auth/auth.service';
 
 export class AuthComponent {
-    public alert: IAlert;
+    public alert: IAlert | undefined;
     public processing = true;
 
     constructor(

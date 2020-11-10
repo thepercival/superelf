@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
-import { Season } from 'ngx-sport';
+import { Association, Season } from 'ngx-sport';
 import { ScoutedPersonMapper } from './mapper';
 import { ScoutedPerson } from '../scoutedPerson';
 import { Pool } from '../pool';
@@ -22,10 +22,10 @@ export class ScoutedPersonRepository extends APIRepository {
         return super.getApiUrl() + 'scoutedpersons/' + (season ? 'seasons/' + season.getId() : '');
     }
 
-    getObjects(pool: Pool): Observable<ScoutedPerson[]> {
-        return this.http.get(this.getUrl(pool.getSeason()), this.getOptions()).pipe(
+    getObjects(pool: Pool, association: Association): Observable<ScoutedPerson[]> {
+        return this.http.get<JsonScoutedPerson[]>(this.getUrl(pool.getSeason()), this.getOptions()).pipe(
             map((jsonScoutedPersons: JsonScoutedPerson[]) => jsonScoutedPersons.map(jsonScoutedPerson => {
-                return this.mapper.toObject(jsonScoutedPerson, pool.getAssociation());
+                return this.mapper.toObject(jsonScoutedPerson, association);
             })),
             catchError((err) => this.handleError(err))
         );

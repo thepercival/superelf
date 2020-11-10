@@ -1,6 +1,6 @@
 import { JsonAssociation } from 'ngx-sport';
 
 export interface JsonPoolCollection {
-    id?: number;
+    id: number;
     association: JsonAssociation;
 }

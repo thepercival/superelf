@@ -9,12 +9,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
     styleUrls: ['./namemodal.component.scss']
 })
 export class NameModalComponent implements OnInit {
-    @Input() header: string;
-    @Input() range: VoetbalRange;
-    @Input() initialName: string;
-    @Input() labelName: string;
-    @Input() buttonName: string;
-    @Input() buttonOutline: boolean;
+    @Input() header: string | undefined;
+    @Input() range: VoetbalRange | undefined;
+    @Input() initialName: string | undefined;
+    @Input() labelName: string | undefined;
+    @Input() buttonName: string | undefined;
+    @Input() buttonOutline: boolean | undefined;
     form: FormGroup;
 
     constructor(public activeModal: NgbActiveModal, private fb: FormBuilder) {
@@ -24,11 +24,15 @@ export class NameModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.form.get('name').setValidators(
+        const range = this.range ? this.range : undefined;
+        if (range === undefined) {
+            return;
+        }
+        this.form.controls.name.setValidators(
             Validators.compose([
                 Validators.required,
-                Validators.minLength(this.range.min),
-                Validators.maxLength(this.range.max)
+                Validators.minLength(range.min),
+                Validators.maxLength(range.max)
             ]));
         this.form.controls.name.setValue(this.initialName);
     }

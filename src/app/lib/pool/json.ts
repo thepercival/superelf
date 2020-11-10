@@ -6,13 +6,13 @@ import { JsonPoolScoreUnit } from './scoreUnit/json';
 import { JsonPoolUser } from './user/json';
 
 export interface JsonPool {
-    id?: number;
-    formations?: JsonFormation[];
+    id: number;
+    formations: JsonFormation[];
     collection: JsonPoolCollection;
     season: JsonSeason;
     competitions: JsonCompetition[];
-    sourceCompetitionId?: number;
+    sourceCompetitionId: number;
     users: JsonPoolUser[];
-    scoreUnits?: JsonPoolScoreUnit[];
-    periods?: JsonPoolPeriod[];
+    scoreUnits: JsonPoolScoreUnit[];
+    periods: JsonPoolPeriod[];
 }

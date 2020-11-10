@@ -16,7 +16,7 @@ import { ScoutedPerson } from '../../lib/scoutedPerson';
 })
 export class ScoutingComponent extends PoolComponent implements OnInit {
   form: FormGroup;
-  scoutedPersons: ScoutedPerson[];
+  scoutedPersons: ScoutedPerson[] = [];
 
   constructor(
     route: ActivatedRoute,
@@ -39,7 +39,12 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
   }
 
   initScoutedPersons() {
-    this.scoutedPersonRepository.getObjects(this.pool)
+    const association = this.pool?.getAssociation();
+    if (!this.pool || !association) {
+      this.processing = false;
+      return;
+    }
+    this.scoutedPersonRepository.getObjects(this.pool, association)
       .subscribe(
           /* happy path */(scoutedPersons: ScoutedPerson[]) => {
           this.scoutedPersons = scoutedPersons;

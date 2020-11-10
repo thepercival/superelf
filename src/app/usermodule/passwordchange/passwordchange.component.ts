@@ -23,7 +23,7 @@ export class PasswordchangeComponent extends AuthComponent implements OnInit {
     minlengthpassword: User.MIN_LENGTH_PASSWORD,
     maxlengthpassword: User.MAX_LENGTH_PASSWORD
   };
-  private emailaddress;
+  private emailaddress: string | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -54,7 +54,8 @@ export class PasswordchangeComponent extends AuthComponent implements OnInit {
 
   ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
-      this.emailaddress = params.get('emailaddress');
+      const emailaddress = params.get('emailaddress');
+      this.emailaddress = emailaddress !== null ? emailaddress : undefined;
     });
     this.processing = false;
   }
@@ -70,6 +71,9 @@ export class PasswordchangeComponent extends AuthComponent implements OnInit {
     const code = this.form.controls.code.value;
     const password = this.form.controls.password.value;
 
+    if (!this.emailaddress) {
+      return false;
+    }
     // this.activationmessage = undefined;
     this.authService.passwordChange(this.emailaddress, password, code)
       .subscribe(

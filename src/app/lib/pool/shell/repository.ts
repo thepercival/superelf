@@ -7,8 +7,6 @@ import { APIRepository } from '../../repository';
 @Injectable()
 export class PoolShellRepository extends APIRepository {
 
-    private url: string;
-
     constructor(
         private http: HttpClient) {
         super();
@@ -27,7 +25,7 @@ export class PoolShellRepository extends APIRepository {
             headers: super.getHeaders(),
             params: this.getHttpParams(filter)
         };
-        const withRole: boolean = filter ? filter.roles > 0 : false;
+        const withRole: boolean = filter?.roles ? filter.roles > 0 : false;
         return this.http.get<PoolShell[]>(this.getUrl(withRole), options).pipe(
             catchError((err) => this.handleError(err))
         );

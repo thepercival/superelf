@@ -41,6 +41,10 @@ export class InviteComponent extends PoolComponent implements OnInit {
   }
 
   initUrl() {
+    if (!this.pool) {
+      this.processing = false;
+      return;
+    }
     this.poolRepository.getJoinUrl(this.pool)
       .subscribe(
           /* happy path */(joinUrl: string) => {

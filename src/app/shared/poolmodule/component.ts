@@ -7,9 +7,9 @@ import { PoolRepository } from '../../lib/pool/repository';
 
 export class PoolComponent {
 
-    public pool: Pool;
-    public structure: Structure;
-    public alert: IAlert;
+    public pool: Pool | undefined;
+    public structure: Structure | undefined;
+    public alert: IAlert | undefined;
     public processing = true;
 
     constructor(

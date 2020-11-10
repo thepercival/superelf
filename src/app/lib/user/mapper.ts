@@ -4,7 +4,7 @@ import { User } from '../user';
 
 @Injectable()
 export class UserMapper {
-    protected static users = {};
+    protected static users: UserMap = {};
     constructor() { }
 
     toObject(json: JsonUser): User {
@@ -33,4 +33,8 @@ export interface JsonUser {
     id: number;
     emailaddress?: string;
     name?: string;
+}
+
+interface UserMap {
+    [key: number]: User;
 }

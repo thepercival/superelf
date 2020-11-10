@@ -5,8 +5,8 @@ import { filter, pairwise } from 'rxjs/operators';
 
 @Injectable()
 export class MyNavigation {
-    private previousUrl: string;
-    scrollPosition: [number, number];
+    private previousUrl: string | undefined;
+    scrollPosition: [number, number] = [0, 0];
 
     constructor(
         private router: Router,
@@ -23,10 +23,11 @@ export class MyNavigation {
             filter(e => e instanceof Scroll)
         ).subscribe(e => {
             if ((e as Scroll).position) {
-                this.scrollPosition = (e as Scroll).position;
-            } else {
+                const scrollPosition = (e as Scroll).position;
+                this.scrollPosition = scrollPosition ? scrollPosition : [0, 0]
+            } /*else {
                 this.scrollPosition = [0, 0];
-            }
+            }*/
         });
     }
 
@@ -47,9 +48,7 @@ export class MyNavigation {
 
     // ngAfterViewInit() {
     public scroll() {
-        if (this.scrollPosition) {
-            this.viewportScroller.scrollToPosition(this.scrollPosition);
-        }
+        this.viewportScroller.scrollToPosition(this.scrollPosition);
     }
 
     public updateScrollPosition() {

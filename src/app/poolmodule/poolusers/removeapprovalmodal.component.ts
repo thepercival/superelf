@@ -8,7 +8,7 @@ import { PoolUser } from '../../lib/pool/user';
     styleUrls: ['./removeapprovalmodal.component.scss']
 })
 export class PoolUserRemoveApprovalModalComponent implements OnInit {
-    @Input() poolUser: PoolUser;
+    @Input() poolUser: PoolUser | undefined;
 
     constructor(public modal: NgbActiveModal) {
     }

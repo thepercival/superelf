@@ -30,8 +30,8 @@ export class RulesComponent extends PoolComponent implements OnInit {
     });
   }
 
-  getFormationNames(): string {
-    return this.pool.getFormations().map(formation => formation.getName()).join(", ");
+  getFormationNames(): string | undefined {
+    return this.pool?.getFormations().map(formation => formation.getName()).join(", ");
   }
 
   getLineDefs(): number[] {
@@ -39,7 +39,9 @@ export class RulesComponent extends PoolComponent implements OnInit {
   }
 
   getPoolScoreUnits(formationLineDef: number): PoolScoreUnit[] {
-    console.log(formationLineDef, this.pool.getScoreUnits(formationLineDef));
+    if (!this.pool) {
+      return [];
+    }
     return this.pool.getScoreUnits(formationLineDef);
   }
 }

@@ -40,7 +40,9 @@ export class HomeComponent extends PoolComponent implements OnInit {
     }
 
     isAdmin(): boolean {
-        return this.pool.getUser(this.authService.getUser())?.getAdmin();
+        const user = this.authService.getUser();
+        const poolUser = user ? this.pool?.getUser(user) : undefined;
+        return poolUser ? poolUser.getAdmin() : false;
     }
 
     allUsersHaveCompletedTeamChoice(): boolean {

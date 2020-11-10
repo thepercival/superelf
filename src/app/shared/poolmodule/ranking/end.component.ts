@@ -9,11 +9,11 @@ import { VoetbalRange } from 'ngx-sport';
 })
 export class EndRankingComponent implements OnInit, OnChanges {
 
-  @Input() structure: Structure;
-  @Input() favorites: Competitor[];
-  @Input() range: VoetbalRange;
+  @Input() structure: Structure | undefined;
+  @Input() favorites: Competitor[] | undefined;
+  @Input() range: VoetbalRange | undefined;
 
-  public items: EndRankingItem[];
+  public items: EndRankingItem[] | undefined;
 
   constructor() {
   }
@@ -33,10 +33,14 @@ export class EndRankingComponent implements OnInit, OnChanges {
   }
 
   protected updateItems() {
+    if (!this.structure) {
+      return;
+    }
     const endRankingService = new EndRankingService(this.structure, RankingService.RULESSET_WC);
     this.items = endRankingService.getItems();
-    if (this.range !== undefined) {
-      this.items = this.items.filter(item => item.getUniqueRank() >= this.range.min && item.getUniqueRank() <= this.range.max);
+    const range = this.range ? this.range : undefined;
+    if (range !== undefined) {
+      this.items = this.items.filter(item => item.getUniqueRank() >= range.min && item.getUniqueRank() <= range.max);
     }
   }
 

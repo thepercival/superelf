@@ -14,13 +14,7 @@ export class PoolCompetitorMapper {
             competitor = new PoolCompetitor(poolUser, competition, json.pouleNr, json.placeNr);
         }
         competitor.setId(json.id);
-        this.updateObject(json, competitor);
         return competitor;
-    }
-
-    updateObject(json: JsonPoolCompetitor, competitor: PoolCompetitor) {
-        competitor.setRegistered(json.registered);
-        competitor.setInfo(json.info);
     }
 
     toJson(competitor: PoolCompetitor): JsonPoolCompetitor {

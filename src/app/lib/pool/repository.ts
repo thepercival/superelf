@@ -34,7 +34,7 @@ export class PoolRepository extends APIRepository {
 
     getObject(id: number): Observable<Pool> {
         const url = super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix() + '/' + id;
-        return this.http.get(url, { headers: super.getHeaders() }).pipe(
+        return this.http.get<JsonPool>(url, { headers: super.getHeaders() }).pipe(
             map((jsonPool: JsonPool) => {
                 return this.getObjectHelper(jsonPool, this.competitionRepository.getObject(jsonPool.sourceCompetitionId));
                 // let pool;
@@ -57,8 +57,9 @@ export class PoolRepository extends APIRepository {
         );
     }
 
-    createObject(json: JsonPool, sourceCompetition: Competition): Observable<Pool> {
-        return this.http.post(this.url + '/' + sourceCompetition.getId(), json, { headers: super.getHeaders() }).pipe(
+    createObject(name: string, sourceCompetition: Competition): Observable<Pool> {
+        const json = { name, sourceCompetitionId: sourceCompetition.getId() };
+        return this.http.post<JsonPool>(this.url, json, { headers: super.getHeaders() }).pipe(
             map((jsonPool: JsonPool) => this.mapper.toObject(jsonPool, sourceCompetition)),
             catchError((err) => this.handleError(err))
         );

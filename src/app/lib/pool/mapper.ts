@@ -27,10 +27,12 @@ export class PoolMapper {
         json.competitions.forEach(jsonCompetition => {
             pool.getCompetitions().push(this.competitionMapper.toObject(jsonCompetition));
         });
-        const defaultSport = pool.getCompetition().getSportConfig().getSport();
-        json.formations.forEach(jsonFormation => {
-            pool.getFormations().push(this.formationMapper.toObject(jsonFormation, defaultSport));
-        });
+        const defaultSport = pool.getCompetition()?.getSportConfig().getSport();
+        if (defaultSport) {
+            json.formations.forEach(jsonFormation => {
+                pool.getFormations().push(this.formationMapper.toObject(jsonFormation, defaultSport));
+            });
+        }
         json.periods.forEach(jsonPoolPeriod => {
             this.poolPeriodMapper.toObject(jsonPoolPeriod, pool);
         });
@@ -44,14 +46,14 @@ export class PoolMapper {
         return pool;
     }
 
-    toJson(pool: Pool): JsonPool {
-        return {
-            id: pool.getId(),
-            collection: this.collectionMapper.toJson(pool.getCollection()),
-            season: this.seasonMapper.toJson(pool.getSeason()),
-            competitions: pool.getCompetitions().map(competition => this.competitionMapper.toJson(competition)),
-            formations: pool.getFormations().map(formation => this.formationMapper.toJson(formation)),
-            users: pool.getUsers().map(poolUser => this.poolUserMapper.toJson(poolUser)),
-        };
-    }
+    // toJson(pool: Pool): JsonPool {
+    //     return {
+    //         id: pool.getId(),
+    //         collection: this.collectionMapper.toJson(pool.getCollection()),
+    //         season: this.seasonMapper.toJson(pool.getSeason()),
+    //         competitions: pool.getCompetitions().map(competition => this.competitionMapper.toJson(competition)),
+    //         formations: pool.getFormations().map(formation => this.formationMapper.toJson(formation)),
+    //         users: pool.getUsers().map(poolUser => this.poolUserMapper.toJson(poolUser)),
+    //     };
+    // }
 }
