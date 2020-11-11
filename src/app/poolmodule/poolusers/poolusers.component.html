@@ -1,5 +1,4 @@
-<app-pool-title [pool]="pool">
-</app-pool-title>
+<app-title *ngIf="pool" [title]="pool.getName()"></app-title>
 
 <h2>
   <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
@@ -12,7 +11,7 @@
 <ngb-alert *ngIf="alert" [type]="alert.type">
   {{ alert.message }}</ngb-alert>
 
-<table *ngIf="!processing" class="table">
+<table *ngIf="!processing && pool" class="table">
   <thead>
     <tr>
       <th>naam</th>

@@ -7,12 +7,12 @@ import { RankingService } from 'ngx-sport';
     styleUrls: ['./rankingrules.component.scss']
 })
 export class RankingRulesComponent {
-    @Input() ruleSet: number;
+    @Input() ruleSet: number = RankingService.RULESSET_WC;
 
     constructor() { }
 
     getDescription(): string[] {
-        const rankingService = new RankingService(undefined, this.ruleSet);
+        const rankingService = new RankingService(this.ruleSet);
         return rankingService.getRuleDescriptions();
     }
 }

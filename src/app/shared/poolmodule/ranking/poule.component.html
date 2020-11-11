@@ -1,4 +1,4 @@
-<div *ngIf="poule" class="card border-1">
+<div *ngIf="poule && nameService" class="card border-1">
     <div *ngIf="header" class="card-header">
         {{nameService.getPouleName(poule, true)}}
     </div>
@@ -26,15 +26,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <ng-template ngFor let-rankingItem [ngForOf]="rankingItems">
+                    <!-- <ng-template ngFor let-rankingItem let-place="rankingItem.getPlace()" [ngForOf]="rankingItems">
                         <tr>
                             <td class="rankingnr text-right pl-0">
                                 <span
                                     class="badge badge-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
                             </td>
-                            <td class="place pl-0"
-                                [ngClass]="{ 'current-user': isCurrentUser(rankingItem.getPlace()) }">
-                                {{nameService.getPlaceFromName(rankingItem.getPlace(), true)}}
+                            <td class="place pl-0" [ngClass]="{ 'current-user': isCurrentUser(place) }">
+                                <span *ngIf="place"></span>{{nameService.getPlaceFromName(place, true, true)}}
                             </td>
                             <td class="text-right pl-0">{{rankingItem.getUnranked().getGames()}}</td>
                             <td class="text-right pl-0">{{rankingItem.getUnranked().getPoints()}}</td>
@@ -49,7 +48,7 @@
                                     {{rankingItem.getUnranked().getSubReceived()}} )</div>
                             </td>
                         </tr>
-                    </ng-template>
+                    </ng-template> -->
                 </tbody>
             </table>
         </div>

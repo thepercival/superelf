@@ -5,9 +5,12 @@ import { HorizontalPoule, Place, QualifyGroup, Round } from 'ngx-sport';
 export class CSSService {
     getQualifyPlace(place: Place): string {
         const horizontalPouleWinners = place.getHorizontalPoule(QualifyGroup.WINNERS);
-        const qualifyGroupWinners: QualifyGroup = horizontalPouleWinners.getQualifyGroup();
         const horizontalPouleLosers = place.getHorizontalPoule(QualifyGroup.LOSERS);
-        const qualifyGroupLosers: QualifyGroup = horizontalPouleLosers.getQualifyGroup();
+        if (!horizontalPouleWinners || !horizontalPouleLosers) {
+            return '';
+        }
+        const qualifyGroupWinners: QualifyGroup | undefined = horizontalPouleWinners.getQualifyGroup();
+        const qualifyGroupLosers: QualifyGroup | undefined = horizontalPouleLosers.getQualifyGroup();
         if (!qualifyGroupWinners && !qualifyGroupLosers) {
             return '';
         }
@@ -48,7 +51,7 @@ export class CSSService {
     }
 
     getQualifyRound(round: Round, noQualifyClass: string = ''): string {
-        const qualifyGroup: QualifyGroup = round.getParentQualifyGroup();
+        const qualifyGroup: QualifyGroup | undefined = round.getParentQualifyGroup();
         if (qualifyGroup === undefined) {
             return noQualifyClass;
         }

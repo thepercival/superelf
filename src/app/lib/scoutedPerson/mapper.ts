@@ -9,9 +9,7 @@ export class ScoutedPersonMapper {
     constructor(protected personMapper: PersonMapper) { }
 
     toObject(json: JsonScoutedPerson, association: Association): ScoutedPerson {
-        const scoutedPerson = new ScoutedPerson(this.personMapper.toObject(json.person, association), json.nrOfStars);
-
-        return scoutedPerson;
+        return new ScoutedPerson(this.personMapper.toObject(json.person, association, undefined), json.nrOfStars);
     }
 
     toJson(scoreUnit: ScoreUnit): number {

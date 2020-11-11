@@ -1,5 +1,4 @@
-<app-pool-title [pool]="pool">
-</app-pool-title>
+<app-title *ngIf="pool" [title]="pool.getName()"></app-title>
 
 <h2>
   <fa-icon [icon]="['fas', 'envelope']"></fa-icon> uitnodigen

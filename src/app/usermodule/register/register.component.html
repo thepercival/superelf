@@ -1,14 +1,6 @@
-<div class="d-flex justify-content-between mb-4">
-  <h1>
-    <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> registreren
-  </h1>
-  <div class="ml-3 mr-1">
-    <button [routerLink]="['']" type="button" class="btn btn-dark">
-      <fa-icon [icon]="['fas', 'level-up-alt']" rotate="270"></fa-icon>
-      <span class="ml-1 d-none d-md-inline"> terug</span>
-    </button>
-  </div>
-</div>
+<app-user-title title="registreren" icon="user-circle">
+</app-user-title>
+
 <h2 *ngIf="processing" class="text-center">
   <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </h2>

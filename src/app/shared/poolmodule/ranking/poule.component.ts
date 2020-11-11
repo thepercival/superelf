@@ -40,7 +40,7 @@ export class PouleRankingComponent implements OnInit {
 
   useSubScore(): boolean {
     return this.poule ? this.poule.getRound().getNumber().getValidSportScoreConfigs().some(sportScoreConfig => {
-      return sportScoreConfig.useSubScore();
+      return sportScoreConfig?.useSubScore();
     }) : false;
   }
 

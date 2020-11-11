@@ -1,5 +1,4 @@
-<app-pool-title [pool]="pool">
-</app-pool-title>
+<app-title *ngIf="pool" [title]="pool.getName()"></app-title>
 
 <h2>
   <fa-icon [icon]="['fas', 'envelope']"></fa-icon> inschrijven
@@ -13,6 +12,6 @@
   {{ alert.message }}</ngb-alert>
 
 
-<button *ngIf="!joined" [routerLink]="['/pool', pool.getId()]" type="button" class="btn btn-primary btn-block">
+<button *ngIf="!joined && pool" [routerLink]="['/pool', pool.getId()]" type="button" class="btn btn-primary btn-block">
   ga naar de pool
 </button>

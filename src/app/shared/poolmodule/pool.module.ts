@@ -7,7 +7,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { EndRankingComponent } from './ranking/end.component';
 import { PouleRankingComponent } from './ranking/poule.component';
-import { TitleComponent } from './title/title.component';
 import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule, NgbModalConfig, NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CommonSharedModule } from '../commonmodule/common.module';
 import { NameModalComponent } from './namemodal/namemodal.component';
@@ -21,7 +20,6 @@ import { facStructure, facReferee, facScoreboard } from './icons';
     NameModalComponent,
     EndRankingComponent,
     PouleRankingComponent,
-    TitleComponent,
     RankingRulesComponent
   ],
   imports: [
@@ -39,7 +37,6 @@ import { facStructure, facReferee, facScoreboard } from './icons';
     NameModalComponent,
     EndRankingComponent,
     PouleRankingComponent,
-    TitleComponent,
     RankingRulesComponent,
     NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
     NgbNavModule

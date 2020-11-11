@@ -13,7 +13,8 @@ import {
   faCheckCircle,
   faTrashAlt,
   faInfoCircle,
-  faSearch
+  faSearch,
+  faPlusCircle
 } from '@fortawesome/free-solid-svg-icons';
 import {
   CompetitionMapper,
@@ -27,7 +28,6 @@ import {
   RoundNumberMapper,
   SportConfigMapper,
   SportConfigService,
-  PlanningConfigService,
   SportScoreConfigMapper,
   SportScoreConfigService,
   StructureMapper,
@@ -71,6 +71,7 @@ import { PersonRepository } from '../lib/ngx-sport/person/repository';
 import { ActiveConfigRepository } from '../lib/activeConfig/repository';
 import { ActiveConfigMapper } from '../lib/activeConfig/mapper';
 import { CompetitionRepository } from '../lib/ngx-sport/competition/repository';
+import { PlayerRepository } from '../lib/ngx-sport/player/repository';
 
 @NgModule({
   imports: [
@@ -106,7 +107,6 @@ import { CompetitionRepository } from '../lib/ngx-sport/competition/repository';
     GameScoreMapper,
     LeagueMapper,
     PlaceMapper,
-    PlanningConfigService,
     PlanningMapper,
     PlanningConfigMapper,
     PouleMapper,
@@ -132,6 +132,7 @@ import { CompetitionRepository } from '../lib/ngx-sport/competition/repository';
     ScoutedPersonRepository,
     ScoutedPersonMapper,
     PersonRepository,
+    PlayerRepository,
     ActiveConfigRepository,
     ActiveConfigMapper,
     CompetitionRepository,
@@ -142,7 +143,7 @@ export class PoolModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
       faListOl, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
-      , faInfoCircle, faSearch/*faMoneyBillAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
+      , faInfoCircle, faSearch, faPlusCircle/*faMoneyBillAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
       , faMedal, , faQrcode, faCopy, faDotCircle, faSync*/
     );

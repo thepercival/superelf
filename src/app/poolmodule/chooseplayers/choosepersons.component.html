@@ -1,5 +1,4 @@
-<app-pool-title [pool]="pool">
-</app-pool-title>
+<app-title *ngIf="pool" [title]="pool.getName()"></app-title>
 
 <h2>
   <fa-icon [icon]="['fas', 'users']"></fa-icon> spelers kiezen
@@ -15,20 +14,25 @@
 
 <div>combobox met clubs en 1 met linies</div>
 
-<table *ngIf="!processing && foundPersons" class="table">
+<table *ngIf="!processing && foundPlayers" class="table">
   <tbody>
-    <tr>
+    <tr *ngFor="let player of foundPlayers">
       <td>
-        Linie 1 letter
+        {{player.getLine()}}
       </td>
-      <td class="text-center">
-        Voorletter + Achternaam
+      <td>
+        {{player.getPerson().getName()}}
       </td>
-      <td class="text-center">
-        logo + clubnaam(afkorting op xs)
+      <td>
+        HEE
       </td>
       <td class="text-right">
-        knop "verplaats naar team", wanneer in chooseplayersperiod
+        PP
+      </td>
+      <td class="text-right">
+        <button type="button" class="btn btn-secondary btn-sm">
+          <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+        </button>
       </td>
     </tr>
   </tbody>

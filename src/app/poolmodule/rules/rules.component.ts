@@ -7,7 +7,6 @@ import { PoolRepository } from '../../lib/pool/repository';
 import { PoolScoreUnit } from '../../lib/pool/scoreUnit';
 import { PoolComponent } from '../../shared/poolmodule/component';
 
-
 @Component({
   selector: 'app-pool-rules',
   templateUrl: './rules.component.html',

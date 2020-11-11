@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Competition } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, concatMap, map } from 'rxjs/operators';
 import { CompetitionRepository } from '../ngx-sport/competition/repository';
 
 import { Pool } from '../pool';
@@ -35,17 +35,8 @@ export class PoolRepository extends APIRepository {
     getObject(id: number): Observable<Pool> {
         const url = super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix() + '/' + id;
         return this.http.get<JsonPool>(url, { headers: super.getHeaders() }).pipe(
-            map((jsonPool: JsonPool) => {
+            concatMap((jsonPool: JsonPool) => {
                 return this.getObjectHelper(jsonPool, this.competitionRepository.getObject(jsonPool.sourceCompetitionId));
-                // let pool;
-                // this.competitionRepository.getObject(jsonPool.sourceCompetitionId)
-                //     .subscribe(
-                //             /* happy path */(sourceCompetition: Competition) => {
-                //             pool = this.mapper.toObject(jsonPool, sourceCompetition);
-                //         },
-                //     );
-                // return pool;
-
             }),
             catchError((err) => this.handleError(err))
         );

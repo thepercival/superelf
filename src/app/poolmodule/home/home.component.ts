@@ -9,6 +9,7 @@ import { TranslateService } from '../../lib/translate';
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolPeriod } from '../../lib/pool/period';
 import { ScoutedPerson } from '../../lib/scoutedPerson';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-pool-public',
@@ -35,7 +36,11 @@ export class HomeComponent extends PoolComponent implements OnInit {
     }
 
     postNgOnInit() {
-
+        const obs2 = new Observable(function (observer) {
+            observer.next('Observables on');
+            observer.next('Node.js');
+            observer.complete();
+        });
         this.processing = false;
     }
 

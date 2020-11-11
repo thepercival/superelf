@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { AuthService } from '../../../lib/auth/auth.service';
+import { User } from '../../../lib/user';
 
 @Component({
   selector: 'app-nav',
@@ -9,9 +10,9 @@ import { AuthService } from '../../../lib/auth/auth.service';
 })
 export class NavComponent implements OnInit {
 
-  @Input()
-  title: string;
+  @Input() title: string = '';
   navbarCollapsed = true;
+  user: User | undefined
 
   constructor(
     public authService: AuthService,
@@ -20,5 +21,6 @@ export class NavComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.user = this.authService.getUser();
   }
 }

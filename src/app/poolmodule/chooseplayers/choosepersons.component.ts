@@ -4,8 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { Person, Team } from 'ngx-sport';
+import { Person, Player, Team } from 'ngx-sport';
 import { PersonRepository } from '../../lib/ngx-sport/person/repository';
+import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { PersonRepository } from '../../lib/ngx-sport/person/repository';
 })
 export class ChoosePersonsComponent extends PoolComponent implements OnInit {
   form: FormGroup;
-  foundPersons: Person[] | undefined;
+  foundPlayers: Player[] | undefined;
   teamFilter: Team | undefined;
   lineFilter: number | undefined;
 
@@ -23,7 +24,7 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit {
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
-    protected personRepository: PersonRepository,
+    protected playerRepository: PlayerRepository,
     fb: FormBuilder
   ) {
     super(route, router, poolRepository);
@@ -44,10 +45,10 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit {
       this.processing = false;
       return;
     }
-    this.personRepository.getObjects(this.pool.getSourceCompetition(), this.teamFilter, this.lineFilter)
+    this.playerRepository.getObjects(this.pool.getSourceCompetition(), this.teamFilter, this.lineFilter)
       .subscribe(
-          /* happy path */(foundPersons: Person[]) => {
-          this.foundPersons = foundPersons;
+          /* happy path */(foundPlayers: Player[]) => {
+          this.foundPlayers = foundPlayers;
 
         },
         /* error path */(e: string) => {
@@ -55,7 +56,5 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit {
         },
         /* onComplete */() => { this.processing = false }
       );
-
-
   }
 }

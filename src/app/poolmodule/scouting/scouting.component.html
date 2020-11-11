@@ -1,5 +1,4 @@
-<app-pool-title [pool]="pool">
-</app-pool-title>
+<app-title *ngIf="pool" [title]="pool.getName()"></app-title>
 
 <h2>
   <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
@@ -12,7 +11,7 @@
 <ngb-alert *ngIf="alert" [type]="alert.type">
   {{ alert.message }}</ngb-alert>
 
-<button *ngIf="!processing" [routerLink]="['/pool/choosepersons', pool.getId()]" type="button"
+<button *ngIf="!processing && pool" [routerLink]="['/pool/choosepersons', pool.getId()]" type="button"
   class="btn btn-secondary btn-block">
   <fa-icon [icon]="['fas', 'search']"></fa-icon> spelers zoeken
 </button>

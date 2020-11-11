@@ -14,6 +14,7 @@ import { ValidateComponent } from './validate/validate.component';
 import { UserRoutingModule } from './user-routing.module';
 import { ProfileComponent } from './profile/profile.component';
 import { UserRepository } from '../lib/user/repository';
+import { UserTitleComponent } from './title/title.component';
 
 @NgModule({
   imports: [
@@ -30,8 +31,13 @@ import { UserRepository } from '../lib/user/repository';
     ValidateComponent,
     PasswordresetComponent,
     PasswordchangeComponent,
-    ProfileComponent],
-  providers: [UserRepository]
+    ProfileComponent,
+    UserTitleComponent
+  ],
+  providers: [UserRepository],
+  exports: [
+    UserTitleComponent
+  ]
 })
 export class UserModule {
   constructor(library: FaIconLibrary, alertConfig: NgbAlertConfig) {

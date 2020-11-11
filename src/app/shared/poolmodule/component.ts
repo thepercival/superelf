@@ -29,6 +29,7 @@ export class PoolComponent {
         this.poolRepository.getObject(poolId)
             .subscribe(
                 /* happy path */(pool: Pool) => {
+                    console.log(pool);
                     this.pool = pool;
                     if (callback !== undefined) {
                         callback();

@@ -5,6 +5,9 @@ export class TranslateService {
 
     getScoreNameSingular(sportScoreConfig: SportScoreConfig): string {
         const customId = sportScoreConfig.getSport().getCustomId();
+        if (!customId) {
+            return '';
+        }
         if (sportScoreConfig.isFirst()) {
             return this.getFirstScoreNameSingular(customId);
         } else if (sportScoreConfig.isLast()) {
@@ -41,6 +44,9 @@ export class TranslateService {
 
     getScoreNamePlural(sportScoreConfig: SportScoreConfig): string {
         const customId = sportScoreConfig.getSport().getCustomId();
+        if (!customId) {
+            return '';
+        }
         if (sportScoreConfig.isFirst()) {
             return this.getFirstScoreNamePlural(customId);
         } else if (sportScoreConfig.isLast()) {
