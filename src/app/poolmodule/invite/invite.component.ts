@@ -6,6 +6,7 @@ import { IAlert } from '../../shared/commonmodule/alert';
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolCollection } from '../../lib/pool/collection';
 import { PoolComponent } from '../../shared/poolmodule/component';
+import { Pool } from '../../lib/pool';
 
 
 @Component({
@@ -34,18 +35,15 @@ export class InviteComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.parentNgOnInit(() => {
+    super.parentNgOnInit().subscribe((pool: Pool) => {
+      this.pool = pool;
       this.setAlert('info', 'gebruik de link om mensen uit te nodigen');
-      this.initUrl();
+      this.initUrl(pool);
     });
   }
 
-  initUrl() {
-    if (!this.pool) {
-      this.processing = false;
-      return;
-    }
-    this.poolRepository.getJoinUrl(this.pool)
+  initUrl(pool: Pool) {
+    this.poolRepository.getJoinUrl(pool)
       .subscribe(
           /* happy path */(joinUrl: string) => {
           this.form.controls.url.setValue(joinUrl);
@@ -57,8 +55,6 @@ export class InviteComponent extends PoolComponent implements OnInit {
         },
         /* onComplete */() => { this.processing = false }
       );
-
-
   }
 
   showCopiedToClipboard() {

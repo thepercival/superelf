@@ -70,6 +70,9 @@ td > .btn.btn-sm, th > .btn.btn-sm {
   padding-top: 0px;
   padding-bottom: 0px;
 }
+table.no-border-top {
+  tr:first-child>td { border-top:0; }
+}
 
 input.is-valid, textarea.is-valid {
     border-left: 5px solid #{$success};

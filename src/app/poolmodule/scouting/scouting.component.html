@@ -1,8 +1,13 @@
 <app-title *ngIf="pool" [title]="pool.getName()"></app-title>
 
-<h2>
-  <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
-</h2>
+<div *ngIf="!processing && pool" class="d-flex flex-wrap justify-content-between">
+  <h2 class="mr-2">
+    <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
+  </h2>
+  <button [routerLink]="['/pool/choosepersons', pool.getId()]" type="button" class="btn btn-secondary">
+    <fa-icon [icon]="['fas', 'search']"></fa-icon> zoeken
+  </button>
+</div>
 
 <h2 *ngIf="processing" class="text-center">
   <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -11,28 +16,39 @@
 <ngb-alert *ngIf="alert" [type]="alert.type">
   {{ alert.message }}</ngb-alert>
 
-<button *ngIf="!processing && pool" [routerLink]="['/pool/choosepersons', pool.getId()]" type="button"
-  class="btn btn-secondary btn-block">
-  <fa-icon [icon]="['fas', 'search']"></fa-icon> spelers zoeken
-</button>
-
-<div>4 buttons met de linies</div>
-
-<table *ngIf="!processing && scoutedPersons" class="table">
+<table *ngIf="!processing && scoutedPersons" class="table no-border-top mt-2">
   <tbody>
-    <tr>
+    <tr *ngFor="let scoutedPerson of scoutedPersons">
+      <!-- <ng-template let-player="scoutedPerson.getPlayer()"> -->
       <td>
-        Linie 1 letter
+        pbak
+      </td>
+      <td>
+        {{scoutedPerson.getPerson().getPlayer()?.getLine()}}
       </td>
       <td class="text-center">
-        Voorletter + Achternaam
+        {{scoutedPerson.getPerson().getName()}}
       </td>
       <td class="text-center">
-        logo + clubnaam(afkorting op xs)
+        {{scoutedPerson.getPerson().getPlayer()?.getTeam()?.getName()}}
       </td>
-      <td class="text-right">
-        knop "verplaats naar team", wanneer in chooseplayersperiod
+      <td *ngIf="pool?.inChoosePlayersPeriod()" class="text-right">
+        <button (click)="copyToTeam(scoutedPerson.getPerson())" type="button" class="btn btn-secondary">
+          plaats in team
+        </button>
       </td>
+      <!-- </ng-template> -->
     </tr>
   </tbody>
 </table>
+
+<!-- <div class="pr-5">
+  <ng-container *ngTemplateOutlet="pouleRanking;context:{$implicit: screen.getFirstPoule()}">
+  </ng-container>
+</div>
+
+<ng-template #pouleRanking let-poule>
+  <table *ngIf="poule" class="table liveboard">
+   
+  </table>
+</ng-template> -->

@@ -7,6 +7,8 @@ import { PoolCollection } from '../../lib/pool/collection';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
 import { ScoutedPerson } from '../../lib/scoutedPerson';
+import { Pool } from '../../lib/pool';
+import { Person } from 'ngx-sport';
 
 
 @Component({
@@ -33,18 +35,14 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.parentNgOnInit(() => {
-      this.initScoutedPersons();
+    super.parentNgOnInit().subscribe((pool: Pool) => {
+      this.pool = pool;
+      this.initScoutedPersons(pool);
     });
   }
 
-  initScoutedPersons() {
-    const association = this.pool?.getAssociation();
-    if (!this.pool || !association) {
-      this.processing = false;
-      return;
-    }
-    this.scoutedPersonRepository.getObjects(this.pool, association)
+  initScoutedPersons(pool: Pool) {
+    this.scoutedPersonRepository.getObjects(pool.getSourceCompetition())
       .subscribe(
           /* happy path */(scoutedPersons: ScoutedPerson[]) => {
           this.scoutedPersons = scoutedPersons;
@@ -59,7 +57,7 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
 
   }
 
-  showCopiedToClipboard() {
-    this.setAlert('success', 'de link is gekopieerd naar het klembord');
+  copyToTeam(person: Person) {
+
   }
 }

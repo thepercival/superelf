@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Pool } from '../../lib/pool';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
@@ -23,20 +24,21 @@ export class JoinComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.parentNgOnInit(() => {
-      this.join();
+    super.parentNgOnInit().subscribe((pool: Pool) => {
+      this.pool = pool;
+      this.join(pool);
     });
   }
 
-  protected join() {
+  protected join(pool: Pool) {
     this.route.params.subscribe(params => {
       this.key = params['key'];
     });
-    if (!this.pool || !this.key) {
+    if (!this.key) {
       this.processing = false;
       return;
     }
-    this.poolRepository.join(this.pool, this.key)
+    this.poolRepository.join(pool, this.key)
       .subscribe(
           /* happy path */() => {
           this.joined = true;

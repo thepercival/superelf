@@ -23,7 +23,7 @@ export class PlayerRepository extends APIRepository {
         return super.getApiUrl() + this.getUrlpostfix();
     }
 
-    getObjects(sourceCompetition: Competition, team?: Team, line?: number): Observable<(Player)[]> {
+    getObjects(sourceCompetition: Competition, team: Team | undefined, line: number | undefined): Observable<(Player)[]> {
         const jsonFilter = {
             start: sourceCompetition.getSeason().getStartDateTime().toISOString(),
             end: sourceCompetition.getSeason().getEndDateTime().toISOString(),

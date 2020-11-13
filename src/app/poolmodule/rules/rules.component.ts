@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormationLineDef } from 'ngx-sport';
 import { SuperElfNameService } from '../../lib/nameservice';
+import { Pool } from '../../lib/pool';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolScoreUnit } from '../../lib/pool/scoreUnit';
@@ -24,7 +25,8 @@ export class RulesComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.parentNgOnInit(() => {
+    super.parentNgOnInit().subscribe((pool: Pool) => {
+      this.pool = pool;
       this.processing = false;
     });
   }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt, faMedal, faSpinner,
@@ -29,7 +29,7 @@ import { facStructure, facReferee, facScoreboard } from './icons';
     CommonSharedModule,
     RouterModule,
     NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
-    NgbNavModule
+    NgbNavModule,
   ],
   providers: [
   ],
@@ -39,7 +39,7 @@ import { facStructure, facReferee, facScoreboard } from './icons';
     PouleRankingComponent,
     RankingRulesComponent,
     NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
-    NgbNavModule
+    NgbNavModule,
   ]
 })
 export class PoolSharedModule {

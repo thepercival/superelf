@@ -11,7 +11,7 @@ import { AuthUserGuardService } from '../lib/auth/guard/userguard.service';
 import { PoolUsersComponent } from './poolusers/poolusers.component';
 import { InviteComponent } from './invite/invite.component';
 import { ScoutingComponent } from './scouting/scouting.component';
-import { ChoosePersonsComponent } from './chooseplayers/choosepersons.component';
+import { ChoosePersonsComponent } from './choosepersons/choosepersons.component';
 
 const routes: Routes = [
   { path: 'prenew', component: PreNewComponent },

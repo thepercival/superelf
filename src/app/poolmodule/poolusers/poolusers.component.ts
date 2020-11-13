@@ -8,6 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PoolUserRemoveApprovalModalComponent } from './removeapprovalmodal.component';
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
+import { Pool } from '../../lib/pool';
 
 
 @Component({
@@ -29,7 +30,8 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.parentNgOnInit(() => {
+    super.parentNgOnInit().subscribe((pool: Pool) => {
+      this.pool = pool;
       this.processing = false;
     });
   }

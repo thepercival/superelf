@@ -10,6 +10,7 @@ import { PoolRepository } from '../../lib/pool/repository';
 import { PoolPeriod } from '../../lib/pool/period';
 import { ScoutedPerson } from '../../lib/scoutedPerson';
 import { Observable } from 'rxjs';
+import { Pool } from '../../lib/pool';
 
 @Component({
     selector: 'app-pool-public',
@@ -32,15 +33,13 @@ export class HomeComponent extends PoolComponent implements OnInit {
     }
 
     ngOnInit() {
-        super.parentNgOnInit(() => this.postNgOnInit());
+        super.parentNgOnInit().subscribe((pool: Pool) => {
+            this.pool = pool;
+            this.postNgOnInit();
+        });
     }
 
     postNgOnInit() {
-        const obs2 = new Observable(function (observer) {
-            observer.next('Observables on');
-            observer.next('Node.js');
-            observer.complete();
-        });
         this.processing = false;
     }
 

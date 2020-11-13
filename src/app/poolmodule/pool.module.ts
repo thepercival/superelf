@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { ClipboardModule } from 'ngx-clipboard';
@@ -66,12 +66,14 @@ import { InviteComponent } from './invite/invite.component';
 import { ScoutingComponent } from './scouting/scouting.component';
 import { ScoutedPersonRepository } from '../lib/scoutedPerson/repository';
 import { ScoutedPersonMapper } from '../lib/scoutedPerson/mapper';
-import { ChoosePersonsComponent } from './chooseplayers/choosepersons.component';
 import { PersonRepository } from '../lib/ngx-sport/person/repository';
 import { ActiveConfigRepository } from '../lib/activeConfig/repository';
 import { ActiveConfigMapper } from '../lib/activeConfig/mapper';
 import { CompetitionRepository } from '../lib/ngx-sport/competition/repository';
 import { PlayerRepository } from '../lib/ngx-sport/player/repository';
+import { ChoosePersonsComponent } from './choosepersons/choosepersons.component';
+import { ConfirmPersonChoiceModalComponent } from './choosepersons/confirmpersonchoicemodal.component';
+import { PersonComponent } from './person/person.component';
 
 @NgModule({
   imports: [
@@ -79,9 +81,9 @@ import { PlayerRepository } from '../lib/ngx-sport/player/repository';
     RoutingModule,
     ReactiveFormsModule,
     FontAwesomeModule,
-    CommonSharedModule,
     PoolSharedModule,
-    ClipboardModule
+    CommonSharedModule,
+    ClipboardModule,
   ],
   declarations: [
     PreNewComponent,
@@ -92,9 +94,11 @@ import { PlayerRepository } from '../lib/ngx-sport/player/repository';
     PoolUsersComponent,
     RulesComponent,
     ScoutingComponent,
-    ChoosePersonsComponent
+    ChoosePersonsComponent,
+    PersonComponent,
+    ConfirmPersonChoiceModalComponent,
+    PoolUserRemoveApprovalModalComponent
   ],
-  entryComponents: [PoolUserRemoveApprovalModalComponent],
   providers: [
     AssociationMapper,
     CompetitionMapper,
