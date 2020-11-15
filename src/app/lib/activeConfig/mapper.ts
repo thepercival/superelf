@@ -13,19 +13,19 @@ export class ActiveConfigMapper {
     toObject(json: JsonActiveConfig): ActiveConfig {
         const activeConfig = new ActiveConfig(
             new Period(new Date(json.createAndJoinStart), new Date(json.createAndJoinEnd)),
-            new Period(new Date(json.joinAndChoosePlayersStart), new Date(json.createAndJoinEnd)),
+            json.availableFormations,
             json.sourceCompetitions
         );
         return activeConfig;
     }
 
-    toJson(activeConfig: ActiveConfig): JsonActiveConfig {
-        return {
-            createAndJoinStart: activeConfig.getCreateAndJoinPeriod().getStartDateTime().toISOString(),
-            createAndJoinEnd: activeConfig.getCreateAndJoinPeriod().getEndDateTime().toISOString(),
-            joinAndChoosePlayersStart: activeConfig.getJoinAndChoosePlayersPeriod().getStartDateTime().toISOString(),
-            joinAndChoosePlayersEnd: activeConfig.getJoinAndChoosePlayersPeriod().getEndDateTime().toISOString(),
-            sourceCompetitions: activeConfig.getCompetitions()
-        };
-    }
+    // toJson(activeConfig: ActiveConfig): JsonActiveConfig {
+    //     return {
+    //         createAndJoinStart: activeConfig.getCreateAndJoinPeriod().getStartDateTime().toISOString(),
+    //         createAndJoinEnd: activeConfig.getCreateAndJoinPeriod().getEndDateTime().toISOString(),
+    //         joinAndAssembleStart: activeConfig.getJoinAndAssemblePeriod().getStartDateTime().toISOString(),
+    //         joinAndAssembleEnd: activeConfig.getJoinAndAssemblePeriod().getEndDateTime().toISOString(),
+    //         sourceCompetitions: activeConfig.getCompetitions()
+    //     };
+    // }
 }

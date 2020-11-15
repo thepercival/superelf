@@ -1,4 +1,4 @@
-import { FormationLineDef, Team } from 'ngx-sport';
+import { SportCustom } from 'ngx-sport';
 
 export class ScoreUnit {
 
@@ -34,19 +34,19 @@ export class ScoreUnit {
             case ScoreUnit.Assist_Goalkeeper:
             case ScoreUnit.Sheet_Clean_Goalkeeper:
             case ScoreUnit.Sheet_Spotty_Goalkeeper:
-                return FormationLineDef.Goalkeeper;
+                return SportCustom.Football_Line_GoalKepeer;
             case ScoreUnit.Goal_Defender:
             case ScoreUnit.Assist_Defender:
             case ScoreUnit.Sheet_Clean_Defender:
             case ScoreUnit.Sheet_Spotty_Defender:
-                return FormationLineDef.Defense;
+                return SportCustom.Football_Line_Defense;
             case ScoreUnit.Goal_Midfielder:
             case ScoreUnit.Assist_Midfielder:
-                return FormationLineDef.Midfield;
+                return SportCustom.Football_Line_Midfield;
             case ScoreUnit.Goal_Forward:
             case ScoreUnit.Assist_Forward:
-                return FormationLineDef.Forward;
+                return SportCustom.Football_Line_Forward;
         }
-        return FormationLineDef.All;
+        return SportCustom.Football_Line_All;
     }
 }

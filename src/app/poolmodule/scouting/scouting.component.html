@@ -16,12 +16,14 @@
 <ngb-alert *ngIf="alert" [type]="alert.type">
   {{ alert.message }}</ngb-alert>
 
-<table *ngIf="!processing && scoutedPersons" class="table no-border-top mt-2">
+<table *ngIf="!processing && pool && scoutedPersons" class="table no-border-top mt-2">
   <tbody>
     <tr *ngFor="let scoutedPerson of scoutedPersons">
       <!-- <ng-template let-player="scoutedPerson.getPlayer()"> -->
       <td>
-        pbak
+        <button type="button" class="btn btn-sm btn-danger" (click)="openRemoveApprovalModal(scoutedPerson, pool)">
+          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+        </button>
       </td>
       <td>
         {{scoutedPerson.getPerson().getPlayer()?.getLine()}}
@@ -32,7 +34,7 @@
       <td class="text-center">
         {{scoutedPerson.getPerson().getPlayer()?.getTeam()?.getName()}}
       </td>
-      <td *ngIf="pool?.inChoosePlayersPeriod()" class="text-right">
+      <td *ngIf="pool.getAssemblePeriod().isIn()" class="text-right">
         <button (click)="copyToTeam(scoutedPerson.getPerson())" type="button" class="btn btn-secondary">
           plaats in team
         </button>

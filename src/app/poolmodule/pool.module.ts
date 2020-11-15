@@ -38,8 +38,6 @@ import {
   LeagueMapper,
   FieldMapper,
   AssociationMapper,
-  FormationLineMapper,
-  FormationMapper
 } from 'ngx-sport';
 
 import { CSSService } from '../shared/commonmodule/cssservice';
@@ -54,14 +52,13 @@ import { NewComponent } from './new/new.component';
 import { PoolCollectionMapper } from '../lib/pool/collection/mapper';
 import { ScoreUnitMapper } from '../lib/scoreUnit/mapper';
 import { PoolScoreUnitMapper } from '../lib/pool/scoreUnit/mapper';
-import { PoolPeriodMapper } from '../lib/pool/period/mapper';
 import { RulesComponent } from './rules/rules.component';
 import { JoinComponent } from './join/join.component';
 import { PoolUserMapper } from '../lib/pool/user/mapper';
 import { PoolCompetitorMapper } from '../lib/pool/competitor/mapper';
 import { PoolUsersComponent } from './poolusers/poolusers.component';
 import { PoolUserRepository } from '../lib/pool/user/repository';
-import { PoolUserRemoveApprovalModalComponent } from './poolusers/removeapprovalmodal.component';
+import { RemoveApprovalModalComponent } from './removeapproval/removeapprovalmodal.component';
 import { InviteComponent } from './invite/invite.component';
 import { ScoutingComponent } from './scouting/scouting.component';
 import { ScoutedPersonRepository } from '../lib/scoutedPerson/repository';
@@ -74,6 +71,11 @@ import { PlayerRepository } from '../lib/ngx-sport/player/repository';
 import { ChoosePersonsComponent } from './choosepersons/choosepersons.component';
 import { ConfirmPersonChoiceModalComponent } from './choosepersons/confirmpersonchoicemodal.component';
 import { PersonComponent } from './person/person.component';
+import { PoolEditPeriodMapper } from '../lib/pool/period/edit/mapper';
+import { PoolViewPeriodMapper } from '../lib/pool/period/view/mapper';
+import { AssembleComponent } from './assemble/assemble.component';
+import { FormationMapper } from '../lib/formation/mapper';
+import { FormationLineMapper } from '../lib/formation/line/mapper';
 
 @NgModule({
   imports: [
@@ -96,8 +98,9 @@ import { PersonComponent } from './person/person.component';
     ScoutingComponent,
     ChoosePersonsComponent,
     PersonComponent,
+    AssembleComponent,
     ConfirmPersonChoiceModalComponent,
-    PoolUserRemoveApprovalModalComponent
+    RemoveApprovalModalComponent
   ],
   providers: [
     AssociationMapper,
@@ -127,7 +130,6 @@ import { PersonComponent } from './person/person.component';
     PoolRepository,
     PoolMapper,
     PoolCollectionMapper,
-    PoolPeriodMapper,
     PoolScoreUnitMapper,
     PoolUserRepository,
     PoolUserMapper,
@@ -140,7 +142,9 @@ import { PersonComponent } from './person/person.component';
     ActiveConfigRepository,
     ActiveConfigMapper,
     CompetitionRepository,
-    CompetitionMapper
+    CompetitionMapper,
+    PoolEditPeriodMapper,
+    PoolViewPeriodMapper
   ]
 })
 export class PoolModule {

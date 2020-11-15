@@ -12,9 +12,9 @@
     <div class="card-body">
       <h5 class="card-title">teambeheer</h5>
       <p class="card-text">Het samenstellen van je team kan van
-        {{pool.getChoosePlayersPeriod()?.getStartDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12': false,'hour':'2-digit','minute':'2-digit'})}}
+        {{pool.getAssemblePeriod()?.getStartDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12': false,'hour':'2-digit','minute':'2-digit'})}}
         tot
-        {{pool.getChoosePlayersPeriod()?.getEndDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12': false,'hour':'2-digit','minute':'2-digit'})}}.
+        {{pool.getAssemblePeriod()?.getEndDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12': false,'hour':'2-digit','minute':'2-digit'})}}.
         <br />De transferperiode is van
         {{pool.getTransferPeriod()?.getStartDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12': false,'hour':'2-digit','minute':'2-digit'})}}
         tot

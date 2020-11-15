@@ -1,4 +1,4 @@
-import { FormationLineDef } from 'ngx-sport';
+import { SportCustom } from 'ngx-sport';
 import { ScoreUnit } from './scoreUnit';
 
 
@@ -7,13 +7,13 @@ export class SuperElfNameService {
     }
 
     getLineName(lineDef: number): string {
-        if (lineDef === FormationLineDef.Goalkeeper) {
+        if (lineDef === SportCustom.Football_Line_GoalKepeer) {
             return 'keeper';
-        } else if (lineDef === FormationLineDef.Defense) {
+        } else if (lineDef === SportCustom.Football_Line_Defense) {
             return 'verdediging';
-        } else if (lineDef === FormationLineDef.Midfield) {
+        } else if (lineDef === SportCustom.Football_Line_Midfield) {
             return 'middenveld';
-        } else if (lineDef === FormationLineDef.Forward) {
+        } else if (lineDef === SportCustom.Football_Line_Forward) {
             return 'aanval';
         }
         return 'alle linies';

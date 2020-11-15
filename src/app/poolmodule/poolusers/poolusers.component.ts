@@ -5,7 +5,7 @@ import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { PoolUserRemoveApprovalModalComponent } from './removeapprovalmodal.component';
+import { RemoveApprovalModalComponent } from '../removeapproval/removeapprovalmodal.component';
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { Pool } from '../../lib/pool';
@@ -37,8 +37,9 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
   }
 
   openRemoveApprovalModal(poolUser: PoolUser) {
-    const modalRef = this.modalService.open(PoolUserRemoveApprovalModalComponent);
-    modalRef.componentInstance.poolUser = poolUser;
+    const modalRef = this.modalService.open(RemoveApprovalModalComponent);
+    modalRef.componentInstance.entittyName = 'deelnemer';
+    modalRef.componentInstance.name = poolUser.getName();
     modalRef.result.then((result) => {
       this.remove(poolUser);
     }, (reason) => {

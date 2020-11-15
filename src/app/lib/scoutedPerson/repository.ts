@@ -35,11 +35,19 @@ export class ScoutedPersonRepository extends APIRepository {
     createObject(person: Person, sourceCompetition: Competition): Observable<ScoutedPerson> {
         const association = sourceCompetition.getLeague().getAssociation();
         const json: JsonScoutedPerson = {
+            id: 0,
             person: this.personMapper.toJson(person),
             nrOfStars: 0
         };
         return this.http.post<JsonScoutedPerson>(this.getUrl(sourceCompetition), json, { headers: super.getHeaders() }).pipe(
             map((jsonScoutedPerson: JsonScoutedPerson) => this.mapper.toObject(jsonScoutedPerson, association)),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    removeObject(scoutedPerson: ScoutedPerson, sourceCompetition: Competition): Observable<void> {
+        const url = this.getUrl(sourceCompetition) + '/' + scoutedPerson.getId();
+        return this.http.delete(url, this.getOptions()).pipe(
             catchError((err) => this.handleError(err))
         );
     }

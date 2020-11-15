@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { NameService, Person, Player, SportCustom, Team } from 'ngx-sport';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
-import { ConfirmPersonChoiceModalComponent } from './confirmpersonchoicemodal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
-import { forkJoin, Observable } from 'rxjs';
 import { ScoutedPerson } from '../../lib/scoutedPerson';
 import { Pool } from '../../lib/pool';
 import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
+import { ConfirmPersonChoiceModalComponent } from '../choosepersons/confirmpersonchoicemodal.component';
 
 
 @Component({
@@ -20,7 +19,7 @@ import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
   templateUrl: './choosepersons.component.html',
   styleUrls: ['./choosepersons.component.scss']
 })
-export class ChoosePersonsComponent extends PoolComponent implements OnInit {
+export class TeamComponent extends PoolComponent implements OnInit {
   form: FormGroup;
   foundPlayers: Player[] | undefined;
   searchTeams: Team[] = [];

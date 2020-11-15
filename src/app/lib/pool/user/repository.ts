@@ -6,12 +6,18 @@ import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
 import { Pool } from '../../pool';
 import { PoolUser } from '../user';
+import { AuthService } from '../../auth/auth.service';
+import { JsonPoolUser } from './json';
+import { PoolUserMapper } from './mapper';
+import { User } from '../../user';
 
 @Injectable()
 export class PoolUserRepository extends APIRepository {
 
     constructor(
-        private http: HttpClient) {
+        private mapper: PoolUserMapper,
+        private http: HttpClient,
+        private authService: AuthService,) {
         super();
     }
 
@@ -19,21 +25,31 @@ export class PoolUserRepository extends APIRepository {
         return 'users';
     }
 
+    getUrl(pool: Pool, user?: User): string {
+        return super.getApiUrl() + 'pools/' + pool.getId() + '/' + this.getUrlpostfix() + (user ? '/' + user.getId() : '');
+    }
 
-    getUrl(pool: Pool): string {
-        return super.getApiUrl() + 'pools/' + pool.getId() + '/' + this.getUrlpostfix();
+    getObject(pool: Pool): Observable<PoolUser> {
+        const user = this.authService.getUser();
+        return this.http.get<JsonPoolUser>(this.getUrl(pool, user), this.getOptions()).pipe(
+            map((jsonPoolUser: JsonPoolUser) => this.mapper.toObject(jsonPoolUser, pool)),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    getObjects(pool: Pool): Observable<PoolUser[]> {
+        return this.http.get<JsonPoolUser[]>(this.getUrl(pool), this.getOptions()).pipe(
+            map((jsonPoolUsers: JsonPoolUser[]) => jsonPoolUsers.map(jsonPoolUser => {
+                return this.mapper.toObject(jsonPoolUser, pool);
+            })),
+            catchError((err) => this.handleError(err))
+        );
     }
 
     removeObject(poolUser: PoolUser): Observable<void> {
         const pool = poolUser.getPool();
         const url = this.getUrl(pool) + '/' + poolUser.getId();
         return this.http.delete(url, this.getOptions()).pipe(
-            map(() => {
-                const index = pool.getUsers().indexOf(poolUser);
-                if (index > -1) {
-                    pool.getUsers().splice(index, 1);
-                }
-            }),
             catchError((err) => this.handleError(err))
         );
     }

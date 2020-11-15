@@ -1,16 +1,16 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Structure, StructureService } from 'ngx-sport';
 
 import { IAlert } from '../commonmodule/alert';
 import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
 import { Observable } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
+import { PoolUser } from '../../lib/pool/user';
 
 export class PoolComponent {
 
     public pool: Pool | undefined;
-    public structure: Structure | undefined;
+    public poolUser: PoolUser | undefined;
     public alert: IAlert | undefined;
     public processing = true;
 
@@ -36,10 +36,4 @@ export class PoolComponent {
     protected resetAlert(): void {
         this.alert = undefined;
     }
-
-    protected getStructureService(): StructureService {
-        return new StructureService(Pool.PlaceRanges);
-    }
 }
-
-type DataProcessCallBack = () => void;

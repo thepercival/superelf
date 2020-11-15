@@ -15,10 +15,10 @@
   <thead>
     <tr>
       <th>naam</th>
-      <th *ngIf="pool.beforeTransferPeriod()" class="text-center">
+      <th *ngIf="pool.transferPeriodNotStarted()" class="text-center">
         gekozen spelers
       </th>
-      <th *ngIf="pool.inTransferPeriod()" class="text-center">
+      <th *ngIf="pool.getTransferPeriod().isIn()" class="text-center">
         transfers
       </th>
       <th></th>
@@ -29,15 +29,15 @@
       <td>
         {{poolUser.getName()}}
       </td>
-      <td *ngIf="pool.beforeTransferPeriod()" class="text-center">
+      <td *ngIf="pool.transferPeriodNotStarted()" class="text-center">
         0/15 success/warning
       </td>
-      <td *ngIf="pool.inTransferPeriod()" class="text-center">
+      <td *ngIf="pool.getTransferPeriod().isIn()" class="text-center">
         0/2
       </td>
       <td class="text-right">
-        <button *ngIf="!poolUser.getAdmin() && pool.beforeTransferPeriod()" type="button" class="btn btn-sm btn-danger"
-          [disabled]="processing" (click)="openRemoveApprovalModal(poolUser)">
+        <button *ngIf="!poolUser.getAdmin() && pool.transferPeriodNotStarted()" type="button"
+          class="btn btn-sm btn-danger" [disabled]="processing" (click)="openRemoveApprovalModal(poolUser)">
           <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
         </button>
       </td>

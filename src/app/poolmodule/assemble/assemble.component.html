@@ -1,0 +1,49 @@
+<app-title *ngIf="pool" [title]="pool.getName()"></app-title>
+
+<h2>
+  <fa-icon [icon]="['fas', 'users']"></fa-icon> spelers kiezen
+</h2>
+
+<h2 *ngIf="processing" class="text-center">
+  <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</h2>
+
+<ngb-alert *ngIf="alert" [type]="alert.type">
+  {{ alert.message }}</ngb-alert>
+
+<form *ngIf="!processing && availableFormations" name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
+  <div class="d-flex justify-content-around">
+    <select class="form-control mr-1" formControlName="formation" (change)="searchPersons(pool)">
+      <option [ngValue]="undefined" selected>
+        kies formatie
+      </option>
+      <option *ngFor="let formation of availableFormations" [ngValue]="team">{{formation.name}}</option>
+    </select>
+  </div>
+</form>
+
+<!-- <table *ngIf="!processing && pool && foundPlayers" class="table">
+  <tbody>
+    <tr *ngFor="let player of foundPlayers">
+      <td>
+        {{player.getLine()}}
+      </td>
+      <td>
+        {{player.getPerson().getName()}}
+
+      </td>
+      <td>
+        {{player.getTeam().getAbbreviation()}}
+      </td>
+      <td class="text-right">
+        PP
+      </td>
+      <td class="text-right">
+        <button *ngIf=!inScoutingList(player.getPerson()) type="button" class="btn btn-secondary btn-sm"
+          (click)="addToScoutingList(player.getPerson(), pool)">
+          <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table> -->

@@ -8,7 +8,9 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
 import { ScoutedPerson } from '../../lib/scoutedPerson';
 import { Pool } from '../../lib/pool';
-import { Person } from 'ngx-sport';
+import { Competition, Person } from 'ngx-sport';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RemoveApprovalModalComponent } from '../removeapproval/removeapprovalmodal.component';
 
 
 @Component({
@@ -25,7 +27,8 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
     router: Router,
     poolRepository: PoolRepository,
     protected scoutedPersonRepository: ScoutedPersonRepository,
-    fb: FormBuilder
+    fb: FormBuilder,
+    private modalService: NgbModal
   ) {
     super(route, router, poolRepository);
     this.form = fb.group({
@@ -53,8 +56,29 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
         },
         /* onComplete */() => { this.processing = false }
       );
+  }
 
+  openRemoveApprovalModal(scoutedPerson: ScoutedPerson, pool: Pool) {
+    const modalRef = this.modalService.open(RemoveApprovalModalComponent);
+    modalRef.componentInstance.entittyName = 'gescoute speler';
+    modalRef.componentInstance.name = scoutedPerson.getPerson().getName();
+    modalRef.result.then((result) => {
+      this.remove(scoutedPerson, pool.getSourceCompetition());
+    }, (reason) => {
+    });
+  }
 
+  remove(scoutedPerson: ScoutedPerson, sourceCompetition: Competition) {
+    this.processing = true;
+    this.scoutedPersonRepository.removeObject(scoutedPerson, sourceCompetition)
+      .subscribe(
+            /* happy path */() => {
+          this.scoutedPersons.splice(this.scoutedPersons.indexOf(scoutedPerson), 1);
+          this.setAlert('success', '"' + scoutedPerson.getPerson().getName() + '" verwijderd');
+        },
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* on complete */() => this.processing = false
+      );
   }
 
   copyToTeam(person: Person) {

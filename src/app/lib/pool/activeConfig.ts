@@ -1,11 +1,11 @@
 import { Period } from 'ngx-sport';
-import { JsonCompetitionShell } from '../activeConfig/json';
+import { JsonCompetitionShell, JsonFormationShell } from '../activeConfig/json';
 
 export class ActiveConfig {
 
     constructor(
         protected createAndJoinPeriod: Period,
-        protected joinAndChoosePlayersPeriod: Period,
+        protected availableFormations: JsonFormationShell[],
         protected sourceCompetitions: JsonCompetitionShell[]) {
     }
 
@@ -13,8 +13,8 @@ export class ActiveConfig {
         return this.createAndJoinPeriod;
     }
 
-    public getJoinAndChoosePlayersPeriod(): Period {
-        return this.joinAndChoosePlayersPeriod;
+    public getAvailableFormations(): JsonFormationShell[] {
+        return this.availableFormations;
     }
 
     public getCompetitions(): JsonCompetitionShell[] {
