@@ -23,17 +23,17 @@
       </h5>
       <p class="card-text">
         <span *ngIf="pool.getCreateAndJoinPeriod().isIn()">
-          {{pool.getUsers().length}} deelnemer(s) ingeschreven
+          {{poolUsers.length}} deelnemer(s) ingeschreven
         </span>
-        <span *ngIf="pool.getAssemblePeriod().isIn() && allUsersHaveCompletedTeamChoice()">
+        <span *ngIf="pool.getAssemblePeriod().isIn() && allPoolUsersHaveAssembled()">
           <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> iedereen heeft zijn team
           samengesteld
         </span>
-        <span *ngIf="pool.getAssemblePeriod().isIn() && !allUsersHaveCompletedTeamChoice()">
+        <span *ngIf="pool.getAssemblePeriod().isIn() && !allPoolUsersHaveAssembled()">
           <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> niet iedereen heeft zijn team
           samengesteld
         </span>
-        <span *ngIf="pool.getTransferPeriod().isIn() && allPoolUsersHaveAssembled()">
+        <span *ngIf="pool.getTransferPeriod().isIn() && allPoolUsersHaveTransfered()">
           <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> iedereen heeft zijn
           transfers gedaan
         </span>
@@ -58,14 +58,14 @@
     </div>
   </div>
   <div *ngIf="pool.getAssemblePeriod().isIn()" class="card border-secondary pointer mt-3 mx-2"
-    [routerLink]="['/pool/assembleteam', pool.getId()]">
+    [routerLink]="['/pool/assemble', pool.getId()]">
     <div class="card-body">
       <h5 class="card-title">
         <fa-icon [icon]="['fas', 'users']"></fa-icon> team samenstellen
       </h5>
       <p class="card-text">
         <span>
-          {{scoutedPersons.length}} speler(s) gekozen
+          {{poolUser?.getNrOfAssembled()}} speler(s) gekozen
         </span>
       </p>
     </div>
@@ -76,7 +76,7 @@
         <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> spelregels
       </h5>
       <p class="card-text">
-        <span *ngIf="pool.getCreateAndJoinPeriod().isIn()">
+        <span>
           uitleg over transferperiode, teamsamenstelling, etc.
         </span>
       </p>

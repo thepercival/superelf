@@ -1,6 +1,7 @@
 import { JsonCompetition } from 'ngx-sport';
 import { JsonPoolCollection } from './collection/json';
-import { JsonPoolEditPeriod } from './period/edit/json';
+import { JsonPoolAssemblePeriod } from './period/assemble/json';
+import { JsonPoolTransferPeriod } from './period/transfer/json';
 import { JsonPoolScoreUnit } from './scoreUnit/json';
 
 export interface JsonPool {
@@ -9,6 +10,6 @@ export interface JsonPool {
     competitions: JsonCompetition[];
     sourceCompetitionId: number;
     scoreUnits: JsonPoolScoreUnit[];
-    assemblePeriod: JsonPoolEditPeriod;
-    transferPeriod: JsonPoolEditPeriod;
+    assemblePeriod: JsonPoolAssemblePeriod;
+    transferPeriod: JsonPoolTransferPeriod;
 }

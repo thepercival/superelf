@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { ClipboardModule } from 'ngx-clipboard';
@@ -71,11 +71,13 @@ import { PlayerRepository } from '../lib/ngx-sport/player/repository';
 import { ChoosePersonsComponent } from './choosepersons/choosepersons.component';
 import { ConfirmPersonChoiceModalComponent } from './choosepersons/confirmpersonchoicemodal.component';
 import { PersonComponent } from './person/person.component';
-import { PoolEditPeriodMapper } from '../lib/pool/period/edit/mapper';
 import { PoolViewPeriodMapper } from '../lib/pool/period/view/mapper';
 import { AssembleComponent } from './assemble/assemble.component';
 import { FormationMapper } from '../lib/formation/mapper';
 import { FormationLineMapper } from '../lib/formation/line/mapper';
+import { PoolAssemblePeriodMapper } from '../lib/pool/period/assemble/mapper';
+import { PoolTransferPeriodMapper } from '../lib/pool/period/transfer/mapper';
+import { EditActionMapper } from '../lib/editAction/mapper';
 
 @NgModule({
   imports: [
@@ -143,8 +145,10 @@ import { FormationLineMapper } from '../lib/formation/line/mapper';
     ActiveConfigMapper,
     CompetitionRepository,
     CompetitionMapper,
-    PoolEditPeriodMapper,
-    PoolViewPeriodMapper
+    PoolAssemblePeriodMapper,
+    PoolTransferPeriodMapper,
+    PoolViewPeriodMapper,
+    EditActionMapper
   ]
 })
 export class PoolModule {

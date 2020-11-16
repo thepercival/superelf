@@ -4,7 +4,8 @@
   <h2 class="mr-2">
     <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
   </h2>
-  <button [routerLink]="['/pool/choosepersons', pool.getId()]" type="button" class="btn btn-secondary">
+  <button *ngIf="enableSearch" [routerLink]="['/pool/choosepersons', pool.getId()]" type="button"
+    class="btn btn-secondary">
     <fa-icon [icon]="['fas', 'search']"></fa-icon> zoeken
   </button>
 </div>

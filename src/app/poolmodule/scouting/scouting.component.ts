@@ -21,6 +21,7 @@ import { RemoveApprovalModalComponent } from '../removeapproval/removeapprovalmo
 export class ScoutingComponent extends PoolComponent implements OnInit {
   form: FormGroup;
   scoutedPersons: ScoutedPerson[] = [];
+  enableSearch: boolean = false;
 
   constructor(
     route: ActivatedRoute,
@@ -40,6 +41,7 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.pool = pool;
+      this.enableSearch = pool.assemblePeriodNotStarted();
       this.initScoutedPersons(pool);
     });
   }

@@ -13,11 +13,11 @@
 
 <form *ngIf="!processing && availableFormations" name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
   <div class="d-flex justify-content-around">
-    <select class="form-control mr-1" formControlName="formation" (change)="searchPersons(pool)">
+    <select class="form-control mr-1" formControlName="formation" (change)="chooseFormation()">
       <option [ngValue]="undefined" selected>
         kies formatie
       </option>
-      <option *ngFor="let formation of availableFormations" [ngValue]="team">{{formation.name}}</option>
+      <option *ngFor="let formation of availableFormations" [ngValue]="currentFormation">{{formation.name}}</option>
     </select>
   </div>
 </form>

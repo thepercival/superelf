@@ -6,13 +6,15 @@ import { JsonPool } from './json';
 import { PoolCollectionMapper } from './collection/mapper';
 import { PoolScoreUnitMapper } from './scoreUnit/mapper';
 import { PoolUserMapper } from './user/mapper';
-import { PoolEditPeriodMapper } from './period/edit/mapper';
+import { PoolAssemblePeriodMapper } from './period/assemble/mapper';
+import { PoolTransferPeriodMapper } from './period/transfer/mapper';
 
 @Injectable()
 export class PoolMapper {
     constructor(
         private collectionMapper: PoolCollectionMapper,
-        private poolEditPeriodMapper: PoolEditPeriodMapper,
+        private poolAssemblePeriodMapper: PoolAssemblePeriodMapper,
+        private poolTransferPeriodMapper: PoolTransferPeriodMapper,
         private poolScoreUnitMapper: PoolScoreUnitMapper,
         private competitionMapper: CompetitionMapper,
         private poolUserMapper: PoolUserMapper) { }
@@ -21,8 +23,8 @@ export class PoolMapper {
         const pool = new Pool(
             this.collectionMapper.toObject(json.collection),
             sourceCompetition,
-            this.poolEditPeriodMapper.toAssemble(json.assemblePeriod),
-            this.poolEditPeriodMapper.toTransfer(json.transferPeriod));
+            this.poolAssemblePeriodMapper.toObject(json.assemblePeriod),
+            this.poolTransferPeriodMapper.toObject(json.transferPeriod));
         json.competitions.forEach(jsonCompetition => {
             pool.getCompetitions().push(this.competitionMapper.toObject(jsonCompetition));
         });

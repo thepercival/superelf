@@ -13,6 +13,9 @@ import { Pool } from '../../lib/pool';
 import { ActiveConfigRepository } from '../../lib/activeConfig/repository';
 import { ActiveConfig } from '../../lib/pool/activeConfig';
 import { JsonFormationShell } from '../../lib/activeConfig/json';
+import { concatMap } from 'rxjs/operators';
+import { PoolUserRepository } from '../../lib/pool/user/repository';
+import { PoolUser } from '../../lib/pool/user';
 
 
 @Component({
@@ -23,6 +26,8 @@ import { JsonFormationShell } from '../../lib/activeConfig/json';
 export class AssembleComponent extends PoolComponent implements OnInit {
   form: FormGroup;
   availableFormations: JsonFormationShell[] = [];
+  poolUser: PoolUser | undefined;
+  currentFormation: JsonFormationShell | undefined;
   nameService = new NameService();
 
   constructor(
@@ -32,6 +37,7 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     protected playerRepository: PlayerRepository,
     protected scoutedPersonRepository: ScoutedPersonRepository,
     protected activeConfigRepository: ActiveConfigRepository,
+    protected poolUserRepository: PoolUserRepository,
     fb: FormBuilder,
     private modalService: NgbModal
   ) {
@@ -48,14 +54,21 @@ export class AssembleComponent extends PoolComponent implements OnInit {
       // hier een concat map doen om assembleFormation op te halen
       // en daarna activeConfigRepo, kan dus door bv. pooluser op te halen
 
-      this.activeConfigRepository.getObject()
-        .subscribe(
-        /* happy path */(config: ActiveConfig) => {
-            this.availableFormations = config.getAvailableFormations();
-          },
+      this.activeConfigRepository.getObject().pipe(
+        concatMap((config: ActiveConfig) => {
+          this.availableFormations = config.getAvailableFormations();
+          return this.poolUserRepository.getObjectFromSession(pool);
+        })
+      ).subscribe(
+        /* happy path */(poolUser: PoolUser) => {
+          this.poolUser = poolUser;
+          this.currentFormation = this.availableFormations.find(formation => {
+            return formation.name === poolUser.getAssembleFormation()?.getName();
+          })
+        },
         /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
         /* onComplete */() => this.processing = false
-        );
+      );
 
 
       this.form.controls.searchTeam.setValue(undefined);
@@ -65,6 +78,9 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     });
   }
 
+  chooseFormation() {
+
+  }
   // searchPersons(pool: Pool) {
   //   const sourceCompetition = pool.getSourceCompetition();
   //   const lineFilter = this.form.controls.searchLine.value;

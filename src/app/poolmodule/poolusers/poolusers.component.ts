@@ -18,6 +18,8 @@ import { Pool } from '../../lib/pool';
 })
 export class PoolUsersComponent extends PoolComponent implements OnInit {
 
+  poolUsers: PoolUser[] = [];
+
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -32,6 +34,13 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.pool = pool;
+      if (pool.isInEditPeriod()) {
+        this.poolUserRepository.getObjects(pool).subscribe(
+            /* happy path */(poolUsers: PoolUser[]) => this.poolUsers = poolUsers,
+            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
+            /* on complete */() => this.processing = false
+        );
+      }
       this.processing = false;
     });
   }

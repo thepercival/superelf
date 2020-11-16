@@ -8,6 +8,8 @@ export class PoolUser {
     private id: number = 0;
     private admin: boolean = false;
     protected competitors: PoolCompetitor[] = [];
+    protected nrOfAssembled: number = 0;
+    protected nrOfTransferedWithTeam: number = 0;
     protected assembleFormation: Formation | undefined;
     protected transferFormation: Formation | undefined;
 
@@ -44,6 +46,22 @@ export class PoolUser {
 
     getCompetitors(): PoolCompetitor[] {
         return this.competitors;
+    }
+
+    getNrOfAssembled(): number {
+        return this.nrOfAssembled;;
+    }
+
+    setNrOfAssembled(nrOfAssembled: number) {
+        this.nrOfAssembled = nrOfAssembled;
+    }
+
+    getNrOfTransferedWithTeam(): number {
+        return this.nrOfTransferedWithTeam;
+    }
+
+    setNrOfTransferedWithTeam(nrOfTransfered: number) {
+        this.nrOfTransferedWithTeam = nrOfTransfered;
     }
 
     getAssembleFormation(): Formation | undefined {

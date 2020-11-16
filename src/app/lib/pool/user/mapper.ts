@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { EditActionMapper } from '../../editAction/mapper';
 import { FormationMapper } from '../../formation/mapper';
 
 import { Pool } from '../../pool';
@@ -12,15 +13,29 @@ export class PoolUserMapper {
     constructor(
         protected userMapper: UserMapper,
         protected poolCompetitorMapper: PoolCompetitorMapper,
-        protected formationMapper: FormationMapper) { }
+        protected formationMapper: FormationMapper,
+        protected editActionMapper: EditActionMapper) { }
 
     toObject(json: JsonPoolUser, pool: Pool): PoolUser {
         const poolUser = new PoolUser(pool, this.userMapper.toObject(json.user));
         poolUser.setAdmin(json.admin);
         poolUser.setId(json.id);
+        if (json.nrOfAssembled) {
+            poolUser.setNrOfAssembled(json.nrOfAssembled);
+        }
+        if (json.nrOfTransfersWithTeam) {
+            poolUser.setNrOfTransferedWithTeam(json.nrOfTransfersWithTeam);
+        }
         if (json.assembleFormation) {
             const formation = this.formationMapper.toObject(json.assembleFormation);
             poolUser.setAssembleFormation(formation)
+        }
+        const association = pool.getSourceCompetition().getAssociation();
+        if (json.transfers) {
+            json.transfers.forEach(jsonTransfer => this.editActionMapper.toTransfer(jsonTransfer, poolUser, association));
+        }
+        if (json.substitutions) {
+            json.substitutions.forEach(jsonSub => this.editActionMapper.toSubstitution(jsonSub, poolUser, association));
         }
         if (json.transferFormation) {
             const formation = this.formationMapper.toObject(json.transferFormation);

@@ -1,7 +1,7 @@
 import { Association, Competition, Period, PlaceRange, Season } from 'ngx-sport';
 
 import { PoolCollection } from './pool/collection';
-import { PoolAssemblePeriod } from './pool/period/assembleTeam';
+import { PoolAssemblePeriod } from './pool/period/assemble';
 import { PoolTransferPeriod } from './pool/period/transfer';
 import { PoolScoreUnit } from './pool/scoreUnit';
 
@@ -91,6 +91,11 @@ export class Pool {
 
     isInEditPeriod(): boolean {
         return this.getCreateAndJoinPeriod().isIn() || this.getAssemblePeriod().isIn() || this.getTransferPeriod().isIn();
+    }
+
+    assemblePeriodNotStarted(date?: Date): boolean {
+        const checkDate = date ? date : new Date();
+        return checkDate < this.getAssemblePeriod().getStartDateTime();
     }
 
     transferPeriodNotStarted(date?: Date): boolean {

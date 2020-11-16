@@ -11,6 +11,7 @@ import { Pool } from '../../lib/pool';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
+import { Formation } from '../../lib/formation';
 
 @Component({
     selector: 'app-pool-public',
@@ -21,6 +22,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
     translate: TranslateService;
     scoutedPersons: ScoutedPerson[] = [];
     scoutingEnabled: boolean = false;
+    poolUsers: PoolUser[] = [];
 
     constructor(
         route: ActivatedRoute,
@@ -51,8 +53,13 @@ export class HomeComponent extends PoolComponent implements OnInit {
             });
         }
 
-        this.poolUserRepository.getObject(pool).subscribe((poolUser: PoolUser | undefined) => {
+        this.poolUserRepository.getObjectFromSession(pool).subscribe((poolUser: PoolUser | undefined) => {
             this.poolUser = poolUser;
+            if (pool.isInEditPeriod() && this.isAdmin()) {
+                this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
+                    this.poolUsers = poolUsers;
+                });
+            }
         },
         /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
         /* onComplete */() => { this.processing = false });
@@ -60,24 +67,23 @@ export class HomeComponent extends PoolComponent implements OnInit {
 
     isAdmin(): boolean {
         return this.poolUser ? this.poolUser.getAdmin() : false;
+    }
 
-        // aparte call naar pooluser 
-
-        // kijk in welke periode je zit en dan 1 van onderstaande drie ophalen (kan eventueel 1 url gebruiken)
-        //     nrOfPoolUsers: Number,
-        //     nrHaveAssembled
-        //     nrHaveTransfered: number
+    getNrOfPoolUsersHaveAssembled(): number {
+        return this.poolUsers.filter(poolUser => poolUser.getNrOfAssembled() === Formation.TotalNrOfPersons).length;
     }
 
     allPoolUsersHaveAssembled(): boolean {
+        return this.poolUsers.length === this.getNrOfPoolUsersHaveAssembled();
+    }
 
-
-        return false;
+    getNrOfPoolUsersHaveTransfered(): number {
+        const max = this.pool?.getTransferPeriod().getMaxNrOfTransfers();
+        return this.poolUsers.filter(poolUser => poolUser.getNrOfTransferedWithTeam() === max).length;
     }
 
     allPoolUsersHaveTransfered(): boolean {
-
-        return false;
+        return this.poolUsers.length === this.getNrOfPoolUsersHaveTransfered();
     }
 
 
