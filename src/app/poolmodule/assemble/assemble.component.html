@@ -13,37 +13,47 @@
 
 <form *ngIf="!processing && availableFormations" name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
   <div class="d-flex justify-content-around">
-    <select class="form-control mr-1" formControlName="formation" (change)="chooseFormation()">
+    <select class="form-control mr-1" formControlName="formation">
       <option [ngValue]="undefined" selected>
         kies formatie
       </option>
-      <option *ngFor="let formation of availableFormations" [ngValue]="currentFormation">{{formation.name}}</option>
+      <option *ngFor="let formation of availableFormations" [ngValue]="formation">{{formation.name}}</option>
     </select>
   </div>
 </form>
 
-<!-- <table *ngIf="!processing && pool && foundPlayers" class="table">
-  <tbody>
-    <tr *ngFor="let player of foundPlayers">
-      <td>
-        {{player.getLine()}}
-      </td>
-      <td>
-        {{player.getPerson().getName()}}
+<table *ngIf="!form.controls.formation.value" class="table">
 
+  <tbody *ngFor="let assembleLine of assembleLines">
+    <tr>
+      <td colspan="2">
+        {{superElfNameService.getLineName(assembleLine.number)}}
       </td>
       <td>
-        {{player.getTeam().getAbbreviation()}}
+        <button *ngIf="assembleLine.substitute" type="button" class="btn btn-secondary btn-sm"
+          (click)="substitute(assembleLine)">
+          <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>wissel als er een wissel is
+        </button>
+      </td>
+    </tr>
+    <tr *ngFor="let player of assembleLine.players">
+      <td>
+        <span *ngIf="player">{{player.getPerson().getName()}}</span>
+        <span *ngIf="!player" class="badge badge-warning">kies een speler</span>
+      </td>
+      <td>
+        <span *ngIf="player">{{player.getTeam().getAbbreviation()}}</span>
       </td>
       <td class="text-right">
-        PP
-      </td>
-      <td class="text-right">
-        <button *ngIf=!inScoutingList(player.getPerson()) type="button" class="btn btn-secondary btn-sm"
-          (click)="addToScoutingList(player.getPerson(), pool)">
+        <button *ngIf="player" type="button" class="btn btn-secondary btn-sm"
+          (click)="removePerson(player.getPerson())">
+          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+        </button>
+        <button *ngIf="!player" type="button" class="btn btn-secondary btn-sm"
+          (click)="choosePerson(assembleLine.number)">
           <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
         </button>
       </td>
     </tr>
   </tbody>
-</table> -->
+</table>

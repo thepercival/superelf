@@ -78,6 +78,7 @@ import { FormationLineMapper } from '../lib/formation/line/mapper';
 import { PoolAssemblePeriodMapper } from '../lib/pool/period/assemble/mapper';
 import { PoolTransferPeriodMapper } from '../lib/pool/period/transfer/mapper';
 import { EditActionMapper } from '../lib/editAction/mapper';
+import { FormationRepository } from '../lib/formation/repository';
 
 @NgModule({
   imports: [
@@ -148,7 +149,8 @@ import { EditActionMapper } from '../lib/editAction/mapper';
     PoolAssemblePeriodMapper,
     PoolTransferPeriodMapper,
     PoolViewPeriodMapper,
-    EditActionMapper
+    EditActionMapper,
+    FormationRepository
   ]
 })
 export class PoolModule {
