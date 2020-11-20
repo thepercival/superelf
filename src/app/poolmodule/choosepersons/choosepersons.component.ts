@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { NameService, Person, Player, SportCustom, Team } from 'ngx-sport';
+import { NameService, Person, PersonMap, Player, SportCustom, Team } from 'ngx-sport';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
-import { ConfirmPersonChoiceModalComponent } from './confirmpersonchoicemodal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
-import { forkJoin, Observable } from 'rxjs';
 import { ScoutedPerson } from '../../lib/scoutedPerson';
 import { Pool } from '../../lib/pool';
 import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
@@ -21,11 +19,13 @@ import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
   styleUrls: ['./choosepersons.component.scss']
 })
 export class ChoosePersonsComponent extends PoolComponent implements OnInit {
+  @Output() selectedPerson = new EventEmitter<Person>();
+  @Input() selectedPersonMap: PersonMap = new PersonMap();
+
   form: FormGroup;
   foundPlayers: Player[] | undefined;
   searchTeams: Team[] = [];
   searchLines: number[] = [];
-  scoutedPersons: ScoutedPerson[] = [];
   nameService = new NameService();
 
   constructor(
@@ -47,7 +47,6 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit {
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.pool = pool;
-      console.log(pool.getSourceCompetition().getTeamCompetitors());
       this.form.controls.searchTeam.setValue(undefined);
       this.searchTeams = pool.getSourceCompetition().getTeamCompetitors().map((teamCompetitor: TeamCompetitor) => teamCompetitor.getTeam());
 
@@ -56,7 +55,6 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit {
         this.searchLines.push(line);
       }
 
-      this.setScountingList(pool);
       this.searchPersons(pool);
     });
   }
@@ -72,13 +70,12 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit {
       /* onComplete */() => { this.processing = false });
   }
 
-  setScountingList(pool: Pool) {
-    const sourceCompetition = pool.getSourceCompetition();
-    this.scoutedPersonRepository.getObjects(sourceCompetition).subscribe((scoutedPersons: ScoutedPerson[]) => {
-      this.scoutedPersons = scoutedPersons;
-    },
-      /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
-    );
+  select(person: Person) {
+    this.selectedPerson.emit(person);
+  }
+
+  alreadySelected(person: Person): boolean {
+    return this.selectedPersonMap.has(+person.getId());
   }
 
   // searchPersonsAndGetScountingList(pool: Pool) {
@@ -95,34 +92,5 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit {
   //     /* onComplete */() => { this.processing = false });
   // }
 
-  addToScoutingList(person: Person, pool: Pool) {
-    this.processing = true;
-    this.scoutedPersonRepository.createObject(person, pool.getSourceCompetition())
-      .subscribe(
-          /* happy path */(scoutedPerson: ScoutedPerson) => {
-          this.scoutedPersons.push(scoutedPerson);
-          this.openConfirmModal(scoutedPerson.getPerson());
-        },
-        /* error path */(e: string) => {
-          this.setAlert('danger', e); this.processing = false;
-        },
-        /* onComplete */() => { this.processing = false }
-      );
 
-  }
-
-  openConfirmModal(person: Person) {
-    const modalRef = this.modalService.open(ConfirmPersonChoiceModalComponent);
-    console.log(person);
-    modalRef.componentInstance.person = person;
-    modalRef.result.then((result) => {
-      if (result === 'toscouting')
-        this.router.navigate(['/pool/scouting', this.pool?.getId()]);
-    }, (reason) => {
-    });
-  }
-
-  inScoutingList(person: Person): boolean {
-    return this.scoutedPersons.some(scoutedPerson => scoutedPerson.getPerson() === person);
-  }
 }

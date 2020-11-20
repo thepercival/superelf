@@ -28,8 +28,7 @@ export class PoolUserMapper {
         }
         const association = pool.getSourceCompetition().getAssociation();
         if (json.assembleFormation) {
-            const formation = this.formationMapper.toObject(json.assembleFormation, association);
-            poolUser.setAssembleFormation(formation);
+            const formation = this.formationMapper.toObject(json.assembleFormation, poolUser, association);
         }
         if (json.transfers) {
             json.transfers.forEach(jsonTransfer => this.editActionMapper.toTransfer(jsonTransfer, poolUser, association));
@@ -38,7 +37,7 @@ export class PoolUserMapper {
             json.substitutions.forEach(jsonSub => this.editActionMapper.toSubstitution(jsonSub, poolUser, association));
         }
         if (json.transferFormation) {
-            const formation = this.formationMapper.toObject(json.transferFormation, association);
+            const formation = this.formationMapper.toObject(json.transferFormation, poolUser, association);
             poolUser.setTransferFormation(formation)
         }
         json.competitors.forEach(jsonPoolCompetitor => {

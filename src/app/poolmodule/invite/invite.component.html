@@ -1,27 +1,31 @@
-<app-title *ngIf="pool" [title]="pool.getName()"></app-title>
+<div class="row justify-content-center no-gutters">
+  <div class="col-xs-12 col-sm-10 col-md-6">
+    <app-title *ngIf="pool" [title]="pool.getName()"></app-title>
 
-<h2>
-  <fa-icon [icon]="['fas', 'envelope']"></fa-icon> uitnodigen
-</h2>
+    <h2>
+      <fa-icon [icon]="['fas', 'envelope']"></fa-icon> uitnodigen
+    </h2>
 
-<h2 *ngIf="processing" class="text-center">
-  <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-</h2>
+    <h2 *ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </h2>
 
-<ngb-alert *ngIf="alert" [type]="alert.type">
-  {{ alert.message }}</ngb-alert>
+    <ngb-alert *ngIf="alert" [type]="alert.type">
+      {{ alert.message }}</ngb-alert>
 
-<form *ngIf="!processing" name="form" class="max-page-width" (ngSubmit)="false" [formGroup]="form" novalidate>
-  <div class="form-group row">
-    <label for="url" class="col-sm-4 col-form-label">link</label>
-    <div class="col-sm-8">
-      <input type="text" class="form-control" formControlName="url">
-    </div>
+    <form *ngIf="!processing" name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
+      <div class="form-group row">
+        <label for="url" class="col-sm-2 col-form-label">link</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" formControlName="url">
+        </div>
+      </div>
+      <div class="form-row">
+        <button ngxClipboard type="button" class="btn btn-primary btn-block" (cbOnSuccess)="showCopiedToClipboard()"
+          [cbContent]="form.controls.url.value">
+          <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon> de link kopieren naar het klembord
+        </button>
+      </div>
+    </form>
   </div>
-  <div class="form-row">
-    <button ngxClipboard type="button" class="btn btn-primary btn-block" (cbOnSuccess)="showCopiedToClipboard()"
-      [cbContent]="form.controls.url.value">
-      <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon> de link kopieren naar het klembord
-    </button>
-  </div>
-</form>
+</div>

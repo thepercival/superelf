@@ -1,46 +1,50 @@
-<app-title *ngIf="pool" [title]="pool.getName()"></app-title>
+<div class="row justify-content-center no-gutters">
+  <div class="col-xs-12 col-sm-10 col-md-6">
+    <app-title *ngIf="pool" [title]="pool.getName()"></app-title>
 
-<h2>
-  <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
-</h2>
+    <h2>
+      <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
+    </h2>
 
-<h2 *ngIf="processing" class="text-center">
-  <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-</h2>
+    <h2 *ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </h2>
 
-<ngb-alert *ngIf="alert" [type]="alert.type">
-  {{ alert.message }}</ngb-alert>
+    <ngb-alert *ngIf="alert" [type]="alert.type">
+      {{ alert.message }}</ngb-alert>
 
-<table *ngIf="!processing && pool" class="table">
-  <thead>
-    <tr>
-      <th>naam</th>
-      <th *ngIf="pool.transferPeriodNotStarted()" class="text-center">
-        gekozen spelers
-      </th>
-      <th *ngIf="pool.getTransferPeriod().isIn()" class="text-center">
-        transfers
-      </th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let poolUser of poolUsers">
-      <td>
-        {{poolUser.getName()}}
-      </td>
-      <td *ngIf="pool.transferPeriodNotStarted()" class="text-center">
-        0/15 success/warning
-      </td>
-      <td *ngIf="pool.getTransferPeriod().isIn()" class="text-center">
-        0/2
-      </td>
-      <td class="text-right">
-        <button *ngIf="!poolUser.getAdmin() && pool.transferPeriodNotStarted()" type="button"
-          class="btn btn-sm btn-danger" [disabled]="processing" (click)="openRemoveApprovalModal(poolUser)">
-          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+    <table *ngIf="!processing && pool" class="table">
+      <thead>
+        <tr>
+          <th>naam</th>
+          <th *ngIf="pool.transferPeriodNotStarted()" class="text-center">
+            gekozen spelers
+          </th>
+          <th *ngIf="pool.getTransferPeriod().isIn()" class="text-center">
+            transfers
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let poolUser of poolUsers">
+          <td>
+            {{poolUser.getName()}}
+          </td>
+          <td *ngIf="pool.transferPeriodNotStarted()" class="text-center">
+            0/15 success/warning
+          </td>
+          <td *ngIf="pool.getTransferPeriod().isIn()" class="text-center">
+            0/2
+          </td>
+          <td class="text-right">
+            <button *ngIf="!poolUser.getAdmin() && pool.transferPeriodNotStarted()" type="button"
+              class="btn btn-sm btn-danger" [disabled]="processing" (click)="openRemoveApprovalModal(poolUser)">
+              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

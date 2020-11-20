@@ -1,9 +1,9 @@
 @import './mixins';
 
 $enable-responsive-font-sizes: true !default;
-@import "./bootswatch/variables";
+@import "./bootstrapbuild/variables";
 @import "./bootstrap-custom-components";
-@import "./bootswatch/bootswatch-custom";
+// @import "./bootswatch/bootswatch-custom";
 
 @include media-breakpoint-up(sm) {
     app-pouleranking {       
@@ -34,16 +34,6 @@ $enable-responsive-font-sizes: true !default;
     @extend .font-weight-bold;
 }
 
-.cards-no-border > .card {
-  @extend .mx-2;
-}
-.cards-no-border > .card:first-child {
-  @extend .ml-0;
-}
-.cards-no-border > .card:last-child {
-  @extend .mr-0;
-}
-
 hr {
   border-top: 1px solid rgba(136, 136, 136, 0.30);
 }
@@ -62,7 +52,10 @@ app-root {
 }
 .content-wrapper {
   flex: 1 0 auto;
+  @extend .pt-1;
+
 }
+
 .batch-striped-row {
   background-color: #{$table-accent-bg};
 }
@@ -72,6 +65,16 @@ td > .btn.btn-sm, th > .btn.btn-sm {
 }
 table.no-border-top {
   tr:first-child>td { border-top:0; }
+}
+table.valign-middle {
+  tr>td { vertical-align:middle; }
+}
+table.no-padding-x {
+  tr>td:first-child { @extend .pl-0; }
+}
+
+table.no-padding-x {
+  tr>td:last-child { @extend .pr-0; }
 }
 
 input.is-valid, textarea.is-valid {

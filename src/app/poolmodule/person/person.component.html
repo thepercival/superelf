@@ -15,8 +15,8 @@
                 <div class="card-footer bg-transparent border-success">Footer</div>
             </div>
             <div class="card p-3">
-                <img src="https://www.sofascore.com/images/player/image_250501.png" width="100px">
-                <!-- <fa-icon [icon]="['fas', 'user-circle']" size="10x"></fa-icon> -->
+                <img *ngIf="personImageUrl" src="{{personImageUrl}}" width="100px">
+                <fa-icon *ngIf="!personImageUrl" [icon]="['fas', 'user-circle']" size="10x"></fa-icon>
             </div>
         </div>
     </div>

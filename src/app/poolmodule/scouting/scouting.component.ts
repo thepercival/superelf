@@ -8,9 +8,11 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
 import { ScoutedPerson } from '../../lib/scoutedPerson';
 import { Pool } from '../../lib/pool';
-import { Competition, Person } from 'ngx-sport';
+import { Competition, Person, PersonMap } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RemoveApprovalModalComponent } from '../removeapproval/removeapprovalmodal.component';
+import { ScoutedPersonMapper } from '../../lib/scoutedPerson/mapper';
+import { ConfirmPersonChoiceModalComponent } from '../choosepersons/confirmpersonchoicemodal.component';
 
 
 @Component({
@@ -20,8 +22,9 @@ import { RemoveApprovalModalComponent } from '../removeapproval/removeapprovalmo
 })
 export class ScoutingComponent extends PoolComponent implements OnInit {
   form: FormGroup;
-  scoutedPersons: ScoutedPerson[] = [];
-  enableSearch: boolean = false;
+  scoutingList: ScoutingList = { scoutedPersons: [], mappedPersons: new PersonMap() };
+  showSearchBtn = false;
+  showSearchOnSM: boolean = false;
 
   constructor(
     route: ActivatedRoute,
@@ -41,7 +44,8 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.pool = pool;
-      this.enableSearch = pool.assemblePeriodNotStarted();
+      this.showSearchBtn = !pool.isInAssembleOrTransferPeriod();
+      console.log(pool.isInAssembleOrTransferPeriod());
       this.initScoutedPersons(pool);
     });
   }
@@ -50,14 +54,24 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
     this.scoutedPersonRepository.getObjects(pool.getSourceCompetition())
       .subscribe(
           /* happy path */(scoutedPersons: ScoutedPerson[]) => {
-          this.scoutedPersons = scoutedPersons;
-
+          scoutedPersons.forEach(scoutedPerson => this.addToScoutingList(scoutedPerson))
         },
         /* error path */(e: string) => {
           this.setAlert('danger', e); this.processing = false;
         },
         /* onComplete */() => { this.processing = false }
       );
+  }
+
+  protected addToScoutingList(scoutedPerson: ScoutedPerson) {
+    this.scoutingList.scoutedPersons.push(scoutedPerson);
+    this.scoutingList.mappedPersons.set(+scoutedPerson.getPerson().getId(), scoutedPerson.getPerson());
+
+  }
+
+  protected removeFromToScoutingList(scoutedPerson: ScoutedPerson) {
+    this.scoutingList.scoutedPersons.splice(this.scoutingList.scoutedPersons.indexOf(scoutedPerson), 1);
+    this.scoutingList.mappedPersons.delete(+scoutedPerson.getPerson().getId());
   }
 
   openRemoveApprovalModal(scoutedPerson: ScoutedPerson, pool: Pool) {
@@ -75,7 +89,7 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
     this.scoutedPersonRepository.removeObject(scoutedPerson, sourceCompetition)
       .subscribe(
             /* happy path */() => {
-          this.scoutedPersons.splice(this.scoutedPersons.indexOf(scoutedPerson), 1);
+          this.removeFromToScoutingList(scoutedPerson);
           this.setAlert('success', '"' + scoutedPerson.getPerson().getName() + '" verwijderd');
         },
             /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
@@ -83,7 +97,46 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
       );
   }
 
+  add(person: Person) {
+    if (!this.pool) {
+      return;
+    }
+    this.processing = true;
+    this.scoutedPersonRepository.createObject(person, this.pool.getSourceCompetition())
+      .subscribe(
+          /* happy path */(scoutedPerson: ScoutedPerson) => {
+          // this.scoutingList.mappedPersons = new PersonMap();
+          this.addToScoutingList(scoutedPerson);
+
+          if (this.showSearchOnSM) {
+            this.openConfirmModal(scoutedPerson.getPerson());
+          }
+        },
+        /* error path */(e: string) => {
+          this.setAlert('danger', e); this.processing = false;
+        },
+        /* onComplete */() => { this.processing = false }
+      );
+
+  }
+
+  openConfirmModal(person: Person) {
+    const modalRef = this.modalService.open(ConfirmPersonChoiceModalComponent);
+    modalRef.componentInstance.person = person;
+    modalRef.result.then((result) => {
+      if (result === 'goback') {
+        this.showSearchOnSM = false;
+      }
+    }, (reason) => {
+    });
+  }
+
   copyToTeam(person: Person) {
 
   }
+}
+
+interface ScoutingList {
+  scoutedPersons: ScoutedPerson[];
+  mappedPersons: PersonMap;
 }

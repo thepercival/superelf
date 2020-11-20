@@ -1,6 +1,6 @@
-<app-title *ngIf="pool" [title]="pool.getName()"></app-title>
+<!-- <app-title *ngIf="pool" [title]="pool.getName()"></app-title> -->
 
-<h2>
+<h2 class="text-center">
   <fa-icon [icon]="['fas', 'users']"></fa-icon> spelers kiezen
 </h2>
 
@@ -8,8 +8,8 @@
   <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </h2>
 
-<ngb-alert *ngIf="alert" [type]="alert.type">
-  {{ alert.message }}</ngb-alert>
+<!-- <ngb-alert *ngIf="alert" [type]="alert.type">
+  {{ alert.message }}</ngb-alert> -->
 
 <form *ngIf="!processing && pool" name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
   <div class="d-flex justify-content-around">
@@ -42,8 +42,8 @@
         PP
       </td>
       <td class="text-right">
-        <button *ngIf=!inScoutingList(player.getPerson()) type="button" class="btn btn-secondary btn-sm"
-          (click)="addToScoutingList(player.getPerson(), pool)">
+        <button *ngIf="!alreadySelected(player.getPerson())" type="button" class="btn btn-secondary btn-sm"
+          (click)="select(player.getPerson())">
           <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
         </button>
       </td>

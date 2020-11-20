@@ -36,7 +36,14 @@ export class FormationRepository extends APIRepository {
     createObject(formationShell: JsonFormationShell, poolUser: PoolUser): Observable<Formation> {
         const association = poolUser.getPool().getSourceCompetition().getLeague().getAssociation();
         return this.http.post<JsonFormation>(this.getUrl(poolUser), formationShell, { headers: super.getHeaders() }).pipe(
-            map((jsonFormation: JsonFormation) => this.mapper.toObject(jsonFormation, association)),
+            map((jsonFormation: JsonFormation) => this.mapper.toObject(jsonFormation, poolUser, association)),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    removeObject(assembleFormation: Formation): Observable<void> {
+        const url = this.getUrl(assembleFormation.getPoolUser(), assembleFormation.getId());
+        return this.http.delete(url, this.getOptions()).pipe(
             catchError((err) => this.handleError(err))
         );
     }

@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'join/:id/:key', component: JoinComponent, canActivate: [AuthUserGuardService] },
   { path: 'users/:id', component: PoolUsersComponent, canActivate: [AuthUserGuardService] },
   { path: 'scouting/:id', component: ScoutingComponent, canActivate: [AuthUserGuardService] },
-  { path: 'choosepersons/:id', component: ChoosePersonsComponent, canActivate: [AuthUserGuardService] },
+  /*{ path: 'choosepersons/:id', component: ChoosePersonsComponent, canActivate: [AuthUserGuardService] },*/
   { path: 'assemble/:id', component: AssembleComponent, canActivate: [AuthUserGuardService] },
   { path: 'rules/:id', component: RulesComponent },
 

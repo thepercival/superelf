@@ -93,6 +93,10 @@ export class Pool {
         return this.getCreateAndJoinPeriod().isIn() || this.getAssemblePeriod().isIn() || this.getTransferPeriod().isIn();
     }
 
+    isInAssembleOrTransferPeriod(): boolean {
+        return this.getAssemblePeriod().isIn() || this.getTransferPeriod().isIn();
+    }
+
     assemblePeriodNotStarted(date?: Date): boolean {
         const checkDate = date ? date : new Date();
         return checkDate < this.getAssemblePeriod().getStartDateTime();

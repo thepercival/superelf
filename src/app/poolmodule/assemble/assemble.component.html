@@ -1,6 +1,6 @@
 <app-title *ngIf="pool" [title]="pool.getName()"></app-title>
 
-<h2>
+<h2 class="text-center">
   <fa-icon [icon]="['fas', 'users']"></fa-icon> spelers kiezen
 </h2>
 
@@ -12,8 +12,8 @@
   {{ alert.message }}</ngb-alert>
 
 <form *ngIf="!processing && availableFormations" name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
-  <div class="d-flex justify-content-around">
-    <select class="form-control mr-1" formControlName="formation">
+  <div class="d-flex flex-wrap justify-content-center mb-3">
+    <select class="form-control max-width" formControlName="formation">
       <option [ngValue]="undefined" selected>
         kies formatie
       </option>
@@ -22,38 +22,63 @@
   </div>
 </form>
 
-<table *ngIf="!form.controls.formation.value" class="table">
+<div *ngIf="pool" class="d-flex flex-wrap justify-content-center">
+  <div class="card mb-3 mx-2" *ngFor="let assembleLine of assembleLines">
+    <div class="card-body">
+      <h5 class="card-title">{{superElfNameService.getLineName(assembleLine.number)}}</h5>
+      <table class="table">
+        <tbody>
+          <tr *ngFor="let player of assembleLine.players">
+            <td>
+              <span *ngIf="player">{{player.getPerson().getName()}}</span>
+              <span *ngIf="!player" class="badge badge-warning">kies een speler</span>
+            </td>
+            <td>
+              <span *ngIf="player">{{player.getTeam().getAbbreviation()}}</span>
+            </td>
+            <td class="text-right">
+              <button *ngIf="player" type="button" class="btn btn-secondary btn-sm"
+                (click)="removePerson(player.getPerson())">
+                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+              </button>
+              <button *ngIf="!player" type="button" class="btn btn-secondary btn-sm"
+                [routerLink]="['/pool/choosepersons', pool.getId()]">
+                <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <span *ngIf="assembleLine.substitute">{{assembleLine.substitute.getPerson().getName()}}</span>
+              <span *ngIf="!assembleLine.substitute" class="badge badge-warning">kies een wissel</span>
+            </td>
+            <td>
+              <span *ngIf="assembleLine.substitute">{{assembleLine.substitute.getTeam().getAbbreviation()}}</span>
+            </td>
+            <td class="text-right">
+              <button *ngIf="assembleLine.substitute" type="button" class="btn btn-secondary btn-sm"
+                (click)="removePerson(assembleLine.substitute.getPerson())">
+                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+              </button>
+              <button *ngIf="!assembleLine.substitute" type="button" class="btn btn-secondary btn-sm"
+                (click)="choosePerson(assembleLine.number)">
+                <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- <ul class="list-group list-group-flush">
+        <li class="list-group-item d-flex justify-content-between align-items-center pl-0"
+          *ngFor="let poolScoreUnit of getPoolScoreUnits(lineDef)">
+          <span>{{nameService.getScoreUnitName(poolScoreUnit.getBase())}}</span>
+          <span class="badge badge-primary badge-pill ml-1">{{poolScoreUnit.getPoints()}}</span>
+        </li>
+      </ul> -->
+    </div>
+  </div>
+</div>
 
-  <tbody *ngFor="let assembleLine of assembleLines">
-    <tr>
-      <td colspan="2">
-        {{superElfNameService.getLineName(assembleLine.number)}}
-      </td>
-      <td>
-        <button *ngIf="assembleLine.substitute" type="button" class="btn btn-secondary btn-sm"
-          (click)="substitute(assembleLine)">
-          <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>wissel als er een wissel is
-        </button>
-      </td>
-    </tr>
-    <tr *ngFor="let player of assembleLine.players">
-      <td>
-        <span *ngIf="player">{{player.getPerson().getName()}}</span>
-        <span *ngIf="!player" class="badge badge-warning">kies een speler</span>
-      </td>
-      <td>
-        <span *ngIf="player">{{player.getTeam().getAbbreviation()}}</span>
-      </td>
-      <td class="text-right">
-        <button *ngIf="player" type="button" class="btn btn-secondary btn-sm"
-          (click)="removePerson(player.getPerson())">
-          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-        </button>
-        <button *ngIf="!player" type="button" class="btn btn-secondary btn-sm"
-          (click)="choosePerson(assembleLine.number)">
-          <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<!-- <div>
+  <button type="button" class="btn btn-outline-primary">{{superElfNameService.getLineName(assembleLine.number)}}</button>
+</div> -->

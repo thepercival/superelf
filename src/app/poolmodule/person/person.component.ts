@@ -13,6 +13,7 @@ export class PersonComponent implements OnInit {
   public processing = true;
   public teamImageUrl: string | undefined;
   public teamName: string = '';
+  public personImageUrl: string | undefined;
 
   constructor(
     public cssService: CSSService) {
@@ -21,10 +22,10 @@ export class PersonComponent implements OnInit {
   ngOnInit() {
     const team = this.person?.getPlayer()?.getTeam();
     if (team) {
-      console.log(this.person);
       this.teamName = team.getName();
     }
     this.teamImageUrl = team?.getImageUrl();
+    this.personImageUrl = this.person?.getImageUrl();
     this.processing = false;
   }
 }

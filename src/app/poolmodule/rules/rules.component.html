@@ -1,6 +1,6 @@
 <app-title *ngIf="pool" [title]="pool.getName()"></app-title>
 
-<h2>
+<h2 class="text-center">
   <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> spelregels
 </h2>
 
@@ -72,8 +72,8 @@
     <div class="card-body">
       <h5 class="card-title">punten</h5>
 
-      <div class="d-flex flex-wrap cards-no-border">
-        <div class="card mb-3" *ngFor="let lineDef of getLineDefs()">
+      <div class="d-flex flex-wrap justify-content-center">
+        <div class="card mb-3 mx-2" *ngFor="let lineDef of getLineDefs()">
           <div class="card-body">
             <h5 class="card-title">{{nameService.getLineName(lineDef)}}</h5>
             <ul class="list-group list-group-flush">
