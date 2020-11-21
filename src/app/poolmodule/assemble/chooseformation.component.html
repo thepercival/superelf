@@ -1,0 +1,10 @@
+<form name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
+  <div class="d-flex flex-wrap justify-content-center mb-3">
+    <select class="form-control max-width" formControlName="formation">
+      <option [ngValue]="undefined" selected>
+        kies formatie
+      </option>
+      <option *ngFor="let formation of availableFormations" [ngValue]="formation">{{formation.name}}</option>
+    </select>
+  </div>
+</form>

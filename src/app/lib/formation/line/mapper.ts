@@ -19,12 +19,15 @@ export class FormationLineMapper {
         return formationLine;
     }
 
-    // toJson(formationLine: FormationLine): JsonFormationLine {
-    //     return {
-    //         number: formationLine.getNumber(),
-    //         maxNrOfPersons: formationLine.getNrOfPersons()
-    //     };
-    // }
+    toJson(formationLine: FormationLine): JsonFormationLine {
+        const substitute = formationLine.getSubstitute();
+        return {
+            number: formationLine.getNumber(),
+            persons: formationLine.getPersons().map(person => this.personMapper.toJson(person)),
+            maxNrOfPersons: formationLine.getMaxNrOfPersons(),
+            substitute: substitute ? this.personMapper.toJson(substitute) : undefined
+        };
+    }
 }
 
 

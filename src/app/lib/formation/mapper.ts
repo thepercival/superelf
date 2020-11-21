@@ -11,18 +11,18 @@ export class FormationMapper {
 
     toObject(json: JsonFormation, poolUser: PoolUser, association: Association): Formation {
         const formation = new Formation(poolUser, json.name);
-        console.log(json);
         formation.setId(json.id);
         json.lines.forEach(jsonLine => this.lineMapper.toObject(jsonLine, formation, association));
         return formation;
     }
 
-    // toJson(formation: Formation): JsonFormation {
-    //     return {
-    //         name: formation.getName(),
-    //         lines: formation.getLines().map(line => this.lineMapper.toJson(line)),
-    //     };
-    // }
+    toJson(formation: Formation): JsonFormation {
+        return {
+            id: formation.getId(),
+            name: formation.getName(),
+            lines: formation.getLines().map(line => this.lineMapper.toJson(line))
+        };
+    }
 }
 
 

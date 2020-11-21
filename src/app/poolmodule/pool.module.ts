@@ -79,6 +79,7 @@ import { PoolAssemblePeriodMapper } from '../lib/pool/period/assemble/mapper';
 import { PoolTransferPeriodMapper } from '../lib/pool/period/transfer/mapper';
 import { EditActionMapper } from '../lib/editAction/mapper';
 import { FormationRepository } from '../lib/formation/repository';
+import { ChooseFormationComponent } from './assemble/chooseformation.component';
 
 @NgModule({
   imports: [
@@ -102,6 +103,7 @@ import { FormationRepository } from '../lib/formation/repository';
     ChoosePersonsComponent,
     PersonComponent,
     AssembleComponent,
+    ChooseFormationComponent,
     ConfirmPersonChoiceModalComponent,
     RemoveApprovalModalComponent
   ],
