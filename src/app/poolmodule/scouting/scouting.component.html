@@ -37,13 +37,13 @@
               </button>
             </td>
             <td>
-              <span>{{scoutedPerson.getPerson().getPlayer()?.getLine()}}</span>
+              <span>{{scoutedPerson.getPerson().getPlayerOneTeamSim()?.getLine()}}</span>
             </td>
             <td class="text-center">
               {{scoutedPerson.getPerson().getName()}}
             </td>
             <td class="text-center">
-              {{scoutedPerson.getPerson().getPlayer()?.getTeam()?.getName()}}
+              {{scoutedPerson.getPerson().getPlayerOneTeamSim()?.getTeam()?.getName()}}
             </td>
             <td *ngIf="pool.getAssemblePeriod().isIn()" class="text-right">
               <button (click)="copyToTeam(scoutedPerson.getPerson())" type="button" class="btn btn-secondary">
@@ -56,8 +56,8 @@
       </table>
     </div>
     <app-pool-choosepersons *ngIf="showSearchBtn && showSearchOnSM" class="d-block d-md-none"
-      (selectPerson)=" add($event)" [selectedPersonMap]="scoutingList.mappedPersons"></app-pool-choosepersons>
-    <app-pool-choosepersons *ngIf="showSearchBtn" class="d-none d-md-block" (selectPerson)=" add($event)"
+      (selectPlayer)=" add($event)" [selectedPersonMap]="scoutingList.mappedPersons"></app-pool-choosepersons>
+    <app-pool-choosepersons *ngIf="showSearchBtn" class="d-none d-md-block" (selectPlayer)=" add($event)"
       [selectedPersonMap]="scoutingList.mappedPersons"></app-pool-choosepersons>
   </div>
 </div>

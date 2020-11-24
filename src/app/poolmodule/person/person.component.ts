@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Person } from 'ngx-sport';
+import { Person, Team } from 'ngx-sport';
 
 import { CSSService } from '../../shared/commonmodule/cssservice';
 
@@ -10,6 +10,7 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 })
 export class PersonComponent implements OnInit {
   @Input() person: Person | undefined;
+  @Input() team: Team | undefined;
   public processing = true;
   public teamImageUrl: string | undefined;
   public teamName: string = '';
@@ -20,11 +21,10 @@ export class PersonComponent implements OnInit {
   }
 
   ngOnInit() {
-    const team = this.person?.getPlayer()?.getTeam();
-    if (team) {
-      this.teamName = team.getName();
+    if (this.team) {
+      this.teamName = this.team?.getName();
+      this.teamImageUrl = this.team.getImageUrl();
     }
-    this.teamImageUrl = team?.getImageUrl();
     this.personImageUrl = this.person?.getImageUrl();
     this.processing = false;
   }

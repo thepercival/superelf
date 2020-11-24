@@ -21,7 +21,7 @@ export class AssembleLineComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    console.log(this.assembleLine);
   }
 
   select(place: AssembleLinePlace) {

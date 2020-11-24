@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
-import { Person, Sport } from 'ngx-sport';
+import { Person, Player, PlayerMapper, Sport } from 'ngx-sport';
 import { JsonFormationShell } from '../activeConfig/json';
 import { FormationMapper } from './mapper';
 import { Pool } from '../pool';
@@ -16,7 +16,7 @@ import { FormationLine } from './line';
 @Injectable()
 export class FormationRepository extends APIRepository {
     constructor(
-        private mapper: FormationMapper, private http: HttpClient) {
+        private mapper: FormationMapper, private playerMapper: PlayerMapper, private http: HttpClient) {
         super();
     }
 
@@ -58,26 +58,27 @@ export class FormationRepository extends APIRepository {
         );
     }
 
-    addPerson(person: Person, line: FormationLine, asSubstitute: boolean): Observable<void> {
+    addPerson(player: Player, line: FormationLine, asSubstitute: boolean): Observable<void> {
         const formation = line.getFormation();
-        const url = this.getUrl(formation.getPoolUser(), formation) + '/persons/' + person.getId();
-        return this.http.post<void>(url, undefined, { headers: super.getHeaders() }).pipe(
+        const json = this.playerMapper.toJson(player);
+        const url = this.getUrl(formation.getPoolUser(), formation) + '/persons';
+        return this.http.post<void>(url, json, { headers: super.getHeaders() }).pipe(
             map(() => {
-                asSubstitute ? line.setSubstitute(person) : line.getPersons().push(person);
+                asSubstitute ? line.setSubstitute(player.getPerson()) : line.getPersons().push(player.getPerson());
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    removePerson(person: Person, line: FormationLine, asSubstitute: boolean): Observable<void> {
+    removePerson(player: Player, line: FormationLine, asSubstitute: boolean): Observable<void> {
         const formation = line.getFormation();
-        const url = this.getUrl(formation.getPoolUser(), formation) + '/persons/' + person.getId();
+        const url = this.getUrl(formation.getPoolUser(), formation) + '/persons/' + player.getId();
         return this.http.delete<void>(url, { headers: super.getHeaders() }).pipe(
             map(() => {
                 if (asSubstitute) {
                     line.setSubstitute(undefined)
                 } else {
-                    const index = line.getPersons().indexOf(person);
+                    const index = line.getPersons().indexOf(player.getPerson());
                     if (index > -1) {
                         line.getPersons().splice(index, 1);
                     }

@@ -32,10 +32,10 @@
       </div>
     </div>
     <app-pool-choosepersons *ngIf="selectedPlace && showSearchOnSM" class="d-block d-md-none"
-      (selectPerson)="updatePlace($event)" [selectedPersonMap]="teamPersonMap" [selectedSearchLine]="selectedSearchLine"
+      (selectPlayer)="updatePlace($event)" [selectedPersonMap]="teamPersonMap" [selectedSearchLine]="selectedSearchLine"
       [selectWarningTeamMap]="selectedTeamMap"></app-pool-choosepersons>
     <app-pool-choosepersons *ngIf="selectedPlace" class="d-none d-md-block" [selectedSearchLine]="selectedSearchLine"
-      (selectPerson)="updatePlace($event)" [selectedPersonMap]="teamPersonMap" [selectWarningTeamMap]="selectedTeamMap">
+      (selectPlayer)="updatePlace($event)" [selectedPersonMap]="teamPersonMap" [selectWarningTeamMap]="selectedTeamMap">
     </app-pool-choosepersons>
   </div>
 </div>

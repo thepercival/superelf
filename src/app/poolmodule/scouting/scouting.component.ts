@@ -8,7 +8,7 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
 import { ScoutedPerson } from '../../lib/scoutedPerson';
 import { Pool } from '../../lib/pool';
-import { Competition, Person, PersonMap } from 'ngx-sport';
+import { Competition, Person, PersonMap, Player } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RemoveApprovalModalComponent } from '../removeapproval/removeapprovalmodal.component';
 import { ScoutedPersonMapper } from '../../lib/scoutedPerson/mapper';
@@ -97,12 +97,12 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
       );
   }
 
-  add(person: Person) {
+  add(player: Player) {
     if (!this.pool) {
       return;
     }
     this.processing = true;
-    this.scoutedPersonRepository.createObject(person, this.pool.getSourceCompetition())
+    this.scoutedPersonRepository.createObject(player.getPerson(), this.pool.getSourceCompetition())
       .subscribe(
           /* happy path */(scoutedPerson: ScoutedPerson) => {
           // this.scoutingList.mappedPersons = new PersonMap();

@@ -1,5 +1,5 @@
 
-import { Person, Team } from 'ngx-sport';
+import { Person, Player, Team } from 'ngx-sport';
 import { FormationLine } from './formation/line';
 import { PoolUser } from './pool/user';
 
@@ -45,8 +45,7 @@ export class Formation {
     public getPerson(team: Team, date?: Date): Person | undefined {
         const checkDate = date ? date : new Date();
         return this.getPersons().find((person: Person) => {
-            const player = person.getPlayer(checkDate);
-            return player && player.getTeam() === team;
+            return person.getPlayer(team, checkDate);
         });
     }
 }

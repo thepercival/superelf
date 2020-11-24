@@ -11,7 +11,6 @@ export class ActiveConfigMapper {
     ) { }
 
     toObject(json: JsonActiveConfig): ActiveConfig {
-        console.log(json.availableFormations);
         const activeConfig = new ActiveConfig(
             new Period(new Date(json.createAndJoinStart), new Date(json.createAndJoinEnd)),
             json.availableFormations,

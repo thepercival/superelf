@@ -11,8 +11,10 @@ export class FormationLineMapper {
 
     toObject(json: JsonFormationLine, formation: Formation, association: Association): FormationLine {
         const formationLine = new FormationLine(formation, json.number, json.maxNrOfPersons);
-
-        json.persons.forEach(jsonPerson => this.personMapper.toObject(jsonPerson, association));
+        json.persons.forEach(jsonPerson => {
+            const person = this.personMapper.toObject(jsonPerson, association);
+            formationLine.getPersons().push(person);
+        });
         if (json.substitute) {
             formationLine.setSubstitute(this.personMapper.toObject(json.substitute, association));
         }

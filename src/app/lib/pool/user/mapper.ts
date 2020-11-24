@@ -28,7 +28,7 @@ export class PoolUserMapper {
         }
         const association = pool.getSourceCompetition().getAssociation();
         if (json.assembleFormation) {
-            const formation = this.formationMapper.toObject(json.assembleFormation, poolUser, association);
+            this.formationMapper.toObject(json.assembleFormation, poolUser, association);
         }
         if (json.transfers) {
             json.transfers.forEach(jsonTransfer => this.editActionMapper.toTransfer(jsonTransfer, poolUser, association));
