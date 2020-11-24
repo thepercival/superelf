@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { NameService, Person, PersonMap, Player } from 'ngx-sport';
+import { NameService, Person, PersonMap, TeamMap, SportCustom, Team } from 'ngx-sport';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
@@ -20,23 +20,27 @@ import { FormationLineMapper } from '../../lib/formation/line/mapper';
 import { FormationLine } from '../../lib/formation/line';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { FormationRepository } from '../../lib/formation/repository';
-
+import { AssembleLine, AssembleLinePlace } from './assembleline.component';
+import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-pool-assembleteam',
+  selector: 'app-pool-assemble',
   templateUrl: './assemble.component.html',
   styleUrls: ['./assemble.component.scss']
 })
 export class AssembleComponent extends PoolComponent implements OnInit {
   form: FormGroup;
   availableFormations: JsonFormationShell[] = [];
-  poolUser: PoolUser | undefined;
+  poolUser!: PoolUser;
   nameService = new NameService();
   superElfNameService = new SuperElfNameService();
   assembleLines: AssembleLine[] = [];
-  showSearchBtn = false;
   showSearchOnSM: boolean = false;
   teamPersonMap = new PersonMap();
+  selectedPlace: AssembleLinePlace | undefined;
+  changingFormation = false;
+  selectedSearchLine: number = SportCustom.Football_Line_All;
+  selectedTeamMap: TeamMap = new TeamMap();
 
   constructor(
     route: ActivatedRoute,
@@ -76,7 +80,7 @@ export class AssembleComponent extends PoolComponent implements OnInit {
           this.form.controls.formation.setValue(this.availableFormations.find(formationShell => {
             return formationShell.name === formation.getName();
           }));
-          this.changeAssembleLines(formation);
+          this.assembleLines = this.getAssembleLines(formation);
         },
         /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
         /* onComplete */() => this.processing = false
@@ -88,32 +92,109 @@ export class AssembleComponent extends PoolComponent implements OnInit {
   }
 
 
-  changeAssembleLines(formation?: Formation) {
-    this.assembleLines = [];
+  getAssembleLines(formation?: Formation): AssembleLine[] {
+    const assembleLines: AssembleLine[] = [];
     if (!formation) {
-      return;
+      return assembleLines;
     }
     formation.getLines().forEach((formationLine: FormationLine) => {
       const persons = formationLine.getPersons().slice();
-      const assemblePlayers: (Player | undefined)[] = [];
+      const places: AssembleLinePlace[] = [];
       for (let i = 1; i <= formationLine.getMaxNrOfPersons(); i++) {
         const person = persons.shift();
-        assemblePlayers.push(person ? person.getPlayer() : undefined);
+        places.push({
+          lineNumber: formationLine.getNumber(),
+          number: 1,
+          player: person ? person.getPlayer() : undefined,
+          isSubstitute: false
+        });
       }
-      const substitute = formationLine.getSubstitute()?.getPlayer();
-      const assembleLine: AssembleLine = {
-        number: formationLine.getNumber(),
-        players: assemblePlayers,
-        substitute
+      const substitute = {
+        lineNumber: formationLine.getNumber(),
+        number: 1,
+        player: formationLine.getSubstitute()?.getPlayer(),
+        isSubstitute: true
       };
-      this.assembleLines.push(assembleLine);
+      assembleLines.push({
+        number: formationLine.getNumber(), places, substitute
+      });
     });
-    console.log(this.assembleLines);
+    return assembleLines;
+  }
+
+  selectPlace(place: AssembleLinePlace) {
+    this.selectedPlace = place;
+    this.selectedSearchLine = place.lineNumber;
+    this.selectedTeamMap = this.getSelectedTeamMap();
+
+    console.log('searching for line ' + this.selectedPlace.lineNumber + ', place ' + this.selectedPlace.number);
+  }
+
+  getSelectedTeamMap(): TeamMap {
+    const teamMap: TeamMap = new TeamMap();
+    this.poolUser.getAssembleFormation()?.getLines().forEach((line: FormationLine) => {
+      line.getPersons().forEach((person: Person) => {
+        const player = person.getPlayer();
+        if (player) {
+          teamMap.set(+player.getTeam().getId(), player.getTeam());
+        }
+      });
+    });
+    return teamMap;
+  }
+
+  updatePlace(person: Person) {
+    const formation = this.poolUser.getAssembleFormation();
+    const selectedPlace = this.selectedPlace;
+    if (!selectedPlace) {
+      return;
+    }
+    const line = formation?.getLine(selectedPlace?.lineNumber);
+    if (!line) {
+      return;
+    }
+    this.removePersonSameTeam(line).subscribe(
+        /* happy path */() => {
+        // update this-variable
+        this.formationRepository.addPerson(person, line, selectedPlace.isSubstitute).subscribe(
+        /* happy path */() => {
+
+            this.assembleLines = this.getAssembleLines(formation);
+          },
+        /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
+        /* onComplete */() => this.processing = false
+        );
+      },
+        /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; }
+    );
+    console.log('update line ' + selectedPlace.lineNumber + ', place ' + selectedPlace.number
+      + ' with person ' + person?.getName());
+  }
+
+  protected removePersonSameTeam(line: FormationLine): Observable<void> {
+    const selectedPlace = this.selectedPlace;
+    if (!selectedPlace) {
+      return new Observable();
+    }
+    const player = this.selectedPlace?.player;
+    if (!player || !this.teamAlreadyPresent(player.getTeam())) {
+      return new Observable();
+    }
+    return this.formationRepository.removePerson(player.getPerson(), line, selectedPlace.isSubstitute);
+  }
+
+  protected teamAlreadyPresent(team: Team): boolean {
+    return this.poolUser.getAssembleFormation()?.getPerson(team) !== undefined;
   }
 
   add(person: Person) {
-
+    console.log('person selected: ' + person.getName());
   }
+
+  processFormationChange(processing: boolean) {
+    this.changingFormation = processing;
+  }
+
 
   choosePerson(lineNumer: number) {
     console.log('TODO choosePerson for line ' + lineNumer);
@@ -126,10 +207,4 @@ export class AssembleComponent extends PoolComponent implements OnInit {
   substitute(assembleLine: AssembleLine) {
 
   }
-}
-
-interface AssembleLine {
-  number: number;
-  players: (Player | undefined)[];
-  substitute: Player | undefined;
 }

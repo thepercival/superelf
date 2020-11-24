@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
-import { Sport } from 'ngx-sport';
+import { Person, Sport } from 'ngx-sport';
 import { JsonFormationShell } from '../activeConfig/json';
 import { FormationMapper } from './mapper';
 import { Pool } from '../pool';
 import { JsonFormation } from './json';
 import { Formation } from '../formation';
 import { PoolUser } from '../pool/user';
+import { FormationLine } from './line';
 
 @Injectable()
 export class FormationRepository extends APIRepository {
@@ -53,6 +54,35 @@ export class FormationRepository extends APIRepository {
     removeObject(assembleFormation: Formation): Observable<void> {
         const url = this.getUrl(assembleFormation.getPoolUser(), assembleFormation);
         return this.http.delete(url, this.getOptions()).pipe(
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    addPerson(person: Person, line: FormationLine, asSubstitute: boolean): Observable<void> {
+        const formation = line.getFormation();
+        const url = this.getUrl(formation.getPoolUser(), formation) + '/persons/' + person.getId();
+        return this.http.post<void>(url, undefined, { headers: super.getHeaders() }).pipe(
+            map(() => {
+                asSubstitute ? line.setSubstitute(person) : line.getPersons().push(person);
+            }),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    removePerson(person: Person, line: FormationLine, asSubstitute: boolean): Observable<void> {
+        const formation = line.getFormation();
+        const url = this.getUrl(formation.getPoolUser(), formation) + '/persons/' + person.getId();
+        return this.http.delete<void>(url, { headers: super.getHeaders() }).pipe(
+            map(() => {
+                if (asSubstitute) {
+                    line.setSubstitute(undefined)
+                } else {
+                    const index = line.getPersons().indexOf(person);
+                    if (index > -1) {
+                        line.getPersons().splice(index, 1);
+                    }
+                }
+            }),
             catchError((err) => this.handleError(err))
         );
     }

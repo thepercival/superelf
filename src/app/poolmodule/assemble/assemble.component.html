@@ -9,88 +9,34 @@
   {{ alert.message }}</ngb-alert>
 
 
-<div *ngIf="!processing && pool && poolUser" class="content-wrapper-between">
+<div *ngIf="pool && poolUser" class="content-wrapper-between">
   <div class="d-flex flex-wrap justify-content-around">
-    <div *ngIf="!showSearchOnSM" class="mb-3" ngClass="{'mr-3': showSearchBtn}">
+    <div *ngIf="!showSearchOnSM" class="mb-3 mr-3" style="max-width: 60vw">
       <div>
-        <h2 *ngIf="!showSearchBtn" class="text-center">
+        <h2 class="text-center">
           <fa-icon [icon]="['fas', 'users']"></fa-icon> team samenstellen
         </h2>
-        <div *ngIf="showSearchBtn" class="d-flex flex-wrap justify-content-between">
-          <h2 class="mr-2 text-truncate">
-            <fa-icon [icon]="['fas', 'users']"></fa-icon> team samenstellen
-          </h2>
-          <!-- <button (click)="showSearchOnSM = true" type="button" class="btn btn-secondary d-inline d-md-none">
-            <fa-icon [icon]="['fas', 'search']"></fa-icon> <span class="d-none d-sm-inline ml-1">zoeken</span>
-          </button> -->
-        </div>
       </div>
 
-      <app-pool-chooseformation *ngIf="!processing && availableFormations" [availableFormations]="availableFormations"
-        [poolUser]="poolUser" (alert)="alert = alert" (processing)="processing = processing">
+      <app-pool-chooseformation *ngIf="availableFormations" [availableFormations]="availableFormations"
+        [poolUser]="poolUser" (alert)="alert = $event" (processing)="processFormationChange($event)"
+        (formation)="assembleLines = getAssembleLines($event)">
       </app-pool-chooseformation>
-
-      <div class="d-flex flex-wrap justify-content-center">
-        <div class="card mb-3 mx-2" *ngFor="let assembleLine of assembleLines">
-          <div class="card-body">
-            <h5 class="card-title">{{superElfNameService.getLineName(assembleLine.number)}}</h5>
-            <table class="table">
-              <tbody>
-                <tr *ngFor="let player of assembleLine.players">
-                  <td>
-                    <span *ngIf="player">{{player.getPerson().getName()}}</span>
-                    <span *ngIf="!player" class="badge badge-warning">kies een speler</span>
-                  </td>
-                  <td>
-                    <span *ngIf="player">{{player.getTeam().getAbbreviation()}}</span>
-                  </td>
-                  <td class="text-right">
-                    <button *ngIf="player" type="button" class="btn btn-secondary btn-sm"
-                      (click)="removePerson(player.getPerson())">
-                      <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-                    </button>
-                    <button *ngIf="!player" type="button" class="btn btn-secondary btn-sm"
-                      [routerLink]="['/pool/choosepersons', pool.getId()]">
-                      <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <span *ngIf="assembleLine.substitute">{{assembleLine.substitute.getPerson().getName()}}</span>
-                    <span *ngIf="!assembleLine.substitute" class="badge badge-warning">kies een wissel</span>
-                  </td>
-                  <td>
-                    <span *ngIf="assembleLine.substitute">{{assembleLine.substitute.getTeam().getAbbreviation()}}</span>
-                  </td>
-                  <td class="text-right">
-                    <button *ngIf="assembleLine.substitute" type="button" class="btn btn-secondary btn-sm"
-                      (click)="removePerson(assembleLine.substitute.getPerson())">
-                      <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-                    </button>
-                    <button *ngIf="!assembleLine.substitute" type="button" class="btn btn-secondary btn-sm"
-                      (click)="choosePerson(assembleLine.number)">
-                      <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- <ul class="list-group list-group-flush">
-        <li class="list-group-item d-flex justify-content-between align-items-center pl-0"
-          *ngFor="let poolScoreUnit of getPoolScoreUnits(lineDef)">
-          <span>{{nameService.getScoreUnitName(poolScoreUnit.getBase())}}</span>
-          <span class="badge badge-primary badge-pill ml-1">{{poolScoreUnit.getPoints()}}</span>
-        </li>
-      </ul> -->
-          </div>
-        </div>
+      <h2 *ngIf="changingFormation" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
+      <div *ngIf="!changingFormation" class="d-flex flex-wrap justify-content-center">
+        <app-pool-assembleline *ngFor="let assembleLine of assembleLines" [assembleLine]="assembleLine"
+          [selectedPlace]="selectedPlace" (selectPlace)="selectPlace($event)">
+        </app-pool-assembleline>
       </div>
     </div>
-    <app-pool-choosepersons *ngIf="showSearchBtn && showSearchOnSM" class="d-block d-md-none"
-      (selectedPerson)=" add($event)" [selectedPersonMap]="teamPersonMap"></app-pool-choosepersons>
-    <app-pool-choosepersons *ngIf="showSearchBtn" class="d-none d-md-block" (selectedPerson)=" add($event)"
-      [selectedPersonMap]="teamPersonMap"></app-pool-choosepersons>
+    <app-pool-choosepersons *ngIf="selectedPlace && showSearchOnSM" class="d-block d-md-none"
+      (selectPerson)="updatePlace($event)" [selectedPersonMap]="teamPersonMap" [selectedSearchLine]="selectedSearchLine"
+      [selectWarningTeamMap]="selectedTeamMap"></app-pool-choosepersons>
+    <app-pool-choosepersons *ngIf="selectedPlace" class="d-none d-md-block" [selectedSearchLine]="selectedSearchLine"
+      (selectPerson)="updatePlace($event)" [selectedPersonMap]="teamPersonMap" [selectWarningTeamMap]="selectedTeamMap">
+    </app-pool-choosepersons>
   </div>
 </div>
 

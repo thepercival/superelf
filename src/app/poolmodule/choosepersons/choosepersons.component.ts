@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { NameService, Person, PersonMap, Player, SportCustom, Team } from 'ngx-sport';
+import { NameService, Person, PersonMap, Player, SportCustom, Team, TeamMap } from 'ngx-sport';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
@@ -12,15 +12,16 @@ import { ScoutedPerson } from '../../lib/scoutedPerson';
 import { Pool } from '../../lib/pool';
 import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
 
-
 @Component({
   selector: 'app-pool-choosepersons',
   templateUrl: './choosepersons.component.html',
   styleUrls: ['./choosepersons.component.scss']
 })
-export class ChoosePersonsComponent extends PoolComponent implements OnInit {
-  @Output() selectedPerson = new EventEmitter<Person>();
+export class ChoosePersonsComponent extends PoolComponent implements OnInit, OnChanges {
+  @Output() selectPerson = new EventEmitter<Person>();
   @Input() selectedPersonMap: PersonMap = new PersonMap();
+  @Input() selectedSearchLine: number = 0;
+  @Input() selectWarningTeamMap: TeamMap = new TeamMap();
 
   form: FormGroup;
   foundPlayers: Player[] | undefined;
@@ -54,9 +55,22 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit {
       for (let line = 1; line < SportCustom.Football_Line_All; line *= 2) {
         this.searchLines.push(line);
       }
-
+      if (this.selectedSearchLine) {
+        this.form.controls.searchLine.setValue(this.selectedSearchLine);
+      }
       this.searchPersons(pool);
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // @TODO teams die je al hebt, moeten met een warning kunnen oplichten
+    // dus een soort van selectWarningTeams
+
+    if (this.pool && changes.selectedSearchLine !== undefined && changes.selectedSearchLine.currentValue !== changes.selectedSearchLine.previousValue
+      && changes.selectedSearchLine.firstChange === false) {
+      this.form.controls.searchLine.setValue(changes.selectedSearchLine.currentValue);
+      this.searchPersons(this.pool);
+    }
   }
 
   searchPersons(pool: Pool) {
@@ -71,7 +85,7 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit {
   }
 
   select(person: Person) {
-    this.selectedPerson.emit(person);
+    this.selectPerson.emit(person);
   }
 
   alreadySelected(person: Person): boolean {

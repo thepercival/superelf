@@ -14,7 +14,9 @@ import {
   faTrashAlt,
   faInfoCircle,
   faSearch,
-  faPlusCircle
+  faPlusCircle,
+  faPenAlt,
+  faPencilAlt
 } from '@fortawesome/free-solid-svg-icons';
 import {
   CompetitionMapper,
@@ -80,6 +82,7 @@ import { PoolTransferPeriodMapper } from '../lib/pool/period/transfer/mapper';
 import { EditActionMapper } from '../lib/editAction/mapper';
 import { FormationRepository } from '../lib/formation/repository';
 import { ChooseFormationComponent } from './assemble/chooseformation.component';
+import { AssembleLineComponent } from './assemble/assembleline.component';
 
 @NgModule({
   imports: [
@@ -103,6 +106,7 @@ import { ChooseFormationComponent } from './assemble/chooseformation.component';
     ChoosePersonsComponent,
     PersonComponent,
     AssembleComponent,
+    AssembleLineComponent,
     ChooseFormationComponent,
     ConfirmPersonChoiceModalComponent,
     RemoveApprovalModalComponent
@@ -159,7 +163,7 @@ export class PoolModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
       faListOl, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
-      , faInfoCircle, faSearch, faPlusCircle/*faMoneyBillAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
+      , faInfoCircle, faSearch, faPlusCircle, faPencilAlt/*faMoneyBillAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
       , faMedal, , faQrcode, faCopy, faDotCircle, faSync*/
     );

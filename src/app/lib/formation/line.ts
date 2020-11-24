@@ -9,6 +9,10 @@ export class FormationLine {
         this.formation.getLines().push(this);
     }
 
+    public getFormation(): Formation {
+        return this.formation;
+    }
+
     public getMaxNrOfPersons(): number {
         return this.maxNrOfPersons;
     }
@@ -27,5 +31,12 @@ export class FormationLine {
 
     public setSubstitute(substitute: Person | undefined) {
         this.substitute = substitute;
+    }
+
+    public getAllPersons(): Person[] {
+        if (this.substitute) {
+            return this.persons.concat([this.substitute]);
+        }
+        return this.persons;
     }
 }

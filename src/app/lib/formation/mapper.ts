@@ -10,6 +10,7 @@ export class FormationMapper {
     constructor(protected lineMapper: FormationLineMapper) { }
 
     toObject(json: JsonFormation, poolUser: PoolUser, association: Association): Formation {
+        console.log('cdk');
         const formation = new Formation(poolUser, json.name);
         formation.setId(json.id);
         json.lines.forEach(jsonLine => this.lineMapper.toObject(jsonLine, formation, association));

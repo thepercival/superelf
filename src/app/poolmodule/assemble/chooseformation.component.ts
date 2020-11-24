@@ -1,17 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { Player } from 'ngx-sport';
-
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { JsonFormationShell } from '../../lib/activeConfig/json';
 import { pairwise } from 'rxjs/operators';
 import { PoolUser } from '../../lib/pool/user';
 import { Formation } from '../../lib/formation';
-import { FormationLine } from '../../lib/formation/line';
 import { FormationRepository } from '../../lib/formation/repository';
 import { IAlert } from '../../shared/commonmodule/alert';
-
 
 @Component({
   selector: 'app-pool-chooseformation',
@@ -24,6 +20,7 @@ export class ChooseFormationComponent implements OnInit {
   @Input() poolUser!: PoolUser;
   @Output() alert = new EventEmitter<IAlert>();
   @Output() processing = new EventEmitter<boolean>();
+  @Output() formation = new EventEmitter<Formation | undefined>();
 
   constructor(
     protected formationRepository: FormationRepository,
@@ -42,6 +39,7 @@ export class ChooseFormationComponent implements OnInit {
       this.form.controls.formation.setValue(undefined);
       return;
     }
+
     this.form.controls.formation.setValue(this.availableFormations.find(formationShell => {
       return formationShell.name === formation.getName();
     }));
@@ -52,14 +50,11 @@ export class ChooseFormationComponent implements OnInit {
     this.form.controls.formation.valueChanges
       .pipe(pairwise())
       .subscribe(([prev, next]) => {
-        console.log(prev, next);
         if (prev === undefined && next) {
           this.addFormation(next);
         } else if (prev && next === undefined) {
-          console.log('remove formation');
           this.removeFormation();
         } else { // update
-          console.log('update formation', next);
           this.editFormation(next);
         }
       },
@@ -78,7 +73,7 @@ export class ChooseFormationComponent implements OnInit {
     this.emitProcessing(true);
     this.formationRepository.createObject(newFormationShell, this.poolUser).subscribe(
       /* happy path */(formation: Formation) => {
-        this.changeAssembleLines(formation);
+        this.formation.emit(formation);
       },
       /* error path */(e: string) => { this.emitAlert('danger', e); this.emitProcessing(false); },
       /* onComplete */() => this.emitProcessing(false)
@@ -91,11 +86,12 @@ export class ChooseFormationComponent implements OnInit {
       return;
     }
     this.emitProcessing(true);
-    // kijk als er linies zijn waarbij spelers wegvallen, zo ja toon popup
+    // @TODO kijk als er linies zijn waarbij spelers wegvallen, zo ja toon popup
     this.formationRepository.editObject(newFormationShell, formation).subscribe(
       /* happy path */(newFormation: Formation) => {
-        this.poolUser.setAssembleFormation(undefined);
-        this.changeAssembleLines();
+        this.poolUser.setAssembleFormation(newFormation);
+        this.formation.emit(newFormation);
+        this.emitProcessing(false);
       },
       /* error path */(e: string) => { this.emitAlert('danger', e); this.emitProcessing(false); },
       /* onComplete */() => this.emitProcessing(false)
@@ -112,39 +108,12 @@ export class ChooseFormationComponent implements OnInit {
     this.formationRepository.removeObject(assembleFormation).subscribe(
       /* happy path */() => {
         this.poolUser.setAssembleFormation(undefined);
-        this.changeAssembleLines();
+        this.formation.emit(undefined);
+        this.emitProcessing(false)
       },
       /* error path */(e: string) => { this.emitAlert('danger', e); this.emitProcessing(false); },
       /* onComplete */() => this.emitProcessing(false)
     );
   }
-
-  changeAssembleLines(formation?: Formation) {
-    const assembleLines: AssembleLine[] = [];
-    if (!formation) {
-      return assembleLines;
-    }
-    formation.getLines().forEach((formationLine: FormationLine) => {
-      const persons = formationLine.getPersons().slice();
-      const assemblePlayers: (Player | undefined)[] = [];
-      for (let i = 1; i <= formationLine.getMaxNrOfPersons(); i++) {
-        const person = persons.shift();
-        assemblePlayers.push(person ? person.getPlayer() : undefined);
-      }
-      const substitute = formationLine.getSubstitute()?.getPlayer();
-      const assembleLine: AssembleLine = {
-        number: formationLine.getNumber(),
-        players: assemblePlayers,
-        substitute
-      };
-      assembleLines.push(assembleLine);
-    });
-    // emit
-  }
 }
 
-interface AssembleLine {
-  number: number;
-  players: (Player | undefined)[];
-  substitute: Player | undefined;
-}

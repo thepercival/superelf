@@ -43,7 +43,8 @@
       </td>
       <td class="text-right">
         <button *ngIf="!alreadySelected(player.getPerson())" type="button" class="btn btn-secondary btn-sm"
-          (click)="select(player.getPerson())">
+          (click)="select(player.getPerson())"
+          [ngClass]="{'btn-warning': selectWarningTeamMap.has(+player.getTeam().getId())}">
           <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
         </button>
       </td>

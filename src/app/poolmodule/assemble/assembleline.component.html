@@ -1,0 +1,33 @@
+<div class="card mb-3 mx-2" *ngIf="assembleLine">
+  <div class="card-body">
+    <h5 class="card-title">{{superElfNameService.getLineName(assembleLine.number)}}</h5>
+    <table class="table">
+      <tbody>
+        <ng-container *ngFor="let place of assembleLine.places" [ngTemplateOutlet]="placeRow"
+          [ngTemplateOutletContext]="{place:place}">
+        </ng-container>
+        <ng-container [ngTemplateOutlet]="placeRow" [ngTemplateOutletContext]="{place:assembleLine.substitute}">
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #placeRow let-place="place">
+  <tr [ngClass]="{'top-border-black': place.isSubstitute, 'table-active': selectedPlace === place}">
+    <td>
+      <span *ngIf="place.player">{{place.player.getPerson().getName()}}</span>
+      <span *ngIf="!place.player" class="badge"
+        [ngClass]="{'badge-warning': place.isSubstitute, 'badge-danger': !place.isSubstitute}">kies een
+        {{place.isSubstitute ? 'wissel' : 'speler'}}</span>
+    </td>
+    <td>
+      <span *ngIf="place.player">{{place.player.getTeam().getAbbreviation()}}</span>
+    </td>
+    <td class="text-right">
+      <button *ngIf="selectedPlace !== place" type="button" class="btn btn-secondary btn-sm" (click)="select(place)">
+        <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+      </button>
+    </td>
+  </tr>
+</ng-template>
