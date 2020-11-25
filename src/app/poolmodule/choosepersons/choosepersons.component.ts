@@ -18,10 +18,11 @@ import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
   styleUrls: ['./choosepersons.component.scss']
 })
 export class ChoosePersonsComponent extends PoolComponent implements OnInit, OnChanges {
-  @Output() selectPlayer = new EventEmitter<Player>();
   @Input() selectedPersonMap: PersonMap = new PersonMap();
   @Input() selectedSearchLine: number = 0;
+  @Input() selectableLines: number = SportCustom.Football_Line_All;
   @Input() selectWarningTeamMap: TeamMap = new TeamMap();
+  @Output() selectPlayer = new EventEmitter<Player>();
 
   form: FormGroup;
   foundPlayers: Player[] | undefined;
@@ -87,6 +88,10 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit, OnC
 
   select(player: Player) {
     this.selectPlayer.emit(player);
+  }
+
+  isSelectable(player: Player): boolean {
+    return !this.alreadySelected(player.getPerson()) && (this.selectableLines & player.getLine()) > 0;
   }
 
   alreadySelected(person: Person): boolean {

@@ -42,8 +42,8 @@
         PP
       </td>
       <td class="text-right">
-        <button *ngIf="!alreadySelected(player.getPerson())" type="button" class="btn btn-secondary btn-sm"
-          (click)="select(player)" [ngClass]="{'btn-warning': selectWarningTeamMap.has(+player.getTeam().getId())}">
+        <button *ngIf="isSelectable(player)" type="button" class="btn btn-secondary btn-sm" (click)="select(player)"
+          [ngClass]="{'btn-warning': selectWarningTeamMap.has(+player.getTeam().getId())}">
           <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
         </button>
       </td>

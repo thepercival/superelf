@@ -1,8 +1,9 @@
-@import './mixins';
+
 
 $enable-responsive-font-sizes: true !default;
-@import "./bootstrapbuild/variables";
 @import "./bootstrap-custom-components";
+@import "./bootstrapbuild/variables";
+@import './mixins';
 // @import "./bootswatch/bootswatch-custom";
 
 @include media-breakpoint-up(sm) {

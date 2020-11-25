@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -14,10 +14,11 @@ import { IAlert } from '../../shared/commonmodule/alert';
   templateUrl: './chooseformation.component.html',
   styleUrls: ['./chooseformation.component.scss']
 })
-export class ChooseFormationComponent implements OnInit {
+export class ChooseFormationComponent implements OnInit, OnChanges {
   form: FormGroup;
   @Input() availableFormations: JsonFormationShell[] = [];
   @Input() poolUser!: PoolUser;
+  @Input() disabled: boolean = false;
   @Output() alert = new EventEmitter<IAlert>();
   @Output() processing = new EventEmitter<boolean>();
   @Output() formation = new EventEmitter<Formation | undefined>();
@@ -46,6 +47,13 @@ export class ChooseFormationComponent implements OnInit {
 
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.disabled !== undefined && changes.disabled.currentValue !== changes.disabled.previousValue
+      && changes.disabled.firstChange === false) {
+      changes.disabled.currentValue ? this.form.controls.formation.disable() : this.form.controls.formation.enable();
+    }
+  }
+
   onChanges(): void {
     this.form.controls.formation.valueChanges
       .pipe(pairwise())
@@ -54,7 +62,7 @@ export class ChooseFormationComponent implements OnInit {
           this.addFormation(next);
         } else if (prev && next === undefined) {
           this.removeFormation();
-        } else { // update
+        } else if (prev !== next) {
           this.editFormation(next);
         }
       },

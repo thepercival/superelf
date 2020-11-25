@@ -35,10 +35,11 @@ export class AssembleComponent extends PoolComponent implements OnInit {
   nameService = new NameService();
   superElfNameService = new SuperElfNameService();
   assembleLines: AssembleLine[] = [];
-  showSearchOnSM: boolean = false;
+  showSearchSMDown: boolean = false;
   teamPersonMap = new PersonMap();
   selectedPlace: AssembleLinePlace | undefined;
   changingFormation = false;
+  updatingPlayer = false;
   selectedSearchLine: number = SportCustom.Football_Line_All;
   selectedTeamMap: TeamMap = new TeamMap();
 
@@ -85,9 +86,6 @@ export class AssembleComponent extends PoolComponent implements OnInit {
         /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
         /* onComplete */() => this.processing = false
       );
-
-      // this.setScountingList(pool);
-      // this.searchPersons(pool);
     });
   }
 
@@ -148,7 +146,7 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     return teamMap;
   }
 
-  updatePlace(player: Player) {
+  updatePlace(player: Player, smDown: boolean) {
     const formation = this.poolUser.getAssembleFormation();
     if (!formation) {
       return;
@@ -161,33 +159,61 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     if (!line) {
       return;
     }
-    this.removePersonSameTeam(line).subscribe(
+    this.updatingPlayer = true;
+    this.removeSelected(line).subscribe(
         /* happy path */() => {
-        this.formationRepository.addPerson(player, line, selectedPlace.isSubstitute).subscribe(
+        this.removeSameTeam(formation, player.getTeam()).subscribe(
         /* happy path */() => {
-
-            this.assembleLines = this.getAssembleLines(formation);
+            // check if someOne from same team is in formation, than show modal and 
+            this.formationRepository.addPerson(player, line, selectedPlace.isSubstitute).subscribe(
+            /* happy path */() => {
+                this.selectedPlace = undefined;
+                this.assembleLines = this.getAssembleLines(formation);
+                this.showSearchSMDown = false;
+              },
+                  /* error path */(e: string) => { this.setAlert('danger', e); this.updatingPlayer = false; },
+                  /* onComplete */() => this.updatingPlayer = false
+            );
           },
-        /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => this.processing = false
+        /* error path */(e: string) => { this.setAlert('danger', e); this.updatingPlayer = false; }
         );
       },
-        /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; }
+        /* error path */(e: string) => { this.setAlert('danger', e); this.updatingPlayer = false; }
     );
     console.log('update line ' + selectedPlace.lineNumber + ', place ' + selectedPlace.number
       + ' with person ' + player.getPerson().getName());
   }
 
-  protected removePersonSameTeam(line: FormationLine): Observable<void | number> {
+  protected removeSelected(line: FormationLine): Observable<void | number> {
     const selectedPlace = this.selectedPlace;
     if (!selectedPlace) {
       return of(0);
     }
-    const player = this.selectedPlace?.player;
-    if (!player || !this.teamAlreadyPresent(player.getTeam())) {
+    const player = selectedPlace.player;
+    if (!player) {
       return of(0);
     }
     return this.formationRepository.removePerson(player, line, selectedPlace.isSubstitute);
+  }
+
+  protected removeSameTeam(formation: Formation, team: Team): Observable<void | number> {
+    const selectedPlace = this.selectedPlace;
+    if (!selectedPlace) {
+      return of(0);
+    }
+    const person = formation.getPerson(team);
+    if (!person) {
+      return of(0);
+    }
+    const player = person.getPlayerOneTeamSim();
+    if (!player) {
+      return of(0);
+    }
+    const line = formation.getLine(player.getLine());
+    if (!line) {
+      return of(0);
+    }
+    return this.formationRepository.removePerson(player, line, line.getSubstitute() === player.getPerson());
   }
 
   protected teamAlreadyPresent(team: Team): boolean {

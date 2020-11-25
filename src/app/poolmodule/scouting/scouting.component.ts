@@ -24,7 +24,7 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
   form: FormGroup;
   scoutingList: ScoutingList = { scoutedPersons: [], mappedPersons: new PersonMap() };
   showSearchBtn = false;
-  showSearchOnSM: boolean = false;
+  showSearchSMDown: boolean = false;
 
   constructor(
     route: ActivatedRoute,
@@ -108,7 +108,7 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
           // this.scoutingList.mappedPersons = new PersonMap();
           this.addToScoutingList(scoutedPerson);
 
-          if (this.showSearchOnSM) {
+          if (this.showSearchSMDown) {
             this.openConfirmModal(scoutedPerson.getPerson());
           }
         },
@@ -125,7 +125,7 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
     modalRef.componentInstance.person = person;
     modalRef.result.then((result) => {
       if (result === 'goback') {
-        this.showSearchOnSM = false;
+        this.showSearchSMDown = false;
       }
     }, (reason) => {
     });

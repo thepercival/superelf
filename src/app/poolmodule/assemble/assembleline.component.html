@@ -1,5 +1,6 @@
-<div class="card mb-3 mx-2" *ngIf="assembleLine">
-  <div class="card-body">
+<div *ngIf="assembleLine" class="card mx-2 mb-1 border-{{ completed() ? 'success' : 'danger'}}">
+
+  <div class="card-body pb-0">
     <h5 class="card-title">{{superElfNameService.getLineName(assembleLine.number)}}</h5>
     <table class="table">
       <tbody>
@@ -12,7 +13,6 @@
     </table>
   </div>
 </div>
-
 <ng-template #placeRow let-place="place">
   <tr [ngClass]="{'top-border-black': place.isSubstitute, 'table-active': selectedPlace === place}">
     <td>
@@ -25,9 +25,15 @@
       <span *ngIf="place.player">{{place.player.getTeam().getAbbreviation()}}</span>
     </td>
     <td class="text-right">
-      <button *ngIf="selectedPlace !== place" type="button" class="btn btn-secondary btn-sm" (click)="select(place)">
+      <button *ngIf="selectedPlace !== place && !processing" type="button"
+        class="btn btn-secondary btn-sm d-inline d-md-none" (click)="select(place, true)">
         <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
       </button>
+      <button *ngIf="selectedPlace !== place && !processing" type="button"
+        class="btn btn-secondary btn-sm d-none d-md-inline" (click)="select(place, false)">
+        <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+      </button>
+      <fa-icon *ngIf="selectedPlace == place && processing" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </td>
   </tr>
 </ng-template>

@@ -11,7 +11,10 @@ import { SuperElfNameService } from '../../lib/nameservice';
 export class AssembleLineComponent implements OnInit {
   @Input() assembleLine!: AssembleLine;
   @Input() selectedPlace: AssembleLinePlace | undefined;
+  @Input() processing: boolean = true;
   @Output() selectPlace = new EventEmitter<AssembleLinePlace>();
+  @Output() hideOnSMDown = new EventEmitter<boolean>();
+
 
   superElfNameService = new SuperElfNameService();
 
@@ -21,11 +24,16 @@ export class AssembleLineComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.assembleLine);
+    this.processing = false;
   }
 
-  select(place: AssembleLinePlace) {
+  select(place: AssembleLinePlace, smDown: boolean) {
     this.selectPlace.emit(place);
+    this.hideOnSMDown.emit(smDown);
+  }
+
+  completed() {
+    return this.assembleLine.substitute?.player && this.assembleLine.places.every(place => place.player);
   }
 }
 

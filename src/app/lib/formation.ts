@@ -38,7 +38,14 @@ export class Formation {
 
     public getPersons(): Person[] {
         let persons: Person[] = [];
-        this.lines.forEach(line => persons = persons.concat(line.getAllPersons()));
+        this.lines.forEach(line => {
+            persons = persons.concat(line.getAllPersons());
+            const substitute = line.getSubstitute();
+            if (substitute) {
+                persons.push(substitute);
+            }
+
+        });
         return persons;
     }
 

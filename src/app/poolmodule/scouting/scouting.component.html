@@ -11,7 +11,7 @@
 
 <div *ngIf="!processing && pool" class="content-wrapper-between">
   <div class="d-flex flex-wrap justify-content-around">
-    <div *ngIf="!showSearchOnSM" class="mb-3" ngClass="{'mr-3': showSearchBtn}">
+    <div *ngIf="!showSearchSMDown" class="mb-3" ngClass="{'mr-3': showSearchBtn}">
       <div>
         <h2 *ngIf="!showSearchBtn" class="text-center">
           <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
@@ -20,7 +20,7 @@
           <h2 class="mr-2 text-truncate">
             <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
           </h2>
-          <button (click)="showSearchOnSM = true" type="button" class="btn btn-secondary d-inline d-md-none">
+          <button (click)="showSearchSMDown = true" type="button" class="btn btn-secondary d-inline d-md-none">
             <fa-icon [icon]="['fas', 'search']"></fa-icon> <span class="d-none d-sm-inline ml-1">zoeken</span>
           </button>
         </div>
@@ -55,7 +55,7 @@
         </tbody>
       </table>
     </div>
-    <app-pool-choosepersons *ngIf="showSearchBtn && showSearchOnSM" class="d-block d-md-none"
+    <app-pool-choosepersons *ngIf="showSearchBtn && showSearchSMDown" class="d-block d-md-none"
       (selectPlayer)=" add($event)" [selectedPersonMap]="scoutingList.mappedPersons"></app-pool-choosepersons>
     <app-pool-choosepersons *ngIf="showSearchBtn" class="d-none d-md-block" (selectPlayer)=" add($event)"
       [selectedPersonMap]="scoutingList.mappedPersons"></app-pool-choosepersons>

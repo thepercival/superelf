@@ -10,32 +10,40 @@
 
 
 <div *ngIf="pool && poolUser" class="content-wrapper-between">
-  <div class="d-flex flex-wrap justify-content-around">
-    <div *ngIf="!showSearchOnSM" class="mb-3 mr-3" style="max-width: 60vw">
+  <div class="d-flex flex-wrap">
+    <div *ngIf="!showSearchSMDown" class="mb-3 mr-3 assemble-width">
       <div>
         <h2 class="text-center">
           <fa-icon [icon]="['fas', 'users']"></fa-icon> team samenstellen
         </h2>
       </div>
-
-      <app-pool-chooseformation *ngIf="availableFormations" [availableFormations]="availableFormations"
-        [poolUser]="poolUser" (alert)="alert = $event" (processing)="processFormationChange($event)"
-        (formation)="assembleLines = getAssembleLines($event)">
-      </app-pool-chooseformation>
-      <h2 *ngIf="changingFormation" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-      </h2>
-      <div *ngIf="!changingFormation" class="d-flex flex-wrap justify-content-center">
-        <app-pool-assembleline *ngFor="let assembleLine of assembleLines" [assembleLine]="assembleLine"
-          [selectedPlace]="selectedPlace" (selectPlace)="selectPlace($event)">
-        </app-pool-assembleline>
+      <div>
+        <app-pool-chooseformation *ngIf="availableFormations" [availableFormations]="availableFormations"
+          [disabled]="updatingPlayer" [poolUser]="poolUser" (alert)="alert = $event"
+          (processing)="processFormationChange($event)" (formation)="assembleLines = getAssembleLines($event)">
+        </app-pool-chooseformation>
+        <h2 *ngIf="changingFormation" class="text-center">
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+        <div *ngIf="!changingFormation">
+          <app-pool-assembleline *ngFor="let assembleLine of assembleLines" [assembleLine]="assembleLine"
+            [selectedPlace]="selectedPlace" [processing]="updatingPlayer" (selectPlace)="selectPlace($event)"
+            (hideOnSMDown)="showSearchSMDown=$event">
+          </app-pool-assembleline>
+        </div>
       </div>
     </div>
-    <app-pool-choosepersons *ngIf="selectedPlace && showSearchOnSM" class="d-block d-md-none"
-      (selectPlayer)="updatePlace($event)" [selectedPersonMap]="teamPersonMap" [selectedSearchLine]="selectedSearchLine"
-      [selectWarningTeamMap]="selectedTeamMap"></app-pool-choosepersons>
-    <app-pool-choosepersons *ngIf="selectedPlace" class="d-none d-md-block" [selectedSearchLine]="selectedSearchLine"
-      (selectPlayer)="updatePlace($event)" [selectedPersonMap]="teamPersonMap" [selectWarningTeamMap]="selectedTeamMap">
+    <h2 *ngIf="updatingPlayer" class="assemble-width text-center">
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </h2>
+    <app-pool-choosepersons *ngIf="selectedPlace && showSearchSMDown && !updatingPlayer"
+      class="d-block d-md-none assemble-width" (selectPlayer)="updatePlace($event, true)"
+      [selectedPersonMap]="teamPersonMap" [selectedSearchLine]="selectedSearchLine"
+      [selectWarningTeamMap]="selectedTeamMap" [selectableLines]="selectedSearchLine"></app-pool-choosepersons>
+    <app-pool-choosepersons *ngIf="selectedPlace && !updatingPlayer" class="d-none d-md-block assemble-width"
+      [selectedSearchLine]="selectedSearchLine" (selectPlayer)="updatePlace($event, false)"
+      [selectedPersonMap]="teamPersonMap" [selectWarningTeamMap]="selectedTeamMap"
+      [selectableLines]="selectedSearchLine">
     </app-pool-choosepersons>
   </div>
 </div>
