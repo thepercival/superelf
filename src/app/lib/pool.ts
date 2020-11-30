@@ -1,8 +1,8 @@
 import { Association, Competition, Period, PlaceRange, Season } from 'ngx-sport';
 
 import { PoolCollection } from './pool/collection';
-import { PoolAssemblePeriod } from './pool/period/assemble';
-import { PoolTransferPeriod } from './pool/period/transfer';
+import { AssemblePeriod } from './period/assemble';
+import { TransferPeriod } from './period/transfer';
 import { PoolScoreUnit } from './pool/scoreUnit';
 
 export class Pool {
@@ -15,7 +15,7 @@ export class Pool {
     ];
 
     constructor(protected collection: PoolCollection, protected sourceCompetition: Competition,
-        protected assemblePeriod: PoolAssemblePeriod, protected transferPeriod: PoolTransferPeriod) {
+        protected assemblePeriod: AssemblePeriod, protected transferPeriod: TransferPeriod) {
     }
 
     getId(): number {
@@ -59,11 +59,11 @@ export class Pool {
         return this.getCompetition()?.getLeague().getAssociation();
     }
 
-    getAssemblePeriod(): PoolAssemblePeriod {
+    getAssemblePeriod(): AssemblePeriod {
         return this.assemblePeriod;
     }
 
-    getTransferPeriod(): PoolTransferPeriod {
+    getTransferPeriod(): TransferPeriod {
         return this.transferPeriod;
     }
 

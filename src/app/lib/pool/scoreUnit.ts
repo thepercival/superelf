@@ -14,6 +14,10 @@ export class PoolScoreUnit {
         return this.base;
     }
 
+    public getNumber(): number {
+        return this.base.getNumber();
+    }
+
     public getPoints(): number {
         return this.points;
     }

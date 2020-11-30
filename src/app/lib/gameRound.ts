@@ -1,4 +1,4 @@
-export class PoolViewPeriodRound {
+export class GameRound {
 
     constructor(
         protected number: number) {

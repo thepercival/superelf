@@ -73,12 +73,12 @@ import { PlayerRepository } from '../lib/ngx-sport/player/repository';
 import { ChoosePersonsComponent } from './choosepersons/choosepersons.component';
 import { ConfirmPersonChoiceModalComponent } from './choosepersons/confirmpersonchoicemodal.component';
 import { PersonComponent } from './person/person.component';
-import { PoolViewPeriodMapper } from '../lib/pool/period/view/mapper';
+import { ViewPeriodMapper } from '../lib/period/view/mapper';
 import { AssembleComponent } from './assemble/assemble.component';
 import { FormationMapper } from '../lib/formation/mapper';
 import { FormationLineMapper } from '../lib/formation/line/mapper';
-import { PoolAssemblePeriodMapper } from '../lib/pool/period/assemble/mapper';
-import { PoolTransferPeriodMapper } from '../lib/pool/period/transfer/mapper';
+import { AssemblePeriodMapper } from '../lib/period/assemble/mapper';
+import { TransferPeriodMapper } from '../lib/period/transfer/mapper';
 import { EditActionMapper } from '../lib/editAction/mapper';
 import { FormationRepository } from '../lib/formation/repository';
 import { ChooseFormationComponent } from './assemble/chooseformation.component';
@@ -152,9 +152,9 @@ import { AssembleLineComponent } from './assemble/assembleline.component';
     ActiveConfigMapper,
     CompetitionRepository,
     CompetitionMapper,
-    PoolAssemblePeriodMapper,
-    PoolTransferPeriodMapper,
-    PoolViewPeriodMapper,
+    AssemblePeriodMapper,
+    TransferPeriodMapper,
+    ViewPeriodMapper,
     EditActionMapper,
     FormationRepository
   ]

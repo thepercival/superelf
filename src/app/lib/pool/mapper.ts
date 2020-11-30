@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Competition, CompetitionMapper, SeasonMapper } from 'ngx-sport';
+import { Competition, CompetitionMapper } from 'ngx-sport';
 
 import { Pool } from '../pool';
 import { JsonPool } from './json';
 import { PoolCollectionMapper } from './collection/mapper';
 import { PoolScoreUnitMapper } from './scoreUnit/mapper';
 import { PoolUserMapper } from './user/mapper';
-import { PoolAssemblePeriodMapper } from './period/assemble/mapper';
-import { PoolTransferPeriodMapper } from './period/transfer/mapper';
+import { AssemblePeriodMapper } from '../period/assemble/mapper';
+import { TransferPeriodMapper } from '../period/transfer/mapper';
 
 @Injectable()
 export class PoolMapper {
     constructor(
         private collectionMapper: PoolCollectionMapper,
-        private poolAssemblePeriodMapper: PoolAssemblePeriodMapper,
-        private poolTransferPeriodMapper: PoolTransferPeriodMapper,
+        private assemblePeriodMapper: AssemblePeriodMapper,
+        private transferPeriodMapper: TransferPeriodMapper,
         private poolScoreUnitMapper: PoolScoreUnitMapper,
         private competitionMapper: CompetitionMapper,
         private poolUserMapper: PoolUserMapper) { }
@@ -23,8 +23,8 @@ export class PoolMapper {
         const pool = new Pool(
             this.collectionMapper.toObject(json.collection),
             sourceCompetition,
-            this.poolAssemblePeriodMapper.toObject(json.assemblePeriod),
-            this.poolTransferPeriodMapper.toObject(json.transferPeriod));
+            this.assemblePeriodMapper.toObject(json.assemblePeriod),
+            this.transferPeriodMapper.toObject(json.transferPeriod));
         json.competitions.forEach(jsonCompetition => {
             pool.getCompetitions().push(this.competitionMapper.toObject(jsonCompetition));
         });
