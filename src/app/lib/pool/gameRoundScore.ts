@@ -1,21 +1,13 @@
 import { Person } from 'ngx-sport';
 import { PoolScoreUnit } from './scoreUnit';
-import { PoolScoreUnitMap } from './scoreUnit/mapper';
 import { PoolUser } from './user';
 
-export class GameRoundScore {
+// export class GameRoundScore {
 
-    constructor(protected poolUser: PoolUser, protected gameRound: number, protected scores: PoolScoreUnitMap) {
+//     constructor(protected poolUser: PoolUser, protected gameRound: number, protected scores: PoolScoreUnitMap) {
 
-    }
-}
-
-export class PersonGameRoundScore {
-
-    constructor(protected poolUser: PoolUser, protected gameRound: number, protected person: Person, protected scores: PoolScoreUnit[]) {
-
-    }
-}
+//     }
+// }
     // algemene stand
     // punten per pooluser per speelronde(alleen totaal, apart differentiatie kunnen ophalen)
     // punten per speler per pooluser per speelronde(alleen totaal, apart differentiatie kunnen ophalen)

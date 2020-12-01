@@ -9,7 +9,7 @@ import { PoolUser } from '../../lib/pool/user';
 
 export class PoolComponent {
 
-    public pool: Pool | undefined;
+    public pool!: Pool;
     public poolUser: PoolUser | undefined;
     public alert: IAlert | undefined;
     public processing = true;

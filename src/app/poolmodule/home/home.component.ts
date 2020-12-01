@@ -78,7 +78,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
     }
 
     getNrOfPoolUsersHaveTransfered(): number {
-        const max = this.pool?.getTransferPeriod().getMaxNrOfTransfers();
+        const max = this.pool.getTransferPeriod().getMaxNrOfTransfers();
         return this.poolUsers.filter(poolUser => poolUser.getNrOfTransferedWithTeam() === max).length;
     }
 

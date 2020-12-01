@@ -116,7 +116,7 @@ export class TeamComponent extends PoolComponent implements OnInit {
     modalRef.componentInstance.person = person;
     modalRef.result.then((result) => {
       if (result === 'toscouting')
-        this.router.navigate(['/pool/scouting', this.pool?.getId()]);
+        this.router.navigate(['/pool/scouting', this.pool.getId()]);
     }, (reason) => {
     });
   }

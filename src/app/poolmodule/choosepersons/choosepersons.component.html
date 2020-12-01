@@ -25,28 +25,34 @@
   </div>
 </form>
 
-<table *ngIf="!processing && pool && foundPlayers" class="table">
+<table *ngIf="!processing && pool && foundCompetitionPersons" class="table">
   <tbody>
-    <tr *ngFor="let player of foundPlayers">
-      <td>
-        {{player.getLine()}}
-      </td>
-      <td>
-        {{player.getPerson().getName()}}
-
-      </td>
-      <td>
-        {{player.getTeam().getAbbreviation()}}
-      </td>
-      <td class="text-right">
-        PP
-      </td>
-      <td class="text-right">
-        <button *ngIf="isSelectable(player)" type="button" class="btn btn-secondary btn-sm" (click)="select(player)"
-          [ngClass]="{'btn-warning': selectWarningTeamMap.has(+player.getTeam().getId())}">
-          <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
-        </button>
-      </td>
+    <tr *ngFor="let competitionPerson of foundCompetitionPersons">
+      <ng-template [ngTemplateOutlet]="template"
+        [ngTemplateOutletContext]="{$implicit: competitionPerson, player: competitionPerson.getPerson().getPlayerOneTeamSim()}">
+      </ng-template>
     </tr>
   </tbody>
 </table>
+
+<ng-template #template let-competitionPerson let-player="player">
+  <td>
+    {{player.getLine()}}
+  </td>
+  <td>
+    {{player.getPerson().getName()}}
+
+  </td>
+  <td>
+    {{player.getTeam().getAbbreviation()}}
+  </td>
+  <td class="text-right">
+    {{getPoints(competitionPerson)}}
+  </td>
+  <td class="text-right">
+    <button *ngIf="isSelectable(player)" type="button" class="btn btn-secondary btn-sm" (click)="select(player)"
+      [ngClass]="{'btn-warning': selectWarningTeamMap.has(+player.getTeam().getId())}">
+      <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+    </button>
+  </td>
+</ng-template>

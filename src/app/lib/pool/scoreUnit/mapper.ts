@@ -22,6 +22,6 @@ export class PoolScoreUnitMapper {
     }
 }
 
-export class PoolScoreUnitMap extends Map<number, PoolScoreUnit> {
+export class ScoreUnitMap extends Map<number, number> {
 
 }

@@ -83,6 +83,9 @@ import { EditActionMapper } from '../lib/editAction/mapper';
 import { FormationRepository } from '../lib/formation/repository';
 import { ChooseFormationComponent } from './assemble/chooseformation.component';
 import { AssembleLineComponent } from './assemble/assembleline.component';
+import { CompetitionPersonRepository } from '../lib/competitionPerson/repository';
+import { CompetitionPersonMapper } from '../lib/competitionPerson/mapper';
+import { ScoreUnitCalculator } from '../lib/scoreUnit/calculator';
 
 @NgModule({
   imports: [
@@ -146,6 +149,8 @@ import { AssembleLineComponent } from './assemble/assembleline.component';
     ScoreUnitMapper,
     ScoutedPersonRepository,
     ScoutedPersonMapper,
+    CompetitionPersonRepository,
+    CompetitionPersonMapper,
     PersonRepository,
     PlayerRepository,
     ActiveConfigRepository,
@@ -156,7 +161,8 @@ import { AssembleLineComponent } from './assemble/assembleline.component';
     TransferPeriodMapper,
     ViewPeriodMapper,
     EditActionMapper,
-    FormationRepository
+    FormationRepository,
+    ScoreUnitCalculator
   ]
 })
 export class PoolModule {

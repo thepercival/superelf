@@ -5,12 +5,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { NameService, Person, PersonMap, Player, SportCustom, Team, TeamMap } from 'ngx-sport';
-import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
-import { ScoutedPerson } from '../../lib/scoutedPerson';
 import { Pool } from '../../lib/pool';
 import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
+import { CompetitionPersonRepository } from '../../lib/competitionPerson/repository';
+import { CompetitionPerson } from '../../lib/competitionPerson';
+import { ScoreUnitMap } from '../../lib/pool/scoreUnit/mapper';
+import { PoolScoreUnit } from '../../lib/pool/scoreUnit';
+import { GameRoundStats } from '../../lib/competitionPerson/gameRoundStats';
+import { ScoreUnitCalculator } from '../../lib/scoreUnit/calculator';
 
 @Component({
   selector: 'app-pool-choosepersons',
@@ -25,7 +29,7 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit, OnC
   @Output() selectPlayer = new EventEmitter<Player>();
 
   form: FormGroup;
-  foundPlayers: Player[] | undefined;
+  foundCompetitionPersons: CompetitionPerson[] | undefined;
   searchTeams: Team[] = [];
   searchLines: number[] = [];
   nameService = new NameService();
@@ -34,8 +38,9 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit, OnC
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
-    protected playerRepository: PlayerRepository,
+    protected competitionPersonRepository: CompetitionPersonRepository,
     protected scoutedPersonRepository: ScoutedPersonRepository,
+    protected scoreUnitCalculator: ScoreUnitCalculator,
     fb: FormBuilder,
     private modalService: NgbModal
   ) {
@@ -78,16 +83,31 @@ export class ChoosePersonsComponent extends PoolComponent implements OnInit, OnC
     const sourceCompetition = pool.getSourceCompetition();
     const lineFilter = this.form.controls.searchLine.value;
     const teamFilter = this.form.controls.searchTeam.value;
-    this.playerRepository.getObjects(sourceCompetition, teamFilter, lineFilter).subscribe((players: Player[]) => {
-      this.foundPlayers = players;
-      console.log(players);
-    },
+    this.competitionPersonRepository.getObjects(sourceCompetition, teamFilter, lineFilter).subscribe(
+      (competitionPersons: CompetitionPerson[]) => {
+        this.foundCompetitionPersons = competitionPersons;
+      },
       /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
       /* onComplete */() => { this.processing = false });
   }
 
   select(player: Player) {
     this.selectPlayer.emit(player);
+  }
+
+  // getPlayers(competitionPersons: CompetitionPerson[]): Player[] {
+  //   const players: Player[] = [];
+  //   competitionPersons.forEach(competitionPerson => {
+  //     const player = competitionPerson.getPerson().getPlayerOneTeamSim();
+  //     if (player) {
+  //       players.push(player);
+  //     }
+  //   });
+  //   return players;
+  // }
+
+  getPoints(competitionPerson: CompetitionPerson): number {
+    return this.scoreUnitCalculator.getPoints(this.pool.getScoreUnits(), competitionPerson.getGameRoundStats());
   }
 
   isSelectable(player: Player): boolean {
