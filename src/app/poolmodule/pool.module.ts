@@ -53,7 +53,6 @@ import { PoolSharedModule } from '../shared/poolmodule/pool.module';
 import { NewComponent } from './new/new.component';
 import { PoolCollectionMapper } from '../lib/pool/collection/mapper';
 import { ScoreUnitMapper } from '../lib/scoreUnit/mapper';
-import { PoolScoreUnitMapper } from '../lib/pool/scoreUnit/mapper';
 import { RulesComponent } from './rules/rules.component';
 import { JoinComponent } from './join/join.component';
 import { PoolUserMapper } from '../lib/pool/user/mapper';
@@ -83,9 +82,11 @@ import { EditActionMapper } from '../lib/editAction/mapper';
 import { FormationRepository } from '../lib/formation/repository';
 import { ChooseFormationComponent } from './assemble/chooseformation.component';
 import { AssembleLineComponent } from './assemble/assembleline.component';
-import { CompetitionPersonRepository } from '../lib/competitionPerson/repository';
-import { CompetitionPersonMapper } from '../lib/competitionPerson/mapper';
 import { ScoreUnitCalculator } from '../lib/scoreUnit/calculator';
+import { ViewPeriodPersonRepository } from '../lib/period/view/person/repository';
+import { ViewPeriodPersonMapper } from '../lib/period/view/person/mapper';
+import { GameRoundMapper } from '../lib/gameRound/mapper';
+import { PoolUserViewPeriodPersonMapper } from '../lib/pool/user/viewPeriodPerson/mapper';
 
 @NgModule({
   imports: [
@@ -142,15 +143,14 @@ import { ScoreUnitCalculator } from '../lib/scoreUnit/calculator';
     PoolRepository,
     PoolMapper,
     PoolCollectionMapper,
-    PoolScoreUnitMapper,
     PoolUserRepository,
     PoolUserMapper,
     PoolCompetitorMapper,
     ScoreUnitMapper,
     ScoutedPersonRepository,
     ScoutedPersonMapper,
-    CompetitionPersonRepository,
-    CompetitionPersonMapper,
+    ViewPeriodPersonRepository,
+    ViewPeriodPersonMapper,
     PersonRepository,
     PlayerRepository,
     ActiveConfigRepository,
@@ -160,9 +160,11 @@ import { ScoreUnitCalculator } from '../lib/scoreUnit/calculator';
     AssemblePeriodMapper,
     TransferPeriodMapper,
     ViewPeriodMapper,
+    GameRoundMapper,
     EditActionMapper,
     FormationRepository,
-    ScoreUnitCalculator
+    ScoreUnitCalculator,
+    PoolUserViewPeriodPersonMapper
   ]
 })
 export class PoolModule {

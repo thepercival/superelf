@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Association } from 'ngx-sport';
 import { Formation } from '../formation';
+import { ViewPeriod } from '../period/view';
 import { PoolUser } from '../pool/user';
 import { JsonFormation } from './json';
 import { FormationLineMapper } from './line/mapper';
@@ -9,10 +10,10 @@ import { FormationLineMapper } from './line/mapper';
 export class FormationMapper {
     constructor(protected lineMapper: FormationLineMapper) { }
 
-    toObject(json: JsonFormation, poolUser: PoolUser, association: Association): Formation {
-        const formation = new Formation(poolUser, json.name);
+    toObject(json: JsonFormation, poolUser: PoolUser, viewPeriod: ViewPeriod): Formation {
+        const formation = new Formation(poolUser, viewPeriod, json.name);
         formation.setId(json.id);
-        json.lines.forEach(jsonLine => this.lineMapper.toObject(jsonLine, formation, association));
+        json.lines.forEach(jsonLine => this.lineMapper.toObject(jsonLine, formation, viewPeriod));
         return formation;
     }
 

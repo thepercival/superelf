@@ -1,22 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Association, PersonMapper } from 'ngx-sport';
 import { Formation } from '../../formation';
+import { ViewPeriod } from '../../period/view';
+import { ViewPeriodPersonMapper } from '../../period/view/person/mapper';
+import { PoolUserViewPeriodPersonMapper } from '../../pool/user/viewPeriodPerson/mapper';
 import { FormationLine } from '../line';
 import { JsonFormationLine } from './json';
 
 
 @Injectable()
 export class FormationLineMapper {
-    constructor(protected personMapper: PersonMapper) { }
+    constructor(
+        protected viewPeriodPersonMapper: ViewPeriodPersonMapper,
+        protected poolUserViewPeriodPersonMapper: PoolUserViewPeriodPersonMapper) { }
 
-    toObject(json: JsonFormationLine, formation: Formation, association: Association): FormationLine {
+    toObject(json: JsonFormationLine, formation: Formation, viewPeriod: ViewPeriod): FormationLine {
         const formationLine = new FormationLine(formation, json.number, json.maxNrOfPersons);
-        json.persons.forEach(jsonPerson => {
-            const person = this.personMapper.toObject(jsonPerson, association);
-            formationLine.getPersons().push(person);
+        json.viewPeriodPersons.forEach(jsonViewPeriodPerson => {
+            const viewPeriodPerson = this.viewPeriodPersonMapper.toObject(jsonViewPeriodPerson, viewPeriod)
+            formationLine.getViewPeriodPersons().push(viewPeriodPerson);
         });
         if (json.substitute) {
-            formationLine.setSubstitute(this.personMapper.toObject(json.substitute, association));
+            formationLine.setSubstitute(this.poolUserViewPeriodPersonMapper.toObject(json.substitute, formation.getPoolUser(), viewPeriod));
         }
         return formationLine;
     }
@@ -25,9 +30,9 @@ export class FormationLineMapper {
         const substitute = formationLine.getSubstitute();
         return {
             number: formationLine.getNumber(),
-            persons: formationLine.getPersons().map(person => this.personMapper.toJson(person)),
+            viewPeriodPersons: formationLine.getViewPeriodPersons().map(person => this.viewPeriodPersonMapper.toJson(person)),
             maxNrOfPersons: formationLine.getMaxNrOfPersons(),
-            substitute: substitute ? this.personMapper.toJson(substitute) : undefined
+            substitute: substitute ? this.poolUserViewPeriodPersonMapper.toJson(substitute) : undefined
         };
     }
 }

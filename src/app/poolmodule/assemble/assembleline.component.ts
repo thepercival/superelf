@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Person } from 'ngx-sport';
 
-import { Person, Player } from 'ngx-sport';
 import { SuperElfNameService } from '../../lib/nameservice';
+import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
+import { ViewPeriodPerson } from '../../lib/period/view/person';
+import { PoolUserViewPeriodPerson } from '../../lib/pool/user/viewPeriodPerson';
 
 @Component({
   selector: 'app-pool-assembleline',
@@ -15,7 +18,7 @@ export class AssembleLineComponent implements OnInit {
   @Output() selectPlace = new EventEmitter<AssembleLinePlace>();
   @Output() hideOnSMDown = new EventEmitter<boolean>();
 
-
+  public oneTeamSimultaneous = new OneTeamSimultaneous();
   superElfNameService = new SuperElfNameService();
 
   constructor(
@@ -33,7 +36,17 @@ export class AssembleLineComponent implements OnInit {
   }
 
   completed() {
-    return this.assembleLine.substitute?.player && this.assembleLine.places.every(place => place.player);
+    return this.assembleLine.substitute?.substitute
+      && this.assembleLine.places.every(place => place.viewPeriodPerson);
+  }
+
+  getTeamAbbreviation(person: Person): string {
+    const player = this.oneTeamSimultaneous.getPlayer(person);
+    if (!player) {
+      return '?';
+    }
+    const abbreviation = player.getTeam().getAbbreviation();
+    return abbreviation ? abbreviation : '';
   }
 }
 
@@ -46,6 +59,6 @@ export interface AssembleLine {
 export interface AssembleLinePlace {
   lineNumber: number;
   number: number;
-  player: Player | undefined;
-  isSubstitute: boolean;
+  viewPeriodPerson: ViewPeriodPerson | undefined;
+  substitute: PoolUserViewPeriodPerson | undefined;
 }

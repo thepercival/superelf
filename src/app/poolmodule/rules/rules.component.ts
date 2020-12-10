@@ -8,7 +8,7 @@ import { Pool } from '../../lib/pool';
 import { ActiveConfig } from '../../lib/pool/activeConfig';
 
 import { PoolRepository } from '../../lib/pool/repository';
-import { PoolScoreUnit } from '../../lib/pool/scoreUnit';
+import { SeasonScoreUnit } from '../../lib/ngx-sport/season/scoreUnit';
 import { PoolComponent } from '../../shared/poolmodule/component';
 
 @Component({
@@ -53,10 +53,12 @@ export class RulesComponent extends PoolComponent implements OnInit {
       SportCustom.Football_Line_Forward];
   }
 
-  getPoolScoreUnits(formationLineDef: number): PoolScoreUnit[] {
+  getPoolScoreUnits(formationLineDef: number): SeasonScoreUnit[] {
     if (!this.pool) {
       return [];
     }
-    return this.pool.getScoreUnits(formationLineDef);
+    // @TODO get from repository
+    return [];
+    // return this.pool.getScoreUnits(formationLineDef);
   }
 }

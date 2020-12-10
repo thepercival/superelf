@@ -3,19 +3,19 @@ import { Association, Competition, Period, PlaceRange, Season } from 'ngx-sport'
 import { PoolCollection } from './pool/collection';
 import { AssemblePeriod } from './period/assemble';
 import { TransferPeriod } from './period/transfer';
-import { PoolScoreUnit } from './pool/scoreUnit';
+import { ViewPeriod } from './period/view';
 
 export class Pool {
     protected id: number = 0;
     protected competitions: Competition[] = [];
-    protected scoreUnits: PoolScoreUnit[] = [];
 
     static readonly PlaceRanges: PlaceRange[] = [
         { min: 1, max: 1, placesPerPoule: { min: 2, max: 40 } }
     ];
 
     constructor(protected collection: PoolCollection, protected sourceCompetition: Competition,
-        protected assemblePeriod: AssemblePeriod, protected transferPeriod: TransferPeriod) {
+        protected createAndJoinPeriod: ViewPeriod, protected assemblePeriod: AssemblePeriod,
+        protected transferPeriod: TransferPeriod) {
     }
 
     getId(): number {
@@ -67,12 +67,12 @@ export class Pool {
         return this.transferPeriod;
     }
 
-    getScoreUnits(formationLineDef?: number): PoolScoreUnit[] {
-        if (formationLineDef === undefined) {
-            return this.scoreUnits;
-        }
-        return this.scoreUnits.filter(scoreUnit => scoreUnit.getBase().getLineDef() === formationLineDef);
-    }
+    // getScoreUnits(formationLineDef?: number): PoolScoreUnit[] {
+    //     if (formationLineDef === undefined) {
+    //         return this.scoreUnits;
+    //     }
+    //     return this.scoreUnits.filter(scoreUnit => scoreUnit.getBase().getLineDef() === formationLineDef);
+    // }
 
     // getCompetitors(competition?: Competition): PoolCompetitor[] {
     //     if (competition === undefined) {
@@ -85,8 +85,8 @@ export class Pool {
     //     return this.getCompetitors(competition).map(competitor => competitor.getName());
     // }
 
-    getCreateAndJoinPeriod(): Period {
-        return new Period(this.getSeason().getStartDateTime(), this.getAssemblePeriod().getStartDateTime());
+    getCreateAndJoinPeriod(): ViewPeriod {
+        return this.createAndJoinPeriod;
     }
 
     isInEditPeriod(): boolean {

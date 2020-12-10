@@ -11,48 +11,42 @@
 <!-- <ngb-alert *ngIf="alert" [type]="alert.type">
   {{ alert.message }}</ngb-alert> -->
 
-<form *ngIf="!processing && pool" name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
+<form *ngIf="!processing && viewPeriod" name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
   <div class="d-flex justify-content-around">
-    <select class="form-control mr-1" formControlName="searchTeam" (change)="searchPersons(pool)">
+    <select class="form-control mr-1" formControlName="searchTeam" (change)="searchPersons()">
       <option [ngValue]="undefined" selected>
         Alle clubs
       </option>
       <option *ngFor="let team of searchTeams" [ngValue]="team">{{team.getName()}}</option>
     </select>
-    <select class="form-control ml-1" formControlName="searchLine" (change)="searchPersons(pool)">
+    <select class="form-control ml-1" formControlName="searchLine" (change)="searchPersons()">
       <option *ngFor="let line of searchLines" [ngValue]="line">{{nameService.getFormationLineName(line)}}</option>
     </select>
   </div>
 </form>
 
-<table *ngIf="!processing && pool && foundCompetitionPersons" class="table">
+<table *ngIf="!processing && viewPeriod" class="table">
   <tbody>
-    <tr *ngFor="let competitionPerson of foundCompetitionPersons">
-      <ng-template [ngTemplateOutlet]="template"
-        [ngTemplateOutletContext]="{$implicit: competitionPerson, player: competitionPerson.getPerson().getPlayerOneTeamSim()}">
-      </ng-template>
+    <tr *ngFor="let choosePersonItem of choosePersonItems">
+      <td>
+        {{choosePersonItem.player.getLine()}}
+      </td>
+      <td>
+        {{choosePersonItem.player.getPerson().getName()}}
+      </td>
+      <td>
+        {{choosePersonItem.player.getTeam().getAbbreviation()}}
+      </td>
+      <td class="text-right">
+        {{choosePersonItem.points}}
+      </td>
+      <td class="text-right">
+        <button *ngIf="isSelectable(choosePersonItem.player)" type="button" class="btn btn-secondary btn-sm"
+          (click)="select(choosePersonItem.viewPeriodPerson)"
+          [ngClass]="{'btn-warning': selectWarningTeamMap.has(+choosePersonItem.player.getTeam().getId())}">
+          <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>
-
-<ng-template #template let-competitionPerson let-player="player">
-  <td>
-    {{player.getLine()}}
-  </td>
-  <td>
-    {{player.getPerson().getName()}}
-
-  </td>
-  <td>
-    {{player.getTeam().getAbbreviation()}}
-  </td>
-  <td class="text-right">
-    {{getPoints(competitionPerson)}}
-  </td>
-  <td class="text-right">
-    <button *ngIf="isSelectable(player)" type="button" class="btn btn-secondary btn-sm" (click)="select(player)"
-      [ngClass]="{'btn-warning': selectWarningTeamMap.has(+player.getTeam().getId())}">
-      <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
-    </button>
-  </td>
-</ng-template>

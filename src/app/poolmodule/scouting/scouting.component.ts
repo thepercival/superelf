@@ -13,6 +13,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RemoveApprovalModalComponent } from '../removeapproval/removeapprovalmodal.component';
 import { ScoutedPersonMapper } from '../../lib/scoutedPerson/mapper';
 import { ConfirmPersonChoiceModalComponent } from '../choosepersons/confirmpersonchoicemodal.component';
+import { ViewPeriodPerson } from '../../lib/period/view/person';
+import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 
 
 @Component({
@@ -25,6 +27,7 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
   scoutingList: ScoutingList = { scoutedPersons: [], mappedPersons: new PersonMap() };
   showSearchBtn = false;
   showSearchSMDown: boolean = false;
+  public oneTeamSimultaneous = new OneTeamSimultaneous();
 
   constructor(
     route: ActivatedRoute,
@@ -97,12 +100,12 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
       );
   }
 
-  add(player: Player) {
+  add(person: Person) {
     if (!this.pool) {
       return;
     }
     this.processing = true;
-    this.scoutedPersonRepository.createObject(player.getPerson(), this.pool.getSourceCompetition())
+    this.scoutedPersonRepository.createObject(person, this.pool.getSourceCompetition())
       .subscribe(
           /* happy path */(scoutedPerson: ScoutedPerson) => {
           // this.scoutingList.mappedPersons = new PersonMap();

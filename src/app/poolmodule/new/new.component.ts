@@ -52,7 +52,8 @@ export class NewComponent implements OnInit {
         /* happy path */(config: ActiveConfig) => {
           this.activeConfig = config;
           if (!this.inCreateAndJoinPeriod()) {
-            this.setAlert('danger', 'het opzetten van een pool kan alleen van x tot y');
+            const period = this.activeConfig.getCreateAndJoinPeriod();
+            this.setAlert('danger', 'het opzetten van een pool kan alleen van ' + period.getStartDateTime().toLocaleString() + ' tot ' + period.getEndDateTime().toLocaleString());
           }
           else if (this.activeConfig.getCompetitions().length !== 1) {
             this.setAlert('danger', 'het aantal actieve broncompetities moet altijd 1 zijn');

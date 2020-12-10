@@ -1,4 +1,4 @@
-export interface JsonPoolScoreUnit {
+export interface JsonSeasonScoreUnit {
     number: number;
     points: number;
 }

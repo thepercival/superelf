@@ -1,9 +1,11 @@
 import { Person } from 'ngx-sport';
 import { Formation } from '../formation';
+import { ViewPeriodPerson } from '../period/view/person';
+import { PoolUserViewPeriodPerson } from '../pool/user/viewPeriodPerson';
 
 export class FormationLine {
-    protected persons: Person[] = [];
-    protected substitute: Person | undefined;
+    protected viewPeriodPersons: ViewPeriodPerson[] = [];
+    protected substitute: PoolUserViewPeriodPerson | undefined;
 
     constructor(protected formation: Formation, protected number: number, protected maxNrOfPersons: number) {
         this.formation.getLines().push(this);
@@ -21,22 +23,22 @@ export class FormationLine {
         return this.number;
     }
 
-    public getPersons(): Person[] {
-        return this.persons;
+    public getViewPeriodPersons(): ViewPeriodPerson[] {
+        return this.viewPeriodPersons;
     }
 
-    public getSubstitute(): Person | undefined {
+    public getSubstitute(): PoolUserViewPeriodPerson | undefined {
         return this.substitute;
     }
 
-    public setSubstitute(substitute: Person | undefined) {
+    public setSubstitute(substitute: PoolUserViewPeriodPerson | undefined) {
         this.substitute = substitute;
     }
 
-    public getAllPersons(): Person[] {
-        if (this.substitute) {
-            return this.persons.concat([this.substitute]);
-        }
-        return this.persons;
-    }
+    // public getAllPersons(): Person[] {
+    //     if (this.substitute) {
+    //         return this.persons.concat([this.substitute]);
+    //     }
+    //     return this.persons;
+    // }
 }
