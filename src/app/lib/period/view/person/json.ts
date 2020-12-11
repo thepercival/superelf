@@ -6,5 +6,5 @@ export interface JsonViewPeriodPerson {
     person: JsonPerson;
     points: Map<number, number>;
     total: number;
-    gameRoundScores: JsonViewPeriodPersonGameRoundScore[];
+    gameRoundScores: JsonViewPeriodPersonGameRoundScore[] | undefined;
 }

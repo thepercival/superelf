@@ -21,7 +21,7 @@ export class ViewPeriodPersonMapper {
         viewPeriodPerson.setTotal(json.total);
         // console.log(json.gameRoundScores)
 
-        json.gameRoundScores.forEach((jsonGameRoundScore: JsonViewPeriodPersonGameRoundScore) => {
+        json.gameRoundScores?.forEach((jsonGameRoundScore: JsonViewPeriodPersonGameRoundScore) => {
             // const stats = new Map<number, boolean | number>();
             // for (let stat in jsonGameRoundScore.points) {
             //     stats.set(+stat, jsonGameRoundScore.points[stat]);
