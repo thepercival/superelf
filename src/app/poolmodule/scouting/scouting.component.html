@@ -11,17 +11,17 @@
 
 <div *ngIf="!processing && pool" class="content-wrapper-between">
   <div class="d-flex flex-wrap justify-content-around">
-    <div *ngIf="!showSearchSMDown" class="mb-3" ngClass="{'mr-3': showSearchBtn}">
+    <div *ngIf="!showSearchSMDown" class="mb-3" ngClass="{'me-3': showSearchBtn}">
       <div>
         <h2 *ngIf="!showSearchBtn" class="text-center">
           <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
         </h2>
         <div *ngIf="showSearchBtn" class="d-flex flex-wrap justify-content-between">
-          <h2 class="mr-2 text-truncate">
+          <h2 class="me-2 text-truncate">
             <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
           </h2>
           <button (click)="showSearchSMDown = true" type="button" class="btn btn-secondary d-inline d-md-none">
-            <fa-icon [icon]="['fas', 'search']"></fa-icon> <span class="d-none d-sm-inline ml-1">zoeken</span>
+            <fa-icon [icon]="['fas', 'search']"></fa-icon> <span class="d-none d-sm-inline ms-1">zoeken</span>
           </button>
         </div>
       </div>
@@ -45,7 +45,7 @@
             <td class="text-center">
               {{oneTeamSimultaneous.getPlayer(scoutedPerson.getPerson())?.getTeam()?.getName()}}
             </td>
-            <td *ngIf="pool.getAssemblePeriod().isIn()" class="text-right">
+            <td *ngIf="pool.getAssemblePeriod().isIn()" class="text-end">
               <button (click)="copyToTeam(scoutedPerson.getPerson())" type="button" class="btn btn-secondary">
                 plaats in team
               </button>

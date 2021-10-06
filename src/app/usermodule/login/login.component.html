@@ -1,42 +1,48 @@
-<app-user-title title="inloggen" icon="sign-in-alt">
-</app-user-title>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-sm-10 col-md-6 col-lg-4 g-0">
+      <div class="card my-3">
+        <app-user-title title="inloggen" icon="sign-in-alt">
+        </app-user-title>
 
-<h2 *ngIf="processing" class="text-center">
-  <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-</h2>
-<ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-<form *ngIf="!processing && !isLoggedIn()" name="form" (ngSubmit)="login()" [formGroup]="form" novalidate>
-  <div class="form-group row">
-    <div class="col-3">
-      <label for="emailaddress" class="col-form-label">emailadres</label>
-    </div>
-    <div class="col-9">
-      <input class="form-control"
-        [ngClass]="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
-        type="text" formControlName="emailaddress" placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+        <h2 *ngIf="processing" class="text-center">
+          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+        <div *ngIf="!processing" class="card-body card-body-auth">
+          <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+          <form *ngIf="!processing && !isLoggedIn()" name="form" (ngSubmit)="login()" [formGroup]="form" novalidate>
+            <div class="row">
+              <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">
+                  <fa-icon [icon]="['fas', 'envelope']"></fa-icon>
+                </span>
+                <input class="form-control"
+                  [ngClass]="{ 'is-invalid': !isValid(control.emailaddress), 'is-valid': isValid(control.emailaddress) }"
+                  type="text" formControlName="emailaddress" placeholder="emailadres">
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">
+                  <fa-icon [icon]="['fas', 'key']"></fa-icon>
+                </span>
+                <input class="form-control"
+                  [ngClass]="{ 'is-invalid': !isValid(control.password), 'is-valid': isValid(control.password) }"
+                  type="password" formControlName="password" placeholder="wachtwoord">
+              </div>
+            </div>
+            <div class="row mt-4 g-0">
+              <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+                inloggen
+              </button>
+            </div>
+            <div class="row g-0">
+              <button routerLink="/user/register" class="btn btn-secondary me-2 mt-4">registreren</button>
+              <button routerLink="/user/passwordreset" class="btn btn-secondary mt-4">wachtwoord vergeten</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="form-group row">
-    <div class="col-3">
-      <label for="password" class="col-form-label">wachtwoord</label>
-    </div>
-    <div class="col-9">
-      <input class="form-control"
-        [ngClass]="{ 'is-invalid': form.controls.password.invalid, 'is-valid': form.controls.password.valid }"
-        type="password" formControlName="password" placeholder="min. {{validations.minlengthpassword}} karakters">
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="col-4 offset-3">
-      <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
-        inloggen
-      </button>
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="offset-3 col-9">
-      <button routerLink="/user/register" class="btn btn-secondary mr-2 mt-4">registreren</button>
-      <button routerLink="/user/passwordreset" class="btn btn-secondary mt-4">wachtwoord vergeten</button>
-    </div>
-  </div>
-</form>
+</div>

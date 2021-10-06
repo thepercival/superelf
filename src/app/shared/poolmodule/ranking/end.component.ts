@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { EndRankingService, EndRankingItem, RankingService, Structure, Competitor } from 'ngx-sport';
+import { EndRankingItem, Structure, Competitor } from 'ngx-sport';
 import { VoetbalRange } from 'ngx-sport';
 
 @Component({
@@ -36,12 +36,12 @@ export class EndRankingComponent implements OnInit, OnChanges {
     if (!this.structure) {
       return;
     }
-    const endRankingService = new EndRankingService(this.structure, RankingService.RULESSET_WC);
-    this.items = endRankingService.getItems();
-    const range = this.range ? this.range : undefined;
-    if (range !== undefined) {
-      this.items = this.items.filter(item => item.getUniqueRank() >= range.min && item.getUniqueRank() <= range.max);
-    }
+    // const endRankingService = new EndRankingService(this.structure, RankingService.RULESSET_WC);
+    // this.items = endRankingService.getItems();
+    // const range = this.range ? this.range : undefined;
+    // if (range !== undefined) {
+    //   this.items = this.items.filter(item => item.getUniqueRank() >= range.min && item.getUniqueRank() <= range.max);
+    // }
   }
 
   hasMedal(rank: number): boolean {

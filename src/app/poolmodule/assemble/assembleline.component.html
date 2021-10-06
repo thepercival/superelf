@@ -18,13 +18,13 @@
     <td>
       <span *ngIf="place.viewPeriodPerson">{{place.viewPeriodPerson.getPerson().getName()}}</span>
       <span *ngIf="!place.viewPeriodPerson" class="badge"
-        [ngClass]="{'badge-warning': place.substitute, 'badge-danger': !place.substitute}">kies een
+        [ngClass]="{'bg-warning': place.substitute, 'bg-danger': !place.substitute}">kies een
         {{place.substitute ? 'wissel' : 'speler'}}</span>
     </td>
     <td>
       <span *ngIf="place.viewPeriodPerson">{{getTeamAbbreviation(place.viewPeriodPerson.getPerson())}}</span>
     </td>
-    <td class="text-right">
+    <td class="text-end">
       <button *ngIf="selectedPlace !== place && !processing" type="button"
         class="btn btn-secondary btn-sm d-inline d-md-none" (click)="select(place, true)">
         <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>

@@ -13,13 +13,13 @@
 
 <form *ngIf="!processing && viewPeriod" name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
   <div class="d-flex justify-content-around">
-    <select class="form-control mr-1" formControlName="searchTeam" (change)="searchPersons()">
+    <select class="form-control me-1" formControlName="searchTeam" (change)="searchPersons()">
       <option [ngValue]="undefined" selected>
         Alle clubs
       </option>
       <option *ngFor="let team of searchTeams" [ngValue]="team">{{team.getName()}}</option>
     </select>
-    <select class="form-control ml-1" formControlName="searchLine" (change)="searchPersons()">
+    <select class="form-control ms-1" formControlName="searchLine" (change)="searchPersons()">
       <option *ngFor="let line of searchLines" [ngValue]="line">{{nameService.getFormationLineName(line)}}</option>
     </select>
   </div>
@@ -37,10 +37,10 @@
       <td>
         {{choosePersonItem.player.getTeam().getAbbreviation()}}
       </td>
-      <td class="text-right">
+      <td class="text-end">
         {{choosePersonItem.points}}
       </td>
-      <td class="text-right">
+      <td class="text-end">
         <button *ngIf="isSelectable(choosePersonItem.player)" type="button" class="btn btn-secondary btn-sm"
           (click)="select(choosePersonItem.viewPeriodPerson)"
           [ngClass]="{'btn-warning': selectWarningTeamMap.has(+choosePersonItem.player.getTeam().getId())}">

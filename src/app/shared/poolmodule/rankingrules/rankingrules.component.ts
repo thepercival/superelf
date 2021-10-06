@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { RankingService } from 'ngx-sport';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AgainstRuleSet, NameService } from 'ngx-sport';
 
 @Component({
     selector: 'app-ranking-rules',
@@ -7,12 +7,17 @@ import { RankingService } from 'ngx-sport';
     styleUrls: ['./rankingrules.component.scss']
 })
 export class RankingRulesComponent {
-    @Input() ruleSet: number = RankingService.RULESSET_WC;
+    @Input() againstRuleSet!: AgainstRuleSet;
+    @Input() editMode: boolean = false;
+    @Output() changed = new EventEmitter<AgainstRuleSet>();
 
-    constructor() { }
+    protected nameService: NameService;
+
+    constructor() {
+        this.nameService = new NameService();
+    }
 
     getDescription(): string[] {
-        const rankingService = new RankingService(this.ruleSet);
-        return rankingService.getRuleDescriptions();
+        return this.nameService.getRulesName(this.againstRuleSet);
     }
 }

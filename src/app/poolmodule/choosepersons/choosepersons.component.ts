@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { NameService, Person, PersonMap, Player, SportCustom, Team, TeamMap } from 'ngx-sport';
+import { FootballLine, NameService, Person, PersonMap, Player, Team, TeamMap } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
 import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
@@ -22,7 +22,7 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
   @Input() viewPeriod!: ViewPeriod;
   @Input() selectedPersonMap: PersonMap = new PersonMap();
   @Input() selectedSearchLine: number = 0;
-  @Input() selectableLines: number = SportCustom.Football_Line_All;
+  @Input() selectableLines: number = FootballLine.All;
   @Input() selectWarningTeamMap: TeamMap = new TeamMap();
   @Output() selectPerson = new EventEmitter<Person>();
 
@@ -45,7 +45,7 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
 
     this.form = fb.group({
       searchTeam: [undefined],
-      searchLine: [SportCustom.Football_Line_All],
+      searchLine: [FootballLine.All],
     });
   }
 
@@ -53,8 +53,8 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
     this.form.controls.searchTeam.setValue(undefined);
     this.searchTeams = this.viewPeriod.getSourceCompetition().getTeamCompetitors().map((teamCompetitor: TeamCompetitor) => teamCompetitor.getTeam());
 
-    this.searchLines.push(SportCustom.Football_Line_All);
-    for (let line = 1; line < SportCustom.Football_Line_All; line *= 2) {
+    this.searchLines.push(FootballLine.All);
+    for (let line = 1; line < FootballLine.All; line *= 2) {
       this.searchLines.push(line);
     }
     if (this.selectedSearchLine) {

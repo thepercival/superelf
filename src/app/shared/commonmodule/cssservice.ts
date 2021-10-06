@@ -1,53 +1,52 @@
 import { Injectable } from '@angular/core';
-import { HorizontalPoule, Place, QualifyGroup, Round } from 'ngx-sport';
+import { HorizontalPoule, MultipleQualifyRule, Place, QualifyGroup, QualifyTarget, Round, SingleQualifyRule } from 'ngx-sport';
 
 @Injectable()
 export class CSSService {
     getQualifyPlace(place: Place): string {
-        const horizontalPouleWinners = place.getHorizontalPoule(QualifyGroup.WINNERS);
-        const horizontalPouleLosers = place.getHorizontalPoule(QualifyGroup.LOSERS);
-        if (!horizontalPouleWinners || !horizontalPouleLosers) {
-            return '';
-        }
-        const qualifyGroupWinners: QualifyGroup | undefined = horizontalPouleWinners.getQualifyGroup();
-        const qualifyGroupLosers: QualifyGroup | undefined = horizontalPouleLosers.getQualifyGroup();
-        if (!qualifyGroupWinners && !qualifyGroupLosers) {
-            return '';
-        }
-        if (qualifyGroupWinners && qualifyGroupLosers) {
-            const partialWinners = (qualifyGroupWinners.getNrOfToPlacesTooMuch() > 0 && horizontalPouleWinners.isBorderPoule());
-            const partialLosers = (qualifyGroupLosers.getNrOfToPlacesTooMuch() > 0 && horizontalPouleLosers.isBorderPoule());
+        const horPouleWinners = place.getHorizontalPoule(QualifyTarget.Winners);
+        const horPouleLosers = place.getHorizontalPoule(QualifyTarget.Losers);
+
+        const winnersRule: SingleQualifyRule | MultipleQualifyRule | undefined = horPouleWinners.getQualifyRule();
+        const losersRule: SingleQualifyRule | MultipleQualifyRule | undefined = horPouleLosers.getQualifyRule();
+
+        if (winnersRule !== undefined && losersRule !== undefined) {
+            const partialWinners = winnersRule instanceof MultipleQualifyRule;
+            const partialLosers = losersRule instanceof MultipleQualifyRule;
             if (partialWinners && partialLosers) {
-                return 'q-partial q-w-' + this.getQualifyGroupNumber(qualifyGroupWinners) + '-double-partial q-l-'
-                    + this.getQualifyGroupNumber(qualifyGroupLosers) + '-double-partial';
+                return 'q-partial q-w-' + this.getQualifyGroupNumber(winnersRule.getGroup()) + '-double-partial q-l-'
+                    + this.getQualifyGroupNumber(losersRule.getGroup()) + '-double-partial';
+            } else if (!partialWinners) {
+                return 'q-w-' + this.getQualifyGroupNumber(winnersRule.getGroup());
             }
-            if (!partialWinners) {
-                return 'q-w-' + this.getQualifyGroupNumber(qualifyGroupWinners);
-            }
-            return 'q-l-' + this.getQualifyGroupNumber(qualifyGroupLosers);
+            return 'q-l-' + this.getQualifyGroupNumber(losersRule.getGroup());
+        } else if (winnersRule !== undefined) {
+            return this.getQualifyRule(winnersRule);
+        } else if (losersRule !== undefined) {
+            return this.getQualifyRule(losersRule);
         }
-        if (qualifyGroupWinners && !qualifyGroupLosers) {
-            return this.getQualifyPoule(horizontalPouleWinners);
-        }
-        return this.getQualifyPoule(horizontalPouleLosers);
+        return '';
     }
 
     protected getQualifyGroupNumber(qualifyGroup: QualifyGroup): number {
         return qualifyGroup.getNumber() > 4 ? 5 : qualifyGroup.getNumber();
     }
 
-    getQualifyPoule(horizontalPoule: HorizontalPoule): string {
-        const qualifyGroup = horizontalPoule.getQualifyGroup();
-        if (qualifyGroup === undefined) {
+    getQualifyPoule(horPoule: HorizontalPoule): string {
+        const qualifyRule = horPoule.getQualifyRule();
+        if (qualifyRule === undefined) {
             return '';
         }
-        const classes = (qualifyGroup.getNrOfToPlacesTooMuch() > 0 && horizontalPoule.isBorderPoule()) ? 'q-partial' : '';
-        return classes + ' q-' + this.getQualifyWinnersOrLosers(qualifyGroup.getWinnersOrLosers()) + '-' +
-            this.getQualifyGroupNumber(qualifyGroup);
+        return this.getQualifyRule(qualifyRule);
     }
 
-    getQualifyWinnersOrLosers(winnersOrLosers: number): string {
-        return winnersOrLosers === QualifyGroup.WINNERS ? 'w' : 'l';
+    getQualifyRule(rule: SingleQualifyRule | MultipleQualifyRule): string {
+        const classes = rule instanceof MultipleQualifyRule ? 'q-partial' : '';
+        return classes + this.getQualifyGroup(rule.getGroup());
+    }
+
+    getQualifyGroup(qualifyGroup: QualifyGroup): string {
+        return ' q-' + qualifyGroup.getTarget().toLowerCase() + '-' + this.getQualifyGroupNumber(qualifyGroup);
     }
 
     getQualifyRound(round: Round, noQualifyClass: string = ''): string {
@@ -55,7 +54,7 @@ export class CSSService {
         if (qualifyGroup === undefined) {
             return noQualifyClass;
         }
-        return ' q-' + (qualifyGroup.getWinnersOrLosers() === QualifyGroup.WINNERS ? 'w' : 'l') + '-' +
+        return ' q-' + (qualifyGroup.getTarget() === QualifyTarget.Winners ? 'w' : 'l') + '-' +
             this.getQualifyGroupNumber(qualifyGroup);
     }
 

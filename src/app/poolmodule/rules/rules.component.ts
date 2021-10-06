@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SportCustom } from 'ngx-sport';
+import { CustomSport, FootballLine } from 'ngx-sport';
 import { JsonFormationShell } from '../../lib/activeConfig/json';
 import { ActiveConfigRepository } from '../../lib/activeConfig/repository';
 import { SuperElfNameService } from '../../lib/nameservice';
@@ -44,13 +44,12 @@ export class RulesComponent extends PoolComponent implements OnInit {
     return this.availableFormations?.map((formation: JsonFormationShell) => formation.name).join(", ");
   }
 
-  getLineDefs(): number[] {
+  getLineDefs(): FootballLine[] {
     return [
-      SportCustom.Football_Line_All,
-      SportCustom.Football_Line_GoalKepeer,
-      SportCustom.Football_Line_Defense,
-      SportCustom.Football_Line_Midfield,
-      SportCustom.Football_Line_Forward];
+      FootballLine.GoalKepeer,
+      FootballLine.Defense,
+      FootballLine.Midfield,
+      FootballLine.Forward];
   }
 
   getPoolScoreUnits(formationLineDef: number): SeasonScoreUnit[] {

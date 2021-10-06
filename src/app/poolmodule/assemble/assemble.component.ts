@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { NameService, Person, PersonMap, TeamMap, SportCustom, Team, Player } from 'ngx-sport';
+import { NameService, Person, PersonMap, TeamMap, CustomSport, Team, Player, FootballLine } from 'ngx-sport';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
@@ -42,7 +42,7 @@ export class AssembleComponent extends PoolComponent implements OnInit {
   selectedPlace: AssembleLinePlace | undefined;
   changingFormation = false;
   updatingPlayer = false;
-  selectedSearchLine: number = SportCustom.Football_Line_All;
+  selectedSearchLine: number = FootballLine.All;
   selectedTeamMap: TeamMap = new TeamMap();
   public oneTeamSimultaneous = new OneTeamSimultaneous();
 

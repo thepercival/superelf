@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Game } from 'ngx-sport';
+import { AgainstResult, Game } from 'ngx-sport';
 import { GameRoundScore } from '../gameRound/score';
 import { SeasonScoreUnit } from '../ngx-sport/season/scoreUnit';
 import { ViewPeriodPerson } from '../period/view/person';
@@ -37,10 +37,10 @@ export class ScoreUnitCalculator {
     initCalculators() {
 
         this.calculatorMap[ScoreUnit.Points_Win] = (seasonScoreUnit: SeasonScoreUnit, stats: Map<number, number | boolean>): number => {
-            return stats.get(ViewPeriodPerson.Result) === Game.Result_Win ? seasonScoreUnit.getPoints() : 0;
+            return stats.get(ViewPeriodPerson.Result) === AgainstResult.Win ? seasonScoreUnit.getPoints() : 0;
         };
         this.calculatorMap[ScoreUnit.Points_Draw] = (seasonScoreUnit: SeasonScoreUnit, stats: Map<number, number | boolean>): number => {
-            return stats.get(ViewPeriodPerson.Result) === Game.Result_Draw ? seasonScoreUnit.getPoints() : 0;
+            return stats.get(ViewPeriodPerson.Result) === AgainstResult.Draw ? seasonScoreUnit.getPoints() : 0;
         };
         const goalCalculator = (seasonScoreUnit: SeasonScoreUnit, stats: Map<number, number | boolean>): number => {
             const fieldGoalStat = stats.get(ViewPeriodPerson.Goals_Field);

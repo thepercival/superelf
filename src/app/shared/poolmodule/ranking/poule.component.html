@@ -17,27 +17,27 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th class="text-right pl-0">pl</th>
-                        <th class="place pl-0">deelnemer</th>
-                        <th class="text-right pl-0" title="gespeeld">g</th>
-                        <th class="text-right pl-0" title="punten">p</th>
-                        <th class="text-center text-info pl-0 pointer"
+                        <th class="text-end ps-0">pl</th>
+                        <th class="place ps-0">deelnemer</th>
+                        <th class="text-end ps-0" title="gespeeld">g</th>
+                        <th class="text-end ps-0" title="punten">p</th>
+                        <th class="text-center text-info ps-0 pointer"
                             (click)="showDifferenceDetail = !showDifferenceDetail" title="doelsaldo">&Delta;</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- <ng-template ngFor let-rankingItem let-place="rankingItem.getPlace()" [ngForOf]="rankingItems">
                         <tr>
-                            <td class="rankingnr text-right pl-0">
+                            <td class="rankingnr text-end ps-0">
                                 <span
-                                    class="badge badge-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
+                                    class="badge bg-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
                             </td>
-                            <td class="place pl-0" [ngClass]="{ 'current-user': isCurrentUser(place) }">
+                            <td class="place ps-0" [ngClass]="{ 'current-user': isCurrentUser(place) }">
                                 <span *ngIf="place"></span>{{nameService.getPlaceFromName(place, true, true)}}
                             </td>
-                            <td class="text-right pl-0">{{rankingItem.getUnranked().getGames()}}</td>
-                            <td class="text-right pl-0">{{rankingItem.getUnranked().getPoints()}}</td>
-                            <td class="text-center unitdiff pl-0">
+                            <td class="text-end ps-0">{{rankingItem.getUnranked().getGames()}}</td>
+                            <td class="text-end ps-0">{{rankingItem.getUnranked().getPoints()}}</td>
+                            <td class="text-center unitdiff ps-0">
                                 <div>
                                     {{rankingItem.getUnranked().getDiff() > 0 ? '+' : ''}}{{rankingItem.getUnranked().getDiff()}}
                                 </div>

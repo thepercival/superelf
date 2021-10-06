@@ -1,0 +1,8 @@
+@import "sass/bootstrap/_components";
+
+@include media-breakpoint-only(xs) {
+   .authcard {
+    padding: 0px;
+    margin: 0px;
+  } 
+}

@@ -1,17 +1,16 @@
-<nav class="navbar navbar-dark bg-primary py-1">
-  <a class="navbar-brand" tabindex="-1" [routerLink]="['/']">
+<nav class="navbar navbar-dark bg-primary py-1 ps-1">
+  <a class="navbar-brand text-light" tabindex="-1" [routerLink]="['/']">
     {{title}}
   </a>
 
-  <button *ngIf="!user" routerLink="/user/login" routerLinkActive="active" class="btn btn-light" role="button"
+  <button *ngIf="!user" routerLink="/user/login" routerLinkActive="active" class="btn text-light" role="button"
     aria-label="inloggen " tabindex="-1">
     <fa-icon [icon]=" [ 'fas', 'sign-in-alt'] "></fa-icon>
-    <span class="ml-1">inloggen</span>
+    <span class="ms-1">inloggen</span>
   </button>
-  <button *ngIf="user" [routerLink]="['/user/profile', user.getId()]" class="btn btn-light border-0 p-0 pt-1"
+  <button *ngIf="user" [routerLink]="['/user/profile', user.getId()]" class="btn text-light border-0 p-0 pt-1"
     role="button" tabindex="-1" aria-label="account">
     <fa-icon [icon]="[ 'fas', 'user-circle']" size="3x"></fa-icon>
-    {{user.getName()}}
   </button>
 
   <!-- <button class="navbar-toggler navbar-toggler-right pointer" type="button" data-toggle="collapse
@@ -27,7 +26,7 @@
       </li>
     </ul>
 
-    <ul class="nav navbar-nav ml-auto ">
+    <ul class="nav navbar-nav ms-auto ">
       <li *ngIf="!isLoggedIn() " class="nav-item ">
         <a class="nav-link" routerLink="/user/login " routerLinkActive="active " (click)="navbarCollapsed=!navbarCollapsed ">inloggen</a>
       </li>

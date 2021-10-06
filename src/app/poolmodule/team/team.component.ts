@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { NameService, Person, Player, SportCustom, Team } from 'ngx-sport';
+import { NameService, Person, Player, CustomSport, Team, FootballLine } from 'ngx-sport';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
@@ -39,7 +39,7 @@ export class TeamComponent extends PoolComponent implements OnInit {
     super(route, router, poolRepository);
     this.form = fb.group({
       searchTeam: [undefined],
-      searchLine: [SportCustom.Football_Line_All],
+      searchLine: [FootballLine.All],
     });
   }
 
@@ -50,8 +50,8 @@ export class TeamComponent extends PoolComponent implements OnInit {
       this.form.controls.searchTeam.setValue(undefined);
       this.searchTeams = pool.getSourceCompetition().getTeamCompetitors().map((teamCompetitor: TeamCompetitor) => teamCompetitor.getTeam());
 
-      this.searchLines.push(SportCustom.Football_Line_All);
-      for (let line = 1; line < SportCustom.Football_Line_All; line *= 2) {
+      this.searchLines.push(FootballLine.All);
+      for (let line = 1; line < FootballLine.All; line *= 2) {
         this.searchLines.push(line);
       }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -10,7 +10,7 @@ import { AuthComponent } from '../component';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent extends AuthComponent implements OnInit {
   registered = false;
@@ -86,5 +86,17 @@ export class LoginComponent extends AuthComponent implements OnInit {
             /* onComplete */() => this.processing = false
       );
     return false;
+  }
+
+  get control() {
+    return this.form.controls;
+  }
+
+  isValid(control: AbstractControl): boolean {
+    return control.value !== undefined && control.valid;
+  }
+
+  isInvalid(control: AbstractControl): boolean {
+    return control.value !== undefined && control.invalid;
   }
 }

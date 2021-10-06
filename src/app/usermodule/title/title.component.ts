@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 
 @Component({
@@ -8,7 +10,7 @@ import { MyNavigation } from '../../shared/commonmodule/navigation';
 export class UserTitleComponent {
 
   @Input() title: string = '';
-  @Input() icon: string | undefined;
+  @Input() icon: IconName | undefined;
 
   constructor(private myNavigation: MyNavigation) {
   }
