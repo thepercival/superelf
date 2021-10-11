@@ -7,88 +7,72 @@
 <ngb-alert *ngIf="alert" [type]="alert.type">
   {{ alert.message }}</ngb-alert>
 
-<div *ngIf="pool">
-  <div class="card mb-3">
-    <div class="card-body">
-      <h5 class="card-title">teambeheer</h5>
-      <p class="card-text">Het samenstellen van je team kan van
-        {{pool.getAssemblePeriod()?.getStartDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
-        false,'hour':'2-digit','minute':'2-digit'})}}
-        tot
-        {{pool.getAssemblePeriod()?.getEndDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
-        false,'hour':'2-digit','minute':'2-digit'})}}.
-        <br />De transferperiode is van
-        {{pool.getTransferPeriod()?.getStartDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
-        false,'hour':'2-digit','minute':'2-digit'})}}
-        tot
-        {{pool.getTransferPeriod()?.getStartDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
-        false,'hour':'2-digit','minute':'2-digit'})}}.
-      </p>
-    </div>
-  </div>
-  <div class="card mb-3">
-    <div class="card-body">
-      <h5 class="card-title">team samenstellen</h5>
-      <ul class="list-group">
-        <li class="list-group-item">je mag van elk team max 1 speler kiezen ( wanneer je door een transfer toch 2
-          spelers
-          van 1 team hebt, dan is dit
-          toegestaan )</li>
-        <li class="list-group-item">de toegestane formaties zijn : {{getFormationNames()}}</li>
-      </ul>
-    </div>
-  </div>
-  <div class="card mb-3">
-    <div class="card-body">
-      <h5 class="card-title">transferperiode</h5>
-      <ul class="list-group">
-        <li class="list-group-item">een speler, die niet meer voor een team uit de eredivisie uitkomt, mag in de
-          transferperiode worden vervangen door een
-          speler van hetzelfde team, zonder dat dit ten koste gaat van een wissel</li>
-        <li class="list-group-item">je mag een speler, die wissel staat, ruilen met een speler die in de basis staat,
-          zonder dat dit ten koste gaat van een
-          wissel</li>
-        <li class="list-group-item">je mag van formatie wisselen tijdens de transferperiode. Dit kun je doen door
-          bijvoorbeeld een middenvelder te
-          wisselen
-          voor een verdediger. De formatie verandert dus van 4-3-3 naar 5-3-2. De nieuwe formatie dient 1 van de
-          toegstane
-          formaties te zijn</li>
-      </ul>
-    </div>
-  </div>
-  <div class="card mb-3">
-    <div class="card-body">
-      <h5 class="card-title">puntentelling</h5>
-      <ul class="list-group">
-        <li class="list-group-item">de wedstrijden worden per speelronde gedaan, dus wanneer een wedstrijd is uitgesteld
-          blijft de wedstrijd bij dezelfde
-          speelronde horen</li>
-        <li class="list-group-item">wanneer een speler minimaal 1 seconde meedoet, dan telt dit als een gespeelde
-          wedstrijd</li>
-        <li class="list-group-item">de wisselspeler wordt ingezet indien minimaal 1 speler van dezelfde linie niet heeft
-          meegedaan</li>
-      </ul>
-    </div>
-  </div>
+<div *ngIf="pool" class="ps-3">
 
-  <div class="card mb-3">
-    <div class="card-body">
-      <h5 class="card-title">punten</h5>
+  <h5>teambeheer</h5>
+  <p class="card-text">Het samenstellen van je team kan van
+    {{pool.getAssemblePeriod()?.getStartDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
+    false,'hour':'2-digit','minute':'2-digit'})}}
+    tot
+    {{pool.getAssemblePeriod()?.getEndDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
+    false,'hour':'2-digit','minute':'2-digit'})}}.
+    <br />De transferperiode is van
+    {{pool.getTransferPeriod()?.getStartDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
+    false,'hour':'2-digit','minute':'2-digit'})}}
+    tot
+    {{pool.getTransferPeriod()?.getStartDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
+    false,'hour':'2-digit','minute':'2-digit'})}}.
+  </p>
 
-      <div class="d-flex flex-wrap justify-content-center">
-        <div class="card mb-3 mx-2" *ngFor="let lineDef of getLineDefs()">
-          <div class="card-body">
-            <h5 class="card-title">{{nameService.getLineName(lineDef)}}</h5>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item d-flex justify-content-between align-items-center ps-0"
-                *ngFor="let poolScoreUnit of getPoolScoreUnits(lineDef)">
-                <span>{{nameService.getScoreUnitName(poolScoreUnit.getBase())}}</span>
-                <span class="badge rounded-pill bg-primary ms-1">{{poolScoreUnit.getPoints()}}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+  <h5>team samenstellen</h5>
+  <ul class="list-group mb-3">
+    <li class="list-group-item">je mag van elk team max 1 speler kiezen ( wanneer je door een transfer toch 2
+      spelers
+      van 1 team hebt, dan is dit
+      toegestaan )</li>
+    <li class="list-group-item">de toegestane formaties zijn : {{getFormationNames()}}</li>
+  </ul>
+
+  <h5>transferperiode</h5>
+  <ul class="list-group mb-3">
+    <li class="list-group-item">een speler, die niet meer voor een team uit de eredivisie uitkomt, mag in de
+      transferperiode worden vervangen door een
+      speler van hetzelfde team, zonder dat dit ten koste gaat van een wissel</li>
+    <li class="list-group-item">je mag een speler, die wissel staat, ruilen met een speler die in de basis staat,
+      zonder dat dit ten koste gaat van een
+      wissel</li>
+    <li class="list-group-item">je mag van formatie wisselen tijdens de transferperiode. Dit kun je doen door
+      bijvoorbeeld een middenvelder te
+      wisselen
+      voor een verdediger. De formatie verandert dus van 4-3-3 naar 5-3-2. De nieuwe formatie dient 1 van de
+      toegstane
+      formaties te zijn</li>
+  </ul>
+
+
+  <h5>puntentelling</h5>
+  <ul class="list-group mb-3">
+    <li class="list-group-item">de wedstrijden worden per speelronde gedaan, dus wanneer een wedstrijd is uitgesteld
+      blijft de wedstrijd bij dezelfde
+      speelronde horen</li>
+    <li class="list-group-item">wanneer een speler minimaal 1 seconde meedoet, dan telt dit als een gespeelde
+      wedstrijd</li>
+    <li class="list-group-item">de wisselspeler wordt ingezet indien minimaal 1 speler van dezelfde linie niet heeft
+      meegedaan</li>
+  </ul>
+
+  <h5>punten</h5>
+  <div class="d-flex flex-wrap justify-content-center">
+    <div class="card mb-3 mx-2" *ngFor="let lineDef of getLineDefs()">
+      <div class="card-body">
+        <h5 class="card-title">{{nameService.getLineName(lineDef)}}</h5>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between align-items-center ps-0"
+            *ngFor="let poolScoreUnit of getPoolScoreUnits(lineDef)">
+            <span>{{nameService.getScoreUnitName(poolScoreUnit.getBase())}}</span>
+            <span class="badge rounded-pill bg-primary ms-1">{{poolScoreUnit.getPoints()}}</span>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

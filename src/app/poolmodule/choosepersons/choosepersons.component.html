@@ -15,7 +15,7 @@
   <div class="d-flex justify-content-around">
     <select class="form-control me-1" formControlName="searchTeam" (change)="searchPersons()">
       <option [ngValue]="undefined" selected>
-        Alle clubs
+        alle clubs
       </option>
       <option *ngFor="let team of searchTeams" [ngValue]="team">{{team.getName()}}</option>
     </select>
@@ -42,7 +42,7 @@
       </td>
       <td class="text-end">
         <button *ngIf="isSelectable(choosePersonItem.player)" type="button" class="btn btn-secondary btn-sm"
-          (click)="select(choosePersonItem.viewPeriodPerson)"
+          (click)="select(choosePersonItem.s11Player)"
           [ngClass]="{'btn-warning': selectWarningTeamMap.has(+choosePersonItem.player.getTeam().getId())}">
           <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
         </button>

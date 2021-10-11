@@ -20,8 +20,12 @@ export class ViewPeriod extends Period {
         return this.gameRounds;
     }
 
-    getGameRound(number: number): GameRound | undefined {
-        return this.gameRounds.find(gameRound => gameRound.getNumber() === number);
+    getGameRound(number: number): GameRound {
+        const gameRound = this.gameRounds.find(gameRound => gameRound.getNumber() === number);
+        if (gameRound === undefined) {
+            throw new Error('gameRound could not be found for number "' + number + '"');
+        }
+        return gameRound;
     }
 
     getSourceCompetition(): Competition {

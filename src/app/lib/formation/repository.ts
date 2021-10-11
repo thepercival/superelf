@@ -11,20 +11,15 @@ import { JsonFormation } from './json';
 import { Formation } from '../formation';
 import { PoolUser } from '../pool/user';
 import { FormationLine } from './line';
-import { ViewPeriodPerson } from '../period/view/person';
-import { ViewPeriodPersonMapper } from '../period/view/person/mapper';
-import { PoolUserViewPeriodPerson } from '../pool/user/viewPeriodPerson';
-import { ViewPeriod } from '../period/view';
-import { JsonViewPeriodPerson } from '../period/view/person/json';
-import { JsonPoolUserViewPeriodPerson } from '../pool/user/viewPeriodPerson/json';
-import { PoolUserViewPeriodPersonMapper } from '../pool/user/viewPeriodPerson/mapper';
+import { S11PlayerMapper } from '../player/mapper';
+import { S11Player } from '../player';
+import { JsonS11Player } from '../player/json';
 
 @Injectable()
 export class FormationRepository extends APIRepository {
     constructor(
         private mapper: FormationMapper,
-        private viewPeriodPersonMapper: ViewPeriodPersonMapper,
-        private poolUserViewPeriodPersonMapper: PoolUserViewPeriodPersonMapper,
+        private playerMapper: S11PlayerMapper,
         private personMapper: PersonMapper,
         private http: HttpClient) {
         super();
@@ -68,59 +63,59 @@ export class FormationRepository extends APIRepository {
         );
     }
 
-    addPerson(person: Person, line: FormationLine, asSubstitute: boolean): Observable<ViewPeriodPerson | PoolUserViewPeriodPerson> {
+    addPerson(person: Person, line: FormationLine, asSubstitute: boolean): Observable<S11Player> {
         if (asSubstitute) {
             return this.editSubstitute(person, line);
         }
-        return this.addViewPeriodPerson(person, line);
+        return this.addPlayer(person, line);
     }
 
-    addViewPeriodPerson(person: Person, line: FormationLine): Observable<ViewPeriodPerson> {
+    addPlayer(person: Person, line: FormationLine): Observable<S11Player> {
         const formation = line.getFormation();
         const json = this.personMapper.toJson(person);
-        const urlSuffix = '/lines/' + line.getNumber() + '/viewperiodpersons';
+        const urlSuffix = '/lines/' + line.getNumber() + '/players';
         const url = this.getUrl(formation.getPoolUser(), formation) + urlSuffix;
-        return this.http.post<JsonViewPeriodPerson>(url, json, { headers: super.getHeaders() }).pipe(
-            map((jsonViewPeriodPerson: JsonViewPeriodPerson) => {
-                const viewPeriodPerson = this.viewPeriodPersonMapper.toObject(jsonViewPeriodPerson, formation.getViewPeriod());
-                line.getViewPeriodPersons().push(viewPeriodPerson);
-                return viewPeriodPerson;
+        return this.http.post<JsonS11Player>(url, json, { headers: super.getHeaders() }).pipe(
+            map((jsonPlayer: JsonS11Player) => {
+                const player = this.playerMapper.toObject(jsonPlayer, formation.getViewPeriod());
+                line.getPlayers().push(player);
+                return player;
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    editSubstitute(person: Person, line: FormationLine): Observable<PoolUserViewPeriodPerson> {
+    editSubstitute(person: Person, line: FormationLine): Observable<S11Player> {
         const formation = line.getFormation();
         const json = this.personMapper.toJson(person);
         const urlSuffix = '/lines/' + line.getNumber() + '/substitute';
         const url = this.getUrl(formation.getPoolUser(), formation) + urlSuffix;
-        return this.http.post<JsonPoolUserViewPeriodPerson>(url, json, { headers: super.getHeaders() }).pipe(
-            map((jsonPoolUserViewPeriodPerson: JsonPoolUserViewPeriodPerson) => {
-                const poolUserViewPeriodPerson = this.poolUserViewPeriodPersonMapper.toObject(jsonPoolUserViewPeriodPerson, formation.getPoolUser(), formation.getViewPeriod());
-                line.setSubstitute(poolUserViewPeriodPerson);
+        return this.http.post<JsonS11Player>(url, json, { headers: super.getHeaders() }).pipe(
+            map((jsonPlayer: JsonS11Player) => {
+                const player = this.playerMapper.toObject(jsonPlayer, formation.getViewPeriod());
+                line.setSubstitute(player);
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    removeViewPeriodPerson(viewPeriodPerson: ViewPeriodPerson, line: FormationLine): Observable<void> {
+    removePlayer(player: S11Player, line: FormationLine): Observable<void> {
         const formation = line.getFormation();
-        const url = this.getUrl(formation.getPoolUser(), formation) + '/lines/' + line.getNumber() + '/viewperiodpersons/' + viewPeriodPerson.getId();
+        const url = this.getUrl(formation.getPoolUser(), formation) + '/lines/' + line.getNumber() + '/players/' + player.getId();
         return this.http.delete<void>(url, { headers: super.getHeaders() }).pipe(
             map(() => {
-                const index = line.getViewPeriodPersons().indexOf(viewPeriodPerson);
+                const index = line.getPlayers().indexOf(player);
                 if (index > -1) {
-                    line.getViewPeriodPersons().splice(index, 1);
+                    line.getPlayers().splice(index, 1);
                 }
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    removeSubstitute(poolUserViewPeriodPerson: PoolUserViewPeriodPerson, line: FormationLine): Observable<void> {
+    removeSubstitute(player: S11Player, line: FormationLine): Observable<void> {
         const formation = line.getFormation();
-        const url = this.getUrl(formation.getPoolUser(), formation) + '/lines/' + line.getNumber() + '/substitute/' + poolUserViewPeriodPerson.getId();
+        const url = this.getUrl(formation.getPoolUser(), formation) + '/lines/' + line.getNumber() + '/substitute/' + player.getId();
         return this.http.delete<void>(url, { headers: super.getHeaders() }).pipe(
             map(() => line.setSubstitute(undefined)),
             catchError((err) => this.handleError(err))

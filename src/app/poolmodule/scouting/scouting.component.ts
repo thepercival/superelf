@@ -8,12 +8,10 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
 import { ScoutedPerson } from '../../lib/scoutedPerson';
 import { Pool } from '../../lib/pool';
-import { Competition, Person, PersonMap, Player } from 'ngx-sport';
+import { Competition, Person, PersonMap } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RemoveApprovalModalComponent } from '../removeapproval/removeapprovalmodal.component';
-import { ScoutedPersonMapper } from '../../lib/scoutedPerson/mapper';
 import { ConfirmPersonChoiceModalComponent } from '../choosepersons/confirmpersonchoicemodal.component';
-import { ViewPeriodPerson } from '../../lib/period/view/person';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 
 

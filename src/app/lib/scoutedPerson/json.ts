@@ -1,7 +1,6 @@
-import { JsonPerson } from 'ngx-sport';
+import { JsonIdentifiable, JsonPerson } from 'ngx-sport';
 
-export interface JsonScoutedPerson {
-    id: number;
+export interface JsonScoutedPerson extends JsonIdentifiable {
     person: JsonPerson;
     nrOfStars: number;
 }

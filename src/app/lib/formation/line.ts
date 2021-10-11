@@ -1,11 +1,10 @@
-import { Person } from 'ngx-sport';
 import { Formation } from '../formation';
-import { ViewPeriodPerson } from '../period/view/person';
-import { PoolUserViewPeriodPerson } from '../pool/user/viewPeriodPerson';
+import { S11Player } from '../player';
 
 export class FormationLine {
-    protected viewPeriodPersons: ViewPeriodPerson[] = [];
-    protected substitute: PoolUserViewPeriodPerson | undefined;
+    protected players: S11Player[] = [];
+    protected substitute: S11Player | undefined;
+    protected substitutions: Map<number, boolean> = new Map();
 
     constructor(protected formation: Formation, protected number: number, protected maxNrOfPersons: number) {
         this.formation.getLines().push(this);
@@ -23,22 +22,29 @@ export class FormationLine {
         return this.number;
     }
 
-    public getViewPeriodPersons(): ViewPeriodPerson[] {
-        return this.viewPeriodPersons;
+    public getPlayers(): S11Player[] {
+        return this.players;
     }
 
-    public getSubstitute(): PoolUserViewPeriodPerson | undefined {
+    public getSubstitute(): S11Player | undefined {
         return this.substitute;
     }
 
-    public setSubstitute(substitute: PoolUserViewPeriodPerson | undefined) {
+    public setSubstitute(substitute: S11Player | undefined) {
         this.substitute = substitute;
     }
 
-    // public getAllPersons(): Person[] {
-    //     if (this.substitute) {
-    //         return this.persons.concat([this.substitute]);
-    //     }
-    //     return this.persons;
-    // }
+    public getSubstitutions(): Map<number, boolean> {
+        return this.substitutions;
+    }
+    public setSubstitutions(substitutions: Map<number, boolean>) {
+        this.substitutions = substitutions;
+    }
+
+    public getAllPlayers(): S11Player[] {
+        if (this.substitute!) {
+            return this.players.concat([this.substitute]);
+        }
+        return this.players;
+    }
 }

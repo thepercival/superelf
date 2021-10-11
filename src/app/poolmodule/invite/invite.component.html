@@ -1,5 +1,5 @@
 <div class="row justify-content-center g-0">
-  <div class="col-xs-12 col-sm-10 col-md-6">
+  <div class="col-xs-12 col-sm-9 col-md-6">
     <app-title *ngIf="pool" [title]="pool.getName()"></app-title>
 
     <h2>
@@ -20,11 +20,13 @@
           <input type="text" class="form-control" formControlName="url">
         </div>
       </div>
-      <div class="form-row">
-        <button ngxClipboard type="button" class="btn btn-primary btn-block" (cbOnSuccess)="showCopiedToClipboard()"
-          [cbContent]="form.controls.url.value">
-          <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon> de link kopieren naar het klembord
-        </button>
+      <div class="form-group row mt-3 justify-content-end">
+        <div class="col-10">
+          <button ngxClipboard type="button" class="btn btn-primary btn-block" (cbOnSuccess)="showCopiedToClipboard()"
+            [cbContent]="form.controls.url.value">
+            <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon> de link kopieren naar het klembord
+          </button>
+        </div>
       </div>
     </form>
   </div>

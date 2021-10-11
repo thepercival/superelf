@@ -16,13 +16,13 @@
 <ng-template #placeRow let-place="place">
   <tr [ngClass]="{'top-border-black': place.substitute, 'table-active': selectedPlace === place}">
     <td>
-      <span *ngIf="place.viewPeriodPerson">{{place.viewPeriodPerson.getPerson().getName()}}</span>
-      <span *ngIf="!place.viewPeriodPerson" class="badge"
+      <span *ngIf="place.player">{{place.player.getPerson().getName()}}</span>
+      <span *ngIf="!place.player" class="badge"
         [ngClass]="{'bg-warning': place.substitute, 'bg-danger': !place.substitute}">kies een
         {{place.substitute ? 'wissel' : 'speler'}}</span>
     </td>
     <td>
-      <span *ngIf="place.viewPeriodPerson">{{getTeamAbbreviation(place.viewPeriodPerson.getPerson())}}</span>
+      <span *ngIf="place.player">{{getTeamAbbreviation(place.player.getPerson())}}</span>
     </td>
     <td class="text-end">
       <button *ngIf="selectedPlace !== place && !processing" type="button"

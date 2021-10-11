@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
 
 @Injectable()
@@ -18,6 +18,13 @@ export class PoolShellRepository extends APIRepository {
 
     getUrl(withRole: boolean): string {
         return super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix(withRole);
+    }
+
+
+    canCreate(): Observable<boolean> {
+        return this.http.get<boolean>(super.getApiUrl() + 'public/cancreate', { headers: super.getHeaders() }).pipe(
+            catchError((err) => this.handleError(err))
+        );
     }
 
     getObjects(filter?: PoolShellFilter): Observable<PoolShell[]> {

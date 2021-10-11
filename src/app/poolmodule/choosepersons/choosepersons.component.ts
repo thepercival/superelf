@@ -6,12 +6,12 @@ import { FootballLine, NameService, Person, PersonMap, Player, Team, TeamMap } f
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
 import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
-import { ScoreUnitCalculator } from '../../lib/scoreUnit/calculator';
-import { ViewPeriodPersonRepository } from '../../lib/period/view/person/repository';
-import { ViewPeriodPerson } from '../../lib/period/view/person';
 import { ViewPeriod } from '../../lib/period/view';
 import { IAlert } from '../../shared/commonmodule/alert';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
+import { S11Player } from '../../lib/player';
+import { S11PlayerRepository } from '../../lib/player/repository';
+import { PointsCalculator } from '../../lib/points/calculator';
 
 @Component({
   selector: 'app-pool-choosepersons',
@@ -36,9 +36,9 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
   public oneTeamSimultaneous = new OneTeamSimultaneous();
 
   constructor(
-    protected viewPeriodPersonRepository: ViewPeriodPersonRepository,
+    protected playerRepository: S11PlayerRepository,
     protected scoutedPersonRepository: ScoutedPersonRepository,
-    protected scoreUnitCalculator: ScoreUnitCalculator,
+    protected pointsCalculator: PointsCalculator,
     fb: FormBuilder,
     private modalService: NgbModal
   ) {
@@ -78,16 +78,21 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
   searchPersons() {
     const lineFilter = this.form.controls.searchLine.value;
     const teamFilter = this.form.controls.searchTeam.value;
-    this.viewPeriodPersonRepository.getObjects(this.viewPeriod, teamFilter, lineFilter).subscribe(
-      (viewPeriodPersons: ViewPeriodPerson[]) => {
-        this.setChoosePersonItems(viewPeriodPersons);
+
+    // haal alle persons op met viewperiods spelers op 
+    // dit is dan inclusief de statistics
+    // wanneer incl. en wanneer exclusief statistics?????
+
+    this.playerRepository.getObjects(this.viewPeriod, teamFilter, lineFilter).subscribe(
+      (players: S11Player[]) => {
+        this.setChoosePersonItems(players);
       },
       /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
       /* onComplete */() => { this.processing = false });
   }
 
-  select(viewPeriodPerson: ViewPeriodPerson) {
-    this.selectPerson.emit(viewPeriodPerson.getPerson());
+  select(player: S11Player) {
+    this.selectPerson.emit(player.getPerson());
   }
 
   // getPlayers(competitionPersons: CompetitionPerson[]): Player[] {
@@ -101,12 +106,12 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
   //   return players;
   // }
 
-  setChoosePersonItems(viewPeriodPersons: ViewPeriodPerson[]) {
+  setChoosePersonItems(players: S11Player[]) {
     const choosePersonItems: ChoosePersonItem[] = [];
-    viewPeriodPersons.forEach((viewPeriodPerson: ViewPeriodPerson) => {
-      const player = this.oneTeamSimultaneous.getPlayer(viewPeriodPerson.getPerson());
-      if (player) {
-        choosePersonItems.push({ viewPeriodPerson, player, points: viewPeriodPerson.getTotal() });
+    players.forEach((player: S11Player) => {
+      const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player.getPerson());
+      if (currentPlayer) {
+        choosePersonItems.push({ player: currentPlayer, s11Player: player, points: 0/* @TODO CDK */ });
       }
     });
     choosePersonItems.sort((itemA, itemB) => itemA.points < itemB.points ? 1 : -1);
@@ -143,7 +148,7 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
 }
 
 interface ChoosePersonItem {
-  viewPeriodPerson: ViewPeriodPerson;
+  s11Player: S11Player;
   player: Player;
   points: number;
 }

@@ -1,9 +1,9 @@
-import { JsonViewPeriodPerson } from '../../period/view/person/json';
-import { JsonPoolUserViewPeriodPerson } from '../../pool/user/viewPeriodPerson/json';
+import { JsonS11Player } from '../../player/json';
 
 export interface JsonFormationLine {
     number: number;
-    viewPeriodPersons: JsonViewPeriodPerson[];
-    substitute?: JsonPoolUserViewPeriodPerson;
+    players: JsonS11Player[];
+    substitute?: JsonS11Player;
+    substitutions: Map<number, boolean>;
     maxNrOfPersons: number
 }

@@ -59,6 +59,7 @@ export class NewComponent implements OnInit {
             this.setAlert('danger', 'het aantal actieve broncompetities moet altijd 1 zijn');
           } else {
             this.activeSourceCompetitionShell = this.activeConfig.getCompetitions().pop();
+            this.setAlert('info', 'wanneer je dezelfde naam gebruikt voor meerdere seizoenen, dan wordt er ook een alltime - ranking bijgehouden');
           }
 
         },

@@ -82,11 +82,11 @@ import { EditActionMapper } from '../lib/editAction/mapper';
 import { FormationRepository } from '../lib/formation/repository';
 import { ChooseFormationComponent } from './assemble/chooseformation.component';
 import { AssembleLineComponent } from './assemble/assembleline.component';
-import { ScoreUnitCalculator } from '../lib/scoreUnit/calculator';
-import { ViewPeriodPersonRepository } from '../lib/period/view/person/repository';
-import { ViewPeriodPersonMapper } from '../lib/period/view/person/mapper';
+import { PointsCalculator } from '../lib/points/calculator';
+import { S11PlayerRepository } from '../lib/player/repository';
+import { S11PlayerMapper } from '../lib/player/mapper';
 import { GameRoundMapper } from '../lib/gameRound/mapper';
-import { PoolUserViewPeriodPersonMapper } from '../lib/pool/user/viewPeriodPerson/mapper';
+import { StatisticsMapper } from '../lib/statistics/mapper';
 
 @NgModule({
   imports: [
@@ -149,8 +149,9 @@ import { PoolUserViewPeriodPersonMapper } from '../lib/pool/user/viewPeriodPerso
     ScoreUnitMapper,
     ScoutedPersonRepository,
     ScoutedPersonMapper,
-    ViewPeriodPersonRepository,
-    ViewPeriodPersonMapper,
+    S11PlayerRepository,
+    S11PlayerMapper,
+    StatisticsMapper,
     PersonRepository,
     PlayerRepository,
     ActiveConfigRepository,
@@ -163,8 +164,7 @@ import { PoolUserViewPeriodPersonMapper } from '../lib/pool/user/viewPeriodPerso
     GameRoundMapper,
     EditActionMapper,
     FormationRepository,
-    ScoreUnitCalculator,
-    PoolUserViewPeriodPersonMapper
+    PointsCalculator
   ]
 })
 export class PoolModule {

@@ -3,8 +3,7 @@ import { Person } from 'ngx-sport';
 
 import { SuperElfNameService } from '../../lib/nameservice';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
-import { ViewPeriodPerson } from '../../lib/period/view/person';
-import { PoolUserViewPeriodPerson } from '../../lib/pool/user/viewPeriodPerson';
+import { S11Player } from '../../lib/player';
 
 @Component({
   selector: 'app-pool-assembleline',
@@ -36,12 +35,11 @@ export class AssembleLineComponent implements OnInit {
   }
 
   completed() {
-    return this.assembleLine.substitute?.substitute
-      && this.assembleLine.places.every(place => place.viewPeriodPerson);
+    return this.assembleLine.places.every(place => place.player);
   }
 
   getTeamAbbreviation(person: Person): string {
-    const player = this.oneTeamSimultaneous.getPlayer(person);
+    const player = this.oneTeamSimultaneous.getCurrentPlayer(person);
     if (!player) {
       return '?';
     }
@@ -59,6 +57,6 @@ export interface AssembleLine {
 export interface AssembleLinePlace {
   lineNumber: number;
   number: number;
-  viewPeriodPerson: ViewPeriodPerson | undefined;
-  substitute: PoolUserViewPeriodPerson | undefined;
+  player: S11Player | undefined;
+  substitute: boolean;
 }

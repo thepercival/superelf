@@ -1,18 +1,8 @@
-import { Person } from 'ngx-sport';
+import { Identifiable, Person } from 'ngx-sport';
 
-export class ScoutedPerson {
-    protected id: number = 0;
-
+export class ScoutedPerson extends Identifiable {
     constructor(protected person: Person, protected nrOfStars: number) {
-
-    }
-
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
+        super();
     }
 
     public getPerson(): Person {

@@ -1,8 +1,8 @@
 
-import { Person, Player, Team } from 'ngx-sport';
+import { Team } from 'ngx-sport';
 import { FormationLine } from './formation/line';
 import { ViewPeriod } from './period/view';
-import { ViewPeriodPerson } from './period/view/person';
+import { S11Player } from './player';
 import { PoolUser } from './pool/user';
 
 export class Formation {
@@ -41,23 +41,18 @@ export class Formation {
         return this.viewPeriod;
     }
 
-    public getViewPeriodPersons(): ViewPeriodPerson[] {
-        let persons: ViewPeriodPerson[] = [];
+    public getPlayers(): S11Player[] {
+        let players: S11Player[] = [];
         this.lines.forEach(line => {
-            persons = persons.concat(line.getViewPeriodPersons());
-            const substitute = line.getSubstitute();
-            if (substitute) {
-                persons.push(substitute.getViewPeriodPerson());
-            }
-
+            players = players.concat(line.getPlayers());
         });
-        return persons;
+        return players;
     }
 
-    public getViewPeriodPerson(team: Team, date?: Date): ViewPeriodPerson | undefined {
+    public getPlayer(team: Team, date?: Date): S11Player | undefined {
         const checkDate = date ? date : new Date();
-        return this.getViewPeriodPersons().find((viewPeriodPerson: ViewPeriodPerson) => {
-            return viewPeriodPerson.getPerson().getPlayer(team, checkDate);
+        return this.getPlayers().find((player: S11Player) => {
+            return player.getPerson().getPlayer(team, checkDate);
         });
     }
 }

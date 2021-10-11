@@ -22,7 +22,7 @@ import { SuperElfNameService } from '../../lib/nameservice';
 import { FormationRepository } from '../../lib/formation/repository';
 import { AssembleLine, AssembleLinePlace } from './assembleline.component';
 import { Observable, of } from 'rxjs';
-import { ViewPeriodPerson } from '../../lib/period/view/person';
+import { S11Player } from '../../lib/player';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 
 @Component({
@@ -99,23 +99,22 @@ export class AssembleComponent extends PoolComponent implements OnInit {
       return assembleLines;
     }
     formation.getLines().forEach((formationLine: FormationLine) => {
-      const viewPeriodPersons = formationLine.getViewPeriodPersons().slice();
+      const players = formationLine.getPlayers().slice();
       const places: AssembleLinePlace[] = [];
       for (let i = 1; i <= formationLine.getMaxNrOfPersons(); i++) {
-        const viewPeriodPerson = viewPeriodPersons.shift();
+        const player = players.shift();
         places.push({
           lineNumber: formationLine.getNumber(),
           number: 1,
-          viewPeriodPerson,
-          substitute: undefined
+          player,
+          substitute: false
         });
       }
-      const lineSubstitute = formationLine.getSubstitute();
       const substitute: AssembleLinePlace = {
         lineNumber: formationLine.getNumber(),
         number: 1,
-        viewPeriodPerson: lineSubstitute ? lineSubstitute.getViewPeriodPerson() : undefined,
-        substitute: lineSubstitute
+        player: formationLine.getSubstitute(),
+        substitute: true
       };
       assembleLines.push({
         number: formationLine.getNumber(), places, substitute
@@ -137,10 +136,10 @@ export class AssembleComponent extends PoolComponent implements OnInit {
       return teamMap;
     }
     formation.getLines().forEach((line: FormationLine) => {
-      line.getViewPeriodPersons().forEach((viewPeriodPerson: ViewPeriodPerson) => {
-        const player = this.oneTeamSimultaneous.getPlayer(viewPeriodPerson.getPerson());
-        if (player) {
-          teamMap.set(+player.getTeam().getId(), player.getTeam());
+      line.getPlayers().forEach((player: S11Player) => {
+        const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player.getPerson());
+        if (currentPlayer) {
+          teamMap.set(+currentPlayer.getTeam().getId(), currentPlayer.getTeam());
         }
       });
     });
@@ -163,7 +162,7 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     this.updatingPlayer = true;
     this.removeSelected(line).subscribe(
         /* happy path */() => {
-        const player = this.oneTeamSimultaneous.getPlayer(person);
+        const player = this.oneTeamSimultaneous.getCurrentPlayer(person);
         const team = player?.getTeam();
         this.removeSameTeam(formation, team).subscribe(
         /* happy path */() => {
@@ -192,14 +191,14 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     if (!selectedPlace) {
       return of(0);
     }
-    const viewPeriodPerson = selectedPlace.viewPeriodPerson;
-    if (!viewPeriodPerson) {
+    const player = selectedPlace.player;
+    if (!player) {
       return of(0);
     }
     if (selectedPlace.substitute) {
-      return this.formationRepository.removeSubstitute(selectedPlace.substitute, line);
+      return this.formationRepository.removeSubstitute(player, line);
     }
-    return this.formationRepository.removeViewPeriodPerson(viewPeriodPerson, line);
+    return this.formationRepository.removePlayer(player, line);
   }
 
   protected removeSameTeam(formation: Formation, team: Team | undefined): Observable<void | number> {
@@ -210,27 +209,27 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     // if (!selectedPlace) {
     //   return of(0);
     // }
-    const viewPeriodPerson = formation.getViewPeriodPerson(team);
-    if (!viewPeriodPerson) {
-      return of(0);
-    }
-    const player = this.oneTeamSimultaneous.getPlayer(viewPeriodPerson.getPerson());
+    const player = formation.getPlayer(team);
     if (!player) {
       return of(0);
     }
-    const line = formation.getLine(player.getLine());
+    const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player.getPerson());
+    if (!currentPlayer) {
+      return of(0);
+    }
+    const line = formation.getLine(currentPlayer.getLine());
     if (!line) {
       return of(0);
     }
     const substitute = line.getSubstitute()
-    if (substitute && substitute.getViewPeriodPerson() === viewPeriodPerson) {
+    if (substitute && substitute === player) {
       return this.formationRepository.removeSubstitute(substitute, line);
     }
-    return this.formationRepository.removeViewPeriodPerson(viewPeriodPerson, line);
+    return this.formationRepository.removePlayer(player, line);
   }
 
   protected teamAlreadyPresent(team: Team): boolean {
-    return this.poolUser.getAssembleFormation()?.getViewPeriodPerson(team) !== undefined;
+    return this.poolUser.getAssembleFormation()?.getPlayer(team) !== undefined;
   }
 
   add(person: Person) {

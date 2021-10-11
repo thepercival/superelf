@@ -15,9 +15,9 @@ import { ConfirmPersonChoiceModalComponent } from '../choosepersons/confirmperso
 
 
 @Component({
-  selector: 'app-pool-choosepersons',
-  templateUrl: './choosepersons.component.html',
-  styleUrls: ['./choosepersons.component.scss']
+  selector: 'app-pool-team',
+  templateUrl: './team.component.html',
+  styleUrls: ['./team.component.scss']
 })
 export class TeamComponent extends PoolComponent implements OnInit {
   form: FormGroup;
