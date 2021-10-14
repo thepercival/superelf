@@ -1,5 +1,6 @@
 import { Identifiable, Person } from 'ngx-sport';
 import { ViewPeriod } from './period/view';
+import { JsonPlayerTotals } from './player/totals/json';
 import { Statistics } from './statistics';
 
 export class S11Player extends Identifiable {
@@ -23,7 +24,11 @@ export class S11Player extends Identifiable {
     protected statistics = new StatisticsMap();
     // protected gameRoundScores: PlayerGameRoundScore[] = [];    
 
-    constructor(protected viewPeriod: ViewPeriod, protected person: Person) {
+    constructor(
+        protected viewPeriod: ViewPeriod,
+        protected person: Person,
+        protected totals: JsonPlayerTotals,
+        protected totalPoints: number) {
         super();
     }
 
@@ -35,9 +40,7 @@ export class S11Player extends Identifiable {
         return this.person;
     }
 
-    // public getTotal(): number {
-    //     return this.total;
-    // }
+
 
     // public setTotal(total: number) {
     //     this.total = total;
@@ -61,6 +64,14 @@ export class S11Player extends Identifiable {
 
     public setAllStats(statisticsMap: StatisticsMap) {
         return this.statistics = statisticsMap;
+    }
+
+    public getTotals(): JsonPlayerTotals {
+        return this.totals;
+    }
+
+    public getTotalPoints(): number {
+        return this.totalPoints;
     }
 }
 

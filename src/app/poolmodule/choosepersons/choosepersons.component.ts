@@ -111,10 +111,10 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
     players.forEach((player: S11Player) => {
       const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player.getPerson());
       if (currentPlayer) {
-        choosePersonItems.push({ player: currentPlayer, s11Player: player, points: 0/* @TODO CDK */ });
+        choosePersonItems.push({ player: currentPlayer, s11Player: player });
       }
     });
-    choosePersonItems.sort((itemA, itemB) => itemA.points < itemB.points ? 1 : -1);
+    choosePersonItems.sort((itemA, itemB) => itemA.s11Player.getTotalPoints() < itemB.s11Player.getTotalPoints() ? 1 : -1);
     this.choosePersonItems = choosePersonItems;
   }
 
@@ -150,5 +150,4 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
 interface ChoosePersonItem {
   s11Player: S11Player;
   player: Player;
-  points: number;
 }
