@@ -13,6 +13,7 @@ import { InviteComponent } from './invite/invite.component';
 import { ScoutingComponent } from './scouting/scouting.component';
 import { ChoosePersonsComponent } from './choosepersons/choosepersons.component';
 import { AssembleComponent } from './assemble/assemble.component';
+import { ChooseFormationComponent } from './assemble/chooseformation.component';
 
 const routes: Routes = [
   { path: 'prenew', component: PreNewComponent },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'users/:id', component: PoolUsersComponent, canActivate: [AuthUserGuardService] },
   { path: 'scouting/:id', component: ScoutingComponent, canActivate: [AuthUserGuardService] },
   /*{ path: 'choosepersons/:id', component: ChoosePersonsComponent, canActivate: [AuthUserGuardService] },*/
+  { path: 'chooseformation/:id', component: ChooseFormationComponent, canActivate: [AuthUserGuardService] },
   { path: 'assemble/:id', component: AssembleComponent, canActivate: [AuthUserGuardService] },
   { path: 'rules/:id', component: RulesComponent },
 

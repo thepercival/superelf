@@ -9,7 +9,7 @@
 
 <div *ngIf="pool" class="ps-3">
 
-  <h5>teambeheer</h5>
+  <h5 class="text-primary">teambeheer</h5>
   <p class="card-text">Het samenstellen van je team kan van
     {{pool.getAssemblePeriod()?.getStartDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
     false,'hour':'2-digit','minute':'2-digit'})}}
@@ -24,7 +24,7 @@
     false,'hour':'2-digit','minute':'2-digit'})}}.
   </p>
 
-  <h5>team samenstellen</h5>
+  <h5 class="text-primary">team samenstellen</h5>
   <ul class="list-group mb-3">
     <li class="list-group-item">je mag van elk team max 1 speler kiezen ( wanneer je door een transfer toch 2
       spelers
@@ -33,7 +33,7 @@
     <li class="list-group-item">de toegestane formaties zijn : {{getFormationNames()}}</li>
   </ul>
 
-  <h5>transferperiode</h5>
+  <h5 class="text-primary">transferperiode</h5>
   <ul class="list-group mb-3">
     <li class="list-group-item">een speler, die niet meer voor een team uit de eredivisie uitkomt, mag in de
       transferperiode worden vervangen door een
@@ -49,8 +49,7 @@
       formaties te zijn</li>
   </ul>
 
-
-  <h5>puntentelling</h5>
+  <h5 class="text-primary">puntentelling</h5>
   <ul class="list-group mb-3">
     <li class="list-group-item">de wedstrijden worden per speelronde gedaan, dus wanneer een wedstrijd is uitgesteld
       blijft de wedstrijd bij dezelfde
@@ -61,7 +60,7 @@
       meegedaan</li>
   </ul>
 
-  <h5>punten</h5>
+  <h5 class="text-primary">punten</h5>
   <div class="d-flex flex-wrap justify-content-center">
     <div class="card mb-3 mx-2" *ngFor="let lineDef of getLineDefs()">
       <div class="card-body">

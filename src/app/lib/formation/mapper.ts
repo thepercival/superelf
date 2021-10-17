@@ -1,27 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Association } from 'ngx-sport';
-import { Formation } from '../formation';
+import { S11Formation } from '../formation';
 import { ViewPeriod } from '../period/view';
 import { PoolUser } from '../pool/user';
-import { JsonFormation } from './json';
-import { FormationLineMapper } from './line/mapper';
+import { JsonS11Formation } from './json';
+import { S11FormationLine } from './line';
+import { JsonS11FormationLine } from './line/json';
+import { S11FormationLineMapper } from './line/mapper';
 
 @Injectable()
-export class FormationMapper {
-    constructor(protected lineMapper: FormationLineMapper) { }
+export class S11FormationMapper {
+    constructor(protected lineMapper: S11FormationLineMapper) { }
 
-    toObject(json: JsonFormation, poolUser: PoolUser, viewPeriod: ViewPeriod): Formation {
-        const formation = new Formation(poolUser, viewPeriod, json.name);
+    toObject(json: JsonS11Formation, poolUser: PoolUser, viewPeriod: ViewPeriod): S11Formation {
+        const formation = new S11Formation(poolUser, viewPeriod);
         formation.setId(json.id);
-        json.lines.forEach(jsonLine => this.lineMapper.toObject(jsonLine, formation, viewPeriod));
+        json.lines.forEach((jsonLine: JsonS11FormationLine) => this.lineMapper.toObject(jsonLine, formation, viewPeriod));
         return formation;
     }
 
-    toJson(formation: Formation): JsonFormation {
+    toJson(formation: S11Formation): JsonS11Formation {
         return {
             id: formation.getId(),
-            name: formation.getName(),
-            lines: formation.getLines().map(line => this.lineMapper.toJson(line))
+            lines: formation.getLines().map((line: S11FormationLine) => this.lineMapper.toJson(line))
         };
     }
 }

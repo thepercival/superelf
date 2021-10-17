@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
-import { JsonAssociation, Period } from 'ngx-sport';
+import { FormationMapper, Period } from 'ngx-sport';
 
-import { Pool } from '../pool';
-import { ActiveConfig } from '../pool/activeConfig';
+import { ActiveConfig } from '../activeConfig';
 import { JsonActiveConfig } from './json';
 
 @Injectable()
 export class ActiveConfigMapper {
-    constructor(
+    constructor(protected formationMapper: FormationMapper
     ) { }
 
     toObject(json: JsonActiveConfig): ActiveConfig {
+        console.log(json.availableFormations);
+
         const activeConfig = new ActiveConfig(
             new Period(new Date(json.createAndJoinStart), new Date(json.createAndJoinEnd)),
-            json.availableFormations,
+            json.availableFormations.map(jsonFormation => this.formationMapper.toObject(jsonFormation)),
             json.sourceCompetitions
         );
         return activeConfig;

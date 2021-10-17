@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { ActiveConfig } from '../pool/activeConfig';
+import { ActiveConfig } from '../activeConfig';
 
 import { APIRepository } from '../repository';
 import { JsonActiveConfig } from './json';

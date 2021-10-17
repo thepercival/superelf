@@ -11,7 +11,7 @@ import { Pool } from '../../lib/pool';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
-import { Formation } from '../../lib/formation';
+import { S11Formation } from '../../lib/formation';
 
 @Component({
     selector: 'app-pool-public',
@@ -70,7 +70,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
     }
 
     getNrOfPoolUsersHaveAssembled(): number {
-        return this.poolUsers.filter(poolUser => poolUser.getNrOfAssembled() === Formation.TotalNrOfPersons).length;
+        return this.poolUsers.filter(poolUser => poolUser.getNrOfAssembled() === S11Formation.FootbalNrOfPersons).length;
     }
 
     allPoolUsersHaveAssembled(): boolean {
@@ -86,6 +86,13 @@ export class HomeComponent extends PoolComponent implements OnInit {
         return this.poolUsers.length === this.getNrOfPoolUsersHaveTransfered();
     }
 
+    linkToAssemble() {
+        if (this.poolUser?.getAssembleFormation() !== undefined) {
+            this.router.navigate(['/pool/assemble', this.pool.getId()]);
+        } else {
+            this.router.navigate(['/pool/chooseformation', this.pool.getId()]);
+        }
+    }
 
 
 }

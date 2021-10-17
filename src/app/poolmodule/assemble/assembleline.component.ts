@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Person } from 'ngx-sport';
+import { S11FormationLine } from '../../lib/formation/line';
+import { S11FormationPlace } from '../../lib/formation/place';
 
 import { SuperElfNameService } from '../../lib/nameservice';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
@@ -11,16 +13,16 @@ import { S11Player } from '../../lib/player';
   styleUrls: ['./assembleline.component.scss']
 })
 export class AssembleLineComponent implements OnInit {
-  @Input() assembleLine!: AssembleLine;
-  @Input() selectedPlace: AssembleLinePlace | undefined;
+  @Input() line!: S11FormationLine;
+  @Input() selectedPlace: S11FormationPlace | undefined;
   @Input() processing: boolean = true;
-  @Output() selectPlace = new EventEmitter<AssembleLinePlace>();
+  @Output() selectPlace = new EventEmitter<S11FormationPlace>();
   @Output() hideOnSMDown = new EventEmitter<boolean>();
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
-  superElfNameService = new SuperElfNameService();
 
   constructor(
+    public superElfNameService: SuperElfNameService,
   ) {
 
   }
@@ -29,13 +31,13 @@ export class AssembleLineComponent implements OnInit {
     this.processing = false;
   }
 
-  select(place: AssembleLinePlace, smDown: boolean) {
+  select(place: S11FormationPlace, smDown: boolean) {
     this.selectPlace.emit(place);
     this.hideOnSMDown.emit(smDown);
   }
 
   completed() {
-    return this.assembleLine.places.every(place => place.player);
+    return this.line.getPlaces().every((place: S11FormationPlace) => place.getPlayer());
   }
 
   getTeamAbbreviation(person: Person): string {
@@ -46,17 +48,4 @@ export class AssembleLineComponent implements OnInit {
     const abbreviation = player.getTeam().getAbbreviation();
     return abbreviation ? abbreviation : '';
   }
-}
-
-export interface AssembleLine {
-  number: number;
-  places: AssembleLinePlace[];
-  substitute: AssembleLinePlace;
-}
-
-export interface AssembleLinePlace {
-  lineNumber: number;
-  number: number;
-  player: S11Player | undefined;
-  substitute: boolean;
 }

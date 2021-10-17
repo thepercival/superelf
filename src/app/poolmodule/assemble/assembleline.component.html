@@ -1,13 +1,13 @@
-<div *ngIf="assembleLine" class="card mx-2 mb-1 border-{{ completed() ? 'success' : 'danger'}}">
+<div *ngIf="line" class="card mx-2 mb-1 border-{{ completed() ? 'success' : 'danger'}}">
 
   <div class="card-body pb-0">
-    <h5 class="card-title">{{superElfNameService.getLineName(assembleLine.number)}}</h5>
+    <h5 class="card-title">{{superElfNameService.getLineName(line.getNumber())}}</h5>
     <table class="table">
       <tbody>
-        <ng-container *ngFor="let place of assembleLine.places" [ngTemplateOutlet]="placeRow"
+        <ng-container *ngFor="let place of line.getPlaces()" [ngTemplateOutlet]="placeRow"
           [ngTemplateOutletContext]="{place:place}">
         </ng-container>
-        <ng-container [ngTemplateOutlet]="placeRow" [ngTemplateOutletContext]="{place:assembleLine.substitute}">
+        <ng-container [ngTemplateOutlet]="placeRow" [ngTemplateOutletContext]="{place:line.getSubstitute()}">
         </ng-container>
       </tbody>
     </table>

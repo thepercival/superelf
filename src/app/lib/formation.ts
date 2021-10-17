@@ -1,40 +1,32 @@
 
-import { Team } from 'ngx-sport';
-import { FormationLine } from './formation/line';
+import { Identifiable, Team } from 'ngx-sport';
+import { S11FormationLine } from './formation/line';
 import { ViewPeriod } from './period/view';
 import { S11Player } from './player';
 import { PoolUser } from './pool/user';
 
-export class Formation {
-    static readonly TotalNrOfPersons: number = 15;
-    protected lines: FormationLine[] = [];
-    protected id: number = 0;
+export class S11Formation extends Identifiable {
+    static readonly FootbalNrOfPersons: number = 11;
+    private lines: S11FormationLine[] = [];
 
-    constructor(protected poolUser: PoolUser, protected viewPeriod: ViewPeriod, protected name: string) {
-    }
-
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
+    constructor(protected poolUser: PoolUser, protected viewPeriod: ViewPeriod) {
+        super();
     }
 
     public getPoolUser(): PoolUser {
         return this.poolUser;
     }
 
-    public getName(): string {
-        return this.name;
-    }
-
-    public getLines(): FormationLine[] {
+    public getLines(): S11FormationLine[] {
         return this.lines;
     }
 
-    public getLine(lineNumber: number): FormationLine | undefined {
-        return this.lines.find(line => line.getNumber() === lineNumber);
+    public getLine(lineNumber: number): S11FormationLine | undefined {
+        const line = this.lines.find(line => line.getNumber() === lineNumber);
+        if (line === undefined) {
+            throw new Error('formationline not found');
+        }
+        return line;
     }
 
     public getViewPeriod(): ViewPeriod {
@@ -44,7 +36,7 @@ export class Formation {
     public getPlayers(): S11Player[] {
         let players: S11Player[] = [];
         this.lines.forEach(line => {
-            players = players.concat(line.getPlayers());
+            players = players.concat(line.getPlayers(true));
         });
         return players;
     }
@@ -54,5 +46,9 @@ export class Formation {
         return this.getPlayers().find((player: S11Player) => {
             return player.getPerson().getPlayer(team, checkDate);
         });
+    }
+
+    getName(): string {
+        return this.getLines().map((line: S11FormationLine) => line.getPlaces().length - 1).join('-');
     }
 }

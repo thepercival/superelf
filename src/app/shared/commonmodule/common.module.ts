@@ -5,6 +5,7 @@ import { faUsers } from '@fortawesome/free-solid-svg-icons';
 
 import { EscapeHtmlPipe } from './escapehtmlpipe';
 import { FocusDirective } from './focus';
+import { LineIconComponent } from './lineicon/lineicon.component';
 import { TitleComponent } from './title/title.component';
 
 @NgModule({
@@ -12,6 +13,7 @@ import { TitleComponent } from './title/title.component';
     EscapeHtmlPipe,
     FocusDirective,
     TitleComponent,
+    LineIconComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +22,8 @@ import { TitleComponent } from './title/title.component';
   exports: [
     EscapeHtmlPipe,
     FocusDirective,
-    TitleComponent
+    TitleComponent,
+    LineIconComponent
   ]
 })
 

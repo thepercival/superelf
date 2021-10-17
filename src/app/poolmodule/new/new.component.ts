@@ -5,11 +5,10 @@ import { Router } from '@angular/router';
 import { IAlert } from '../../shared/commonmodule/alert';
 import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
-import { JsonPool } from '../../lib/pool/json';
 import { PoolCollection } from '../../lib/pool/collection';
 import { ActiveConfigRepository } from '../../lib/activeConfig/repository';
-import { JsonActiveConfig, JsonCompetitionShell } from '../../lib/activeConfig/json';
-import { ActiveConfig } from '../../lib/pool/activeConfig';
+import { JsonCompetitionShell } from '../../lib/activeConfig/json';
+import { ActiveConfig } from '../../lib/activeConfig';
 import { CompetitionRepository } from '../../lib/ngx-sport/competition/repository';
 import { Competition } from 'ngx-sport';
 

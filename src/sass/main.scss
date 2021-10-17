@@ -75,11 +75,17 @@ input.is-warning {
   @extend .border-white;
 }
 
-.bg-against {
-  background-color: purple;
+.line-1 {
+  background-color: $gray-700;
 }
-.bg-together {
-  background-color: pink;
+.line-2 {
+  background-color: $gray-600;
+}
+.line-4 {
+  background-color: $gray-500;
+}
+.line-8 {
+  background-color: $gray-400;
 }
 
 .progress {

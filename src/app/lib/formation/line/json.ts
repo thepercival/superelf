@@ -1,9 +1,8 @@
 import { JsonS11Player } from '../../player/json';
+import { JsonS11FormationPlace } from '../place/json';
 
-export interface JsonFormationLine {
+export interface JsonS11FormationLine {
     number: number;
-    players: JsonS11Player[];
-    substitute?: JsonS11Player;
-    substitutions: Map<number, boolean>;
-    maxNrOfPersons: number
+    places: JsonS11FormationPlace[];
+    // substitutionAppearances: Map<number, boolean>;    
 }

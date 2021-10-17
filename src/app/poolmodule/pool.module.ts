@@ -40,6 +40,7 @@ import {
   LeagueMapper,
   FieldMapper,
   AssociationMapper,
+  FormationMapper,
 } from 'ngx-sport';
 
 import { CSSService } from '../shared/commonmodule/cssservice';
@@ -74,8 +75,8 @@ import { ConfirmPersonChoiceModalComponent } from './choosepersons/confirmperson
 import { PersonComponent } from './person/person.component';
 import { ViewPeriodMapper } from '../lib/period/view/mapper';
 import { AssembleComponent } from './assemble/assemble.component';
-import { FormationMapper } from '../lib/formation/mapper';
-import { FormationLineMapper } from '../lib/formation/line/mapper';
+import { S11FormationMapper } from '../lib/formation/mapper';
+import { S11FormationLineMapper } from '../lib/formation/line/mapper';
 import { AssemblePeriodMapper } from '../lib/period/assemble/mapper';
 import { TransferPeriodMapper } from '../lib/period/transfer/mapper';
 import { EditActionMapper } from '../lib/editAction/mapper';
@@ -87,6 +88,8 @@ import { S11PlayerRepository } from '../lib/player/repository';
 import { S11PlayerMapper } from '../lib/player/mapper';
 import { GameRoundMapper } from '../lib/gameRound/mapper';
 import { StatisticsMapper } from '../lib/statistics/mapper';
+import { SuperElfNameService } from '../lib/nameservice';
+import { FormationPlaceMapper } from '../lib/formation/place/mapper';
 
 @NgModule({
   imports: [
@@ -121,7 +124,9 @@ import { StatisticsMapper } from '../lib/statistics/mapper';
     CSSService,
     FieldMapper,
     FormationMapper,
-    FormationLineMapper,
+    S11FormationMapper,
+    S11FormationLineMapper,
+    FormationPlaceMapper,
     GameMapper,
     GamePlaceMapper,
     ScoreMapper,
@@ -152,6 +157,7 @@ import { StatisticsMapper } from '../lib/statistics/mapper';
     S11PlayerRepository,
     S11PlayerMapper,
     StatisticsMapper,
+    SuperElfNameService,
     PersonRepository,
     PlayerRepository,
     ActiveConfigRepository,

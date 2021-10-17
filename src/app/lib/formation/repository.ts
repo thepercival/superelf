@@ -4,28 +4,22 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
-import { Person, PersonMapper } from 'ngx-sport';
-import { JsonFormationShell } from '../activeConfig/json';
-import { FormationMapper } from './mapper';
-import { JsonFormation } from './json';
-import { Formation } from '../formation';
+import { Formation, FormationMapper } from 'ngx-sport';
 import { PoolUser } from '../pool/user';
-import { FormationLine } from './line';
-import { S11PlayerMapper } from '../player/mapper';
-import { S11Player } from '../player';
-import { JsonS11Player } from '../player/json';
+import { S11FormationMapper } from './mapper';
+import { S11Formation } from '../formation';
+import { JsonS11Formation } from './json';
 
 @Injectable()
 export class FormationRepository extends APIRepository {
     constructor(
-        private mapper: FormationMapper,
-        private playerMapper: S11PlayerMapper,
-        private personMapper: PersonMapper,
+        private mapper: S11FormationMapper,
+        private sportsFormationMapper: FormationMapper,
         private http: HttpClient) {
         super();
     }
 
-    getUrl(poolUser: PoolUser, formation?: Formation): string {
+    getUrl(poolUser: PoolUser, formation?: S11Formation): string {
         let baseUrl = super.getApiUrl() + 'poolusers/' + poolUser.getId();
         return baseUrl + '/formations' + (formation ? ('/' + formation.getId()) : '');
     }
@@ -39,25 +33,22 @@ export class FormationRepository extends APIRepository {
     //     );
     // }
 
-    createObject(formationShell: JsonFormationShell, poolUser: PoolUser): Observable<Formation> {
+    editObject(poolUser: PoolUser, availableFormation: Formation): Observable<S11Formation> {
         const viewPeriod = poolUser.getPool().getAssemblePeriod().getViewPeriod();
-        return this.http.post<JsonFormation>(this.getUrl(poolUser), formationShell, { headers: super.getHeaders() }).pipe(
-            map((jsonFormation: JsonFormation) => this.mapper.toObject(jsonFormation, poolUser, viewPeriod)),
+        const jsonFormation = this.sportsFormationMapper.toJson(availableFormation);
+        return this.http.put<JsonS11Formation>(this.getUrl(poolUser), jsonFormation, { headers: super.getHeaders() }).pipe(
+            map((jsonS11Formation: JsonS11Formation) => {
+                const formation = this.mapper.toObject(jsonS11Formation, poolUser, viewPeriod);
+                poolUser.setAssembleFormation(formation);
+                console.log(jsonS11Formation, formation);
+                return formation;
+            }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    editObject(formationShell: JsonFormationShell, formation: Formation): Observable<Formation> {
-        const poolUser = formation.getPoolUser();
-        const viewPeriod = poolUser.getPool().getAssemblePeriod().getViewPeriod();
-        return this.http.put<JsonFormation>(this.getUrl(poolUser, formation), formationShell, { headers: super.getHeaders() }).pipe(
-            map((jsonFormation: JsonFormation) => this.mapper.toObject(jsonFormation, poolUser, viewPeriod)),
-            catchError((err) => this.handleError(err))
-        );
-    }
-
-    removeObject(assembleFormation: Formation): Observable<void> {
-        const url = this.getUrl(assembleFormation.getPoolUser(), assembleFormation);
+    /*removeObject(poolUser: PoolUser, assembleFormation: S11Formation): Observable<void> {
+        const url = this.getUrl(poolUser, assembleFormation);
         return this.http.delete(url, this.getOptions()).pipe(
             catchError((err) => this.handleError(err))
         );
@@ -120,5 +111,5 @@ export class FormationRepository extends APIRepository {
             map(() => line.setSubstitute(undefined)),
             catchError((err) => this.handleError(err))
         );
-    }
+    }*/
 }

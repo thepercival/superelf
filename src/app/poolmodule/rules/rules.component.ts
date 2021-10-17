@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CustomSport, FootballLine } from 'ngx-sport';
-import { JsonFormationShell } from '../../lib/activeConfig/json';
+import { FootballLine, Formation } from 'ngx-sport';
 import { ActiveConfigRepository } from '../../lib/activeConfig/repository';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { Pool } from '../../lib/pool';
-import { ActiveConfig } from '../../lib/pool/activeConfig';
+import { ActiveConfig } from '../../lib/activeConfig';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { SeasonScoreUnit } from '../../lib/ngx-sport/season/scoreUnit';
@@ -14,19 +13,19 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 @Component({
   selector: 'app-pool-rules',
   templateUrl: './rules.component.html',
-  styleUrls: ['./rules.component.scss']
+  styleUrls: ['./rules.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class RulesComponent extends PoolComponent implements OnInit {
-  nameService: SuperElfNameService;
-  availableFormations: JsonFormationShell[] | undefined;
+  availableFormations: Formation[] | undefined;
   constructor(
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
+    public nameService: SuperElfNameService,
     protected activeConfigRepository: ActiveConfigRepository
   ) {
     super(route, router, poolRepository);
-    this.nameService = new SuperElfNameService();
   }
 
   ngOnInit() {
@@ -41,7 +40,9 @@ export class RulesComponent extends PoolComponent implements OnInit {
   }
 
   getFormationNames(): string | undefined {
-    return this.availableFormations?.map((formation: JsonFormationShell) => formation.name).join(", ");
+    return this.availableFormations?.map((formation: Formation) => {
+      return formation.getName();
+    }).join(", ");
   }
 
   getLineDefs(): FootballLine[] {

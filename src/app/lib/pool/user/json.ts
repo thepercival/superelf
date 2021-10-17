@@ -1,8 +1,8 @@
 import { JsonPoolCompetitor } from '../competitor/json';
 import { JsonUser } from '../../user/mapper';
-import { JsonFormation } from '../../formation/json';
 import { JsonSubstitution } from '../../editAction/substitution/json';
 import { JsonTransfer } from '../../editAction/transfer/json';
+import { JsonS11Formation } from '../../formation/json';
 
 export interface JsonPoolUser {
     id: number;
@@ -13,6 +13,6 @@ export interface JsonPoolUser {
     nrOfTransfersWithTeam?: number;
     transfers?: JsonTransfer[];
     substitutions?: JsonSubstitution[];
-    assembleFormation?: JsonFormation;
-    transferFormation?: JsonFormation;
+    assembleFormation?: JsonS11Formation;
+    transferFormation?: JsonS11Formation;
 }

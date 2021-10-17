@@ -1,7 +1,8 @@
-import { CustomSport, FootballLine } from 'ngx-sport';
+import { Injectable } from '@angular/core';
+import { FootballLine } from 'ngx-sport';
 import { ScoreUnit } from './scoreUnit';
 
-
+@Injectable()
 export class SuperElfNameService {
     constructor() {
     }

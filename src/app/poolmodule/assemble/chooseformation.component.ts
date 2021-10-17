@@ -2,125 +2,87 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { JsonFormationShell } from '../../lib/activeConfig/json';
-import { pairwise } from 'rxjs/operators';
+import { concatMap, pairwise } from 'rxjs/operators';
 import { PoolUser } from '../../lib/pool/user';
-import { Formation } from '../../lib/formation';
 import { FormationRepository } from '../../lib/formation/repository';
 import { IAlert } from '../../shared/commonmodule/alert';
+import { Formation } from 'ngx-sport';
+import { S11Formation } from '../../lib/formation';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PoolRepository } from '../../lib/pool/repository';
+import { Pool } from '../../lib/pool';
+import { ActiveConfigRepository } from '../../lib/activeConfig/repository';
+import { PoolComponent } from '../../shared/poolmodule/component';
+import { ActiveConfig } from '../../lib/activeConfig';
+import { PoolUserRepository } from '../../lib/pool/user/repository';
 
 @Component({
   selector: 'app-pool-chooseformation',
   templateUrl: './chooseformation.component.html',
   styleUrls: ['./chooseformation.component.scss']
 })
-export class ChooseFormationComponent implements OnInit, OnChanges {
-  form: FormGroup;
-  @Input() availableFormations: JsonFormationShell[] = [];
-  @Input() poolUser!: PoolUser;
-  @Input() disabled: boolean = false;
-  @Output() alert = new EventEmitter<IAlert>();
-  @Output() processing = new EventEmitter<boolean>();
-  @Output() formation = new EventEmitter<Formation | undefined>();
+export class ChooseFormationComponent extends PoolComponent implements OnInit {
+  formations: Formation[] = [];
+  poolUser!: PoolUser;
 
   constructor(
+    route: ActivatedRoute,
+    router: Router,
+    poolRepository: PoolRepository,
     protected formationRepository: FormationRepository,
-    fb: FormBuilder,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    protected activeConfigRepository: ActiveConfigRepository,
+    protected poolUserRepository: PoolUserRepository,
   ) {
-    this.form = fb.group({
-      formation: [undefined]
-    });
+    super(route, router, poolRepository);
   }
 
   ngOnInit() {
-    this.onChanges();
-    const formation = this.poolUser.getAssembleFormation();
-    if (!formation) {
+    super.parentNgOnInit().subscribe((pool: Pool) => {
+      this.pool = pool;
+
+      this.activeConfigRepository.getObject().pipe(
+        concatMap((config: ActiveConfig) => {
+          this.formations = config.getAvailableFormations();
+          console.log(this.formations);
+          return this.poolUserRepository.getObjectFromSession(pool);
+        })
+      ).subscribe(
+        /* happy path */(poolUser: PoolUser) => {
+          this.poolUser = poolUser;
+          const s11Formation = poolUser.getAssembleFormation();
+          if (!s11Formation) {
+            /*
+                const assembleFormation = this.poolUser.getAssembleFormation();
+    if (!assembleFormation) {
       this.form.controls.formation.setValue(undefined);
       return;
     }
 
-    this.form.controls.formation.setValue(this.availableFormations.find(formationShell => {
-      return formationShell.name === formation.getName();
+    this.form.controls.formation.setValue(this.availableFormations.find((formation: Formation) => {
+      return formation.getName() === assembleFormation.getName();
     }));
-
+    */
+          }
+          // this.form.controls.formation.setValue(this.availableFormations.find(formation => {
+          //   return s11Formation.getName() === formation.getName();
+          // }));
+          // this.assembleLines = this.getAssembleLines(formation);
+        },
+        /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
+        /* onComplete */() => this.processing = false
+      );
+    });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.disabled !== undefined && changes.disabled.currentValue !== changes.disabled.previousValue
-      && changes.disabled.firstChange === false) {
-      changes.disabled.currentValue ? this.form.controls.formation.disable() : this.form.controls.formation.enable();
-    }
-  }
-
-  onChanges(): void {
-    this.form.controls.formation.valueChanges
-      .pipe(pairwise())
-      .subscribe(([prev, next]) => {
-        if (prev === undefined && next) {
-          this.addFormation(next);
-        } else if (prev && next === undefined) {
-          this.removeFormation();
-        } else if (prev !== next) {
-          this.editFormation(next);
-        }
+  editFormation(newFormation: Formation) {
+    this.formationRepository.editObject(this.poolUser, newFormation).subscribe(
+      /* happy path */(s11Formation: S11Formation) => {
+        this.poolUser.setAssembleFormation(s11Formation);
+        this.router.navigate(['/pool/assemble', this.pool.getId()]);
       },
-      /* error path */(e: string) => { this.emitAlert('danger', e); });
-  }
-
-  protected emitProcessing(processing: boolean) {
-    this.processing.emit(processing);
-  }
-
-  protected emitAlert(type: string, message: string) {
-    this.alert.emit({ type, message });
-  }
-
-  protected addFormation(newFormationShell: JsonFormationShell) {
-    this.emitProcessing(true);
-    this.formationRepository.createObject(newFormationShell, this.poolUser).subscribe(
-      /* happy path */(formation: Formation) => {
-        this.formation.emit(formation);
-      },
-      /* error path */(e: string) => { this.emitAlert('danger', e); this.emitProcessing(false); },
-      /* onComplete */() => this.emitProcessing(false)
-    );
-  }
-
-  editFormation(newFormationShell: JsonFormationShell) {
-    const formation = this.poolUser.getAssembleFormation();
-    if (!formation) {
-      return;
-    }
-    this.emitProcessing(true);
-    // @TODO kijk als er linies zijn waarbij spelers wegvallen, zo ja toon popup
-    this.formationRepository.editObject(newFormationShell, formation).subscribe(
-      /* happy path */(newFormation: Formation) => {
-        this.poolUser.setAssembleFormation(newFormation);
-        this.formation.emit(newFormation);
-        this.emitProcessing(false);
-      },
-      /* error path */(e: string) => { this.emitAlert('danger', e); this.emitProcessing(false); },
-      /* onComplete */() => this.emitProcessing(false)
-    );
-
-  }
-
-  protected removeFormation() {
-    const assembleFormation = this.poolUser.getAssembleFormation();
-    if (!assembleFormation) {
-      return;
-    }
-    this.emitProcessing(true);
-    this.formationRepository.removeObject(assembleFormation).subscribe(
-      /* happy path */() => {
-        this.poolUser.setAssembleFormation(undefined);
-        this.formation.emit(undefined);
-        this.emitProcessing(false)
-      },
-      /* error path */(e: string) => { this.emitAlert('danger', e); this.emitProcessing(false); },
-      /* onComplete */() => this.emitProcessing(false)
+      /* error path */(e: string) => { this.processing = false; this.setAlert('danger', e); },
+      /* onComplete */() => this.processing = false
     );
   }
 }

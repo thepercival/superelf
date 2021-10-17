@@ -2,7 +2,7 @@ import { Competition } from 'ngx-sport';
 import { PoolCompetitor } from './competitor';
 import { Pool } from '../pool';
 import { User } from '../user';
-import { Formation } from '../formation';
+import { S11Formation } from '../formation';
 
 export class PoolUser {
     private id: number = 0;
@@ -10,8 +10,8 @@ export class PoolUser {
     protected competitors: PoolCompetitor[] = [];
     protected nrOfAssembled: number = 0;
     protected nrOfTransferedWithTeam: number = 0;
-    protected assembleFormation: Formation | undefined;
-    protected transferFormation: Formation | undefined;
+    protected assembleFormation: S11Formation | undefined;
+    protected transferFormation: S11Formation | undefined;
 
     constructor(protected pool: Pool, protected user: User) {
     }
@@ -64,19 +64,19 @@ export class PoolUser {
         this.nrOfTransferedWithTeam = nrOfTransfered;
     }
 
-    getAssembleFormation(): Formation | undefined {
+    getAssembleFormation(): S11Formation | undefined {
         return this.assembleFormation;
     }
 
-    setAssembleFormation(formation: Formation | undefined) {
+    setAssembleFormation(formation: S11Formation | undefined) {
         return this.assembleFormation = formation;
     }
 
-    getTransferFormation(): Formation | undefined {
+    getTransferFormation(): S11Formation | undefined {
         return this.transferFormation;
     }
 
-    setTransferFormation(formation: Formation | undefined) {
+    setTransferFormation(formation: S11Formation | undefined) {
         return this.transferFormation = formation;
     }
 }

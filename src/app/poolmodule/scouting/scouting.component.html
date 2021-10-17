@@ -1,65 +1,69 @@
-<div class="text-center">
-  <app-title *ngIf="pool" [title]="pool.getName()"></app-title>
-</div>
-<h2 *ngIf="processing" class="text-center">
-  <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-</h2>
-
-<ngb-alert *ngIf="alert" [type]="alert.type">
-  {{ alert.message }}</ngb-alert>
-
-
-<div *ngIf="!processing && pool" class="content-wrapper-between">
-  <div class="d-flex flex-wrap justify-content-around">
-    <div *ngIf="!showSearchSMDown" class="mb-3" ngClass="{'me-3': showSearchBtn}">
-      <div>
-        <h2 *ngIf="!showSearchBtn" class="text-center">
-          <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
-        </h2>
-        <div *ngIf="showSearchBtn" class="d-flex flex-wrap justify-content-between">
-          <h2 class="me-2 text-truncate">
-            <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
-          </h2>
-          <button (click)="showSearchSMDown = true" type="button" class="btn btn-secondary d-inline d-md-none">
-            <fa-icon [icon]="['fas', 'search']"></fa-icon> <span class="d-none d-sm-inline ms-1">zoeken</span>
-          </button>
-        </div>
-      </div>
-
-      <table class="table valign-middle no-border-top no-padding-x mt-2">
-        <tbody>
-          <tr *ngFor="let scoutedPerson of scoutingList.scoutedPersons">
-            <!-- <ng-template let-player="scoutedPerson.getPlayer()"> -->
-            <td>
-              <button type="button" class="btn btn-sm btn-danger"
-                (click)="openRemoveApprovalModal(scoutedPerson, pool)">
-                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-              </button>
-            </td>
-            <td>
-              <span>{{oneTeamSimultaneous.getCurrentPlayer(scoutedPerson.getPerson())?.getLine()}}</span>
-            </td>
-            <td class="text-center">
-              {{scoutedPerson.getPerson().getName()}}
-            </td>
-            <td class="text-center">
-              {{oneTeamSimultaneous.getCurrentPlayer(scoutedPerson.getPerson())?.getTeam()?.getName()}}
-            </td>
-            <td *ngIf="pool.getAssemblePeriod().isIn()" class="text-end">
-              <button (click)="copyToTeam(scoutedPerson.getPerson())" type="button" class="btn btn-secondary">
-                plaats in team
-              </button>
-            </td>
-            <!-- </ng-template> -->
-          </tr>
-        </tbody>
-      </table>
+<div class="row justify-content-center g-0">
+  <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+    <div class="text-center">
+      <app-title *ngIf="pool" [title]="pool.getName()"></app-title>
     </div>
-    <app-pool-choosepersons *ngIf="showSearchBtn && showSearchSMDown" class="d-block d-md-none"
-      [viewPeriod]="pool.getCreateAndJoinPeriod()" (selectPerson)="add($event)"
-      [selectedPersonMap]="scoutingList.mappedPersons"></app-pool-choosepersons>
-    <app-pool-choosepersons *ngIf="showSearchBtn" class="d-none d-md-block" (selectPerson)="add($event)"
-      [viewPeriod]="pool.getCreateAndJoinPeriod()" [selectedPersonMap]="scoutingList.mappedPersons">
-    </app-pool-choosepersons>
+    <h2 *ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </h2>
+
+    <ngb-alert *ngIf="alert" [type]="alert.type">
+      {{ alert.message }}</ngb-alert>
+
+
+    <div *ngIf="!processing && pool">
+      <div class="d-flex flex-wrap justify-content-around">
+        <div *ngIf="!showSearchSMDown" class="mb-3" ngClass="{'me-3': showSearchBtn}">
+          <div>
+            <h2 *ngIf="!showSearchBtn" class="text-center">
+              <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
+            </h2>
+            <div *ngIf="showSearchBtn" class="d-flex flex-wrap justify-content-between">
+              <h2 class="me-2 text-truncate">
+                <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
+              </h2>
+              <button (click)="showSearchSMDown = true" type="button" class="btn btn-secondary d-inline d-md-none">
+                <fa-icon [icon]="['fas', 'search']"></fa-icon> <span class="d-none d-sm-inline ms-1">zoeken</span>
+              </button>
+            </div>
+          </div>
+
+          <table class="table valign-middle no-border-top no-padding-x mt-2">
+            <tbody>
+              <tr *ngFor="let scoutedPerson of scoutingList.scoutedPersons">
+                <!-- <ng-template let-player="scoutedPerson.getPlayer()"> -->
+                <td *ngIf="pool.getAssemblePeriod().isIn()" class="text-end">
+                  <button (click)="copyToTeam(scoutedPerson.getPerson())" type="button" class="btn btn-secondary">
+                    plaats in team
+                  </button>
+                </td>
+                <td>
+                  <span>{{oneTeamSimultaneous.getCurrentPlayer(scoutedPerson.getPerson())?.getLine()}}</span>
+                </td>
+                <td class="text-center">
+                  {{scoutedPerson.getPerson().getName()}}
+                </td>
+                <td class="text-center">
+                  {{oneTeamSimultaneous.getCurrentPlayer(scoutedPerson.getPerson())?.getTeam()?.getName()}}
+                </td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-primary"
+                    (click)="openRemoveApprovalModal(scoutedPerson, pool)">
+                    <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                  </button>
+                </td>
+                <!-- </ng-template> -->
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <app-pool-choosepersons *ngIf="showSearchBtn && showSearchSMDown" class="d-block d-md-none"
+          [viewPeriod]="pool.getCreateAndJoinPeriod()" (selectPerson)="add($event)"
+          [selectedPersonMap]="scoutingList.mappedPersons"></app-pool-choosepersons>
+        <app-pool-choosepersons *ngIf="showSearchBtn" class="d-none d-md-block" (selectPerson)="add($event)"
+          [viewPeriod]="pool.getCreateAndJoinPeriod()" [selectedPersonMap]="scoutingList.mappedPersons">
+        </app-pool-choosepersons>
+      </div>
+    </div>
   </div>
 </div>

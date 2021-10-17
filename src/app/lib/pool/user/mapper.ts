@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EditActionMapper } from '../../editAction/mapper';
-import { FormationMapper } from '../../formation/mapper';
+import { S11FormationMapper } from '../../formation/mapper';
 
 import { Pool } from '../../pool';
 import { UserMapper } from '../../user/mapper';
@@ -13,7 +13,7 @@ export class PoolUserMapper {
     constructor(
         protected userMapper: UserMapper,
         protected poolCompetitorMapper: PoolCompetitorMapper,
-        protected formationMapper: FormationMapper,
+        protected formationMapper: S11FormationMapper,
         protected editActionMapper: EditActionMapper) { }
 
     toObject(json: JsonPoolUser, pool: Pool): PoolUser {

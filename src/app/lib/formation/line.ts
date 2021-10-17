@@ -1,50 +1,72 @@
-import { Formation } from '../formation';
+import { Identifiable } from 'ngx-sport';
+import { S11Formation } from '../formation';
 import { S11Player } from '../player';
+import { S11FormationPlace } from './place';
 
-export class FormationLine {
-    protected players: S11Player[] = [];
-    protected substitute: S11Player | undefined;
-    protected substitutions: Map<number, boolean> = new Map();
+export class S11FormationLine extends Identifiable {
+    private static readonly SUBSTITUTE_NUMBER = 0;
 
-    constructor(protected formation: Formation, protected number: number, protected maxNrOfPersons: number) {
-        this.formation.getLines().push(this);
+    protected places: S11FormationPlace[] = [];
+    // protected substituteAppearances: Map<number, boolean> = {};
+
+    constructor(protected formation: S11Formation, protected number: number) {
+        super();
+        formation.getLines().push(this);
     }
 
-    public getFormation(): Formation {
+    public getFormation(): S11Formation {
         return this.formation;
-    }
-
-    public getMaxNrOfPersons(): number {
-        return this.maxNrOfPersons;
     }
 
     public getNumber(): number {
         return this.number;
     }
 
-    public getPlayers(): S11Player[] {
-        return this.players;
+    public getPlaces(): S11FormationPlace[] {
+        return this.places;
     }
 
-    public getSubstitute(): S11Player | undefined {
-        return this.substitute;
+    public getStartingPlaces(): S11FormationPlace[] {
+        return this.places.filter((formationPlace: S11FormationPlace): boolean => {
+            return formationPlace.getNumber() > S11FormationLine.SUBSTITUTE_NUMBER;
+        });
     }
 
-    public setSubstitute(substitute: S11Player | undefined) {
-        this.substitute = substitute;
+    public getSubstitute(): S11FormationPlace {
+        return this.getPlace(S11FormationLine.SUBSTITUTE_NUMBER);
     }
 
-    public getSubstitutions(): Map<number, boolean> {
-        return this.substitutions;
-    }
-    public setSubstitutions(substitutions: Map<number, boolean>) {
-        this.substitutions = substitutions;
-    }
-
-    public getAllPlayers(): S11Player[] {
-        if (this.substitute!) {
-            return this.players.concat([this.substitute]);
+    public getPlace(number: number): S11FormationPlace {
+        const place = this.places.find((formationPlace: S11FormationPlace): boolean => {
+            return formationPlace.getNumber() === number;
+        });
+        if (place === undefined) {
+            throw new Error('the formation-place for number "' + number + '" could not be found');
         }
-        return this.players;
+        return place;
+    }
+
+    // public getSubstituteAppearances(): Map<number, boolean> {
+    //     return this.substituteAppearances;
+    // }
+    // public setSubstituteAppearances(substituteAppearances: Map<number, boolean>) {
+    //     this.substituteAppearances = substituteAppearances;
+    // }
+
+    public getPlayers(withSubstitute: boolean): S11Player[] {
+
+        const places: S11FormationPlace[] = this.getStartingPlaces();
+        if (withSubstitute) {
+            places.push(this.getSubstitute());
+        }
+        const players: S11Player[] = [];
+        places.forEach((place: S11FormationPlace) => {
+            const player = place.getPlayer();
+            if (player === undefined) {
+                return;
+            }
+            players.push(player);
+        });
+        return players;
     }
 }

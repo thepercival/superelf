@@ -1,29 +1,26 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { NameService, Person, PersonMap, TeamMap, CustomSport, Team, Player, FootballLine } from 'ngx-sport';
+import { NameService, Person, PersonMap, TeamMap, Team, FootballLine, Formation } from 'ngx-sport';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
 import { Pool } from '../../lib/pool';
 import { ActiveConfigRepository } from '../../lib/activeConfig/repository';
-import { ActiveConfig } from '../../lib/pool/activeConfig';
-import { JsonFormationShell } from '../../lib/activeConfig/json';
 import { concatMap, map, pairwise } from 'rxjs/operators';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { PoolUser } from '../../lib/pool/user';
-import { Formation } from '../../lib/formation';
-import { FormationLineMapper } from '../../lib/formation/line/mapper';
-import { FormationLine } from '../../lib/formation/line';
-import { SuperElfNameService } from '../../lib/nameservice';
 import { FormationRepository } from '../../lib/formation/repository';
-import { AssembleLine, AssembleLinePlace } from './assembleline.component';
 import { Observable, of } from 'rxjs';
 import { S11Player } from '../../lib/player';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
+import { ActiveConfig } from '../../lib/activeConfig';
+import { S11FormationLine } from '../../lib/formation/line';
+import { S11FormationPlace } from '../../lib/formation/place';
+import { S11Formation } from '../../lib/formation';
 
 @Component({
   selector: 'app-pool-assemble',
@@ -31,16 +28,11 @@ import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
   styleUrls: ['./assemble.component.scss']
 })
 export class AssembleComponent extends PoolComponent implements OnInit {
-  form: FormGroup;
-  availableFormations: JsonFormationShell[] = [];
   poolUser!: PoolUser;
   nameService = new NameService();
-  superElfNameService = new SuperElfNameService();
-  assembleLines: AssembleLine[] = [];
   showSearchSMDown: boolean = false;
   teamPersonMap = new PersonMap();
-  selectedPlace: AssembleLinePlace | undefined;
-  changingFormation = false;
+  selectedPlace: S11FormationPlace | undefined;
   updatingPlayer = false;
   selectedSearchLine: number = FootballLine.All;
   selectedTeamMap: TeamMap = new TeamMap();
@@ -59,9 +51,6 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     private modalService: NgbModal
   ) {
     super(route, router, poolRepository);
-    this.form = fb.group({
-      formation: [undefined]
-    });
   }
 
   ngOnInit() {
@@ -70,21 +59,17 @@ export class AssembleComponent extends PoolComponent implements OnInit {
 
       this.activeConfigRepository.getObject().pipe(
         concatMap((config: ActiveConfig) => {
-          this.availableFormations = config.getAvailableFormations();
           return this.poolUserRepository.getObjectFromSession(pool);
         })
       ).subscribe(
         /* happy path */(poolUser: PoolUser) => {
           this.poolUser = poolUser;
-          const formation = poolUser.getAssembleFormation();
-          if (!formation) {
-            this.form.controls.formation.setValue(undefined);
-            return;
-          }
-          this.form.controls.formation.setValue(this.availableFormations.find(formationShell => {
-            return formationShell.name === formation.getName();
-          }));
-          this.assembleLines = this.getAssembleLines(formation);
+          // const s11Formation = poolUser.getAssembleFormation();
+          // if (!s11Formation) {
+          //   this.form.controls.formation.setValue(undefined);
+          //   return;
+          // }
+          // this.assembleLines = this.getAssembleLines(formation);
         },
         /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
         /* onComplete */() => this.processing = false
@@ -92,40 +77,44 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     });
   }
 
-
-  getAssembleLines(formation?: Formation): AssembleLine[] {
-    const assembleLines: AssembleLine[] = [];
-    if (!formation) {
-      return assembleLines;
-    }
-    formation.getLines().forEach((formationLine: FormationLine) => {
-      const players = formationLine.getPlayers().slice();
-      const places: AssembleLinePlace[] = [];
-      for (let i = 1; i <= formationLine.getMaxNrOfPersons(); i++) {
-        const player = players.shift();
-        places.push({
-          lineNumber: formationLine.getNumber(),
-          number: 1,
-          player,
-          substitute: false
-        });
-      }
-      const substitute: AssembleLinePlace = {
-        lineNumber: formationLine.getNumber(),
-        number: 1,
-        player: formationLine.getSubstitute(),
-        substitute: true
-      };
-      assembleLines.push({
-        number: formationLine.getNumber(), places, substitute
-      });
-    });
-    return assembleLines;
+  getFormationName(): string {
+    return this.poolUser.getAssembleFormation()?.getName() ?? 'kies formatie';
   }
 
-  selectPlace(place: AssembleLinePlace) {
+
+  // getAssembleLines(formation?: S11Formation): AssembleLine[] {
+  //   const assembleLines: AssembleLine[] = [];
+  //   if (!formation) {
+  //     return assembleLines;
+  //   }
+  //   formation.getLines().forEach((formationLine: S11FormationLine) => {
+  //     const players = formationLine.getPlayers().slice();
+  //     const places: AssembleLinePlace[] = [];
+  //     for (let i = 1; i <= formationLine.getNrOfPersons(); i++) {
+  //       const player = players.shift();
+  //       places.push({
+  //         lineNumber: formationLine.getNumber(),
+  //         number: 1,
+  //         player,
+  //         substitute: false
+  //       });
+  //     }
+  //     const substitute: AssembleLinePlace = {
+  //       lineNumber: formationLine.getNumber(),
+  //       number: 1,
+  //       player: formationLine.getSubstitute(),
+  //       substitute: true
+  //     };
+  //     assembleLines.push({
+  //       number: formationLine.getNumber(), places, substitute
+  //     });
+  //   });
+  //   return assembleLines;
+  // }
+
+  selectPlace(place: S11FormationPlace) {
     this.selectedPlace = place;
-    this.selectedSearchLine = place.lineNumber;
+    this.selectedSearchLine = place.getFormationLine().getNumber();
     this.selectedTeamMap = this.getSelectedTeamMap();
   }
 
@@ -135,9 +124,10 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     if (!formation) {
       return teamMap;
     }
-    formation.getLines().forEach((line: FormationLine) => {
-      line.getPlayers().forEach((player: S11Player) => {
-        const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player.getPerson());
+    formation.getLines().forEach((line: S11FormationLine) => {
+      line.getPlaces().forEach((formationPlace: S11FormationPlace) => {
+        const player = formationPlace.getPlayer();
+        const currentPlayer = player ? this.oneTeamSimultaneous.getCurrentPlayer(player.getPerson()) : undefined;
         if (currentPlayer) {
           teamMap.set(+currentPlayer.getTeam().getId(), currentPlayer.getTeam());
         }
@@ -155,77 +145,82 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     if (!selectedPlace) {
       return;
     }
-    const line = formation.getLine(selectedPlace?.lineNumber);
+    const line = formation.getLine(selectedPlace?.getFormationLine().getNumber());
     if (!line) {
       return;
     }
     this.updatingPlayer = true;
-    this.removeSelected(line).subscribe(
-        /* happy path */() => {
-        const player = this.oneTeamSimultaneous.getCurrentPlayer(person);
-        const team = player?.getTeam();
-        this.removeSameTeam(formation, team).subscribe(
-        /* happy path */() => {
-            // check if someOne from same team is in formation, than show modal and 
-            const viewPeriod = this.pool.getAssemblePeriod().getViewPeriod();
-            this.formationRepository.addPerson(person, line, selectedPlace.substitute !== undefined).subscribe(
-            /* happy path */() => {
-                this.selectedPlace = undefined;
-                this.assembleLines = this.getAssembleLines(formation);
-                this.showSearchSMDown = false;
-              },
-                  /* error path */(e: string) => { this.setAlert('danger', e); this.updatingPlayer = false; },
-                  /* onComplete */() => this.updatingPlayer = false
-            );
-          },
-        /* error path */(e: string) => { this.setAlert('danger', e); this.updatingPlayer = false; }
-        );
-      },
-        /* error path */(e: string) => { this.setAlert('danger', e); this.updatingPlayer = false; }
-    );
+    // @TODO CDK
+    // this.removeSelected(line).subscribe(
+    //     /* happy path */() => {
+    //     const player = this.oneTeamSimultaneous.getCurrentPlayer(person);
+    //     const team = player?.getTeam();
+    //     this.removeSameTeam(formation, team).subscribe(
+    //     /* happy path */() => {
+    //         // check if someOne from same team is in formation, than show modal and 
+    //         const viewPeriod = this.pool.getAssemblePeriod().getViewPeriod();
+    //         this.formationRepository.addPerson(person, line, selectedPlace.substitute !== undefined).subscribe(
+    //         /* happy path */() => {
+    //             this.selectedPlace = undefined;
+    //             this.assembleLines = this.getAssembleLines(formation);
+    //             this.showSearchSMDown = false;
+    //           },
+    //               /* error path */(e: string) => { this.setAlert('danger', e); this.updatingPlayer = false; },
+    //               /* onComplete */() => this.updatingPlayer = false
+    //         );
+    //       },
+    //     /* error path */(e: string) => { this.setAlert('danger', e); this.updatingPlayer = false; }
+    //     );
+    //   },
+    //     /* error path */(e: string) => { this.setAlert('danger', e); this.updatingPlayer = false; }
+    // );
 
   }
 
-  protected removeSelected(line: FormationLine): Observable<void | number> {
+  protected removeSelected(line: S11FormationLine): Observable<void | number> {
     const selectedPlace = this.selectedPlace;
     if (!selectedPlace) {
       return of(0);
     }
-    const player = selectedPlace.player;
-    if (!player) {
-      return of(0);
-    }
-    if (selectedPlace.substitute) {
-      return this.formationRepository.removeSubstitute(player, line);
-    }
-    return this.formationRepository.removePlayer(player, line);
+    return of(0);
+    // @TODO CDK
+    // const player = selectedPlace.player;
+    // if (!player) {
+    //   return of(0);
+    // }    
+    // if (selectedPlace.substitute) {
+    //   return this.formationRepository.removeSubstitute(player, line);
+    // }
+    // return this.formationRepository.removePlayer(player, line);
   }
 
   protected removeSameTeam(formation: Formation, team: Team | undefined): Observable<void | number> {
-    if (!team) {
-      return of(0);
-    }
-    // const selectedPlace = this.selectedPlace;
-    // if (!selectedPlace) {
+    // @TODO CDK
+    return of(0);
+    // if (!team) {
     //   return of(0);
     // }
-    const player = formation.getPlayer(team);
-    if (!player) {
-      return of(0);
-    }
-    const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player.getPerson());
-    if (!currentPlayer) {
-      return of(0);
-    }
-    const line = formation.getLine(currentPlayer.getLine());
-    if (!line) {
-      return of(0);
-    }
-    const substitute = line.getSubstitute()
-    if (substitute && substitute === player) {
-      return this.formationRepository.removeSubstitute(substitute, line);
-    }
-    return this.formationRepository.removePlayer(player, line);
+    // // const selectedPlace = this.selectedPlace;
+    // // if (!selectedPlace) {
+    // //   return of(0);
+    // // }
+    // const player = formation.getPlayer(team);
+    // if (!player) {
+    //   return of(0);
+    // }
+    // const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player.getPerson());
+    // if (!currentPlayer) {
+    //   return of(0);
+    // }
+    // const line = formation.getLine(currentPlayer.getLine());
+    // if (!line) {
+    //   return of(0);
+    // }
+    // const substitute = line.getSubstitute()
+    // if (substitute && substitute === player) {
+    //   return this.formationRepository.removeSubstitute(substitute, line);
+    // }
+    // return this.formationRepository.removePlayer(player, line);
   }
 
   protected teamAlreadyPresent(team: Team): boolean {
@@ -236,20 +231,15 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     console.log('person selected: ' + person.getName());
   }
 
-  processFormationChange(processing: boolean) {
-    this.changingFormation = processing;
-  }
-
-
   choosePerson(lineNumer: number) {
-    console.log('TODO choosePerson for line ' + lineNumer);
+    console.log('@TODO CDK choosePerson for line ' + lineNumer);
   }
 
   removePerson(person: Person) {
-    console.log('TODO removePerson');
+    console.log('@TODO CDK removePerson');
   }
 
-  substitute(assembleLine: AssembleLine) {
+  // substitute(assembleLine: AssembleLine) {
 
-  }
+  // }
 }

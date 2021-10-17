@@ -46,6 +46,19 @@
           </p>
         </div>
       </div>
+      <div *ngIf="pool.getAssemblePeriod().isIn()" class="card border-secondary pointer mt-3 mx-2"
+        (click)="linkToAssemble()">
+        <div class="card-body">
+          <h5 class="card-title">
+            <fa-icon [icon]="['fas', 'users']"></fa-icon> team samenstellen
+          </h5>
+          <p class="card-text">
+            <span>
+              {{poolUser?.getNrOfAssembled()}} speler(s) gekozen
+            </span>
+          </p>
+        </div>
+      </div>
       <div *ngIf="scoutingEnabled" class="card border-secondary pointer mt-3 mx-2"
         [routerLink]="['/pool/scouting', pool.getId()]">
         <div class="card-body">
@@ -59,31 +72,19 @@
           </p>
         </div>
       </div>
-      <div *ngIf="pool.getAssemblePeriod().isIn()" class="card border-secondary pointer mt-3 mx-2"
-        [routerLink]="['/pool/assemble', pool.getId()]">
-        <div class="card-body">
+    </div>
+
+    <!-- option block -->
+    <div *ngIf="!processing && pool" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+      <!-- referees -->
+      <div *ngIf="isAdmin()" class="card card-sub pointer px-0" [routerLink]="['/pool/rules', pool.getId()]">
+        <div class="card-body text-center p-1 pt-2">
           <h5 class="card-title">
-            <fa-icon [icon]="['fas', 'users']"></fa-icon> team samenstellen
+            <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
           </h5>
-          <p class="card-text">
-            <span>
-              {{poolUser?.getNrOfAssembled()}} speler(s) gekozen
-            </span>
-          </p>
-        </div>
-      </div>
-      <div class="card border-secondary pointer mt-3 mx-2" [routerLink]="['/pool/rules', pool.getId()]">
-        <div class="card-body">
-          <h5 class="card-title">
-            <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> spelregels
-          </h5>
-          <p class="card-text">
-            <span>
-              uitleg over transferperiode, teamsamenstelling, etc.
-            </span>
-          </p>
+          <div>spel</div>
+          <div>regels</div>
         </div>
       </div>
     </div>
   </div>
-</div>

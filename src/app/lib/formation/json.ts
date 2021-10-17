@@ -1,7 +1,6 @@
-import { JsonFormationLine } from './line/json';
+import { JsonIdentifiable } from 'ngx-sport';
+import { JsonS11FormationLine } from './line/json';
 
-export interface JsonFormation {
-    id: number;
-    name: string;
-    lines: JsonFormationLine[];
+export interface JsonS11Formation extends JsonIdentifiable {
+    lines: JsonS11FormationLine[];
 }
