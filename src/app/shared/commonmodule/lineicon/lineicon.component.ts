@@ -9,12 +9,14 @@ import { SuperElfNameService } from '../../../lib/nameservice';
 export class LineIconComponent {
 
   @Input() line!: FootballLine;
+  @Input() abbreviate: boolean = true;
 
   constructor(private nameService: SuperElfNameService) {
   }
 
-  getAbbreviation(): string {
-    return this.nameService.getLineName(this.line).substr(0, 1);
+  getName(): string {
+    const lineName = this.nameService.getLineName(this.line);
+    return this.abbreviate ? lineName.substr(0, 1) : lineName;
   }
 
   getClass(): string {

@@ -39,7 +39,7 @@ export class InviteComponent extends PoolComponent implements OnInit {
       this.pool = pool;
       this.setAlert('info', 'gebruik de link om mensen uit te nodigen');
       this.initUrl(pool);
-    });
+    }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
   }
 
   initUrl(pool: Pool) {

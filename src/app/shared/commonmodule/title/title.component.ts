@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { IconName } from '@fortawesome/fontawesome-svg-core';
 
 import { MyNavigation } from '../../commonmodule/navigation';
 
@@ -8,7 +9,8 @@ import { MyNavigation } from '../../commonmodule/navigation';
   templateUrl: './title.component.html'
 })
 export class TitleComponent {
-
+  @Input() iconName: IconName | undefined;
+  @Input() center: boolean = false;
   @Input() title: string = '';
   @Input() poolId: number | undefined;
 

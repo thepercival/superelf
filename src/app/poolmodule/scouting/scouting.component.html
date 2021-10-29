@@ -57,11 +57,14 @@
             </tbody>
           </table>
         </div>
-        <app-pool-choosepersons *ngIf="showSearchBtn && showSearchSMDown" class="d-block d-md-none"
+        <!-- <app-pool-choosepersons *ngIf="showSearchBtn && showSearchSMDown" class="d-block d-md-none"
           [viewPeriod]="pool.getCreateAndJoinPeriod()" (selectPerson)="add($event)"
-          [selectedPersonMap]="scoutingList.mappedPersons"></app-pool-choosepersons>
+          [alreadyChosenPersons]="getPersons()"></app-pool-choosepersons>
         <app-pool-choosepersons *ngIf="showSearchBtn" class="d-none d-md-block" (selectPerson)="add($event)"
-          [viewPeriod]="pool.getCreateAndJoinPeriod()" [selectedPersonMap]="scoutingList.mappedPersons">
+          [viewPeriod]="pool.getCreateAndJoinPeriod()" [alreadyChosenPersons)]="scoutingList.mappedPersons">
+        </app-pool-choosepersons> -->
+        <app-pool-choosepersons *ngIf="showSearchBtn" (selectPerson)="add($event)"
+          [viewPeriod]="pool.getCreateAndJoinPeriod()" [alreadyChosenPersons]="getPersons()">
         </app-pool-choosepersons>
       </div>
     </div>

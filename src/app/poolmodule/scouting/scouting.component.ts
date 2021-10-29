@@ -22,7 +22,7 @@ import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 })
 export class ScoutingComponent extends PoolComponent implements OnInit {
   form: FormGroup;
-  scoutingList: ScoutingList = { scoutedPersons: [], mappedPersons: new PersonMap() };
+  scoutingList: ScoutingList = { scoutedPersons: []/*, mappedPersons: new PersonMap()*/ };
   showSearchBtn = false;
   showSearchSMDown: boolean = false;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
@@ -66,13 +66,16 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
 
   protected addToScoutingList(scoutedPerson: ScoutedPerson) {
     this.scoutingList.scoutedPersons.push(scoutedPerson);
-    this.scoutingList.mappedPersons.set(+scoutedPerson.getPerson().getId(), scoutedPerson.getPerson());
-
+    // this.scoutingList.mappedPersons.set(+scoutedPerson.getPerson().getId(), scoutedPerson.getPerson());
   }
 
   protected removeFromToScoutingList(scoutedPerson: ScoutedPerson) {
     this.scoutingList.scoutedPersons.splice(this.scoutingList.scoutedPersons.indexOf(scoutedPerson), 1);
-    this.scoutingList.mappedPersons.delete(+scoutedPerson.getPerson().getId());
+    // this.scoutingList.mappedPersons.delete(+scoutedPerson.getPerson().getId());
+  }
+
+  public getPersons(): Person[] {
+    return this.scoutingList.scoutedPersons.map((scoutedPerson: ScoutedPerson) => scoutedPerson.getPerson());
   }
 
   openRemoveApprovalModal(scoutedPerson: ScoutedPerson, pool: Pool) {
@@ -139,5 +142,4 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
 
 interface ScoutingList {
   scoutedPersons: ScoutedPerson[];
-  mappedPersons: PersonMap;
 }

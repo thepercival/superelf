@@ -39,5 +39,9 @@ export class S11FormationPlace extends Identifiable {
     public setPlayer(player: S11Player | undefined): void {
         this.player = player;
     }
+
+    public isSubstitute(): boolean {
+        return this.number === 0;
+    }
 }
 

@@ -4,24 +4,36 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
-import { Formation, FormationMapper } from 'ngx-sport';
+import { Formation, FormationMapper, Person, PersonMapper } from 'ngx-sport';
 import { PoolUser } from '../pool/user';
 import { S11FormationMapper } from './mapper';
 import { S11Formation } from '../formation';
 import { JsonS11Formation } from './json';
+import { S11FormationPlace } from './place';
+import { JsonS11FormationPlace } from './place/json';
+import { FormationPlaceMapper } from './place/mapper';
+import { JsonS11Player } from '../player/json';
+import { S11PlayerMapper } from '../player/mapper';
+import { S11Player } from '../player';
 
 @Injectable()
 export class FormationRepository extends APIRepository {
     constructor(
         private mapper: S11FormationMapper,
+        private personMapper: PersonMapper,
         private sportsFormationMapper: FormationMapper,
+        private s11PlayerMapper: S11PlayerMapper,
         private http: HttpClient) {
         super();
     }
 
-    getUrl(poolUser: PoolUser, formation?: S11Formation): string {
+    getUrl(poolUser: PoolUser, formation?: S11Formation, place?: S11FormationPlace): string {
         let baseUrl = super.getApiUrl() + 'poolusers/' + poolUser.getId();
-        return baseUrl + '/formations' + (formation ? ('/' + formation.getId()) : '');
+        baseUrl += '/formations' + (formation ? ('/' + formation.getId()) : '');
+        if (place) {
+            baseUrl += '/places/' + place.getId();
+        }
+        return baseUrl;
     }
 
     // getObjects(sport: Sport): Observable<Formation[]> {
@@ -42,6 +54,22 @@ export class FormationRepository extends APIRepository {
                 poolUser.setAssembleFormation(formation);
                 console.log(jsonS11Formation, formation);
                 return formation;
+            }),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    editPlace(place: S11FormationPlace, person: Person | null): Observable<S11Player | undefined> {
+        const formation = place.getFormationLine().getFormation();
+        const poolUser = formation.getPoolUser();
+        const url = this.getUrl(poolUser, formation, place);
+        const viewPeriod = poolUser.getPool().getAssemblePeriod().getViewPeriod();
+        const jsonPerson = person ? this.personMapper.toJson(person) : undefined;
+        return this.http.post<JsonS11Player | undefined>(url, jsonPerson, { headers: super.getHeaders() }).pipe(
+            map((jsonS11Player: JsonS11Player | undefined) => {
+                const s11Player = jsonS11Player ? this.s11PlayerMapper.toObject(jsonS11Player, viewPeriod) : undefined;
+                place.setPlayer(s11Player);
+                return s11Player;
             }),
             catchError((err) => this.handleError(err))
         );

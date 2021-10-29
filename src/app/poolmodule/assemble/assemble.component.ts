@@ -64,6 +64,7 @@ export class AssembleComponent extends PoolComponent implements OnInit {
       ).subscribe(
         /* happy path */(poolUser: PoolUser) => {
           this.poolUser = poolUser;
+          console.log(poolUser);
           // const s11Formation = poolUser.getAssembleFormation();
           // if (!s11Formation) {
           //   this.form.controls.formation.setValue(undefined);
@@ -73,8 +74,8 @@ export class AssembleComponent extends PoolComponent implements OnInit {
         },
         /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
         /* onComplete */() => this.processing = false
-      );
-    });
+      )
+    }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
   }
 
   getFormationName(): string {
@@ -142,6 +143,7 @@ export class AssembleComponent extends PoolComponent implements OnInit {
       return;
     }
     const selectedPlace = this.selectedPlace;
+    console.log(selectedPlace);
     if (!selectedPlace) {
       return;
     }
@@ -150,6 +152,16 @@ export class AssembleComponent extends PoolComponent implements OnInit {
       return;
     }
     this.updatingPlayer = true;
+
+    this.formationRepository.editPlace(selectedPlace, person).subscribe(
+      /* happy path */(s11Player: S11Player | undefined) => {
+        // this.router.navigate(['/pool/assemble', this.pool.getId()]);
+        this.selectedPlace = undefined;
+      },
+      /* error path */(e: string) => { this.updatingPlayer = false; this.setAlert('danger', e); },
+      /* onComplete */() => this.updatingPlayer = false
+    );
+
     // @TODO CDK
     // this.removeSelected(line).subscribe(
     //     /* happy path */() => {
@@ -225,6 +237,11 @@ export class AssembleComponent extends PoolComponent implements OnInit {
 
   protected teamAlreadyPresent(team: Team): boolean {
     return this.poolUser.getAssembleFormation()?.getPlayer(team) !== undefined;
+  }
+
+  public getPersons(): Person[] {
+    const formation = this.poolUser.getAssembleFormation();
+    return formation?.getPersons() ?? [];
   }
 
   add(person: Person) {

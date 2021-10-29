@@ -1,5 +1,5 @@
 
-import { Identifiable, Team } from 'ngx-sport';
+import { Identifiable, Person, Team } from 'ngx-sport';
 import { S11FormationLine } from './formation/line';
 import { ViewPeriod } from './period/view';
 import { S11Player } from './player';
@@ -46,6 +46,10 @@ export class S11Formation extends Identifiable {
         return this.getPlayers().find((player: S11Player) => {
             return player.getPerson().getPlayer(team, checkDate);
         });
+    }
+
+    public getPersons(): Person[] {
+        return this.getPlayers().map((player: S11Player) => player.getPerson());
     }
 
     getName(): string {

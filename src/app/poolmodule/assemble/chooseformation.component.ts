@@ -72,7 +72,7 @@ export class ChooseFormationComponent extends PoolComponent implements OnInit {
         /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
         /* onComplete */() => this.processing = false
       );
-    });
+    }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
   }
 
   editFormation(newFormation: Formation) {

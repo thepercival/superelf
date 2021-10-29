@@ -88,6 +88,71 @@ input.is-warning {
   background-color: $gray-400;
 }
 
+.color-line-1 {
+  color: $gray-700;
+}
+
+.color-line-2 {
+  color: $gray-600;
+}
+
+.color-line-4 {
+  color: $gray-500;
+}
+
+.color-line-8 {
+  color: $gray-400;
+}
+
+.bg-color-line-1 {
+  background-color: $gray-700;
+}
+
+.bg-color-line-2 {
+  background-color: $gray-600;
+}
+
+.bg-color-line-4 {
+  background-color: $gray-500;
+}
+
+.bg-color-line-8 {
+  background-color: $gray-400;
+}
+
+.border-line-1 {
+  border-color: $gray-700;
+}
+
+.border-line-2 {
+  border-color: $gray-600;
+}
+
+.border-line-4 {
+  border-color: $gray-500;
+}
+
+.border-line-8 {
+  border-color: $gray-400;
+}
+
+table.border-line-1 td{
+  @extend .border-line-1;    
+}
+
+table.border-line-2 td{
+  @extend .border-line-2;
+}
+
+table.border-line-4 td{
+  @extend .border-line-4;
+}
+
+table.border-line-8 td{
+  @extend .border-line-8;
+}
+
+/*
 .progress {
   background-color:#{$body-bg};
 }
@@ -97,7 +162,7 @@ input.is-warning {
 }
 .progress__meter {
   stroke: #{$body-bg};
-}
+}*/
 
 .pointer {
   cursor: pointer;
@@ -106,6 +171,7 @@ input.is-warning {
 ngb-alert {
   width:100%;
 }
+
 .q-w-1 {
   border-color: #298F00 !important;
 }

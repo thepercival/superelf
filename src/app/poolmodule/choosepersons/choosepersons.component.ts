@@ -20,11 +20,13 @@ import { PointsCalculator } from '../../lib/points/calculator';
 })
 export class ChoosePersonsComponent implements OnInit, OnChanges {
   @Input() viewPeriod!: ViewPeriod;
-  @Input() selectedPersonMap: PersonMap = new PersonMap();
+  @Input() alreadyChosenPersons: Person[] | undefined;
+  @Input() alreadyChosenTeams: Team[] | undefined;
   @Input() selectedSearchLine: number = 0;
   @Input() selectableLines: number = FootballLine.All;
   @Input() selectWarningTeamMap: TeamMap = new TeamMap();
   @Output() selectPerson = new EventEmitter<Person>();
+  @Output() close = new EventEmitter<void>();
 
   form: FormGroup;
   choosePersonItems: ChoosePersonItem[] = [];
@@ -34,6 +36,7 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
   public alert: IAlert | undefined;
   public processing = true;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
+  private alreadyChosenPersonsMap!: PersonMap;
 
   constructor(
     protected playerRepository: S11PlayerRepository,
@@ -60,6 +63,17 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
     if (this.selectedSearchLine) {
       this.form.controls.searchLine.setValue(this.selectedSearchLine);
     }
+    this.alreadyChosenPersonsMap = new PersonMap();
+
+    this.alreadyChosenPersonsMap = new PersonMap();
+    this.alreadyChosenPersons?.forEach((person: Person) => {
+      this.alreadyChosenPersonsMap.set(+person.getId(), person);
+      const team = this.oneTeamSimultaneous.getCurrentPlayer(person)?.getTeam();
+      if (team) {
+        this.selectWarningTeamMap.set(+team.getId(), team);
+      }
+    });
+
     this.searchPersons();
 
   }
@@ -123,7 +137,7 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
   }
 
   alreadySelected(person: Person): boolean {
-    return this.selectedPersonMap.has(+person.getId());
+    return this.alreadyChosenPersonsMap.has(+person.getId());
   }
 
   protected setAlert(type: string, message: string) {

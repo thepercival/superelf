@@ -1,8 +1,13 @@
 <!-- <app-title *ngIf="pool" [title]="pool.getName()"></app-title> -->
 
-<h2 class="text-center">
-  <fa-icon [icon]="['fas', 'users']"></fa-icon> spelers kiezen
-</h2>
+<div class="d-flex justify-content-between mb-4 mt-2">
+  <h2 class="text-center">
+    <fa-icon [icon]="['fas', 'users']"></fa-icon> spelers kiezen
+  </h2>
+  <button (click)="close.emit()" type="button" class="btn btn-outline-dark">
+    <span class="fs-4">&times;</span>
+  </button>
+</div>
 
 <h2 *ngIf="processing" class="text-center">
   <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -29,7 +34,7 @@
   <tbody>
     <tr *ngFor="let choosePersonItem of choosePersonItems">
       <td>
-        {{choosePersonItem.player.getLine()}}
+        <app-lineicon [line]="choosePersonItem.player.getLine()"></app-lineicon>
       </td>
       <td>
         {{choosePersonItem.player.getPerson().getName()}}

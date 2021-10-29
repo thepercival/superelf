@@ -36,7 +36,7 @@ export class RulesComponent extends PoolComponent implements OnInit {
         /* happy path */(config: ActiveConfig) => this.availableFormations = config.getAvailableFormations()
         );
       this.processing = false;
-    });
+    }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
   }
 
   getFormationNames(): string | undefined {

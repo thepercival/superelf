@@ -27,7 +27,7 @@ export class JoinComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.pool = pool;
       this.join(pool);
-    });
+    }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
   }
 
   protected join(pool: Pool) {

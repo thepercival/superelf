@@ -42,7 +42,7 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
         );
       }
       this.processing = false;
-    });
+    }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
   }
 
   openRemoveApprovalModal(poolUser: PoolUser) {

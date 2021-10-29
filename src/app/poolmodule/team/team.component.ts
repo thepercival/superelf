@@ -57,7 +57,7 @@ export class TeamComponent extends PoolComponent implements OnInit {
 
       this.setScountingList(pool);
       this.searchPersons(pool);
-    });
+    }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
   }
 
   searchPersons(pool: Pool) {

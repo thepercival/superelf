@@ -1,38 +1,31 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
 
-    <app-title *ngIf="pool" [title]="pool.getName()"></app-title>
+    <app-title *ngIf="pool" iconName="users" title="team samenstellen"></app-title>
 
     <h2 *ngIf="processing" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
 
-    <div>
-      <h2 class="text-center">
-        <fa-icon [icon]="['fas', 'users']"></fa-icon> team samenstellen
-      </h2>
-    </div>
-
     <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-    <div *ngIf="pool && poolUser" class="d-flex flex-wrap">
-      <div *ngIf="!showSearchSMDown" class="mb-3 me-3 assemble-width">
-
-        <button [disabled]="updatingPlayer" class="btn btn-outline-secondary"
+    <div *ngIf="!processing && pool && poolUser">
+      <div class="d-flex justify-content-center">
+        <button [disabled]="updatingPlayer" class="btn btn-secondary"
           [routerLink]="['/pool/chooseformation', pool.getId()]">
           {{getFormationName()}}
         </button>
-        <!-- <h2 *ngIf="changingFormation" class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-        </h2>
-        <div *ngIf="!changingFormation">
-          <app-pool-assembleline *ngFor="let line of poolUser.getAssembleFormation()?.getLines()" [line]="line"
-            [selectedPlace]="selectedPlace" [processing]="updatingPlayer" (selectPlace)="selectPlace($event)"
-            (hideOnSMDown)="showSearchSMDown=$event">
-          </app-pool-assembleline>
-        </div> -->
+      </div>
 
-        <!-- <app-pool-chooseformation *ngIf="availableFormations" [availableFormations]="availableFormations"
+      <div *ngIf="!selectedPlace">
+        <!-- lines-->
+        <app-pool-assembleline *ngFor="let line of poolUser.getAssembleFormation()?.getLines()" [line]="line"
+          [selectedPlace]="selectedPlace" [processing]="updatingPlayer" (selectPlace)="selectPlace($event)"
+          (hideOnSMDown)="showSearchSMDown=$event">
+        </app-pool-assembleline>
+      </div>
+
+      <!-- <app-pool-chooseformation *ngIf="availableFormations" [availableFormations]="availableFormations"
           [disabled]="updatingPlayer" [poolUser]="poolUser" (alert)="alert = $event"
           (processing)="processFormationChange($event)" (formation)="assembleLines = getAssembleLines($event)">
         </app-pool-chooseformation>
@@ -45,12 +38,12 @@
             (hideOnSMDown)="showSearchSMDown=$event">
           </app-pool-assembleline>
         </div> -->
-      </div>
+
     </div>
-    <h2 *ngIf="updatingPlayer" class="assemble-width text-center">
+    <h2 *ngIf="updatingPlayer" class="text-center mt-3">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
-    <app-pool-choosepersons *ngIf="selectedPlace && showSearchSMDown && !updatingPlayer"
+    <!-- <app-pool-choosepersons *ngIf="selectedPlace && showSearchSMDown && !updatingPlayer"
       class="d-block d-md-none assemble-width" (selectPerson)="updatePlace($event, true)"
       [viewPeriod]="pool.getCreateAndJoinPeriod()" [selectedPersonMap]="teamPersonMap"
       [selectedSearchLine]="selectedSearchLine" [selectWarningTeamMap]="selectedTeamMap"
@@ -59,10 +52,16 @@
       [viewPeriod]="pool.getCreateAndJoinPeriod()" [selectedSearchLine]="selectedSearchLine"
       (selectPerson)="updatePlace($event, false)" [selectedPersonMap]="teamPersonMap"
       [selectWarningTeamMap]="selectedTeamMap" [selectableLines]="selectedSearchLine">
+    </app-pool-choosepersons> -->
+    <app-pool-choosepersons *ngIf="selectedPlace && showSearchSMDown && !updatingPlayer"
+      [viewPeriod]="pool.getCreateAndJoinPeriod()" [selectedSearchLine]="selectedSearchLine"
+      [alreadyChosenPersons]="getPersons()" (selectPerson)="updatePlace($event, true)"
+      (close)="selectedPlace = undefined">
     </app-pool-choosepersons>
   </div>
 </div>
 
 <!-- <div>
-  <button type="button" class="btn btn-outline-primary">{{superElfNameService.getLineName(assembleLine.number)}}</button>
-</div> -->
+  <button type=" button" class="btn btn-outline-primary">
+      {{superElfNameService.getLineName(assembleLine.number)}}</button>
+  </div> -->

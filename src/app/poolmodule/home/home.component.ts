@@ -40,7 +40,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
         super.parentNgOnInit().subscribe((pool: Pool) => {
             this.pool = pool;
             this.postNgOnInit(pool);
-        });
+        }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
     }
 
     postNgOnInit(pool: Pool) {

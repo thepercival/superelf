@@ -48,4 +48,16 @@ export class AssembleLineComponent implements OnInit {
     const abbreviation = player.getTeam().getAbbreviation();
     return abbreviation ? abbreviation : '';
   }
+
+  getBorderClass(): string {
+    return 'border-line-' + this.line.getNumber();
+  }
+
+  getBGColorClass(): string {
+    return 'bg-color-line-' + this.line.getNumber();
+  }
+
+  getButtonLineClass(): string {
+    return 'bg-color-line-' + this.line.getNumber() + ' text-white';
+  }
 }
