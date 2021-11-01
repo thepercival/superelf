@@ -12,6 +12,7 @@ import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
 import { S11PlayerRepository } from '../../lib/player/repository';
 import { PointsCalculator } from '../../lib/points/calculator';
+import { ImageRepository } from '../../lib/image/repository';
 
 @Component({
   selector: 'app-pool-choosepersons',
@@ -24,7 +25,7 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
   @Input() alreadyChosenTeams: Team[] | undefined;
   @Input() selectedSearchLine: number = 0;
   @Input() selectableLines: number = FootballLine.All;
-  @Input() selectWarningTeamMap: TeamMap = new TeamMap();
+  // @Input() selectWarningTeamMap: TeamMap = new TeamMap();
   @Output() selectPerson = new EventEmitter<Person>();
   @Output() close = new EventEmitter<void>();
 
@@ -37,11 +38,13 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
   public processing = true;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   private alreadyChosenPersonsMap!: PersonMap;
+  private alreadyChosenTeamsMap!: TeamMap;
 
   constructor(
     protected playerRepository: S11PlayerRepository,
     protected scoutedPersonRepository: ScoutedPersonRepository,
     protected pointsCalculator: PointsCalculator,
+    public imageRepository: ImageRepository,
     fb: FormBuilder,
     private modalService: NgbModal
   ) {
@@ -64,15 +67,23 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
       this.form.controls.searchLine.setValue(this.selectedSearchLine);
     }
     this.alreadyChosenPersonsMap = new PersonMap();
-
-    this.alreadyChosenPersonsMap = new PersonMap();
     this.alreadyChosenPersons?.forEach((person: Person) => {
       this.alreadyChosenPersonsMap.set(+person.getId(), person);
-      const team = this.oneTeamSimultaneous.getCurrentPlayer(person)?.getTeam();
-      if (team) {
-        this.selectWarningTeamMap.set(+team.getId(), team);
-      }
+      // const team = this.oneTeamSimultaneous.getCurrentPlayer(person)?.getTeam();
+      // if (team) {
+      //   this.selectWarningTeamMap.set(+team.getId(), team);
+      // }
     });
+    this.alreadyChosenTeamsMap = new TeamMap();
+    this.alreadyChosenTeams?.forEach((team: Team) => {
+      this.alreadyChosenTeamsMap.set(+team.getId(), team);
+      console.log(this.alreadyChosenTeamsMap);
+    });
+    // const team = this.oneTeamSimultaneous.getCurrentPlayer(person)?.getTeam();
+    // if (team) {
+    //   this.selectWarningTeamMap.set(+team.getId(), team);
+    // }
+
 
     this.searchPersons();
 
@@ -132,12 +143,24 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
     this.choosePersonItems = choosePersonItems;
   }
 
-  isSelectable(player: Player): boolean {
-    return !this.alreadySelected(player.getPerson()) && (this.selectableLines & player.getLine()) > 0;
+  isPlayerChoosable(player: Player): boolean {
+    // console.log('pac', this.personAlreadyChosen(player.getPerson()));
+    // console.log('tac', this.teamAlreadyChosen(player.getTeam()));
+    return !(this.personAlreadyChosen(player.getPerson()) || this.teamAlreadyChosen(player.getTeam()))
+      && (this.selectableLines & player.getLine()) > 0;
   }
 
-  alreadySelected(person: Person): boolean {
+  personAlreadyChosen(person: Person): boolean {
     return this.alreadyChosenPersonsMap.has(+person.getId());
+  }
+
+  teamAlreadyChosen(team: Team): boolean {
+    return this.alreadyChosenTeamsMap.has(+team.getId());
+  }
+
+
+  getTeamImageUrl(choosePersonItem: ChoosePersonItem): string {
+    return this.imageRepository.getTeamUrl(choosePersonItem.player.getTeam());
   }
 
   protected setAlert(type: string, message: string) {
@@ -158,6 +181,9 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
   //     /* onComplete */() => { this.processing = false });
   // }
 
+  showPlayer(s11Player: S11Player) {
+    console.log('show pl');
+  }
 
 }
 

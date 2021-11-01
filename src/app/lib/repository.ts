@@ -43,6 +43,8 @@ export class APIRepository {
         let errortext;
         if (!navigator.onLine) {
             errortext = 'er kan geen internet verbinding gemaakt worden';
+        } else if (typeof response === 'string') {
+            errortext = response;
         } else if (response.status === 0) {
             errortext = 'er kan geen verbinding met de data-service gemaakt worden, ververs de pagina';
         } else if (response.status === 401) {

@@ -72,7 +72,7 @@ import { CompetitionRepository } from '../lib/ngx-sport/competition/repository';
 import { PlayerRepository } from '../lib/ngx-sport/player/repository';
 import { ChoosePersonsComponent } from './choosepersons/choosepersons.component';
 import { ConfirmPersonChoiceModalComponent } from './choosepersons/confirmpersonchoicemodal.component';
-import { PersonComponent } from './person/person.component';
+import { PersonComponent } from './person/info.component';
 import { ViewPeriodMapper } from '../lib/period/view/mapper';
 import { AssembleComponent } from './assemble/assemble.component';
 import { S11FormationMapper } from '../lib/formation/mapper';
@@ -90,6 +90,8 @@ import { GameRoundMapper } from '../lib/gameRound/mapper';
 import { StatisticsMapper } from '../lib/statistics/mapper';
 import { SuperElfNameService } from '../lib/nameservice';
 import { FormationPlaceMapper } from '../lib/formation/place/mapper';
+import { ImageRepository } from '../lib/image/repository';
+import { PersonInfoModalComponent } from './person/infomodal.component';
 
 @NgModule({
   imports: [
@@ -116,7 +118,9 @@ import { FormationPlaceMapper } from '../lib/formation/place/mapper';
     AssembleLineComponent,
     ChooseFormationComponent,
     ConfirmPersonChoiceModalComponent,
-    RemoveApprovalModalComponent
+    RemoveApprovalModalComponent,
+    PersonComponent,
+    PersonInfoModalComponent
   ],
   providers: [
     AssociationMapper,
@@ -160,6 +164,7 @@ import { FormationPlaceMapper } from '../lib/formation/place/mapper';
     SuperElfNameService,
     PersonRepository,
     PlayerRepository,
+    ImageRepository,
     ActiveConfigRepository,
     ActiveConfigMapper,
     CompetitionRepository,

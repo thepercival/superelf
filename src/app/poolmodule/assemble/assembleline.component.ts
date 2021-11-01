@@ -1,11 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Person } from 'ngx-sport';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Person, Team } from 'ngx-sport';
 import { S11FormationLine } from '../../lib/formation/line';
 import { S11FormationPlace } from '../../lib/formation/place';
 
 import { SuperElfNameService } from '../../lib/nameservice';
+import { ImageRepository } from '../../lib/image/repository';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
+import { PersonInfoModalComponent } from '../person/infomodal.component';
 
 @Component({
   selector: 'app-pool-assembleline',
@@ -22,7 +25,9 @@ export class AssembleLineComponent implements OnInit {
   public oneTeamSimultaneous = new OneTeamSimultaneous();
 
   constructor(
+    public imageRepository: ImageRepository,
     public superElfNameService: SuperElfNameService,
+    private modalService: NgbModal
   ) {
 
   }
@@ -43,10 +48,26 @@ export class AssembleLineComponent implements OnInit {
   getTeamAbbreviation(person: Person): string {
     const player = this.oneTeamSimultaneous.getCurrentPlayer(person);
     if (!player) {
-      return '?';
+      return '';
     }
     const abbreviation = player.getTeam().getAbbreviation();
     return abbreviation ? abbreviation : '';
+  }
+
+  getTeamImageUrl(person: Person): string {
+    const team = this.getCurrentTeam(person);
+    return team ? this.imageRepository.getTeamUrl(team) : '';
+  }
+
+  getCurrentTeam(person: Person | undefined): Team | undefined {
+    if (!person) {
+      return undefined;
+    }
+    const player = this.oneTeamSimultaneous.getCurrentPlayer(person);
+    if (!player) {
+      return undefined;
+    }
+    return player.getTeam();
   }
 
   getBorderClass(): string {
@@ -59,5 +80,18 @@ export class AssembleLineComponent implements OnInit {
 
   getButtonLineClass(): string {
     return 'bg-color-line-' + this.line.getNumber() + ' text-white';
+  }
+
+  showPlayer(s11Player: S11Player | undefined): void {
+    if (!s11Player) {
+      return;
+    }
+    const modalRef = this.modalService.open(PersonInfoModalComponent);
+    modalRef.componentInstance.person = s11Player.getPerson();
+    // modalRef.componentInstance.name = poolUser.getName();
+    modalRef.result.then((result) => {
+      // this.remove(poolUser);
+    }, (reason) => {
+    });
   }
 }

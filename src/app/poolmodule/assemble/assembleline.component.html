@@ -7,26 +7,31 @@
     <table class="table {{getBorderClass()}}">
       <tbody>
         <ng-container *ngFor="let place of line.getStartingPlaces()" [ngTemplateOutlet]="placeRow"
-          [ngTemplateOutletContext]="{place:place}">
+          [ngTemplateOutletContext]="{place:place, s11Player: place.getPlayer()}">
         </ng-container>
-        <ng-container [ngTemplateOutlet]="placeRow" [ngTemplateOutletContext]="{place:line.getSubstitute()}">
+        <ng-container [ngTemplateOutlet]="placeRow"
+          [ngTemplateOutletContext]="{place:line.getSubstitute(), s11Player: line.getSubstitute().getPlayer()}">
         </ng-container>
       </tbody>
     </table>
   </div>
 </div>
-<ng-template #placeRow let-place="place">
-  <tr>
+<ng-template #placeRow let-place="place" let-s11Player="s11Player">
+  <tr (click)="showPlayer(s11Player)" class="pointer">
     <td>
-      <span *ngIf="place.getPlayer()">{{place.getPlayer()?.getPerson().getName()}}</span>
-      <button *ngIf="!place.getPlayer()" type="button" class="btn btn-outline-danger btn-sm">
+      <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
+      <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="select(place, true)">
         kies een {{place.isSubstitute() ? 'wissel' : 'speler'}}
       </button>
+      <span *ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">res</span>
     </td>
     <td>
-      <span *ngIf="place.getPlayer()">{{getTeamAbbreviation(place.getPlayer().getPerson())}}</span>
+      <img *ngIf="getCurrentTeam(s11Player?.getPerson())" src="{{getTeamImageUrl(s11Player.getPerson())}}"
+        class="me-1 center-block" />
+      <span *ngIf="getCurrentTeam(s11Player?.getPerson())"
+        class="align-bottom">{{getTeamAbbreviation(s11Player.getPerson())}}</span>
     </td>
-    <td class="text-end">
+    <td class="text-end" (click)="$event.stopPropagation()">
       <button *ngIf="selectedPlace !== place && !processing" type="button" class="btn btn-sm {{getButtonLineClass()}}"
         (click)="select(place, true)">
         <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>

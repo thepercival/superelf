@@ -32,7 +32,8 @@
 
 <table *ngIf="!processing && viewPeriod" class="table">
   <tbody>
-    <tr *ngFor="let choosePersonItem of choosePersonItems">
+    <tr *ngFor="let choosePersonItem of choosePersonItems" (click)="showPlayer(choosePersonItem.s11Player)"
+      class="pointer">
       <td>
         <app-lineicon [line]="choosePersonItem.player.getLine()"></app-lineicon>
       </td>
@@ -40,15 +41,16 @@
         {{choosePersonItem.player.getPerson().getName()}}
       </td>
       <td>
-        {{choosePersonItem.player.getTeam().getAbbreviation()}}
+        <img src="{{getTeamImageUrl(choosePersonItem)}}" class="me-1 center-block" />
+        <span class="align-bottom">{{choosePersonItem.player.getTeam().getAbbreviation()}}</span>
+
       </td>
       <td class="text-end">
         {{choosePersonItem.s11Player.getTotalPoints()}}
       </td>
-      <td class="text-end">
-        <button *ngIf="isSelectable(choosePersonItem.player)" type="button" class="btn btn-secondary btn-sm"
-          (click)="select(choosePersonItem.s11Player)"
-          [ngClass]="{'btn-warning': selectWarningTeamMap.has(+choosePersonItem.player.getTeam().getId())}">
+      <td class="text-end" (click)="$event.stopPropagation()">
+        <button *ngIf="isPlayerChoosable(choosePersonItem.player)" type="button" class="btn btn-secondary btn-sm"
+          (click)="select(choosePersonItem.s11Player)">
           <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
         </button>
       </td>

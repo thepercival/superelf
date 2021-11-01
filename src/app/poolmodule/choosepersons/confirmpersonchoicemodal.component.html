@@ -1,5 +1,5 @@
 <div class="modal-body mx-auto">
-    <app-person-test [person]="person"></app-person-test>
+    <app-person-info *ngIf="person" [person]="person"></app-person-info>
     <div class="alert alert-success  mb-0" role="alert">
         toegevoegd
     </div>

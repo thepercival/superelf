@@ -55,7 +55,7 @@
     </app-pool-choosepersons> -->
     <app-pool-choosepersons *ngIf="selectedPlace && showSearchSMDown && !updatingPlayer"
       [viewPeriod]="pool.getCreateAndJoinPeriod()" [selectedSearchLine]="selectedSearchLine"
-      [alreadyChosenPersons]="getPersons()" (selectPerson)="updatePlace($event, true)"
+      [alreadyChosenPersons]="getPersons()" [alreadyChosenTeams]="getTeams(selectedPlace.getPlayer())" (selectPerson)="updatePlace($event, true)"
       (close)="selectedPlace = undefined">
     </app-pool-choosepersons>
   </div>

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { NameService, Person, PersonMap, TeamMap, Team, FootballLine, Formation } from 'ngx-sport';
+import { NameService, Person, PersonMap, TeamMap, Team, FootballLine, Formation, Player } from 'ngx-sport';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
@@ -72,10 +72,10 @@ export class AssembleComponent extends PoolComponent implements OnInit {
           // }
           // this.assembleLines = this.getAssembleLines(formation);
         },
-        /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
+        /* error path */(e: string) => { console.log(e); this.setAlert('danger', e); this.processing = false; },
         /* onComplete */() => this.processing = false
       )
-    }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
+    }, /* error path */(e: any) => { console.log(e); this.setAlert('danger', e); this.processing = false; });
   }
 
   getFormationName(): string {
@@ -259,4 +259,27 @@ export class AssembleComponent extends PoolComponent implements OnInit {
   // substitute(assembleLine: AssembleLine) {
 
   // }
+
+  getTeams(selectedS11Player: S11Player | undefined): Team[] {
+    const teams: Team[] = [];
+    this.getPersons().forEach((person: Person) => {
+      const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(person);
+      if (currentPlayer === undefined) {
+        return;
+      }
+      teams.push(currentPlayer.getTeam());
+    });
+
+    const person: Person | undefined = selectedS11Player?.getPerson();
+    const currentPlayer = person ? this.oneTeamSimultaneous.getCurrentPlayer(person) : undefined;
+    const team: Team | undefined = currentPlayer ? currentPlayer.getTeam() : undefined;
+    if (team === undefined) {
+      return teams;
+    }
+    const index = teams.indexOf(team);
+    if (index > -1) {
+      teams.splice(index, 1);
+    }
+    return teams;
+  }
 }

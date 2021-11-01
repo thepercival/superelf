@@ -1,0 +1,55 @@
+<div class="card card-person border-0">
+    <div class="card-body px-2">
+        <div *ngIf="!processing && person" class="d-flex justify-content-start">
+            <!-- base card -->
+            <div class="card m-2 p-0 flex-shrink-0">
+                <!-- <div class="card-header bg-transparent border-success">{{person.getName()}}</div> -->
+                <div class="card-body px-0">
+                    <img class="img-fluid" *ngIf="player" src="{{getPlayerImageUrl(player)}}">
+                    <fa-icon *ngIf="!player" [icon]="['fas', 'user-circle']" size="10x"></fa-icon>
+                    <div class="text-center mt-2">
+                        <img *ngIf="player" src="{{getTeamImageUrl(player)}}" class="me-1 center-block team" />
+                        <span *ngIf="player" class="align-bottom">{{player.getTeam().getAbbreviation()}}</span>
+                    </div>
+                    <div class="text-center my-2">
+                        <app-lineicon *ngIf="player" [line]="player.getLine()" [abbreviate]="false"></app-lineicon>
+                    </div>
+                </div>
+            </div>
+            <!-- extra cards (right-side) -->
+            <div class="border-0 d-flex flex-wrap">
+                <!-- card-played -->
+                <div class="card m-2">
+                    <div class="card-header border-success">played</div>
+                </div>
+                <!-- card-goals -->
+                <div class="card m-2">
+                    <div class="card-header border-success">goals</div>
+                </div>
+                <!-- card-defense -->
+                <div class="card m-2">
+                    <div class="card-header border-success">defense</div>
+                </div>
+                <!-- card-cards -->
+                <div class="card m-2">
+                    <div class="card-header border-success">cards</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div *ngIf="!processing && person" class="d-flex flex-wrap-reverse justify-content-center">
+            <div class="card border-success flex-grow-2 ">
+                <!-- <div class="card-header bg-transparent border-success">{{person.getName()}}</div>
+<div class="card-body">
+    <img *ngIf="player" src="{{getTeamImageUrl(player)}}" class="me-1 center-block team" />
+    <span *ngIf="player" class="align-bottom">{{player.getTeam().getAbbreviation()}}</span>
+</div>
+<div class="card-footer bg-transparent border-success">
+    <app-lineicon *ngIf="player" [line]="player.getLine()" [abbreviate]="false"></app-lineicon>
+</div>
+<div class="card p-3">
+    <img *ngIf="player" src="{{getPlayerImageUrl(player)}}" width="100px">
+    <fa-icon *ngIf="!player" [icon]="['fas', 'user-circle']" size="10x"></fa-icon>
+</div>
+-->
