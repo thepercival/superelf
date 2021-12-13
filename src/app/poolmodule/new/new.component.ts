@@ -46,25 +46,26 @@ export class NewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activeConfigRepository.getObject()
-      .subscribe(
-        /* happy path */(config: ActiveConfig) => {
-          this.activeConfig = config;
-          if (!this.inCreateAndJoinPeriod()) {
-            const period = this.activeConfig.getCreateAndJoinPeriod();
-            this.setAlert('danger', 'het opzetten van een pool kan alleen van ' + period.getStartDateTime().toLocaleString() + ' tot ' + period.getEndDateTime().toLocaleString());
-          }
-          else if (this.activeConfig.getCompetitions().length !== 1) {
-            this.setAlert('danger', 'het aantal actieve broncompetities moet altijd 1 zijn');
-          } else {
-            this.activeSourceCompetitionShell = this.activeConfig.getCompetitions().pop();
-            this.setAlert('info', 'wanneer je dezelfde naam gebruikt voor meerdere seizoenen, dan wordt er ook een alltime - ranking bijgehouden');
-          }
+    this.activeConfigRepository.getObject().subscribe({
+      next: (config: ActiveConfig) => {
+        this.activeConfig = config;
+        if (!this.inCreateAndJoinPeriod()) {
+          const period = this.activeConfig.getCreateAndJoinPeriod();
+          this.setAlert('danger', 'het opzetten van een pool kan alleen van ' + period.getStartDateTime().toLocaleString() + ' tot ' + period.getEndDateTime().toLocaleString());
+        }
+        else if (this.activeConfig.getCompetitions().length !== 1) {
+          this.setAlert('danger', 'het aantal actieve broncompetities moet altijd 1 zijn');
+        } else {
+          this.activeSourceCompetitionShell = this.activeConfig.getCompetitions().pop();
+          this.setAlert('info', 'wanneer je dezelfde naam gebruikt voor meerdere seizoenen, dan wordt er ook een alltime - ranking bijgehouden');
+        }
 
-        },
-        /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => this.processing = false
-      );
+      },
+      error: (e) => {
+        this.setAlert('danger', e); this.processing = false;
+      },
+      complete: () => this.processing = false
+    });
   }
 
   protected inCreateAndJoinPeriod(): boolean {
@@ -86,13 +87,14 @@ export class NewComponent implements OnInit {
     this.competitionRepository.getObject(this.activeSourceCompetitionShell.id)
       .subscribe(
           /* happy path */(sourceCompetition: Competition) => {
-          this.poolRepository.createObject(name, sourceCompetition)
-            .subscribe(
-              /* happy path */(pool: Pool) => {
-                this.router.navigate(['/pool', pool.getId()]);
-              },
-              /* error path */ e => { this.setAlert('danger', 'de pool kon niet worden aangemaakt: ' + e); this.processing = false; },
-            );
+          this.poolRepository.createObject(name, sourceCompetition).subscribe({
+            next: (pool: Pool) => {
+              this.router.navigate(['/pool', pool.getId()]);
+            },
+            error: (e) => {
+              this.setAlert('danger', 'de pool kon niet worden aangemaakt: ' + e); this.processing = false;
+            }
+          });
         }
       );
     return false;

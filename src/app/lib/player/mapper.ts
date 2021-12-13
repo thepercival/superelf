@@ -54,3 +54,8 @@ export class S11PlayerMapper {
         };
     }
 }
+
+export class S11PlayerMap extends Map<number, S11Player> {
+
+}
+

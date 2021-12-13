@@ -73,15 +73,16 @@ export class RegisterComponent extends AuthComponent implements OnInit {
       this.form.controls.emailaddress.value,
       this.form.controls.name.value,
       this.form.controls.password.value
-    )
-      .subscribe(
-            /* happy path */() => {
-          this.registered = true;
-          this.resetAlert();
-        },
-            /* error path */ e => { this.setAlert('danger', 'het registreren is niet gelukt: ' + e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-      );
+    ).subscribe({
+      next: () => {
+        this.registered = true;
+        this.resetAlert();
+      },
+      error: (e) => {
+        this.setAlert('danger', 'het registreren is niet gelukt: ' + e); this.processing = false;
+      },
+      complete: () => this.processing = false
+    });
     return false;
   }
 }

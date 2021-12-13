@@ -2,16 +2,17 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Person, Player } from 'ngx-sport';
 import { ImageRepository } from '../../lib/image/repository';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
+import { S11Player } from '../../lib/player';
 
 import { CSSService } from '../../shared/commonmodule/cssservice';
 
 @Component({
-  selector: 'app-person-info',
+  selector: 'app-s11player-info',
   templateUrl: './info.component.html',
   styleUrls: ['./info.component.scss']
 })
-export class PersonComponent implements OnInit {
-  @Input() person!: Person;
+export class S11PlayerComponent implements OnInit {
+  @Input() s11Player!: S11Player;
   // @Input() team: Team | undefined;
   public processing = true;
   // public teamImageUrl: string | undefined;
@@ -32,7 +33,7 @@ export class PersonComponent implements OnInit {
     //   this.teamImageUrl = this.team.getImageUrl();
     // }
     // this.personImageUrl = this.person?.getImageUrl();
-    this.player = this.oneTeamSimultaneous.getCurrentPlayer(this.person);
+    this.player = this.oneTeamSimultaneous.getCurrentPlayer(this.s11Player.getPerson());
     this.processing = false;
   }
 

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { FootballLine, NameService, Person, PersonMap, Player, Team, TeamMap } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
+import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
 import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
 import { ViewPeriod } from '../../lib/period/view';
 import { IAlert } from '../../shared/commonmodule/alert';
@@ -15,18 +15,18 @@ import { PointsCalculator } from '../../lib/points/calculator';
 import { ImageRepository } from '../../lib/image/repository';
 
 @Component({
-  selector: 'app-pool-choosepersons',
-  templateUrl: './choosepersons.component.html',
-  styleUrls: ['./choosepersons.component.scss']
+  selector: 'app-pool-choose-players',
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.scss']
 })
-export class ChoosePersonsComponent implements OnInit, OnChanges {
+export class ChooseS11PlayersComponent implements OnInit, OnChanges {
   @Input() viewPeriod!: ViewPeriod;
   @Input() alreadyChosenPersons: Person[] | undefined;
   @Input() alreadyChosenTeams: Team[] | undefined;
   @Input() selectedSearchLine: number = 0;
   @Input() selectableLines: number = FootballLine.All;
   // @Input() selectWarningTeamMap: TeamMap = new TeamMap();
-  @Output() selectPerson = new EventEmitter<Person>();
+  @Output() selectS11Player = new EventEmitter<S11Player>();
   @Output() close = new EventEmitter<void>();
 
   form: FormGroup;
@@ -42,7 +42,7 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
 
   constructor(
     protected playerRepository: S11PlayerRepository,
-    protected scoutedPersonRepository: ScoutedPersonRepository,
+    protected scoutedPlayerRepository: ScoutedPlayerRepository,
     protected pointsCalculator: PointsCalculator,
     public imageRepository: ImageRepository,
     fb: FormBuilder,
@@ -108,16 +108,20 @@ export class ChoosePersonsComponent implements OnInit, OnChanges {
     // dit is dan inclusief de statistics
     // wanneer incl. en wanneer exclusief statistics?????
 
-    this.playerRepository.getObjects(this.viewPeriod, teamFilter, lineFilter).subscribe(
-      (players: S11Player[]) => {
-        this.setChoosePersonItems(players);
-      },
-      /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
-      /* onComplete */() => { this.processing = false });
+    this.playerRepository.getObjects(this.viewPeriod, teamFilter, lineFilter)
+      .subscribe({
+        next: (players: S11Player[]) => {
+          this.setChoosePersonItems(players);
+        },
+        error: (e) => {
+          this.setAlert('danger', e); this.processing = false;
+        },
+        complete: () => this.processing = false
+      });
   }
 
   select(player: S11Player) {
-    this.selectPerson.emit(player.getPerson());
+    this.selectS11Player.emit(player);
   }
 
   // getPlayers(competitionPersons: CompetitionPerson[]): Player[] {

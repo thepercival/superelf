@@ -8,7 +8,7 @@ import { SuperElfNameService } from '../../lib/nameservice';
 import { ImageRepository } from '../../lib/image/repository';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
-import { PersonInfoModalComponent } from '../person/infomodal.component';
+import { S11PlayerInfoModalComponent } from '../player/infomodal.component';
 
 @Component({
   selector: 'app-pool-assembleline',
@@ -86,8 +86,8 @@ export class AssembleLineComponent implements OnInit {
     if (!s11Player) {
       return;
     }
-    const modalRef = this.modalService.open(PersonInfoModalComponent);
-    modalRef.componentInstance.person = s11Player.getPerson();
+    const modalRef = this.modalService.open(S11PlayerInfoModalComponent);
+    modalRef.componentInstance.s11Player = s11Player;
     // modalRef.componentInstance.name = poolUser.getName();
     modalRef.result.then((result) => {
       // this.remove(poolUser);

@@ -75,18 +75,17 @@ export class PasswordchangeComponent extends AuthComponent implements OnInit {
       return false;
     }
     // this.activationmessage = undefined;
-    this.authService.passwordChange(this.emailaddress, password, code)
-      .subscribe(
-            /* happy path */ p => {
-          this.passwordChanged = true;
-          this.resetAlert();
-        },
-            /* error path */ e => {
-          this.setAlert('danger', 'het wijzigen van het wachtwoord is niet gelukt: ' + e);
-          this.processing = false;
-        },
-            /* onComplete */() => this.processing = false
-      );
+    this.authService.passwordChange(this.emailaddress, password, code).subscribe({
+      next: (p: boolean) => {
+        this.passwordChanged = true;
+        this.resetAlert();
+      },
+      error: (e) => {
+        this.setAlert('danger', 'het wijzigen van het wachtwoord is niet gelukt: ' + e);
+        this.processing = false;
+      },
+      complete: () => this.processing = false
+    });
     return false;
   }
 }

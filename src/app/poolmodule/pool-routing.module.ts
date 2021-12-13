@@ -11,7 +11,7 @@ import { AuthUserGuardService } from '../lib/auth/guard/userguard.service';
 import { PoolUsersComponent } from './poolusers/poolusers.component';
 import { InviteComponent } from './invite/invite.component';
 import { ScoutingComponent } from './scouting/scouting.component';
-import { ChoosePersonsComponent } from './choosepersons/choosepersons.component';
+import { ChooseS11PlayersComponent } from './chooseplayers/list.component';
 import { AssembleComponent } from './assemble/assemble.component';
 import { ChooseFormationComponent } from './assemble/chooseformation.component';
 
@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'join/:id/:key', component: JoinComponent, canActivate: [AuthUserGuardService] },
   { path: 'users/:id', component: PoolUsersComponent, canActivate: [AuthUserGuardService] },
   { path: 'scouting/:id', component: ScoutingComponent, canActivate: [AuthUserGuardService] },
-  /*{ path: 'choosepersons/:id', component: ChoosePersonsComponent, canActivate: [AuthUserGuardService] },*/
+  /*{ path: 'chooseplayers/:id', component: ChooseS11PlayersComponent, canActivate: [AuthUserGuardService] },*/
   { path: 'chooseformation/:id', component: ChooseFormationComponent, canActivate: [AuthUserGuardService] },
   { path: 'assemble/:id', component: AssembleComponent, canActivate: [AuthUserGuardService] },
   { path: 'rules/:id', component: RulesComponent },

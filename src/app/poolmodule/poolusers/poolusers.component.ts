@@ -32,17 +32,22 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.parentNgOnInit().subscribe((pool: Pool) => {
-      this.pool = pool;
-      if (pool.isInEditPeriod()) {
-        this.poolUserRepository.getObjects(pool).subscribe(
-            /* happy path */(poolUsers: PoolUser[]) => this.poolUsers = poolUsers,
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* on complete */() => this.processing = false
-        );
+    super.parentNgOnInit().subscribe({
+      next: (pool: Pool) => {
+        this.pool = pool;
+        if (pool.isInEditPeriod()) {
+          this.poolUserRepository.getObjects(pool).subscribe({
+            next: (poolUsers: PoolUser[]) => this.poolUsers = poolUsers,
+            error: (e) => { this.setAlert('danger', e); this.processing = false; },
+            complete: () => this.processing = false
+          });
+        }
+        this.processing = false;
+      },
+      error: (e) => {
+        this.setAlert('danger', e); this.processing = false;
       }
-      this.processing = false;
-    }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
+    });
   }
 
   openRemoveApprovalModal(poolUser: PoolUser) {
@@ -57,11 +62,12 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
 
   remove(poolUser: PoolUser) {
     this.processing = true;
-    this.poolUserRepository.removeObject(poolUser)
-      .subscribe(
-            /* happy path */() => this.setAlert('success', 'deelnemer ' + poolUser.getName() + 'verwijderd'),
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* on complete */() => this.processing = false
-      );
+    this.poolUserRepository.removeObject(poolUser).subscribe(
+      {
+        next: () => this.setAlert('success', 'deelnemer ' + poolUser.getName() + 'verwijderd'),
+        error: (e) => { this.setAlert('danger', e); this.processing = false; },
+        complete: () => this.processing = false
+      }
+    );
   }
 }

@@ -7,7 +7,7 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 import { NameService, Person, PersonMap, TeamMap, Team, FootballLine, Formation, Player } from 'ngx-sport';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
+import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
 import { Pool } from '../../lib/pool';
 import { ActiveConfigRepository } from '../../lib/activeConfig/repository';
 import { concatMap, map, pairwise } from 'rxjs/operators';
@@ -43,7 +43,7 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     router: Router,
     poolRepository: PoolRepository,
     protected playerRepository: PlayerRepository,
-    protected scoutedPersonRepository: ScoutedPersonRepository,
+    protected scoutedPlayerRepository: ScoutedPlayerRepository,
     protected activeConfigRepository: ActiveConfigRepository,
     protected poolUserRepository: PoolUserRepository,
     protected formationRepository: FormationRepository,
@@ -54,28 +54,36 @@ export class AssembleComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.parentNgOnInit().subscribe((pool: Pool) => {
-      this.pool = pool;
+    super.parentNgOnInit()
+      .subscribe({
+        next: (pool: Pool) => {
+          this.pool = pool;
 
-      this.activeConfigRepository.getObject().pipe(
-        concatMap((config: ActiveConfig) => {
-          return this.poolUserRepository.getObjectFromSession(pool);
-        })
-      ).subscribe(
-        /* happy path */(poolUser: PoolUser) => {
-          this.poolUser = poolUser;
-          console.log(poolUser);
-          // const s11Formation = poolUser.getAssembleFormation();
-          // if (!s11Formation) {
-          //   this.form.controls.formation.setValue(undefined);
-          //   return;
-          // }
-          // this.assembleLines = this.getAssembleLines(formation);
+          this.activeConfigRepository.getObject().pipe(
+            concatMap((config: ActiveConfig) => {
+              return this.poolUserRepository.getObjectFromSession(pool);
+            })
+          ).subscribe({
+            next: (poolUser: PoolUser) => {
+              this.poolUser = poolUser;
+              console.log(poolUser);
+              // const s11Formation = poolUser.getAssembleFormation();
+              // if (!s11Formation) {
+              //   this.form.controls.formation.setValue(undefined);
+              //   return;
+              // }
+              // this.assembleLines = this.getAssembleLines(formation);
+            },
+            error: (e) => {
+              this.setAlert('danger', e); this.processing = false;
+            },
+            complete: () => this.processing = false
+          });
         },
-        /* error path */(e: string) => { console.log(e); this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => this.processing = false
-      )
-    }, /* error path */(e: any) => { console.log(e); this.setAlert('danger', e); this.processing = false; });
+        error: (e) => {
+          this.setAlert('danger', e); this.processing = false;
+        }
+      });
   }
 
   getFormationName(): string {
@@ -137,7 +145,7 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     return teamMap;
   }
 
-  updatePlace(person: Person, smDown: boolean) {
+  updatePlace(s11Player: S11Player, smDown: boolean) {
     const formation = this.poolUser.getAssembleFormation();
     if (!formation) {
       return;
@@ -153,14 +161,17 @@ export class AssembleComponent extends PoolComponent implements OnInit {
     }
     this.updatingPlayer = true;
 
-    this.formationRepository.editPlace(selectedPlace, person).subscribe(
-      /* happy path */(s11Player: S11Player | undefined) => {
-        // this.router.navigate(['/pool/assemble', this.pool.getId()]);
-        this.selectedPlace = undefined;
-      },
-      /* error path */(e: string) => { this.updatingPlayer = false; this.setAlert('danger', e); },
-      /* onComplete */() => this.updatingPlayer = false
-    );
+    this.formationRepository.editPlace(selectedPlace, s11Player.getPerson())
+      .subscribe({
+        next: (s11Player: S11Player | undefined) => {
+          // this.router.navigate(['/pool/assemble', this.pool.getId()]);
+          this.selectedPlace = undefined;
+        },
+        error: (e) => {
+          this.updatingPlayer = false; this.setAlert('danger', e);
+        },
+        complete: () => this.updatingPlayer = false
+      });
 
     // @TODO CDK
     // this.removeSelected(line).subscribe(

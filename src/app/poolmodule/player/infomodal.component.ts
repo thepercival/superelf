@@ -1,14 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Person } from 'ngx-sport';
+import { S11Player } from '../../lib/player';
 
 @Component({
-    selector: 'app-modal-personinfo',
+    selector: 'app-modal-s11playerinfo',
     templateUrl: './infomodal.component.html',
     styleUrls: ['./infomodal.component.scss']
 })
-export class PersonInfoModalComponent implements OnInit {
-    @Input() person: Person | undefined;
+export class S11PlayerInfoModalComponent implements OnInit {
+    @Input() s11Player!: S11Player;
 
     constructor(public activeModal: NgbActiveModal) {
 

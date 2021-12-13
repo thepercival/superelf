@@ -42,15 +42,16 @@ export class ValidateComponent extends AuthComponent implements OnInit {
     if (this.emailaddress === undefined || this.key === undefined) {
       return false;
     }
-    this.authService.validate(this.emailaddress, this.key)
-      .subscribe(
-            /* happy path */(validated) => {
-          this.validated = validated;
-          this.setAlert('success', 'je emailadres is gevalideerd en je bent meteen ingelogd');
-        },
-            /* error path */ e => { this.setAlert('danger', 'het valideren is niet gelukt: ' + e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-      );
+    this.authService.validate(this.emailaddress, this.key).subscribe({
+      next: (validated: boolean) => {
+        this.validated = validated;
+        this.setAlert('success', 'je emailadres is gevalideerd en je bent meteen ingelogd');
+      },
+      error: (e) => {
+        this.setAlert('danger', 'het valideren is niet gelukt: ' + e); this.processing = false;
+      },
+      complete: () => this.processing = false
+    });
     return false;
   }
 }

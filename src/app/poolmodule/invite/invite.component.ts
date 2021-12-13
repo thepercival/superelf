@@ -35,26 +35,30 @@ export class InviteComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.parentNgOnInit().subscribe((pool: Pool) => {
-      this.pool = pool;
-      this.setAlert('info', 'gebruik de link om mensen uit te nodigen');
-      this.initUrl(pool);
-    }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
+    super.parentNgOnInit().subscribe({
+      next: (pool: Pool) => {
+        this.pool = pool;
+        this.setAlert('info', 'gebruik de link om mensen uit te nodigen');
+        this.initUrl(pool);
+      },
+      error: (e) => {
+        this.setAlert('danger', e); this.processing = false;
+      }
+    });
   }
 
   initUrl(pool: Pool) {
-    this.poolRepository.getJoinUrl(pool)
-      .subscribe(
-          /* happy path */(joinUrl: string) => {
-          this.form.controls.url.setValue(joinUrl);
-          this.form.controls.url.disable();
+    this.poolRepository.getJoinUrl(pool).subscribe({
+      next: (joinUrl: string) => {
+        this.form.controls.url.setValue(joinUrl);
+        this.form.controls.url.disable();
 
-        },
-        /* error path */(e: string) => {
-          this.setAlert('danger', e); this.processing = false;
-        },
-        /* onComplete */() => { this.processing = false }
-      );
+      },
+      error: (e) => {
+        this.setAlert('danger', e); this.processing = false;
+      },
+      complete: () => this.processing = false
+    });
   }
 
   showCopiedToClipboard() {

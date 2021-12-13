@@ -5,6 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
 import { Competition, PersonMapper } from 'ngx-sport';
+import { ViewPeriod } from '../period/view';
 
 
 @Injectable()
@@ -14,8 +15,8 @@ export class StatisticsRepository extends APIRepository {
         super();
     }
 
-    getUrl(sourceCompetition: Competition): string {
-        return super.getApiUrl() + 'competitions/' + sourceCompetition.getId() + '/scoutedpersons';
+    getUrl(viewPeriod: ViewPeriod): string {
+        return super.getApiUrl() + 'viewperiods/' + viewPeriod.getId() + '/scoutedplayer';
     }
 
     // @TODO CDK UPDATE STATISTICS

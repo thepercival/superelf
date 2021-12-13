@@ -59,24 +59,32 @@ export class HomeComponent implements OnInit {
 
     this.poolShellRepos.canCreate()
       .subscribe(
-        (canCreate: boolean) => {
-          this.canCreate = canCreate;
-          if (!this.authService.isLoggedIn()) {
-            this.processingMyShells = false;
-            return;
-          }
+        {
+          next: (canCreate: boolean) => {
+            this.canCreate = canCreate;
+            if (!this.authService.isLoggedIn()) {
+              this.processingMyShells = false;
+              return;
+            }
 
-          const filter = { roles: Role.COMPETITOR + Role.ADMIN };
-          this.poolShellRepos.getObjects(filter)
-            .subscribe(
-              (shells: PoolShell[]) => {
-                this.myShells = shells;
-              },
-              /* error path */ e => { this.setAlert('danger', e); this.processingMyShells = false; },
-              /* onComplete */() => { this.processingMyShells = false; }
-            );
-        },
-        /* error path */ e => { this.setAlert('danger', e); this.processingMyShells = false; }
+            const filter = { roles: Role.COMPETITOR + Role.ADMIN };
+            this.poolShellRepos.getObjects(filter)
+              .subscribe({
+                next: (shells: PoolShell[]) => {
+                  this.myShells = shells;
+                },
+                error: (e) => {
+                  this.setAlert('danger', e); this.processingMyShells = false;
+                },
+                complete: () => this.processingMyShells = false
+              });
+          },
+          error: (e) => {
+            this.setAlert('danger', e); this.processingMyShells = false;
+          }
+        }
+
+
       );
   }
 

@@ -13,7 +13,7 @@
 
     <div *ngIf="!processing && pool">
       <div class="d-flex flex-wrap justify-content-around">
-        <div *ngIf="!showSearchSMDown" class="mb-3" ngClass="{'me-3': showSearchBtn}">
+        <div *ngIf="!showSearch" class="mb-3" ngClass="{'me-3': showSearchBtn}">
           <div>
             <h2 *ngIf="!showSearchBtn" class="text-center">
               <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
@@ -22,33 +22,35 @@
               <h2 class="me-2 text-truncate">
                 <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
               </h2>
-              <button (click)="showSearchSMDown = true" type="button" class="btn btn-secondary d-inline d-md-none">
+              <button (click)="showSearch = true" type="button" class="btn btn-secondary d-inline d-md-none">
                 <fa-icon [icon]="['fas', 'search']"></fa-icon> <span class="d-none d-sm-inline ms-1">zoeken</span>
               </button>
             </div>
           </div>
 
-          <table class="table valign-middle no-border-top no-padding-x mt-2">
+          <table class="table mt-2">
             <tbody>
-              <tr *ngFor="let scoutedPerson of scoutingList.scoutedPersons">
-                <!-- <ng-template let-player="scoutedPerson.getPlayer()"> -->
+              <tr *ngFor="let scoutedPlayer of scoutingList.scoutedPlayers">
+                <!-- <ng-template let-player="scoutedPlayer.getPlayer()"> -->
                 <td *ngIf="pool.getAssemblePeriod().isIn()" class="text-end">
-                  <button (click)="copyToTeam(scoutedPerson.getPerson())" type="button" class="btn btn-secondary">
+                  <button (click)="copyToTeam(scoutedPlayer.getS11Player())" type="button" class="btn btn-secondary">
                     plaats in team
                   </button>
                 </td>
                 <td>
-                  <span>{{oneTeamSimultaneous.getCurrentPlayer(scoutedPerson.getPerson())?.getLine()}}</span>
+                  <app-lineicon [line]="scoutedPlayer.getS11Player().getLine()"></app-lineicon>
                 </td>
                 <td class="text-center">
-                  {{scoutedPerson.getPerson().getName()}}
+                  {{scoutedPlayer.getPerson().getName()}}
                 </td>
                 <td class="text-center">
-                  {{oneTeamSimultaneous.getCurrentPlayer(scoutedPerson.getPerson())?.getTeam()?.getName()}}
+                  <!-- {{oneTeamSimultaneous.getCurrentPlayer(scoutedPlayer.getPerson())?.getTeam()?.getName()}} -->
+                  <img src="{{getTeamImageUrl(choosePersonItem)}}" class="me-1 center-block" />
+                  <span class="align-bottom">{{choosePersonItem.player.getTeam().getAbbreviation()}}</span>
                 </td>
                 <td>
                   <button type="button" class="btn btn-sm btn-primary"
-                    (click)="openRemoveApprovalModal(scoutedPerson, pool)">
+                    (click)="openRemoveApprovalModal(scoutedPlayer, pool)">
                     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
                   </button>
                 </td>
@@ -57,15 +59,10 @@
             </tbody>
           </table>
         </div>
-        <!-- <app-pool-choosepersons *ngIf="showSearchBtn && showSearchSMDown" class="d-block d-md-none"
-          [viewPeriod]="pool.getCreateAndJoinPeriod()" (selectPerson)="add($event)"
-          [alreadyChosenPersons]="getPersons()"></app-pool-choosepersons>
-        <app-pool-choosepersons *ngIf="showSearchBtn" class="d-none d-md-block" (selectPerson)="add($event)"
-          [viewPeriod]="pool.getCreateAndJoinPeriod()" [alreadyChosenPersons)]="scoutingList.mappedPersons">
-        </app-pool-choosepersons> -->
-        <app-pool-choosepersons *ngIf="showSearchBtn" (selectPerson)="add($event)"
-          [viewPeriod]="pool.getCreateAndJoinPeriod()" [alreadyChosenPersons]="getPersons()">
-        </app-pool-choosepersons>
+        <app-pool-choose-players *ngIf="showSearch" (selectS11Player)="add($event)"
+          [viewPeriod]="pool.getCreateAndJoinPeriod()" [alreadyChosenPersons]="getPersons()"
+          (close)="showSearch = false">
+        </app-pool-choose-players>
       </div>
     </div>
   </div>

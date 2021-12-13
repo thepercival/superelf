@@ -5,14 +5,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolCollection } from '../../lib/pool/collection';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
-import { ScoutedPerson } from '../../lib/scoutedPerson';
+import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
+import { ScoutedPlayer } from '../../lib/scoutedPlayer';
 import { Pool } from '../../lib/pool';
-import { Competition, Person, PersonMap } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RemoveApprovalModalComponent } from '../removeapproval/removeapprovalmodal.component';
-import { ConfirmPersonChoiceModalComponent } from '../choosepersons/confirmpersonchoicemodal.component';
+import { ConfirmS11PlayerChoiceModalComponent } from '../chooseplayers/confirmchoicemodal.component';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
+import { S11Player } from '../../lib/player';
+import { ViewPeriod } from '../../lib/period/view';
+import { Person } from 'ngx-sport';
 
 
 @Component({
@@ -22,16 +24,16 @@ import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 })
 export class ScoutingComponent extends PoolComponent implements OnInit {
   form: FormGroup;
-  scoutingList: ScoutingList = { scoutedPersons: []/*, mappedPersons: new PersonMap()*/ };
+  scoutingList: ScoutingList = { scoutedPlayers: []/*, mappedPersons: new PersonMap()*/ };
+  showSearch: boolean = false;
   showSearchBtn = false;
-  showSearchSMDown: boolean = false;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
 
   constructor(
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
-    protected scoutedPersonRepository: ScoutedPersonRepository,
+    protected scoutedPlayerRepository: ScoutedPlayerRepository,
     fb: FormBuilder,
     private modalService: NgbModal
   ) {
@@ -45,101 +47,95 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.pool = pool;
-      this.showSearchBtn = !pool.isInAssembleOrTransferPeriod();
-      console.log(pool.isInAssembleOrTransferPeriod());
-      this.initScoutedPersons(pool);
+      this.showSearchBtn = pool.isInCreateAndJoinPeriod();
+      this.initScoutedPlayers(pool);
     });
   }
 
-  initScoutedPersons(pool: Pool) {
-    this.scoutedPersonRepository.getObjects(pool.getSourceCompetition())
-      .subscribe(
-          /* happy path */(scoutedPersons: ScoutedPerson[]) => {
-          scoutedPersons.forEach(scoutedPerson => this.addToScoutingList(scoutedPerson))
-        },
-        /* error path */(e: string) => {
-          this.setAlert('danger', e); this.processing = false;
-        },
-        /* onComplete */() => { this.processing = false }
-      );
+  initScoutedPlayers(pool: Pool) {
+    this.scoutedPlayerRepository.getObjects(pool.getCreateAndJoinPeriod()).subscribe({
+      next: (scoutedPlayers: ScoutedPlayer[]) => {
+        scoutedPlayers.forEach(scoutedPlayer => this.addToScoutingList(scoutedPlayer))
+      },
+      error: (e) => {
+        this.setAlert('danger', e); this.processing = false;
+      },
+      complete: () => this.processing = false
+    });
   }
 
-  protected addToScoutingList(scoutedPerson: ScoutedPerson) {
-    this.scoutingList.scoutedPersons.push(scoutedPerson);
-    // this.scoutingList.mappedPersons.set(+scoutedPerson.getPerson().getId(), scoutedPerson.getPerson());
+  protected addToScoutingList(scoutedPlayer: ScoutedPlayer) {
+    this.scoutingList.scoutedPlayers.push(scoutedPlayer);
+    // this.scoutingList.mappedPersons.set(+scoutedPlayer.getPerson().getId(), scoutedPlayer.getPerson());
   }
 
-  protected removeFromToScoutingList(scoutedPerson: ScoutedPerson) {
-    this.scoutingList.scoutedPersons.splice(this.scoutingList.scoutedPersons.indexOf(scoutedPerson), 1);
-    // this.scoutingList.mappedPersons.delete(+scoutedPerson.getPerson().getId());
+  protected removeFromToScoutingList(scoutedPlayer: ScoutedPlayer) {
+    this.scoutingList.scoutedPlayers.splice(this.scoutingList.scoutedPlayers.indexOf(scoutedPlayer), 1);
+    // this.scoutingList.mappedPersons.delete(+scoutedPlayer.getPerson().getId());
   }
 
   public getPersons(): Person[] {
-    return this.scoutingList.scoutedPersons.map((scoutedPerson: ScoutedPerson) => scoutedPerson.getPerson());
+    return this.scoutingList.scoutedPlayers.map((scoutedPlayer: ScoutedPlayer) => scoutedPlayer.getPerson());
   }
 
-  openRemoveApprovalModal(scoutedPerson: ScoutedPerson, pool: Pool) {
+  openRemoveApprovalModal(scoutedPlayer: ScoutedPlayer, pool: Pool) {
     const modalRef = this.modalService.open(RemoveApprovalModalComponent);
     modalRef.componentInstance.entittyName = 'gescoute speler';
-    modalRef.componentInstance.name = scoutedPerson.getPerson().getName();
+    modalRef.componentInstance.name = scoutedPlayer.getPerson().getName();
     modalRef.result.then((result) => {
-      this.remove(scoutedPerson, pool.getSourceCompetition());
+      this.remove(scoutedPlayer, pool.getCreateAndJoinPeriod());
     }, (reason) => {
     });
   }
 
-  remove(scoutedPerson: ScoutedPerson, sourceCompetition: Competition) {
+  remove(scoutedPlayer: ScoutedPlayer, viewPeriod: ViewPeriod) {
     this.processing = true;
-    this.scoutedPersonRepository.removeObject(scoutedPerson, sourceCompetition)
-      .subscribe(
-            /* happy path */() => {
-          this.removeFromToScoutingList(scoutedPerson);
-          this.setAlert('success', '"' + scoutedPerson.getPerson().getName() + '" verwijderd');
-        },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* on complete */() => this.processing = false
-      );
+    this.scoutedPlayerRepository.removeObject(scoutedPlayer, viewPeriod).subscribe({
+      next: () => {
+        this.removeFromToScoutingList(scoutedPlayer);
+        // this.setAlert('success', '"' + scoutedPlayer.getPerson().getName() + '" verwijderd');
+      },
+      error: (e) => {
+        this.setAlert('danger', e); this.processing = false;
+      },
+      complete: () => this.processing = false
+    });
   }
 
-  add(person: Person) {
+  add(s11Player: S11Player) {
     if (!this.pool) {
       return;
     }
     this.processing = true;
-    this.scoutedPersonRepository.createObject(person, this.pool.getSourceCompetition())
-      .subscribe(
-          /* happy path */(scoutedPerson: ScoutedPerson) => {
-          // this.scoutingList.mappedPersons = new PersonMap();
-          this.addToScoutingList(scoutedPerson);
-
-          if (this.showSearchSMDown) {
-            this.openConfirmModal(scoutedPerson.getPerson());
-          }
-        },
-        /* error path */(e: string) => {
-          this.setAlert('danger', e); this.processing = false;
-        },
-        /* onComplete */() => { this.processing = false }
-      );
-
+    this.scoutedPlayerRepository.createObject(s11Player, this.pool.getCreateAndJoinPeriod()).subscribe({
+      next: (scoutedPlayer: ScoutedPlayer) => {
+        // this.scoutingList.mappedPersons = new PersonMap();
+        this.addToScoutingList(scoutedPlayer);
+        this.openConfirmModal(scoutedPlayer.getS11Player());
+      },
+      error: (e) => {
+        this.setAlert('danger', e); this.processing = false;
+      },
+      complete: () => this.processing = false
+    });
   }
 
-  openConfirmModal(person: Person) {
-    const modalRef = this.modalService.open(ConfirmPersonChoiceModalComponent);
-    modalRef.componentInstance.person = person;
+  openConfirmModal(s11Player: S11Player) {
+    const modalRef = this.modalService.open(ConfirmS11PlayerChoiceModalComponent);
+    modalRef.componentInstance.s11Player = s11Player;
     modalRef.result.then((result) => {
       if (result === 'goback') {
-        this.showSearchSMDown = false;
+        this.showSearch = false;
       }
     }, (reason) => {
     });
   }
 
-  copyToTeam(person: Person) {
+  copyToTeam(s11Player: S11Player) {
 
   }
 }
 
 interface ScoutingList {
-  scoutedPersons: ScoutedPerson[];
+  scoutedPlayers: ScoutedPlayer[];
 }

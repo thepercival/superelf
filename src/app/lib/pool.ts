@@ -63,6 +63,10 @@ export class Pool {
         return this.assemblePeriod;
     }
 
+    getAssembleViewPeriod(): ViewPeriod {
+        return this.assemblePeriod.getViewPeriod();
+    }
+
     getTransferPeriod(): TransferPeriod {
         return this.transferPeriod;
     }
@@ -87,6 +91,10 @@ export class Pool {
 
     getCreateAndJoinPeriod(): ViewPeriod {
         return this.createAndJoinPeriod;
+    }
+
+    isInCreateAndJoinPeriod(): boolean {
+        return this.getCreateAndJoinPeriod().isIn();
     }
 
     isInEditPeriod(): boolean {

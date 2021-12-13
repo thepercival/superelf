@@ -47,17 +47,17 @@
       class="d-block d-md-none assemble-width" (selectPerson)="updatePlace($event, true)"
       [viewPeriod]="pool.getCreateAndJoinPeriod()" [selectedPersonMap]="teamPersonMap"
       [selectedSearchLine]="selectedSearchLine" [selectWarningTeamMap]="selectedTeamMap"
-      [selectableLines]="selectedSearchLine"></app-pool-choosepersons>
-    <app-pool-choosepersons *ngIf="selectedPlace && !updatingPlayer" class="d-none d-md-block assemble-width"
+      [selectableLines]="selectedSearchLine"></app-pool-choose-players>
+    <app-pool-choose-players *ngIf="selectedPlace && !updatingPlayer" class="d-none d-md-block assemble-width"
       [viewPeriod]="pool.getCreateAndJoinPeriod()" [selectedSearchLine]="selectedSearchLine"
       (selectPerson)="updatePlace($event, false)" [selectedPersonMap]="teamPersonMap"
       [selectWarningTeamMap]="selectedTeamMap" [selectableLines]="selectedSearchLine">
     </app-pool-choosepersons> -->
-    <app-pool-choosepersons *ngIf="selectedPlace && showSearchSMDown && !updatingPlayer"
+    <app-pool-choose-players *ngIf="selectedPlace && showSearchSMDown && !updatingPlayer"
       [viewPeriod]="pool.getCreateAndJoinPeriod()" [selectedSearchLine]="selectedSearchLine"
-      [alreadyChosenPersons]="getPersons()" [alreadyChosenTeams]="getTeams(selectedPlace.getPlayer())" (selectPerson)="updatePlace($event, true)"
-      (close)="selectedPlace = undefined">
-    </app-pool-choosepersons>
+      [alreadyChosenPersons]="getPersons()" [alreadyChosenTeams]="getTeams(selectedPlace.getPlayer())"
+      (selectS11Player)="updatePlace($event, true)" (close)="selectedPlace = undefined">
+    </app-pool-choose-players>
   </div>
 </div>
 

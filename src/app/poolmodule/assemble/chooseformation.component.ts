@@ -38,52 +38,65 @@ export class ChooseFormationComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.parentNgOnInit().subscribe((pool: Pool) => {
-      this.pool = pool;
+    super.parentNgOnInit()
+      .subscribe({
+        next: (pool: Pool) => {
+          this.pool = pool;
 
-      this.activeConfigRepository.getObject().pipe(
-        concatMap((config: ActiveConfig) => {
-          this.formations = config.getAvailableFormations();
-          console.log(this.formations);
-          return this.poolUserRepository.getObjectFromSession(pool);
-        })
-      ).subscribe(
-        /* happy path */(poolUser: PoolUser) => {
-          this.poolUser = poolUser;
-          const s11Formation = poolUser.getAssembleFormation();
-          if (!s11Formation) {
-            /*
-                const assembleFormation = this.poolUser.getAssembleFormation();
-    if (!assembleFormation) {
-      this.form.controls.formation.setValue(undefined);
-      return;
-    }
+          this.activeConfigRepository.getObject().pipe(
+            concatMap((config: ActiveConfig) => {
+              this.formations = config.getAvailableFormations();
+              console.log(this.formations);
+              return this.poolUserRepository.getObjectFromSession(pool);
+            })
+          )
+            .subscribe({
+              next: (poolUser: PoolUser) => {
+                this.poolUser = poolUser;
+                const s11Formation = poolUser.getAssembleFormation();
+                if (!s11Formation) {
 
-    this.form.controls.formation.setValue(this.availableFormations.find((formation: Formation) => {
-      return formation.getName() === assembleFormation.getName();
-    }));
-    */
-          }
-          // this.form.controls.formation.setValue(this.availableFormations.find(formation => {
-          //   return s11Formation.getName() === formation.getName();
-          // }));
-          // this.assembleLines = this.getAssembleLines(formation);
+                  //             const assembleFormation = this.poolUser.getAssembleFormation();
+                  //             if (!assembleFormation) {
+                  //               this.form.controls.formation.setValue(undefined);
+                  //               return;
+                  // }
+
+                  // this.form.controls.formation.setValue(this.availableFormations.find((formation: Formation) => {
+                  //   return formation.getName() === assembleFormation.getName();
+                  // }
+                  // ));
+
+                }
+                // this.form.controls.formation.setValue(this.availableFormations.find(formation => {
+                //   return s11Formation.getName() === formation.getName();
+                // }));
+                // this.assembleLines = this.getAssembleLines(formation);
+              },
+              error: (e) => {
+                this.setAlert('danger', e); this.processing = false;
+              },
+              complete: () => this.processing = false
+            });
         },
-        /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => this.processing = false
-      );
-    }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
+        error: (e) => {
+          this.setAlert('danger', e); this.processing = false;
+        }
+      });
   }
 
   editFormation(newFormation: Formation) {
-    this.formationRepository.editObject(this.poolUser, newFormation).subscribe(
-      /* happy path */(s11Formation: S11Formation) => {
-        this.poolUser.setAssembleFormation(s11Formation);
-        this.router.navigate(['/pool/assemble', this.pool.getId()]);
-      },
-      /* error path */(e: string) => { this.processing = false; this.setAlert('danger', e); },
-      /* onComplete */() => this.processing = false
-    );
+    this.formationRepository.editObject(this.poolUser, newFormation)
+      .subscribe({
+        next: (s11Formation: S11Formation) => {
+          this.poolUser.setAssembleFormation(s11Formation);
+          this.router.navigate(['/pool/assemble', this.pool.getId()]);
+        },
+        error: (e) => {
+          this.processing = false; this.setAlert('danger', e);
+        },
+        complete: () => this.processing = false
+      });
   }
 }
 

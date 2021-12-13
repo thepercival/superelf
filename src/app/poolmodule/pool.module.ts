@@ -63,16 +63,15 @@ import { PoolUserRepository } from '../lib/pool/user/repository';
 import { RemoveApprovalModalComponent } from './removeapproval/removeapprovalmodal.component';
 import { InviteComponent } from './invite/invite.component';
 import { ScoutingComponent } from './scouting/scouting.component';
-import { ScoutedPersonRepository } from '../lib/scoutedPerson/repository';
-import { ScoutedPersonMapper } from '../lib/scoutedPerson/mapper';
+import { ScoutedPlayerRepository } from '../lib/scoutedPlayer/repository';
+import { ScoutedPlayerMapper } from '../lib/scoutedPlayer/mapper';
 import { PersonRepository } from '../lib/ngx-sport/person/repository';
 import { ActiveConfigRepository } from '../lib/activeConfig/repository';
 import { ActiveConfigMapper } from '../lib/activeConfig/mapper';
 import { CompetitionRepository } from '../lib/ngx-sport/competition/repository';
 import { PlayerRepository } from '../lib/ngx-sport/player/repository';
-import { ChoosePersonsComponent } from './choosepersons/choosepersons.component';
-import { ConfirmPersonChoiceModalComponent } from './choosepersons/confirmpersonchoicemodal.component';
-import { PersonComponent } from './person/info.component';
+import { ChooseS11PlayersComponent } from './chooseplayers/list.component';
+import { ConfirmS11PlayerChoiceModalComponent } from './chooseplayers/confirmchoicemodal.component';
 import { ViewPeriodMapper } from '../lib/period/view/mapper';
 import { AssembleComponent } from './assemble/assemble.component';
 import { S11FormationMapper } from '../lib/formation/mapper';
@@ -91,7 +90,8 @@ import { StatisticsMapper } from '../lib/statistics/mapper';
 import { SuperElfNameService } from '../lib/nameservice';
 import { FormationPlaceMapper } from '../lib/formation/place/mapper';
 import { ImageRepository } from '../lib/image/repository';
-import { PersonInfoModalComponent } from './person/infomodal.component';
+import { S11PlayerComponent } from './player/info.component';
+import { S11PlayerInfoModalComponent } from './player/infomodal.component';
 
 @NgModule({
   imports: [
@@ -112,15 +112,14 @@ import { PersonInfoModalComponent } from './person/infomodal.component';
     PoolUsersComponent,
     RulesComponent,
     ScoutingComponent,
-    ChoosePersonsComponent,
-    PersonComponent,
+    ChooseS11PlayersComponent,
     AssembleComponent,
     AssembleLineComponent,
     ChooseFormationComponent,
-    ConfirmPersonChoiceModalComponent,
+    ConfirmS11PlayerChoiceModalComponent,
     RemoveApprovalModalComponent,
-    PersonComponent,
-    PersonInfoModalComponent
+    S11PlayerComponent,
+    S11PlayerInfoModalComponent
   ],
   providers: [
     AssociationMapper,
@@ -156,8 +155,8 @@ import { PersonInfoModalComponent } from './person/infomodal.component';
     PoolUserMapper,
     PoolCompetitorMapper,
     ScoreUnitMapper,
-    ScoutedPersonRepository,
-    ScoutedPersonMapper,
+    ScoutedPlayerRepository,
+    ScoutedPlayerMapper,
     S11PlayerRepository,
     S11PlayerMapper,
     StatisticsMapper,

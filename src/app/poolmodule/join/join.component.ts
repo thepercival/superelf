@@ -24,10 +24,15 @@ export class JoinComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.parentNgOnInit().subscribe((pool: Pool) => {
-      this.pool = pool;
-      this.join(pool);
-    }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
+    super.parentNgOnInit().subscribe({
+      next: (pool: Pool) => {
+        this.pool = pool;
+        this.join(pool);
+      },
+      error: (e) => {
+        this.setAlert('danger', e); this.processing = false;
+      }
+    });
   }
 
   protected join(pool: Pool) {
@@ -38,16 +43,15 @@ export class JoinComponent extends PoolComponent implements OnInit {
       this.processing = false;
       return;
     }
-    this.poolRepository.join(pool, this.key)
-      .subscribe(
-          /* happy path */() => {
-          this.joined = true;
-          this.setAlert('success', 'je bent nu ingeschreven');
-        },
-        /* error path */(e: string) => {
-          this.setAlert('danger', e); this.processing = false;
-        },
-        /* onComplete */() => { this.processing = false }
-      );
+    this.poolRepository.join(pool, this.key).subscribe({
+      next: () => {
+        this.joined = true;
+        this.setAlert('success', 'je bent nu ingeschreven');
+      },
+      error: (e) => {
+        this.setAlert('danger', e); this.processing = false;
+      },
+      complete: () => this.processing = false
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Identifiable, Person } from 'ngx-sport';
+import { FootballLine, FormationLine, Identifiable, Person } from 'ngx-sport';
 import { ViewPeriod } from './period/view';
 import { JsonPlayerTotals } from './player/totals/json';
 import { Statistics } from './statistics';
@@ -53,6 +53,14 @@ export class S11Player extends Identifiable {
     // public setPoints(points: Map<number, number>) {
     //     this.points = points;
     // }
+
+    public getLine(): FootballLine {
+        const player = this.getPerson().getPlayers()[0];
+        if (player === undefined) {
+            throw new Error('s11player should always have a line');
+        }
+        return player.getLine();
+    }
 
     public getStatistics(gameRound: number): Statistics | undefined {
         return this.statistics.get(gameRound);

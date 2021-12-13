@@ -6,12 +6,12 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { TranslateService } from '../../lib/translate';
 import { PoolRepository } from '../../lib/pool/repository';
-import { ScoutedPerson } from '../../lib/scoutedPerson';
 import { Pool } from '../../lib/pool';
-import { ScoutedPersonRepository } from '../../lib/scoutedPerson/repository';
+import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { S11Formation } from '../../lib/formation';
+import { ScoutedPlayer } from '../../lib/scoutedPlayer';
 
 @Component({
     selector: 'app-pool-public',
@@ -20,7 +20,7 @@ import { S11Formation } from '../../lib/formation';
 })
 export class HomeComponent extends PoolComponent implements OnInit {
     translate: TranslateService;
-    scoutedPersons: ScoutedPerson[] = [];
+    scoutedPlayers: ScoutedPlayer[] = [];
     scoutingEnabled: boolean = false;
     poolUsers: PoolUser[] = [];
 
@@ -30,39 +30,48 @@ export class HomeComponent extends PoolComponent implements OnInit {
         router: Router,
         private poolUserRepository: PoolUserRepository,
         poolRepository: PoolRepository,
-        protected scoutedPersonRepository: ScoutedPersonRepository
+        protected scoutedPlayerRepository: ScoutedPlayerRepository
     ) {
         super(route, router, poolRepository);
         this.translate = new TranslateService();
     }
 
     ngOnInit() {
-        super.parentNgOnInit().subscribe((pool: Pool) => {
-            this.pool = pool;
-            this.postNgOnInit(pool);
-        }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
+        super.parentNgOnInit().subscribe({
+            next: (pool: Pool) => {
+                this.pool = pool;
+                this.postNgOnInit(pool);
+            },
+            error: (e) => {
+                this.setAlert('danger', e); this.processing = false;
+            }
+        });
     }
 
     postNgOnInit(pool: Pool) {
-        const sourceCompetition = pool.getSourceCompetition();
         this.scoutingEnabled = pool.getCreateAndJoinPeriod().isIn() || pool.getAssemblePeriod().isIn();
-
         if (this.scoutingEnabled) {
-            this.scoutedPersonRepository.getObjects(sourceCompetition).subscribe((scoutedPersons: ScoutedPerson[]) => {
-                this.scoutedPersons = scoutedPersons;
+            const viewPeriod = pool.getAssembleViewPeriod();
+            this.scoutedPlayerRepository.getObjects(viewPeriod).subscribe((scoutedPlayers: ScoutedPlayer[]) => {
+                this.scoutedPlayers = scoutedPlayers;
             });
         }
 
-        this.poolUserRepository.getObjectFromSession(pool).subscribe((poolUser: PoolUser | undefined) => {
-            this.poolUser = poolUser;
-            if (pool.isInEditPeriod() && this.isAdmin()) {
-                this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
-                    this.poolUsers = poolUsers;
-                });
-            }
-        },
-        /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
-        /* onComplete */() => { this.processing = false });
+        this.poolUserRepository.getObjectFromSession(pool)
+            .subscribe({
+                next: (poolUser: PoolUser | undefined) => {
+                    this.poolUser = poolUser;
+                    if (pool.isInEditPeriod() && this.isAdmin()) {
+                        this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
+                            this.poolUsers = poolUsers;
+                        });
+                    }
+                },
+                error: (e) => {
+                    this.setAlert('danger', e); this.processing = false;
+                },
+                complete: () => this.processing = false
+            });
     }
 
     isAdmin(): boolean {

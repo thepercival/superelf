@@ -1,13 +1,13 @@
 <div class="modal-header border-bottom-0">
-    <h5 class="modal-title">{{person ? person.getName() : 'onbekend'}}</h5>
+    <h5 class="modal-title">{{s11Player.getPerson()?.getName() ?? 'onbekend'}}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body p-0">
-    <app-person-info *ngIf="person" [person]="person"></app-person-info>
+    <app-s11player-info *ngIf="s11Player" [s11Player]="s11Player"></app-s11player-info>
     <!-- <div class="alert alert-success  mb-0" role="alert">
         toegevoegd
     </div> -->
-    <div *ngIf="!person" class="alert alert-danger  mb-0" role="alert">onbekende speler
+    <div *ngIf="!s11Player" class="alert alert-danger  mb-0" role="alert">onbekende speler
     </div>
 </div>
 <!-- <div class="modal-footer d-flex justify-content-around">

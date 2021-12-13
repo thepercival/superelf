@@ -77,14 +77,15 @@ export class LoginComponent extends AuthComponent implements OnInit {
     const emailaddress = this.form.controls.emailaddress.value;
     const password = this.form.controls.password.value;
 
-    this.authService.login(emailaddress, password)
-      .subscribe(
-            /* happy path */ p => {
-          this.router.navigate(['/']);
-        },
-            /* error path */ e => { this.setAlert('danger', e); this.processing = false; },
-            /* onComplete */() => this.processing = false
-      );
+    this.authService.login(emailaddress, password).subscribe({
+      next: (p: boolean) => {
+        this.router.navigate(['/']);
+      },
+      error: (e) => {
+        this.setAlert('danger', e); this.processing = false;
+      },
+      complete: () => this.processing = false
+    });
     return false;
   }
 

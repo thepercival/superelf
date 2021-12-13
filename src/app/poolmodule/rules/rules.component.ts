@@ -29,14 +29,19 @@ export class RulesComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.parentNgOnInit().subscribe((pool: Pool) => {
-      this.pool = pool;
-      this.activeConfigRepository.getObject()
-        .subscribe(
-        /* happy path */(config: ActiveConfig) => this.availableFormations = config.getAvailableFormations()
-        );
-      this.processing = false;
-    }, /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; });
+    super.parentNgOnInit().subscribe({
+      next: (pool: Pool) => {
+        this.pool = pool;
+        this.activeConfigRepository.getObject()
+          .subscribe(
+            (config: ActiveConfig) => this.availableFormations = config.getAvailableFormations()
+          );
+        this.processing = false;
+      },
+      error: (e) => {
+        this.setAlert('danger', e); this.processing = false;
+      }
+    });
   }
 
   getFormationNames(): string | undefined {
