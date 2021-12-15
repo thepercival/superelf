@@ -13,24 +13,22 @@
 
     <div *ngIf="!processing && pool">
       <div class="d-flex flex-wrap justify-content-around">
-        <div *ngIf="!showSearch" class="mb-3" ngClass="{'me-3': showSearchBtn}">
-          <div>
-            <h2 *ngIf="!showSearchBtn" class="text-center">
+        <div *ngIf="!showSearch" class="mb-3">
+
+          <div class="d-flex flex-wrap justify-content-between">
+            <h2 class="me-2 text-truncate">
               <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
             </h2>
-            <div *ngIf="showSearchBtn" class="d-flex flex-wrap justify-content-between">
-              <h2 class="me-2 text-truncate">
-                <fa-icon [icon]="['fas', 'users']"></fa-icon> gescoute spelers
-              </h2>
-              <button (click)="showSearch = true" type="button" class="btn btn-secondary d-inline d-md-none">
-                <fa-icon [icon]="['fas', 'search']"></fa-icon> <span class="d-none d-sm-inline ms-1">zoeken</span>
-              </button>
-            </div>
+            <button (click)="showSearch = true" type="button" class="btn btn-secondary ms-5">
+              <fa-icon [icon]="['fas', 'search']"></fa-icon> <span class="d-none d-sm-inline ms-1">zoeken</span>
+            </button>
           </div>
 
-          <table class="table mt-2">
+
+          <table class="table mt-3">
             <tbody>
-              <tr *ngFor="let scoutedPlayer of scoutingList.scoutedPlayers">
+              <tr *ngFor="let scoutedPlayer of scoutingList.scoutedPlayers"
+                (click)="showPlayer(scoutedPlayer.getS11Player())" class="pointer">
                 <!-- <ng-template let-player="scoutedPlayer.getPlayer()"> -->
                 <td *ngIf="pool.getAssemblePeriod().isIn()" class="text-end">
                   <button (click)="copyToTeam(scoutedPlayer.getS11Player())" type="button" class="btn btn-secondary">
@@ -40,16 +38,17 @@
                 <td>
                   <app-lineicon [line]="scoutedPlayer.getS11Player().getLine()"></app-lineicon>
                 </td>
-                <td class="text-center">
-                  {{scoutedPlayer.getPerson().getName()}}
-                </td>
-                <td class="text-center">
-                  <!-- {{oneTeamSimultaneous.getCurrentPlayer(scoutedPlayer.getPerson())?.getTeam()?.getName()}} -->
-                  <img src="{{getTeamImageUrl(choosePersonItem)}}" class="me-1 center-block" />
-                  <span class="align-bottom">{{choosePersonItem.player.getTeam().getAbbreviation()}}</span>
+                <td>
+                  <span>{{scoutedPlayer.getPerson().getName()}}</span>
                 </td>
                 <td>
-                  <button type="button" class="btn btn-sm btn-primary"
+                  <app-team-name [team]="getCurrentTeam(scoutedPlayer.getPerson())"></app-team-name>
+                </td>
+                <td>
+                  <span class="badge bg-totals bg-totals">{{scoutedPlayer.getS11Player().getTotalPoints()}}</span>
+                </td>
+                <td (click)="$event.stopPropagation()">
+                  <button type="button" class="btn btn-sm btn-outline-danger"
                     (click)="openRemoveApprovalModal(scoutedPlayer, pool)">
                     <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
                   </button>

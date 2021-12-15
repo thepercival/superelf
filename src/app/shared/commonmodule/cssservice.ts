@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HorizontalPoule, MultipleQualifyRule, Place, QualifyGroup, QualifyTarget, Round, SingleQualifyRule } from 'ngx-sport';
+import { FootballLine, HorizontalPoule, MultipleQualifyRule, Place, QualifyGroup, QualifyTarget, Round, SingleQualifyRule } from 'ngx-sport';
 
 @Injectable()
 export class CSSService {
@@ -61,4 +61,8 @@ export class CSSService {
     // getWinnersOrLosers(winnersOrLosers: number): string {
     //     return winnersOrLosers === QualifyGroup.WINNERS ? 'success' : (winnersOrLosers === QualifyGroup.LOSERS ? 'danger' : '');
     // }
+
+    getLine(line: FootballLine): string {
+        return 'bg-line-' + line;
+    }
 }

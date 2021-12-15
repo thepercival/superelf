@@ -129,6 +129,6 @@ export class TeamComponent extends PoolComponent implements OnInit {
   }
 
   inScoutingList(s11Player: S11Player): boolean {
-    return this.scoutedPlayers.some(scoutedPlayer => scoutedPlayer.getS11Player() === s11Player);
+    return this.scoutedPlayers.some(scoutedPlayer => scoutedPlayer.getPerson() === s11Player);
   }
 }

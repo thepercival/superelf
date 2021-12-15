@@ -1,82 +1,44 @@
 <div class="card card-person border-0">
-    <div class="card-body px-2">
-        <div *ngIf="!processing && s11Player" class="">
-            <!-- base card -->
-            <div class="card m-2 p-0 flex-shrink-0">
-                <!-- <div class="card-header bg-transparent border-success">{{person.getName()}}</div> -->
-                <div class="card-body px-0">
-                    <div class="text-center">
-                        <img class="img-fluid" *ngIf="player" src="{{getPlayerImageUrl(player)}}">
-                        <fa-icon *ngIf="!player" [icon]="['fas', 'user-circle']" size="10x"></fa-icon>
-                    </div>
-                    <div class="d-flex flex-wrap justify-content-center">
-                        <div class="align-self-center mr-3">
-                            <img *ngIf="player" src="{{getTeamImageUrl(player)}}" class="me-1 center-block team" />
-                            <span *ngIf="player" class="align-bottom">{{player.getTeam().getAbbreviation()}}</span>
-                        </div>
-                        <div class="align-self-center">
-                            <app-lineicon *ngIf="player" [line]="player.getLine()" [abbreviate]="false">
-                            </app-lineicon>
-                        </div>
+    <div class="card-body py-1 px-2">
+        <div *ngIf="!processing && s11Player" class="text-center">
+            <div class="d-flex justify-content-center">
+                <div *ngIf="player" class="player-img d-flex justify-content-between"
+                    style="background-image: url('{{getPlayerImageUrl(player)}}');">
+                    <app-lineicon *ngIf="player" [line]="player.getLine()"></app-lineicon>
+                    <div>
+                        <span class="badge bg-totals">{{s11Player.getTotalPoints()}}</span>
                     </div>
                 </div>
+                <fa-icon *ngIf="!player" [icon]="['fas', 'user-circle']" size="10x"></fa-icon>
             </div>
-            <div class="d-flex flex-wrap justify-content-between">
-                <div>speelronde < 5> alle
-                </div>
-                <div>
-                    punten in paars of rose
-                </div>
+            <div class="mt-1">
+                <app-team-name *ngIf="player" [team]="player.getTeam()" [fullName]="true"></app-team-name>
             </div>
-            <div>
-                speelronde selected ? => show game here, nieuwe modal
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="btn-group" role="group" aria-label="aantal">
+                <button [disabled]="false === false" type="button" class="btn btn-outline-primary"
+                    (click)="previousGameRound()">
+                    <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+                </button>
+                <button [disabled]="true" type="button" class="btn btn-outline-primary">
+                    alle speelronden
+                </button>
+                <button [disabled]="false === false" type="button" class="btn btn-outline-primary"
+                    (click)="nextGameRound()">
+                    <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+                </button>
             </div>
-            <!-- extra cards (right-side) -->
-            <div class="border-0 d-flex flex-wrap justify-content-start">
-                <!-- card-played -->
-                <div class="card m-2 align-self-start">
-                    <div class="card-header border-success">mee gedaan</div>
-                    basis<br />
-                    ingevallen<br />
-                    gewisseld<br />
-                    bank<br />
-                </div>
-                <!-- card-cards -->
-                <div class="card m-2 align-self-start">
-                    <div class="card-header border-success">kaarten</div>
-                    geel<br />
-                    rood<br />
-                </div>
-                <!-- card-goals -->
-                <div class="card m-2 align-self-start">
-                    <div class="card-header border-success">goals</div>
-                    assist<br />
-                    eigen<br />
-                    penalty<br />
-                    veld<br />
-                </div>
-                <!-- card-defense -->
-                <div class="card m-2 align-self-start">
-                    <div class="card-header border-success">tegengoals</div>
-                    de nul<br />
-                    > 3<br />
-                </div>
-            </div>
+        </div>
+        <div *ngIf="currentGame">
+            <app-againstgame-title [againstGame]="currentGame"></app-againstgame-title>
+        </div>
+        <div>
+
+            <app-s11player-viewperiod-statistics *ngIf="!currentGameRound" [s11Player]="s11Player" [points]="points">
+            </app-s11player-viewperiod-statistics>
+            <app-s11player-gameround-statistics *ngIf="currentGameRound" [s11Player]="s11Player">
+            </app-s11player-gameround-statistics>
         </div>
     </div>
 </div>
-<!-- <div *ngIf="!processing && person" class="d-flex flex-wrap-reverse justify-content-center">
-            <div class="card border-success flex-grow-2 ">
-                <!-- <div class="card-header bg-transparent border-success">{{person.getName()}}</div>
-<div class="card-body">
-    <img *ngIf="player" src="{{getTeamImageUrl(player)}}" class="me-1 center-block team" />
-    <span *ngIf="player" class="align-bottom">{{player.getTeam().getAbbreviation()}}</span>
-</div>
-<div class="card-footer bg-transparent border-success">
-    <app-lineicon *ngIf="player" [line]="player.getLine()" [abbreviate]="false"></app-lineicon>
-</div>
-<div class="card p-3">
-    <img *ngIf="player" src="{{getPlayerImageUrl(player)}}" width="100px">
-    <fa-icon *ngIf="!player" [icon]="['fas', 'user-circle']" size="10x"></fa-icon>
-</div>
--->

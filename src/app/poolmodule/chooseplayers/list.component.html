@@ -41,8 +41,7 @@
         {{choosePersonItem.player.getPerson().getName()}}
       </td>
       <td>
-        <img src="{{getTeamImageUrl(choosePersonItem)}}" class="me-1 center-block" />
-        <span class="align-bottom">{{choosePersonItem.player.getTeam().getAbbreviation()}}</span>
+        <app-team-name [team]="choosePersonItem.player.getTeam()"></app-team-name>
       </td>
       <td class="text-end">
         {{choosePersonItem.s11Player.getTotalPoints()}}

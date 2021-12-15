@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
-import { PoolCollection } from '../../lib/pool/collection';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
 import { ScoutedPlayer } from '../../lib/scoutedPlayer';
@@ -14,8 +13,8 @@ import { ConfirmS11PlayerChoiceModalComponent } from '../chooseplayers/confirmch
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
 import { ViewPeriod } from '../../lib/period/view';
-import { Person } from 'ngx-sport';
-
+import { Person, Team } from 'ngx-sport';
+import { S11PlayerInfoModalComponent } from '../player/infomodal.component';
 
 @Component({
   selector: 'app-pool-scouting',
@@ -26,7 +25,6 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
   form: FormGroup;
   scoutingList: ScoutingList = { scoutedPlayers: []/*, mappedPersons: new PersonMap()*/ };
   showSearch: boolean = false;
-  showSearchBtn = false;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
 
   constructor(
@@ -47,7 +45,6 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.pool = pool;
-      this.showSearchBtn = pool.isInCreateAndJoinPeriod();
       this.initScoutedPlayers(pool);
     });
   }
@@ -76,6 +73,17 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
 
   public getPersons(): Person[] {
     return this.scoutingList.scoutedPlayers.map((scoutedPlayer: ScoutedPlayer) => scoutedPlayer.getPerson());
+  }
+
+  getCurrentTeam(person: Person | undefined): Team | undefined {
+    if (!person) {
+      return undefined;
+    }
+    const player = this.oneTeamSimultaneous.getCurrentPlayer(person);
+    if (!player) {
+      return undefined;
+    }
+    return player.getTeam();
   }
 
   openRemoveApprovalModal(scoutedPlayer: ScoutedPlayer, pool: Pool) {
@@ -133,6 +141,20 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
 
   copyToTeam(s11Player: S11Player) {
 
+  }
+
+  showPlayer(s11Player: S11Player | undefined): void {
+    if (!s11Player) {
+      return;
+    }
+    const modalRef = this.modalService.open(S11PlayerInfoModalComponent);
+    modalRef.componentInstance.s11Player = s11Player;
+    modalRef.componentInstance.points = this.pool.getPoints();
+    // modalRef.componentInstance.name = poolUser.getName();
+    modalRef.result.then((result) => {
+      // this.remove(poolUser);
+    }, (reason) => {
+    });
   }
 }
 

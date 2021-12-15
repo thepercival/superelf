@@ -1,9 +1,10 @@
-<div class="modal-header border-bottom-0">
-    <h5 class="modal-title">{{s11Player.getPerson()?.getName() ?? 'onbekend'}}</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal-header border-bottom-0 text-white {{getLineClass()}}">
+    <h5 class="">{{s11Player.getPerson()?.getName() ?? 'onbekend'}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+        (click)="activeModal.dismiss('cancel')"></button>
 </div>
 <div class="modal-body p-0">
-    <app-s11player-info *ngIf="s11Player" [s11Player]="s11Player"></app-s11player-info>
+    <app-s11player-info *ngIf="s11Player" [s11Player]="s11Player" [points]="points"></app-s11player-info>
     <!-- <div class="alert alert-success  mb-0" role="alert">
         toegevoegd
     </div> -->

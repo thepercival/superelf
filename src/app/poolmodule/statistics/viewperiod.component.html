@@ -1,0 +1,93 @@
+<div class="border-0 d-flex justify-content-center">
+    <!-- card-played -->
+    <div class="card m-2 align-self-start">
+        <div class="card-header border-success">
+            <span>wed. punten</span>
+            <span class="badge bg-totals float-end ms-1">{{totalsCalculator.getResultPoints(s11Player.getTotals(),
+                points)}}</span>
+        </div>
+        <div class="card-body">
+            <div>
+                <span>basis</span>
+                <span class="float-end ms-1">{{totals.nrOfTimesStarted}}x</span>
+            </div>
+            <div>
+                <span>gewisseld</span>
+                <span class="float-end ms-1">{{totals.nrOfTimesSubstituted}}x</span>
+            </div>
+            <div>
+                <span>ingevallen</span>
+                <span class="float-end ms-1">{{totals.nrOfTimesSubstitute}}x</span>
+            </div>
+            <div>
+                <span>bank</span>
+                <span class="float-end ms-1">{{totals.nrOfTimesBench}}x</span>
+            </div>
+        </div>
+    </div>
+    <!-- card-goals -->
+    <div class="card m-2 align-self-start">
+        <div class="card-header border-success">
+            <span>goals</span>
+            <span class="badge bg-totals float-end ms-1">{{totalsCalculator.getGoalPoints(line,
+                s11Player.getTotals(), points)}}</span>
+        </div>
+        <div class="card-body">
+            <div>
+                <span>veld</span>
+                <span class="float-end ms-1">{{totals.nrOfFieldGoals}}x</span>
+            </div>
+            <div>
+                <span>assist</span>
+                <span class="float-end ms-1">{{totals.nrOfAssists}}x</span>
+            </div>
+            <div>
+                <span>eigen</span>
+                <span class="float-end ms-1">{{totals.nrOfOwnGoals}}x</span>
+            </div>
+            <div>
+                <span>penalty</span>
+                <span class="float-end ms-1">{{totals.nrOfPenalties}}x</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="border-0 d-flex justify-content-center">
+    <!-- card-defense -->
+    <div *ngIf="sheetActive" class="card m-2 align-self-start">
+        <div class="card-header border-success">
+            <span>tegengoals</span>
+            <span class="badge bg-totals float-end ms-1">{{totalsCalculator.getSheetPoints(line,
+                s11Player.getTotals(), points)}}</span>
+        </div>
+        <div class="card-body">
+            <div>
+                <span>de nul</span>
+                <span class="float-end ms-1">{{totals.nrOfCleanSheets}}x</span>
+            </div>
+            <div>
+                <span>> 3</span>
+                <span class="float-end ms-1">{{totals.nrOfSpottySheets}}x</span>
+            </div>
+        </div>
+    </div>
+    <!-- card-cards -->
+    <div class="card m-2 align-self-start">
+        <div class="card-header border-success">
+            <span>kaarten</span>
+            <span class="badge bg-totals float-end ms-1">{{totalsCalculator.getCardPoints(
+                s11Player.getTotals(), points)}}</span>
+        </div>
+        <div class="card-body">
+            <div>
+                <span>geel</span>
+                <span class="float-end ms-1">{{totals.nrOfYellowCards}}x</span>
+            </div>
+            <div>
+                <span>rood</span>
+                <span class="float-end ms-1">{{totals.nrOfRedCards}}x</span>
+            </div>
+        </div>
+    </div>
+</div>

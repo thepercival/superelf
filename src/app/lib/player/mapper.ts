@@ -4,7 +4,7 @@ import { ViewPeriod } from '../period/view';
 import { S11Player } from '../player';
 import { JsonS11Player } from './json';
 import { StatisticsMapper } from '../statistics/mapper';
-import { TotalsQQ } from '../totals';
+import { Totals } from '../totals';
 
 @Injectable()
 export class S11PlayerMapper {

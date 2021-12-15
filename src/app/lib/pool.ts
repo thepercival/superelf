@@ -4,6 +4,7 @@ import { PoolCollection } from './pool/collection';
 import { AssemblePeriod } from './period/assemble';
 import { TransferPeriod } from './period/transfer';
 import { ViewPeriod } from './period/view';
+import { Points } from './points';
 
 export class Pool {
     protected id: number = 0;
@@ -14,6 +15,7 @@ export class Pool {
     ];
 
     constructor(protected collection: PoolCollection, protected sourceCompetition: Competition,
+        protected points: Points,
         protected createAndJoinPeriod: ViewPeriod, protected assemblePeriod: AssemblePeriod,
         protected transferPeriod: TransferPeriod) {
     }
@@ -57,6 +59,10 @@ export class Pool {
 
     getAssociation(): Association | undefined {
         return this.getCompetition()?.getLeague().getAssociation();
+    }
+
+    getPoints(): Points {
+        return this.points;
     }
 
     getAssemblePeriod(): AssemblePeriod {

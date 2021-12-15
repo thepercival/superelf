@@ -3,7 +3,7 @@ import { ViewPeriod } from "./period/view";
 import { S11Player } from "./player";
 
 // unable to determine line, class is of no use
-export class TotalsQQ {
+export class Totals {
     public constructor(
         protected player: S11Player,
         protected wins: number,

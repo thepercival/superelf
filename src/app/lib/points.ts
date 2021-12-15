@@ -1,8 +1,7 @@
-import { FootballLine, Identifiable, Season, Sport } from "ngx-sport";
+import { FootballLine, Identifiable, Season } from "ngx-sport";
 
 export class Points extends Identifiable {
     constructor(
-        protected season: Season,
         protected resultWin: number,
         protected resultDraw: number,
         protected fieldGoalGoalkeeper: number,
@@ -141,9 +140,5 @@ export class Points extends Identifiable {
 
     public getCardRed(): number {
         return this.cardRed;
-    }
-
-    public getSeason(): Season {
-        return this.season;
     }
 }

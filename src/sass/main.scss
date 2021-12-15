@@ -1,8 +1,31 @@
 $enable-responsive-font-sizes: true !default;
 
 @import "./bootstrap/_variables";
+
+$line-1: $gray-700;
+$line-2: $gray-600;
+$line-4: $gray-500;
+$line-8: $gray-400;
+$totals: #673AB7;
+$points: #2211B7;
+
+
 @import "./bootstrap/_components";
 @import "./bootstrap/_bootswatch";
+
+
+
+
+
+// $custom-theme-colors: (
+//   "totals": #673AB7,
+//   "points": pink
+// );
+
+// $theme-colors: map-merge($custom-theme-colors, $theme-colors);
+
+
+
 
 .current-user {
     @extend .text-primary !optional;
@@ -52,16 +75,11 @@ input.is-warning {
     border-left: 5px solid #{$warning};
 }
 
+
+
 .badge-reserve {
   vertical-align: text-top;
   background-color: #98978b;
-}
-
-/* tmp club logo */
-td>img {
-    max-height: 1rem;
-    vertical-align: top;
-    margin-top: 4px;
 }
 
 .modal-content-info .modal-content {
@@ -87,82 +105,82 @@ td>img {
   @extend .border-white;
 }
 
-.line-1 {
-  background-color: $gray-700;
-}
-.line-2 {
-  background-color: $gray-600;
-}
-.line-4 {
-  background-color: $gray-500;
-}
-.line-8 {
-  background-color: $gray-400;
-}
+// .line-1 {
+//   background-color: $gray-700;
+// }
+// .line-2 {
+//   background-color: $gray-600;
+// }
+// .line-4 {
+//   background-color: $gray-500;
+// }
+// .line-8 {
+//   background-color: $gray-400;
+// }
 
-.color-line-1 {
-  color: $gray-700;
-}
+// .color-line-1 {
+//   color: $gray-700;
+// }
 
-.color-line-2 {
-  color: $gray-600;
-}
+// .color-line-2 {
+//   color: $gray-600;
+// }
 
-.color-line-4 {
-  color: $gray-500;
-}
+// .color-line-4 {
+//   color: $gray-500;
+// }
 
-.color-line-8 {
-  color: $gray-400;
-}
+// .color-line-8 {
+//   color: $gray-400;
+// }
 
-.bg-color-line-1 {
-  background-color: $gray-700;
-}
+// .bg-color-line-1 {
+//   background-color: $gray-700;
+// }
 
-.bg-color-line-2 {
-  background-color: $gray-600;
-}
+// .bg-color-line-2 {
+//   background-color: $gray-600;
+// }
 
-.bg-color-line-4 {
-  background-color: $gray-500;
-}
+// .bg-color-line-4 {
+//   background-color: $gray-500;
+// }
 
-.bg-color-line-8 {
-  background-color: $gray-400;
-}
+// .bg-color-line-8 {
+//   background-color: $gray-400;
+// }
 
-.border-line-1 {
-  border-color: $gray-700;
-}
+// .border-line-1 {
+//   border-color: $gray-700;
+// }
 
-.border-line-2 {
-  border-color: $gray-600;
-}
+// .border-line-2 {
+//   border-color: $gray-600;
+// }
 
-.border-line-4 {
-  border-color: $gray-500;
-}
+// .border-line-4 {
+//   border-color: $gray-500;
+// }
 
-.border-line-8 {
-  border-color: $gray-400;
-}
+// .border-line-8 {
+//   border-color: $gray-400;
+// }
 
-table.border-line-1 td{
-  @extend .border-line-1;    
-}
+// table.border-line-1 td{
+//   @extend .border-line-1;    
+// }
 
-table.border-line-2 td{
-  @extend .border-line-2;
-}
+// table.border-line-2 td{
+//   @extend .border-line-2;
+// }
 
-table.border-line-4 td{
-  @extend .border-line-4;
-}
+// table.border-line-4 td{
+//   @extend .border-line-4;
+// }
 
-table.border-line-8 td{
-  @extend .border-line-8;
-}
+// table.border-line-8 td{
+//   @extend .border-line-8;
+// }
 
 /*
 .progress {

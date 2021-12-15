@@ -5,6 +5,7 @@ import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontaweso
 import { ClipboardModule } from 'ngx-clipboard';
 import {
   faListOl,
+  faChevronLeft,
   faChevronRight,
   faEnvelope,
   faClipboardCheck,
@@ -92,6 +93,11 @@ import { FormationPlaceMapper } from '../lib/formation/place/mapper';
 import { ImageRepository } from '../lib/image/repository';
 import { S11PlayerComponent } from './player/info.component';
 import { S11PlayerInfoModalComponent } from './player/infomodal.component';
+import { TeamNameComponent } from './team/name.component';
+import { AgainstGameTitleComponent } from './againstgame/title.component';
+import { S11PlayerGameRoundStatisticsComponent } from './statistics/gameround.component';
+import { S11PlayerViewPeriodStatisticsComponent } from './statistics/viewperiod.component';
+import { PointsMapper } from '../lib/points/mapper';
 
 @NgModule({
   imports: [
@@ -104,22 +110,26 @@ import { S11PlayerInfoModalComponent } from './player/infomodal.component';
     ClipboardModule,
   ],
   declarations: [
-    PreNewComponent,
+    AgainstGameTitleComponent,
+    AssembleComponent,
+    AssembleLineComponent,
+    ChooseS11PlayersComponent,
+    ChooseFormationComponent,
+    ConfirmS11PlayerChoiceModalComponent,
     NewComponent,
     HomeComponent,
     InviteComponent,
     JoinComponent,
     PoolUsersComponent,
+    PreNewComponent,
     RulesComponent,
-    ScoutingComponent,
-    ChooseS11PlayersComponent,
-    AssembleComponent,
-    AssembleLineComponent,
-    ChooseFormationComponent,
-    ConfirmS11PlayerChoiceModalComponent,
     RemoveApprovalModalComponent,
     S11PlayerComponent,
-    S11PlayerInfoModalComponent
+    S11PlayerInfoModalComponent,
+    S11PlayerGameRoundStatisticsComponent,
+    S11PlayerViewPeriodStatisticsComponent,
+    ScoutingComponent,
+    TeamNameComponent
   ],
   providers: [
     AssociationMapper,
@@ -174,13 +184,14 @@ import { S11PlayerInfoModalComponent } from './player/infomodal.component';
     GameRoundMapper,
     EditActionMapper,
     FormationRepository,
-    PointsCalculator
+    PointsCalculator,
+    PointsMapper
   ]
 })
 export class PoolModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
-      faListOl, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
+      faListOl, faChevronLeft, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
       , faInfoCircle, faSearch, faPlusCircle, faPencilAlt/*faMoneyBillAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
       , faMedal, , faQrcode, faCopy, faDotCircle, faSync*/
