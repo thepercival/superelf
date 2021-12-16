@@ -98,6 +98,7 @@ import { AgainstGameTitleComponent } from './againstgame/title.component';
 import { S11PlayerGameRoundStatisticsComponent } from './statistics/gameround.component';
 import { S11PlayerViewPeriodStatisticsComponent } from './statistics/viewperiod.component';
 import { PointsMapper } from '../lib/points/mapper';
+import { StatisticsRepository } from '../lib/statistics/repository';
 
 @NgModule({
   imports: [
@@ -185,7 +186,8 @@ import { PointsMapper } from '../lib/points/mapper';
     EditActionMapper,
     FormationRepository,
     PointsCalculator,
-    PointsMapper
+    PointsMapper,
+    StatisticsRepository,
   ]
 })
 export class PoolModule {

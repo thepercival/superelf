@@ -1,10 +1,9 @@
-<div class="border-0 d-flex justify-content-center">
+<div *ngIf="totals && categoryPoints" class="border-0 d-flex justify-content-center">
     <!-- card-played -->
-    <div class="card m-2 align-self-start">
-        <div class="card-header border-success">
+    <div class="card m-2 align-self-start {{getBorderClass(categoryPoints.result)}}">
+        <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.result)}}">
             <span>wed. punten</span>
-            <span class="badge bg-totals float-end ms-1">{{totalsCalculator.getResultPoints(s11Player.getTotals(),
-                points)}}</span>
+            <span class="badge {{getBadgeClass(categoryPoints.result)}} float-end ms-1">{{categoryPoints.result}}</span>
         </div>
         <div class="card-body">
             <div>
@@ -12,25 +11,24 @@
                 <span class="float-end ms-1">{{totals.nrOfTimesStarted}}x</span>
             </div>
             <div>
-                <span>gewisseld</span>
-                <span class="float-end ms-1">{{totals.nrOfTimesSubstituted}}x</span>
-            </div>
-            <div>
                 <span>ingevallen</span>
                 <span class="float-end ms-1">{{totals.nrOfTimesSubstitute}}x</span>
             </div>
             <div>
+                <span>gewisseld</span>
+                <span class="float-end ms-1">{{totals.nrOfTimesSubstituted}}x</span>
+            </div>
+            <div>
                 <span>bank</span>
-                <span class="float-end ms-1">{{totals.nrOfTimesBench}}x</span>
+                <span class="float-end ms-1">{{totals.nrOfTimesNotAppeared}}x</span>
             </div>
         </div>
     </div>
     <!-- card-goals -->
-    <div class="card m-2 align-self-start">
-        <div class="card-header border-success">
+    <div class="card m-2 align-self-start {{getBorderClass(categoryPoints.goal)}}">
+        <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.goal)}}">
             <span>goals</span>
-            <span class="badge bg-totals float-end ms-1">{{totalsCalculator.getGoalPoints(line,
-                s11Player.getTotals(), points)}}</span>
+            <span class="badge {{getBadgeClass(categoryPoints.goal)}} float-end ms-1">{{categoryPoints.goal}}</span>
         </div>
         <div class="card-body">
             <div>
@@ -53,13 +51,12 @@
     </div>
 </div>
 
-<div class="border-0 d-flex justify-content-center">
+<div *ngIf="totals && categoryPoints" class="border-0 d-flex justify-content-center">
     <!-- card-defense -->
-    <div *ngIf="sheetActive" class="card m-2 align-self-start">
-        <div class="card-header border-success">
+    <div *ngIf="sheetActive" class="card m-2 align-self-start {{getBorderClass(categoryPoints.sheet)}}">
+        <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.sheet)}}">
             <span>tegengoals</span>
-            <span class="badge bg-totals float-end ms-1">{{totalsCalculator.getSheetPoints(line,
-                s11Player.getTotals(), points)}}</span>
+            <span class="badge {{getBadgeClass(categoryPoints.sheet)}} float-end ms-1">{{categoryPoints.sheet}}</span>
         </div>
         <div class="card-body">
             <div>
@@ -73,11 +70,10 @@
         </div>
     </div>
     <!-- card-cards -->
-    <div class="card m-2 align-self-start">
-        <div class="card-header border-success">
+    <div class="card m-2 align-self-start {{getBorderClass(categoryPoints.card)}}">
+        <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.card)}}">
             <span>kaarten</span>
-            <span class="badge bg-totals float-end ms-1">{{totalsCalculator.getCardPoints(
-                s11Player.getTotals(), points)}}</span>
+            <span class="badge {{getBadgeClass(categoryPoints.card)}} float-end ms-1">{{categoryPoints.card}}</span>
         </div>
         <div class="card-body">
             <div>

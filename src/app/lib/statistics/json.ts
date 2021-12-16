@@ -1,7 +1,8 @@
 import { FootballLine } from "ngx-sport";
+import { JsonGameRound } from "../gameRound/json";
 
 export interface JsonStatistics {
-    gameRoundNumber: number,
+    gameRound: JsonGameRound,
     result: number,
     beginMinute: number,
     endMinute: number,

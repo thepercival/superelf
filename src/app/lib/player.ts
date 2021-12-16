@@ -21,7 +21,7 @@ export class S11Player extends Identifiable {
     // static readonly Line = 4096;
 
     // protected total: number = 0;
-    protected statistics = new StatisticsMap();
+    protected statistics: StatisticsMap | undefined;
     // protected gameRoundScores: PlayerGameRoundScore[] = [];    
 
     constructor(
@@ -62,15 +62,19 @@ export class S11Player extends Identifiable {
         return player.getLine();
     }
 
-    public getStatistics(gameRound: number): Statistics | undefined {
-        return this.statistics.get(gameRound);
+    public hasStatistics(): boolean {
+        return this.statistics !== undefined;
     }
 
-    public setStatistics(gameRound: number, statistics: Statistics) {
-        this.statistics.set(gameRound, statistics);
+    public getGameStatistics(gameRound: number): Statistics | undefined {
+        return this.statistics?.get(gameRound) ?? undefined;
     }
 
-    public setAllStats(statisticsMap: StatisticsMap) {
+    // public setStatistics(gameRound: number, statistics: Statistics) {
+    //     this.statistics.set(gameRound, statistics);
+    // }
+
+    public setStatistics(statisticsMap: StatisticsMap) {
         return this.statistics = statisticsMap;
     }
 

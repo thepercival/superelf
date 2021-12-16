@@ -3,6 +3,8 @@ export interface JsonPlayerTotals {
     nrOfDraws: number;
     nrOfTimesStarted: number;
     nrOfTimesSubstituted: number;
+    nrOfTimesSubstitute: number;
+    nrOfTimesNotAppeared: number;
     nrOfFieldGoals: number;
     nrOfAssists: number;
     nrOfPenalties: number;

@@ -6,48 +6,35 @@ import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../repository';
 import { Competition, PersonMapper } from 'ngx-sport';
 import { ViewPeriod } from '../period/view';
+import { S11Player, StatisticsMap } from '../player';
+import { JsonStatistics } from './json';
+import { StatisticsMapper } from './mapper';
 
 
 @Injectable()
 export class StatisticsRepository extends APIRepository {
     constructor(
-        private personMapper: PersonMapper, private http: HttpClient) {
+        private mapper: StatisticsMapper,
+        private http: HttpClient) {
         super();
     }
 
-    getUrl(viewPeriod: ViewPeriod): string {
-        return super.getApiUrl() + 'viewperiods/' + viewPeriod.getId() + '/scoutedplayer';
+    getUrl(s11Player: S11Player): string {
+        return super.getApiUrl() + 'players/' + s11Player.getId() + '/statistics';
     }
 
-    // @TODO CDK UPDATE STATISTICS
-
-    // getObjects(sourceCompetition: Competition): Observable<ScoutedPerson[]> {
-    //     const association = sourceCompetition.getLeague().getAssociation();
-    //     return this.http.get<JsonScoutedPerson[]>(this.getUrl(sourceCompetition), this.getOptions()).pipe(
-    //         map((jsonScoutedPersons: JsonScoutedPerson[]) => jsonScoutedPersons.map(jsonScoutedPerson => {
-    //             return this.mapper.toObject(jsonScoutedPerson, association);
-    //         })),
-    //         catchError((err) => this.handleError(err))
-    //     );
-    // }
-
-    // createObject(person: Person, sourceCompetition: Competition): Observable<ScoutedPerson> {
-    //     const association = sourceCompetition.getLeague().getAssociation();
-    //     const json: JsonScoutedPerson = {
-    //         id: 0,
-    //         person: this.personMapper.toJson(person),
-    //         nrOfStars: 0
-    //     };
-    //     return this.http.post<JsonScoutedPerson>(this.getUrl(sourceCompetition), json, { headers: super.getHeaders() }).pipe(
-    //         map((jsonScoutedPerson: JsonScoutedPerson) => this.mapper.toObject(jsonScoutedPerson, association)),
-    //         catchError((err) => this.handleError(err))
-    //     );
-    // }
-
-    // removeObject(scoutedPerson: ScoutedPerson, sourceCompetition: Competition): Observable<void> {
-    //     const url = this.getUrl(sourceCompetition) + '/' + scoutedPerson.getId();
-    //     return this.http.delete(url, this.getOptions()).pipe(
-    //         catchError((err) => this.handleError(err))
-    //     );
-    // }
+    getObjects(s11Player: S11Player): Observable<StatisticsMap> {
+        return this.http.get<JsonStatistics[]>(this.getUrl(s11Player), this.getOptions()).pipe(
+            map((jsonStatistics: JsonStatistics[]) => {
+                const map = new StatisticsMap();
+                jsonStatistics.forEach((jsonGameRoundStatistics: JsonStatistics) => {
+                    map.set(
+                        jsonGameRoundStatistics.gameRound.number,
+                        this.mapper.toObject(jsonGameRoundStatistics));
+                });
+                return map;
+            }),
+            catchError((err) => this.handleError(err))
+        );
+    }
 }

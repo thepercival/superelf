@@ -15,14 +15,14 @@ export class S11PlayerMapper {
         const person = this.personMapper.toObject(json.person, association, undefined);
         const player = new S11Player(viewPeriod, person, json.totals, json.totalPoints);
         player.setId(json.id);
-        if (json.statistics) {
-            json.statistics.forEach((jsonStatistics) => {
-                // const gameRound = viewPeriod.getGameRound(jsonStatistics.gameRoundNumber);
-                player.setStatistics(
-                    jsonStatistics.gameRoundNumber, this.statisticsMapper.toObject(jsonStatistics)
-                );
-            });
-        }
+        // if (json.statistics) {
+        //     json.statistics.forEach((jsonStatistics) => {
+        //         // const gameRound = viewPeriod.getGameRound(jsonStatistics.gameRoundNumber);
+        //         player.setStatistics(
+        //             jsonStatistics.gameRoundNumber, this.statisticsMapper.toObject(jsonStatistics)
+        //         );
+        //     });
+        // }
         // player.setPoints(json.points);
         // player.setTotal(json.total);
         // console.log(json.gameRoundScores)

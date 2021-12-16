@@ -16,16 +16,24 @@ export class Statistics {
         return this.json.beginMinute;
     }
 
-    public isStarting(): boolean {
-        return this.getBeginMinute() === 0;
-    }
-
     public getEndMinute(): number {
         return this.json.endMinute;
     }
 
+    public isStarting(): boolean {
+        return this.json.beginMinute === 0;
+    }
+
+    public isSubstitute(): boolean {
+        return this.json.beginMinute > 0;
+    }
+
+    public hasAppeared(): boolean {
+        return this.isStarting() || this.isSubstitute();
+    }
+
     public isSubstituted(): boolean {
-        return this.getEndMinute() > 0;
+        return this.json.endMinute > 0;
     }
 
     public getNrOfFieldGoals(): number {
