@@ -1,7 +1,8 @@
+import { AgainstGame, CompetitorMap, Player } from 'ngx-sport';
 import { ViewPeriod } from './period/view';
 
 export class GameRound {
-    protected againstGames: AgainstGame[];
+    protected againstGames: AgainstGame[] | undefined;
 
     constructor(protected viewPeriod: ViewPeriod, protected number: number) {
         viewPeriod.getGameRounds().push(this);
@@ -14,4 +15,31 @@ export class GameRound {
     public getViewPeriod(): ViewPeriod {
         return this.viewPeriod;
     }
+
+    public hasAgainstGames(): boolean {
+        return this.againstGames !== undefined && this.againstGames.length > 0;
+    }
+
+    public getAgainstGames(): AgainstGame[] {
+        if (this.againstGames === undefined) {
+            throw new Error('gameround has uninitialized againstgames');
+        }
+        return this.againstGames;
+    }
+
+    public setAgainstGames(againstGames: AgainstGame[]): void {
+        this.againstGames = againstGames;
+    }
+
+    public getGame(players: Player[], competitorMap: CompetitorMap): AgainstGame | undefined {
+        return this.getAgainstGames().find((againstGame: AgainstGame): boolean => {
+            return players.some((player: Player): boolean => {
+                if (!player.isIn(againstGame.getStartDateTime())) {
+                    return false;
+                }
+                return againstGame.hasCompetitor(competitorMap);
+            });
+        });
+    }
+
 }

@@ -6,7 +6,9 @@ import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
 import { Competition, CompetitionMapper, JsonCompetition } from 'ngx-sport';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CompetitionRepository extends APIRepository {
 
     constructor(

@@ -3,7 +3,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FootballLine } from 'ngx-sport';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
-import { Points } from '../../lib/points';
+import { Pool } from '../../lib/pool';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 
 @Component({
@@ -13,7 +13,7 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 })
 export class S11PlayerInfoModalComponent implements OnInit {
     @Input() s11Player!: S11Player;
-    @Input() points!: Points;
+    @Input() pool!: Pool;
 
     constructor(
         public activeModal: NgbActiveModal,

@@ -149,7 +149,7 @@ export class ScoutingComponent extends PoolComponent implements OnInit {
     }
     const modalRef = this.modalService.open(S11PlayerInfoModalComponent, { centered: false });
     modalRef.componentInstance.s11Player = s11Player;
-    modalRef.componentInstance.points = this.pool.getPoints();
+    modalRef.componentInstance.pool = this.pool;
     // modalRef.componentInstance.name = poolUser.getName();
     modalRef.result.then((result) => {
       // this.remove(poolUser);

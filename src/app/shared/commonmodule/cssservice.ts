@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { FootballLine, HorizontalPoule, MultipleQualifyRule, Place, QualifyGroup, QualifyTarget, Round, SingleQualifyRule } from 'ngx-sport';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CSSService {
     getQualifyPlace(place: Place): string {
         const horPouleWinners = place.getHorizontalPoule(QualifyTarget.Winners);

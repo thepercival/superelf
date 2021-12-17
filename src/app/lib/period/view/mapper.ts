@@ -4,8 +4,9 @@ import { GameRoundMapper } from '../../gameRound/mapper';
 import { ViewPeriod } from '../view';
 import { JsonViewPeriod } from './json';
 
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ViewPeriodMapper {
     constructor(protected gameRoundMapper: GameRoundMapper) { }
 

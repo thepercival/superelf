@@ -5,8 +5,9 @@ import { S11FormationLine } from '../line';
 import { S11FormationPlace } from '../place';
 import { JsonS11FormationPlace } from './json';
 
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class FormationPlaceMapper {
     constructor(protected playerMapper: S11PlayerMapper) { }
 

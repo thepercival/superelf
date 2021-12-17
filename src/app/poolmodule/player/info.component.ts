@@ -1,11 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AgainstGame, Person, Player } from 'ngx-sport';
+import { AgainstGame, Competition, CompetitorMap, Player, Structure } from 'ngx-sport';
+import { Observable, of } from 'rxjs';
 import { GameRound } from '../../lib/gameRound';
 import { ImageRepository } from '../../lib/image/repository';
+import { GameRepository } from '../../lib/ngx-sport/game/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player, StatisticsMap } from '../../lib/player';
-import { Points } from '../../lib/points';
 import { PointsCalculator } from '../../lib/points/calculator';
+import { Pool } from '../../lib/pool';
 import { Statistics } from '../../lib/statistics';
 import { StatisticsRepository } from '../../lib/statistics/repository';
 
@@ -18,13 +21,14 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 })
 export class S11PlayerComponent implements OnInit {
   @Input() s11Player!: S11Player;
-  @Input() points!: Points;
+  @Input() pool!: Pool;
   @Input() currentGameRound: GameRound | undefined;
   // @Input() team: Team | undefined;
   public processing = true;
   public processingGames = false;
   public currentGame: AgainstGame | undefined;
   public currentStatistics: Statistics | undefined;
+  public sourceStructure: Structure | undefined;
   // public teamImageUrl: string | undefined;
   // public teamName: string = '';
   // public personImageUrl: string | undefined;
@@ -36,6 +40,8 @@ export class S11PlayerComponent implements OnInit {
 
   constructor(
     private statisticsRepository: StatisticsRepository,
+    private structureRepository: StructureRepository,
+    private gameRepository: GameRepository,
     public imageRepository: ImageRepository,
     public cssService: CSSService) {
     this.pointsCalculator = new PointsCalculator();
@@ -96,23 +102,35 @@ export class S11PlayerComponent implements OnInit {
       this.player = this.oneTeamSimultaneous.getCurrentPlayer(this.s11Player.getPerson());
       this.currentStatistics = undefined;
       this.currentGame = undefined;
-    } else {
-      this.currentStatistics = this.s11Player.getGameStatistics(this.currentGameRound.getNumber());
+      return;
+    }
+    this.currentStatistics = this.s11Player.getGameStatistics(this.currentGameRound.getNumber());
 
-      // laad alleen de game-title!!!
-      this.processingGames = true;
-      if (this.currentGameRound.)
-        this.statisticsRepository.getObjects(this.s11Player).subscribe({
+    if (this.currentGameRound.hasAgainstGames()) {
+      return;
+    }
+    this.processingGames = true;
+    this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
+      next: (structure: Structure) => {
+        this.sourceStructure = structure;
+        const sourcePoule = structure.getRootRound().getFirstPoule();
+
+        this.gameRepository.getSourceObjects(sourcePoule, <GameRound>this.currentGameRound).subscribe({
           next: (againstGames: AgainstGame[]) => {
-
+            const competitorMap = new CompetitorMap(this.pool.getSourceCompetition().getTeamCompetitors());
+            this.currentGame = this.currentGameRound?.getGame(this.s11Player.getPerson().getPlayers(), competitorMap);
           },
           complete: () => this.processingGames = false
         });
-      // obv gameRoundNumber zou je moeten kunnen bepalen welke speler je moet hebben.
-      //  de periode van de gameroundnummer kun je uit de wedstrijden halen
-      // this.currentGame = undefined;
-      // this.player = this.oneTeamSimultaneous.getCurrentPlayer(this.s11Player.getPerson());
+      }
+    });
+  }
+
+  getSourceStructure(competition: Competition): Observable<Structure> {
+    if (this.sourceStructure !== undefined) {
+      return of(this.sourceStructure);
     }
+    return this.structureRepository.getObject(competition);
   }
 
   previousGameRound(): void {
@@ -142,7 +160,7 @@ export class S11PlayerComponent implements OnInit {
     if (this.currentStatistics === undefined) {
       return 0;
     }
-    return this.pointsCalculator.getPoints(this.s11Player.getLine(), this.currentStatistics, this.points);
+    return this.pointsCalculator.getPoints(this.s11Player.getLine(), this.currentStatistics, this.pool.getPoints());
   }
 
   // getGame(): AgainstGame | undefined {

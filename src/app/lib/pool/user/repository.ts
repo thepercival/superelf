@@ -9,9 +9,10 @@ import { PoolUser } from '../user';
 import { AuthService } from '../../auth/auth.service';
 import { JsonPoolUser } from './json';
 import { PoolUserMapper } from './mapper';
-import { User } from '../../user';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PoolUserRepository extends APIRepository {
 
     constructor(

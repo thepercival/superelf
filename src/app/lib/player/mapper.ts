@@ -4,9 +4,10 @@ import { ViewPeriod } from '../period/view';
 import { S11Player } from '../player';
 import { JsonS11Player } from './json';
 import { StatisticsMapper } from '../statistics/mapper';
-import { Totals } from '../totals';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class S11PlayerMapper {
     constructor(protected personMapper: PersonMapper, protected statisticsMapper: StatisticsMapper) { }
 

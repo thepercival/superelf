@@ -4,14 +4,13 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
-import { Competition, PersonMapper } from 'ngx-sport';
-import { ViewPeriod } from '../period/view';
 import { S11Player, StatisticsMap } from '../player';
 import { JsonStatistics } from './json';
 import { StatisticsMapper } from './mapper';
 
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class StatisticsRepository extends APIRepository {
     constructor(
         private mapper: StatisticsMapper,

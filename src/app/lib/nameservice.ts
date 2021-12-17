@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { FootballLine } from 'ngx-sport';
 import { ScoreUnit } from './scoreUnit';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SuperElfNameService {
     constructor() {
     }

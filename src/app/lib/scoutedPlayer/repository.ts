@@ -11,8 +11,9 @@ import { ViewPeriod } from '../period/view';
 import { S11Player } from '../player';
 import { S11PlayerMapper } from '../player/mapper';
 
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ScoutedPlayerRepository extends APIRepository {
     constructor(
         private mapper: ScoutedPlayerMapper, private s11PlayerMapper: S11PlayerMapper, private http: HttpClient) {

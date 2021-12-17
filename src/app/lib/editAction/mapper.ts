@@ -7,7 +7,9 @@ import { Transfer } from './transfer';
 
 import { JsonTransfer } from './transfer/json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class EditActionMapper {
     constructor(
         protected personMapper: PersonMapper) { }

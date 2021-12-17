@@ -4,7 +4,9 @@ import { TransferPeriod } from '../transfer';
 import { ViewPeriodMapper } from '../view/mapper';
 import { JsonTransferPeriod } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class TransferPeriodMapper {
     constructor(protected viewPeriodMapper: ViewPeriodMapper) { }
 

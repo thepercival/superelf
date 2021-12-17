@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { S11Formation } from '../../formation';
 import { ViewPeriod } from '../../period/view';
-import { JsonS11Player } from '../../player/json';
 import { S11PlayerMapper } from '../../player/mapper';
 import { S11FormationLine } from '../line';
 import { JsonS11FormationPlace } from '../place/json';
 import { FormationPlaceMapper } from '../place/mapper';
 import { JsonS11FormationLine } from './json';
 
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class S11FormationLineMapper {
     constructor(protected placeMapper: FormationPlaceMapper, protected playerMapper: S11PlayerMapper) { }
 

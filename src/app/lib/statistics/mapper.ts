@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { PersonMapper } from 'ngx-sport';
-import { ViewPeriod } from '../period/view';
 import { ScoreUnit } from '../scoreUnit';
 import { Statistics } from '../statistics';
 import { JsonStatistics } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class StatisticsMapper {
     constructor(protected personMapper: PersonMapper) { }
 

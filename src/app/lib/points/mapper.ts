@@ -3,7 +3,9 @@ import { Points } from '../points';
 
 import { JsonPoints } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PointsMapper {
     constructor() { }
 

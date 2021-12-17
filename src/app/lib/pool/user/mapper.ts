@@ -8,7 +8,9 @@ import { PoolCompetitorMapper } from '../competitor/mapper';
 import { PoolUser } from '../user';
 import { JsonPoolUser } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PoolUserMapper {
     constructor(
         protected userMapper: UserMapper,

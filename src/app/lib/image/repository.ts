@@ -1,11 +1,11 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { APIRepository } from '../repository';
 import { Player, Team } from 'ngx-sport';
 
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ImageRepository extends APIRepository {
 
     constructor() {

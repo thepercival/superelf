@@ -3,8 +3,9 @@ import { GameRound } from '../gameRound';
 import { ViewPeriod } from '../period/view';
 import { JsonGameRound } from './json';
 
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class GameRoundMapper {
     constructor() { }
 

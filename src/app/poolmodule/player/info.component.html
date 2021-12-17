@@ -31,16 +31,19 @@
                 </button>
             </div>
         </div>
-        <div *ngIf="currentGame">
+        <h2 *ngIf="processingGames" class="text-center">
+            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        </h2>
+        <div *ngIf="!processingGames && currentGame">
             <app-againstgame-title [againstGame]="currentGame"></app-againstgame-title>
         </div>
         <div>
             <app-s11player-viewperiod-statistics *ngIf="!currentGameRound" [totals]="s11Player.getTotals()"
-                [line]="s11Player.getLine()" [points]="points">
+                [line]="s11Player.getLine()" [points]="pool.getPoints()">
             </app-s11player-viewperiod-statistics>
             <app-s11player-gameround-statistics *ngIf="currentGameRound"
                 [statistics]="s11Player.getGameStatistics(currentGameRound.getNumber())" [line]="s11Player.getLine()"
-                [points]="points">
+                [points]="pool.getPoints()">
             </app-s11player-gameround-statistics>
         </div>
     </div>

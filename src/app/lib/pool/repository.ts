@@ -11,7 +11,9 @@ import { JsonPool } from './json';
 import { PoolMapper } from './mapper';
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PoolRepository extends APIRepository {
 
     private url: string;

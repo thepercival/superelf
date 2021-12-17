@@ -10,8 +10,9 @@ import { S11PlayerMapper } from './mapper';
 import { JsonS11Player } from './json';
 import { S11Player } from '../player';
 
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class S11PlayerRepository extends APIRepository {
     constructor(
         private mapper: S11PlayerMapper, private personMapper: PersonMapper, private http: HttpClient) {

@@ -4,7 +4,9 @@ import { PoolCollection } from '../collection';
 
 import { JsonPoolCollection } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PoolCollectionMapper {
     constructor(protected associationMapper: AssociationMapper) { }
 

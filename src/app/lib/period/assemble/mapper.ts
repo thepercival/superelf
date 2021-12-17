@@ -4,7 +4,9 @@ import { AssemblePeriod } from '../assemble';
 import { ViewPeriodMapper } from '../view/mapper';
 import { JsonAssemblePeriod } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class AssemblePeriodMapper {
     constructor(protected viewPeriodMapper: ViewPeriodMapper) { }
 

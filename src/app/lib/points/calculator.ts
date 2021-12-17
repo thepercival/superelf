@@ -53,7 +53,6 @@ export class PointsCalculator {
 
     public getCardPoints(statistics: Statistics, points: Points): number {
         let total = statistics.getNrOfYellowCards() * points.getCardYellow();
-        console.log(total, statistics.getNrOfYellowCards(), points.getCardYellow());
         total += statistics.gotDirectRedCard() ? points.getCardRed() : 0;
         return total;
     }

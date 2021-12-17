@@ -5,7 +5,9 @@ import { ScoreUnit } from '../scoreUnit';
 import { ScoutedPlayer } from '../scoutedPlayer';
 import { JsonScoutedPlayer } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ScoutedPlayerMapper {
     constructor(protected s11PlayerMapper: S11PlayerMapper) { }
 

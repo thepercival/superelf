@@ -10,7 +10,9 @@ import { TransferPeriodMapper } from '../period/transfer/mapper';
 import { ViewPeriodMapper } from '../period/view/mapper';
 import { PointsMapper } from '../points/mapper';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PoolMapper {
     constructor(
         private collectionMapper: PoolCollectionMapper,

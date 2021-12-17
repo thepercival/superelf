@@ -7,7 +7,9 @@ import { S11FormationLine } from './line';
 import { JsonS11FormationLine } from './line/json';
 import { S11FormationLineMapper } from './line/mapper';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class S11FormationMapper {
     constructor(protected lineMapper: S11FormationLineMapper) { }
 

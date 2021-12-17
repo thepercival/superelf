@@ -5,7 +5,9 @@ import { Competition } from 'ngx-sport';
 import { JsonPoolCompetitor } from './json';
 import { PoolUser } from '../user';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PoolCompetitorMapper {
     constructor() { }
 
