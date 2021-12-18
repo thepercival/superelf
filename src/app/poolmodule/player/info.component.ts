@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AgainstGame, Competition, CompetitorMap, Player, Structure } from 'ngx-sport';
+import { AgainstGame, Competition, CompetitorMap, Player, State, Structure } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 import { GameRound } from '../../lib/gameRound';
+import { GamePicker } from '../../lib/gameRound/gamePicker';
 import { ImageRepository } from '../../lib/image/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
@@ -29,6 +30,7 @@ export class S11PlayerComponent implements OnInit {
   public currentGame: AgainstGame | undefined;
   public currentStatistics: Statistics | undefined;
   public sourceStructure: Structure | undefined;
+  public competitorMap!: CompetitorMap;
   // public teamImageUrl: string | undefined;
   // public teamName: string = '';
   // public personImageUrl: string | undefined;
@@ -53,6 +55,8 @@ export class S11PlayerComponent implements OnInit {
     //   this.teamImageUrl = this.team.getImageUrl();
     // }
     // this.personImageUrl = this.person?.getImageUrl();
+
+    this.competitorMap = new CompetitorMap(this.pool.getSourceCompetition().getTeamCompetitors());
 
     this.initSliderGameRounds();
 
@@ -81,14 +85,6 @@ export class S11PlayerComponent implements OnInit {
     }
   }
 
-  // updateCurrentGame() {
-  //   if (this.currentGameRound === undefined) {
-  //     this.currentGame = undefined;
-  //     return;
-  //   }
-  //   this.currentGame = undefined; // this.currentGameRound.getNumber(), s11Player, 
-  // }
-
   getTeamImageUrl(player: Player): string {
     return this.imageRepository.getTeamUrl(player.getTeam());
   }
@@ -98,15 +94,17 @@ export class S11PlayerComponent implements OnInit {
   }
 
   updateGameRound(): void {
-    if (this.currentGameRound === undefined) {
+    const currentGameRound = this.currentGameRound;
+    if (currentGameRound === undefined) {
       this.player = this.oneTeamSimultaneous.getCurrentPlayer(this.s11Player.getPerson());
       this.currentStatistics = undefined;
       this.currentGame = undefined;
       return;
     }
-    this.currentStatistics = this.s11Player.getGameStatistics(this.currentGameRound.getNumber());
+    this.currentStatistics = this.s11Player.getGameStatistics(currentGameRound.getNumber());
 
-    if (this.currentGameRound.hasAgainstGames()) {
+    if (currentGameRound.hasAgainstGames()) {
+      this.currentGame = (new GamePicker(currentGameRound)).getGame(this.s11Player.getPerson());
       return;
     }
     this.processingGames = true;
@@ -115,10 +113,9 @@ export class S11PlayerComponent implements OnInit {
         this.sourceStructure = structure;
         const sourcePoule = structure.getRootRound().getFirstPoule();
 
-        this.gameRepository.getSourceObjects(sourcePoule, <GameRound>this.currentGameRound).subscribe({
+        this.gameRepository.getSourceObjects(sourcePoule, currentGameRound).subscribe({
           next: (againstGames: AgainstGame[]) => {
-            const competitorMap = new CompetitorMap(this.pool.getSourceCompetition().getTeamCompetitors());
-            this.currentGame = this.currentGameRound?.getGame(this.s11Player.getPerson().getPlayers(), competitorMap);
+            this.currentGame = (new GamePicker(currentGameRound)).getGame(this.s11Player.getPerson());
           },
           complete: () => this.processingGames = false
         });
@@ -136,6 +133,7 @@ export class S11PlayerComponent implements OnInit {
   previousGameRound(): void {
     this.currentGameRound = this.sliderGameRounds.pop();
     this.sliderGameRounds.unshift(this.currentGameRound);
+    console.log('currentGameRound', this.currentGameRound);
     this.updateGameRound();
   }
 

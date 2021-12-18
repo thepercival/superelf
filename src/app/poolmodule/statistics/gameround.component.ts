@@ -46,7 +46,8 @@ export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsCo
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.statistics.currentValue !== changes.statistics.previousValue) {
+    if (changes.statistics.currentValue !== changes.statistics.previousValue
+      && changes.statistics.currentValue !== undefined) {
       this.categoryPoints = {
         result: this.pointsCalculator.getResultPoints(changes.statistics.currentValue, this.points),
         goal: this.pointsCalculator.getGoalPoints(this.line, changes.statistics.currentValue, this.points),

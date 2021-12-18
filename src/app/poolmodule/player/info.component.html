@@ -31,11 +31,15 @@
                 </button>
             </div>
         </div>
-        <h2 *ngIf="processingGames" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-        </h2>
-        <div *ngIf="!processingGames && currentGame">
-            <app-againstgame-title [againstGame]="currentGame"></app-againstgame-title>
+
+        <div class="text-center mt-3 mb-2">
+            <h2 *ngIf="processingGames" class="text-center">
+                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+            </h2>
+            <button *ngIf="!processingGames && currentGame" type="button" class="btn btn-outline-primary"
+                (click)="previousGameRound()">
+                <app-againstgame-title [againstGame]="currentGame"></app-againstgame-title>
+            </button>
         </div>
         <div>
             <app-s11player-viewperiod-statistics *ngIf="!currentGameRound" [totals]="s11Player.getTotals()"

@@ -30,16 +30,4 @@ export class GameRound {
     public setAgainstGames(againstGames: AgainstGame[]): void {
         this.againstGames = againstGames;
     }
-
-    public getGame(players: Player[], competitorMap: CompetitorMap): AgainstGame | undefined {
-        return this.getAgainstGames().find((againstGame: AgainstGame): boolean => {
-            return players.some((player: Player): boolean => {
-                if (!player.isIn(againstGame.getStartDateTime())) {
-                    return false;
-                }
-                return againstGame.hasCompetitor(competitorMap);
-            });
-        });
-    }
-
 }

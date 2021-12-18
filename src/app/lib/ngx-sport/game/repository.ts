@@ -31,6 +31,7 @@ export class GameRepository extends APIRepository {
                     return this.mapper.toNewAgainst(jsonAgainstGame, poule, poule.getCompetition().getSingleSport());
                 });
                 gameRound.setAgainstGames(againstGames);
+                return againstGames;
             }),
             catchError((err) => this.handleError(err))
         );
