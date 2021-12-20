@@ -24,6 +24,9 @@ export class PlayerTotalsCalculator {
     }
 
     public getSheetPoints(line: FootballLine, jsonTotals: JsonPlayerTotals, points: Points): number {
+        if (line !== FootballLine.GoalKepeer && line !== FootballLine.Defense) {
+            return 0;
+        }
         return this.getCleanSheetPoints(line, jsonTotals, points)
             + this.getSpottySheetPoints(line, jsonTotals, points);
     }

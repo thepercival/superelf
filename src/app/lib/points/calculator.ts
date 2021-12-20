@@ -39,6 +39,9 @@ export class PointsCalculator {
     }
 
     public getSheetPoints(line: FootballLine, statistics: Statistics, points: Points): number {
+        if (line !== FootballLine.GoalKepeer && line !== FootballLine.Defense) {
+            return 0;
+        }
         return this.getCleanSheetPoints(line, statistics, points)
             + this.getSpottySheetPoints(line, statistics, points);
     }

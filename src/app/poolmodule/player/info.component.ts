@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationStart, Params, Router } from '@angular/router';
 import { AgainstGame, Competition, CompetitorMap, Player, State, Structure } from 'ngx-sport';
-import { Observable, of } from 'rxjs';
+import { concatMap, map, Observable, of } from 'rxjs';
 import { GameRound } from '../../lib/gameRound';
 import { GamePicker } from '../../lib/gameRound/gamePicker';
 import { ImageRepository } from '../../lib/image/repository';
@@ -14,6 +15,7 @@ import { Statistics } from '../../lib/statistics';
 import { StatisticsRepository } from '../../lib/statistics/repository';
 
 import { CSSService } from '../../shared/commonmodule/cssservice';
+import { MyNavigation } from '../../shared/commonmodule/navigation';
 
 @Component({
   selector: 'app-s11player-info',
@@ -21,19 +23,18 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
   styleUrls: ['./info.component.scss']
 })
 export class S11PlayerComponent implements OnInit {
-  @Input() s11Player!: S11Player;
-  @Input() pool!: Pool;
-  @Input() currentGameRound: GameRound | undefined;
+  public s11Player!: S11Player;
+  public pool!: Pool;
+  public currentGameRound: GameRound | undefined;
+
   // @Input() team: Team | undefined;
   public processing = true;
   public processingGames = false;
   public currentGame: AgainstGame | undefined;
   public currentStatistics: Statistics | undefined;
+  public currentPoints: number | undefined;
   public sourceStructure: Structure | undefined;
   public competitorMap!: CompetitorMap;
-  // public teamImageUrl: string | undefined;
-  // public teamName: string = '';
-  // public personImageUrl: string | undefined;
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public player: Player | undefined;
@@ -45,16 +46,26 @@ export class S11PlayerComponent implements OnInit {
     private structureRepository: StructureRepository,
     private gameRepository: GameRepository,
     public imageRepository: ImageRepository,
-    public cssService: CSSService) {
+    public cssService: CSSService,
+    private myNavigation: MyNavigation,
+    private route: ActivatedRoute,
+    private router: Router) {
+    const state = this.router.getCurrentNavigation()?.extras.state ?? undefined;
+    if (state !== undefined) {
+      this.s11Player = state.s11Player;
+      this.pool = state.pool;
+      this.currentGameRound = state.currentGameRound ?? undefined;
+    }
     this.pointsCalculator = new PointsCalculator();
   }
 
   ngOnInit() {
-    // if (this.team) {
-    //   this.teamName = this.team?.getName();
-    //   this.teamImageUrl = this.team.getImageUrl();
-    // }
-    // this.personImageUrl = this.person?.getImageUrl();
+    if (this.s11Player === undefined) {
+      this.route.params.subscribe(params => {
+        this.router.navigate(['/pool', +params['id']]);
+      });
+      return
+    }
 
     this.competitorMap = new CompetitorMap(this.pool.getSourceCompetition().getTeamCompetitors());
 
@@ -161,11 +172,7 @@ export class S11PlayerComponent implements OnInit {
     return this.pointsCalculator.getPoints(this.s11Player.getLine(), this.currentStatistics, this.pool.getPoints());
   }
 
-  // getGame(): AgainstGame | undefined {
-  //   // wt is bekend
-
-  //   1 this.currentGameRound.getAgainstGames ?
-  //     2 this.s11Player.getPerson().getPlayer()
-  //   //
-  // }
+  navigateBack() {
+    this.myNavigation.back();
+  }
 }

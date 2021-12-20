@@ -54,9 +54,9 @@
       [selectWarningTeamMap]="selectedTeamMap" [selectableLines]="selectedSearchLine">
     </app-pool-choosepersons> -->
     <app-pool-choose-players *ngIf="selectedPlace && showSearchSMDown && !updatingPlayer"
-      [viewPeriod]="pool.getCreateAndJoinPeriod()" [selectedSearchLine]="selectedSearchLine"
-      [alreadyChosenPersons]="getPersons()" [alreadyChosenTeams]="getTeams(selectedPlace.getPlayer())"
-      (selectS11Player)="updatePlace($event, true)" (close)="selectedPlace = undefined">
+      [viewPeriod]="pool.getCreateAndJoinPeriod()" [alreadyChosenPersons]="getPersons()"
+      [alreadyChosenTeams]="getTeams(selectedPlace.getPlayer())" (selectS11Player)="updatePlace($event, true)"
+      (close)="selectedPlace = undefined">
     </app-pool-choose-players>
   </div>
 </div>

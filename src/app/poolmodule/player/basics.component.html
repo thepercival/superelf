@@ -1,0 +1,15 @@
+<div>
+    <div class="d-flex justify-content-center">
+        <div *ngIf="player" class="player-img d-flex justify-content-between"
+            style="background-image: url('{{getPlayerImageUrl(player)}}');">
+            <app-lineicon *ngIf="player" [line]="player.getLine()"></app-lineicon>
+            <div>
+                <span *ngIf="points !== undefined" class="badge bg-totals">{{points}}</span>
+            </div>
+        </div>
+        <fa-icon *ngIf="!player" [icon]="['fas', 'user-circle']" size="10x"></fa-icon>
+    </div>
+    <div class="d-flex justify-content-center mt-1">
+        <app-team-name *ngIf="player" [team]="player.getTeam()" [fullName]="true"></app-team-name>
+    </div>
+</div>

@@ -61,9 +61,8 @@ import { PoolUserMapper } from '../lib/pool/user/mapper';
 import { PoolCompetitorMapper } from '../lib/pool/competitor/mapper';
 import { PoolUsersComponent } from './poolusers/poolusers.component';
 import { PoolUserRepository } from '../lib/pool/user/repository';
-import { RemoveApprovalModalComponent } from './removeapproval/removeapprovalmodal.component';
 import { InviteComponent } from './invite/invite.component';
-import { ScoutingComponent } from './scouting/scouting.component';
+import { ScoutingListComponent } from './scouting/list.component';
 import { ScoutedPlayerRepository } from '../lib/scoutedPlayer/repository';
 import { ScoutedPlayerMapper } from '../lib/scoutedPlayer/mapper';
 import { PersonRepository } from '../lib/ngx-sport/person/repository';
@@ -72,7 +71,6 @@ import { ActiveConfigMapper } from '../lib/activeConfig/mapper';
 import { CompetitionRepository } from '../lib/ngx-sport/competition/repository';
 import { PlayerRepository } from '../lib/ngx-sport/player/repository';
 import { ChooseS11PlayersComponent } from './chooseplayers/list.component';
-import { ConfirmS11PlayerChoiceModalComponent } from './chooseplayers/confirmchoicemodal.component';
 import { ViewPeriodMapper } from '../lib/period/view/mapper';
 import { AssembleComponent } from './assemble/assemble.component';
 import { S11FormationMapper } from '../lib/formation/mapper';
@@ -83,7 +81,6 @@ import { EditActionMapper } from '../lib/editAction/mapper';
 import { FormationRepository } from '../lib/formation/repository';
 import { ChooseFormationComponent } from './assemble/chooseformation.component';
 import { AssembleLineComponent } from './assemble/assembleline.component';
-import { PointsCalculator } from '../lib/points/calculator';
 import { S11PlayerRepository } from '../lib/player/repository';
 import { S11PlayerMapper } from '../lib/player/mapper';
 import { GameRoundMapper } from '../lib/gameRound/mapper';
@@ -92,13 +89,16 @@ import { SuperElfNameService } from '../lib/nameservice';
 import { FormationPlaceMapper } from '../lib/formation/place/mapper';
 import { ImageRepository } from '../lib/image/repository';
 import { S11PlayerComponent } from './player/info.component';
-import { S11PlayerInfoModalComponent } from './player/infomodal.component';
+import { S11PlayerAddRemoveModalComponent } from './player/addremovemodal.component';
 import { TeamNameComponent } from './team/name.component';
 import { AgainstGameTitleComponent } from './againstgame/title.component';
 import { S11PlayerGameRoundStatisticsComponent } from './statistics/gameround.component';
 import { S11PlayerViewPeriodStatisticsComponent } from './statistics/viewperiod.component';
 import { PointsMapper } from '../lib/points/mapper';
 import { StatisticsRepository } from '../lib/statistics/repository';
+import { PlayerBasicsComponent } from './player/basics.component';
+import { ScoutingSearchComponent } from './scouting/search.component';
+import { PoolUserRemoveModalComponent } from './poolusers/removemodal.component';
 
 @NgModule({
   imports: [
@@ -116,7 +116,7 @@ import { StatisticsRepository } from '../lib/statistics/repository';
     AssembleLineComponent,
     ChooseS11PlayersComponent,
     ChooseFormationComponent,
-    ConfirmS11PlayerChoiceModalComponent,
+    S11PlayerAddRemoveModalComponent,
     NewComponent,
     HomeComponent,
     InviteComponent,
@@ -124,12 +124,13 @@ import { StatisticsRepository } from '../lib/statistics/repository';
     PoolUsersComponent,
     PreNewComponent,
     RulesComponent,
-    RemoveApprovalModalComponent,
+    PoolUserRemoveModalComponent,
     S11PlayerComponent,
-    S11PlayerInfoModalComponent,
+    PlayerBasicsComponent,
     S11PlayerGameRoundStatisticsComponent,
     S11PlayerViewPeriodStatisticsComponent,
-    ScoutingComponent,
+    ScoutingListComponent,
+    ScoutingSearchComponent,
     TeamNameComponent
   ],
   providers: [

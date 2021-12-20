@@ -1,0 +1,14 @@
+<div class="modal-header border-bottom-0 text-white {{getLineClass()}}">
+    <h5 class="">{{s11Player.getPerson()?.getName() ?? 'onbekend'}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+        (click)="activeModal.dismiss()"></button>
+</div>
+<div class="modal-body p-0">
+    <app-player-basics [player]="player" [points]="s11Player.getTotalPoints()"></app-player-basics>
+</div>
+<div class="modal-footer d-flex justify-content-center">
+    <button *ngIf="action === Remove" type="button" class="btn btn-danger" data-dismiss="modal"
+        (click)="activeModal.close(s11Player)">verwijderen</button>
+    <button *ngIf="action === Add" type="button" class="btn btn-success" data-dismiss="modal"
+        (click)="activeModal.close(s11Player)">toevoegen</button>
+</div>

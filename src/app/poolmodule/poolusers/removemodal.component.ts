@@ -2,11 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    selector: 'app-ngbd-modal-pooluser-remove-approval',
-    templateUrl: './removeapprovalmodal.component.html',
-    styleUrls: ['./removeapprovalmodal.component.scss']
+    selector: 'app-ngbd-modal-pooluser-remove',
+    templateUrl: './removemodal.component.html',
+    styleUrls: ['./removemodal.component.scss']
 })
-export class RemoveApprovalModalComponent implements OnInit {
+export class PoolUserRemoveModalComponent implements OnInit {
     @Input() entityName: string = '';
     @Input() name: string = '';
 

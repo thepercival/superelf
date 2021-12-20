@@ -1,54 +1,60 @@
 <h2 *ngIf="processing" class="text-center">
     <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </h2>
-<div *ngIf="!processing" class="card card-person border-0">
-    <div class="card-body py-1 px-2">
-        <div *ngIf="!processing && s11Player" class="text-center">
+<div class="row justify-content-center g-0">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+        <div *ngIf="!processing && s11Player">
             <div class="d-flex justify-content-center">
-                <div *ngIf="player" class="player-img d-flex justify-content-between"
-                    style="background-image: url('{{getPlayerImageUrl(player)}}');">
-                    <app-lineicon *ngIf="player" [line]="player.getLine()"></app-lineicon>
+                <h1 class="text-truncate">
+                    {{s11Player.getPerson().getName()}}
+                </h1>
+                <div class="ms-3 me-1 mt-1">
+                    <button (click)="navigateBack()" type="button" class="btn btn-outline-dark">
+                        <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
+                        <span class="ms-1 d-none d-md-inline"> terug</span>
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="pool" class="card card-person border-0">
+                <div class="card-body py-1 px-2">
+                    <app-player-basics [player]="player" [points]="getCurrentGameRoundPoints()" class="text-center">
+                    </app-player-basics>
+
+                    <div class="d-flex justify-content-center">
+                        <div class="btn-group" role="group" aria-label="aantal">
+                            <button type="button" class="btn btn-outline-primary" (click)="previousGameRound()">
+                                <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+                            </button>
+                            <button [disabled]="true" type="button" class="btn btn-outline-primary btn-fixed-width">
+                                {{getCurrentGameRoundLabel()}}
+                            </button>
+                            <button type="button" class="btn btn-outline-primary" (click)="nextGameRound()">
+                                <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-3 mb-2">
+                        <h2 *ngIf="processingGames" class="text-center">
+                            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+                        </h2>
+                        <button *ngIf="!processingGames && currentGame" type="button" class="btn btn-outline-primary"
+                            (click)="previousGameRound()">
+                            <app-againstgame-title [againstGame]="currentGame"></app-againstgame-title>
+                        </button>
+                    </div>
                     <div>
-                        <span class="badge bg-totals">{{getCurrentGameRoundPoints()}}</span>
+                        <app-s11player-viewperiod-statistics *ngIf="!currentGameRound" [totals]="s11Player.getTotals()"
+                            [line]="s11Player.getLine()" [points]="pool.getPoints()">
+                        </app-s11player-viewperiod-statistics>
+                        <app-s11player-gameround-statistics *ngIf="currentGameRound"
+                            [statistics]="s11Player.getGameStatistics(currentGameRound.getNumber())"
+                            [line]="s11Player.getLine()" [points]="pool.getPoints()">
+                        </app-s11player-gameround-statistics>
                     </div>
                 </div>
-                <fa-icon *ngIf="!player" [icon]="['fas', 'user-circle']" size="10x"></fa-icon>
             </div>
-            <div class="mt-1">
-                <app-team-name *ngIf="player" [team]="player.getTeam()" [fullName]="true"></app-team-name>
-            </div>
-        </div>
-        <div class="d-flex justify-content-center">
-            <div class="btn-group" role="group" aria-label="aantal">
-                <button type="button" class="btn btn-outline-primary" (click)="previousGameRound()">
-                    <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
-                </button>
-                <button [disabled]="true" type="button" class="btn btn-outline-primary btn-fixed-width">
-                    {{getCurrentGameRoundLabel()}}
-                </button>
-                <button type="button" class="btn btn-outline-primary" (click)="nextGameRound()">
-                    <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
-                </button>
-            </div>
-        </div>
-
-        <div class="text-center mt-3 mb-2">
-            <h2 *ngIf="processingGames" class="text-center">
-                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-            </h2>
-            <button *ngIf="!processingGames && currentGame" type="button" class="btn btn-outline-primary"
-                (click)="previousGameRound()">
-                <app-againstgame-title [againstGame]="currentGame"></app-againstgame-title>
-            </button>
-        </div>
-        <div>
-            <app-s11player-viewperiod-statistics *ngIf="!currentGameRound" [totals]="s11Player.getTotals()"
-                [line]="s11Player.getLine()" [points]="pool.getPoints()">
-            </app-s11player-viewperiod-statistics>
-            <app-s11player-gameround-statistics *ngIf="currentGameRound"
-                [statistics]="s11Player.getGameStatistics(currentGameRound.getNumber())" [line]="s11Player.getLine()"
-                [points]="pool.getPoints()">
-            </app-s11player-gameround-statistics>
         </div>
     </div>
 </div>

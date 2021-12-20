@@ -11,7 +11,6 @@ import { IAlert } from '../../shared/commonmodule/alert';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
 import { S11PlayerRepository } from '../../lib/player/repository';
-import { PointsCalculator } from '../../lib/points/calculator';
 import { ImageRepository } from '../../lib/image/repository';
 
 @Component({
@@ -19,15 +18,18 @@ import { ImageRepository } from '../../lib/image/repository';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ChooseS11PlayersComponent implements OnInit, OnChanges {
+export class ChooseS11PlayersComponent implements OnInit {
   @Input() viewPeriod!: ViewPeriod;
   @Input() alreadyChosenPersons: Person[] | undefined;
   @Input() alreadyChosenTeams: Team[] | undefined;
-  @Input() selectedSearchLine: number = 0;
   @Input() selectableLines: number = FootballLine.All;
+  @Input() filter: ChoosePlayersFilter;
+
   // @Input() selectWarningTeamMap: TeamMap = new TeamMap();
   @Output() selectS11Player = new EventEmitter<S11Player>();
-  @Output() close = new EventEmitter<void>();
+  // @Output() close = new EventEmitter<void>();
+  @Output() linkToS11Player = new EventEmitter<S11Player>();
+  @Output() filterUpdate = new EventEmitter<ChoosePlayersFilter>();
 
   form: FormGroup;
   choosePersonItems: ChoosePersonItem[] = [];
@@ -43,28 +45,32 @@ export class ChooseS11PlayersComponent implements OnInit, OnChanges {
   constructor(
     protected playerRepository: S11PlayerRepository,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
-    protected pointsCalculator: PointsCalculator,
     public imageRepository: ImageRepository,
     fb: FormBuilder,
+    private router: Router,
     private modalService: NgbModal
   ) {
+    this.filter = {
+      line: FootballLine.All,
+      team: undefined
+    };
 
     this.form = fb.group({
-      searchTeam: [undefined],
-      searchLine: [FootballLine.All],
+      searchTeam: [],
+      searchLine: [],
     });
   }
 
   ngOnInit() {
-    this.form.controls.searchTeam.setValue(undefined);
     this.searchTeams = this.viewPeriod.getSourceCompetition().getTeamCompetitors().map((teamCompetitor: TeamCompetitor) => teamCompetitor.getTeam());
+    this.form.controls.searchTeam.setValue(this.filter.team);
 
     this.searchLines.push(FootballLine.All);
     for (let line = 1; line < FootballLine.All; line *= 2) {
       this.searchLines.push(line);
     }
-    if (this.selectedSearchLine) {
-      this.form.controls.searchLine.setValue(this.selectedSearchLine);
+    if (this.filter.line) {
+      this.form.controls.searchLine.setValue(this.filter.line);
     }
     this.alreadyChosenPersonsMap = new PersonMap();
     this.alreadyChosenPersons?.forEach((person: Person) => {
@@ -77,7 +83,6 @@ export class ChooseS11PlayersComponent implements OnInit, OnChanges {
     this.alreadyChosenTeamsMap = new TeamMap();
     this.alreadyChosenTeams?.forEach((team: Team) => {
       this.alreadyChosenTeamsMap.set(+team.getId(), team);
-      console.log(this.alreadyChosenTeamsMap);
     });
     // const team = this.oneTeamSimultaneous.getCurrentPlayer(person)?.getTeam();
     // if (team) {
@@ -89,26 +94,23 @@ export class ChooseS11PlayersComponent implements OnInit, OnChanges {
 
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    // @TODO teams die je al hebt, moeten met een warning kunnen oplichten
-    // dus een soort van selectWarningTeams
+  // ngOnChanges(changes: SimpleChanges) {
+  //   // @TODO teams die je al hebt, moeten met een warning kunnen oplichten
+  //   // dus een soort van selectWarningTeams
 
-    if (this.viewPeriod && changes.selectedSearchLine !== undefined && changes.selectedSearchLine.currentValue !== changes.selectedSearchLine.previousValue
-      && changes.selectedSearchLine.firstChange === false) {
-      this.form.controls.searchLine.setValue(changes.selectedSearchLine.currentValue);
-      this.searchPersons();
-    }
-  }
+  //   if (this.viewPeriod && changes.selectedSearchLine !== undefined && changes.selectedSearchLine.currentValue !== changes.selectedSearchLine.previousValue
+  //     && changes.selectedSearchLine.firstChange === false) {
+  //     this.form.controls.searchLine.setValue(changes.selectedSearchLine.currentValue);
+  //     this.searchPersons();
+  //   }
+  // }
 
   searchPersons() {
-    const lineFilter = this.form.controls.searchLine.value;
-    const teamFilter = this.form.controls.searchTeam.value;
-
     // haal alle persons op met viewperiods spelers op 
     // dit is dan inclusief de statistics
     // wanneer incl. en wanneer exclusief statistics?????
 
-    this.playerRepository.getObjects(this.viewPeriod, teamFilter, lineFilter)
+    this.playerRepository.getObjects(this.viewPeriod, this.filter.team, this.filter.line)
       .subscribe({
         next: (players: S11Player[]) => {
           this.setChoosePersonItems(players);
@@ -185,13 +187,26 @@ export class ChooseS11PlayersComponent implements OnInit, OnChanges {
   //     /* onComplete */() => { this.processing = false });
   // }
 
-  showPlayer(s11Player: S11Player) {
-    console.log('show pl');
+  linkToPlayer(s11Player: S11Player): void {
+    this.linkToS11Player.emit(s11Player);
   }
 
+  updateFilter() {
+    this.filter = {
+      line: this.form.controls.searchLine.value,
+      team: this.form.controls.searchTeam.value
+    };
+    this.searchPersons();
+    this.filterUpdate.emit(this.filter);
+  }
 }
 
 interface ChoosePersonItem {
   s11Player: S11Player;
   player: Player;
+}
+
+export interface ChoosePlayersFilter {
+  line: FootballLine;
+  team: Team | undefined;
 }
