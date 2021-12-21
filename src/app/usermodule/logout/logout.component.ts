@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../lib/auth/auth.service';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { AuthComponent } from '../component';
 
 @Component({
@@ -10,8 +11,8 @@ import { AuthComponent } from '../component';
 })
 export class LogoutComponent extends AuthComponent implements OnInit {
 
-  constructor(private router: Router, authService: AuthService) {
-    super(authService);
+  constructor(private router: Router, authService: AuthService, eventsManager: GlobalEventsManager) {
+    super(authService, eventsManager);
   }
 
   ngOnInit() {

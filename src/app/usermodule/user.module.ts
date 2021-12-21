@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faKey, faLevelUpAlt } from '@fortawesome/free-solid-svg-icons';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
 import { NgbAlertConfig, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { LoginComponent } from './login/login.component';
@@ -41,7 +41,7 @@ import { UserTitleComponent } from './title/title.component';
 })
 export class UserModule {
   constructor(library: FaIconLibrary, alertConfig: NgbAlertConfig) {
-    library.addIcons(faLevelUpAlt, faKey);
+    // library.addIcons(, faKey);
     alertConfig.dismissible = false;
   }
 }

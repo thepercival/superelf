@@ -44,7 +44,7 @@
         <app-team-name [team]="choosePersonItem.player.getTeam()"></app-team-name>
       </td>
       <td class="text-end">
-        {{choosePersonItem.s11Player.getTotalPoints()}}
+        <span class="badge bg-totals">{{choosePersonItem.s11Player.getTotalPoints()}}</span>
       </td>
       <td class="text-end" (click)="$event.stopPropagation()">
         <button *ngIf="isPlayerChoosable(choosePersonItem.player)" type="button" class="btn btn-secondary btn-sm"

@@ -12,6 +12,9 @@ import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { S11Formation } from '../../lib/formation';
 import { ScoutedPlayer } from '../../lib/scoutedPlayer';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { Period } from 'ngx-sport';
+import { DateFormatter } from '../../lib/dateFormatter';
 
 @Component({
     selector: 'app-pool-public',
@@ -28,9 +31,11 @@ export class HomeComponent extends PoolComponent implements OnInit {
         route: ActivatedRoute,
         public cssService: CSSService,
         router: Router,
+        private dateFormatter: DateFormatter,
         private poolUserRepository: PoolUserRepository,
         poolRepository: PoolRepository,
-        protected scoutedPlayerRepository: ScoutedPlayerRepository
+        protected scoutedPlayerRepository: ScoutedPlayerRepository,
+        protected globalEventsManager: GlobalEventsManager
     ) {
         super(route, router, poolRepository);
         this.translate = new TranslateService();
@@ -40,6 +45,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
         super.parentNgOnInit().subscribe({
             next: (pool: Pool) => {
                 this.pool = pool;
+                this.toggleNavHeader();
                 this.postNgOnInit(pool);
             },
             error: (e) => {
@@ -74,6 +80,14 @@ export class HomeComponent extends PoolComponent implements OnInit {
             });
     }
 
+    toggleNavHeader() {
+        this.globalEventsManager.navHeaderInfo.emit(
+            {
+                name: this.pool.getName(),
+                start: this.pool.getSeason().getStartDateTime()
+            });
+    }
+
     isAdmin(): boolean {
         return this.poolUser ? this.poolUser.getAdmin() : false;
     }
@@ -96,6 +110,9 @@ export class HomeComponent extends PoolComponent implements OnInit {
     }
 
     linkToAssemble() {
+        if (!this.inAssembleMode()) {
+            return;
+        }
         if (this.poolUser?.getAssembleFormation() !== undefined) {
             this.router.navigate(['/pool/assemble', this.pool.getId()]);
         } else {
@@ -103,5 +120,27 @@ export class HomeComponent extends PoolComponent implements OnInit {
         }
     }
 
+    showAssemble(): boolean {
+        const now = new Date();
+        return this.pool.getAssemblePeriod().isIn();
+    }
 
+    inAssembleMode(): boolean {
+        return this.pool.getAssemblePeriod().isIn();
+    }
+
+    inBeforeStart(): boolean {
+        return this.pool.getStartDateTime().getTime() > (new Date()).getTime();
+    }
+
+    inBeforeAssemble(): boolean {
+        return this.pool.getAssemblePeriod().getStartDateTime().getTime() > (new Date()).getTime();
+    }
+
+    getAssembleText(): string {
+        if (this.inBeforeAssemble()) {
+            return 'vanaf ' + this.dateFormatter.toString(this.pool.getAssemblePeriod().getStartDateTime(), this.dateFormatter.niceDateTime()) + ' uur';
+        }
+        return (this.poolUser?.getNrOfAssembled() ?? 0) + ' speler(s) gekozen';
+    }
 }

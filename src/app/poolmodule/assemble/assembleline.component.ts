@@ -8,6 +8,7 @@ import { SuperElfNameService } from '../../lib/nameservice';
 import { ImageRepository } from '../../lib/image/repository';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
+import { CSSService } from '../../shared/commonmodule/cssservice';
 
 @Component({
   selector: 'app-pool-assembleline',
@@ -26,7 +27,8 @@ export class AssembleLineComponent implements OnInit {
   constructor(
     public imageRepository: ImageRepository,
     public superElfNameService: SuperElfNameService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private cssService: CSSService
   ) {
 
   }
@@ -69,16 +71,16 @@ export class AssembleLineComponent implements OnInit {
     return player.getTeam();
   }
 
-  getBorderClass(): string {
-    return 'border-line-' + this.line.getNumber();
-  }
+  // getBorderClass(): string {
+  //   return 'border-line-' + this.line.getNumber();
+  // }
 
-  getBGColorClass(): string {
-    return 'bg-color-line-' + this.line.getNumber();
-  }
+  // getBGColorClass(): string {
+  //   return 'bg-color-line-' + this.line.getNumber();
+  // }
 
-  getButtonLineClass(): string {
-    return 'bg-color-line-' + this.line.getNumber() + ' text-white';
+  getLineClass(): string {
+    return 'bg-color-line-' + this.cssService.getLine(this.line.getNumber()) + ' text-white';
   }
 
   showPlayer(s11Player: S11Player | undefined): void {

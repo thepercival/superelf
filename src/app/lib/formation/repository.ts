@@ -10,13 +10,13 @@ import { S11FormationMapper } from './mapper';
 import { S11Formation } from '../formation';
 import { JsonS11Formation } from './json';
 import { S11FormationPlace } from './place';
-import { JsonS11FormationPlace } from './place/json';
-import { FormationPlaceMapper } from './place/mapper';
 import { JsonS11Player } from '../player/json';
 import { S11PlayerMapper } from '../player/mapper';
 import { S11Player } from '../player';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class FormationRepository extends APIRepository {
     constructor(
         private mapper: S11FormationMapper,

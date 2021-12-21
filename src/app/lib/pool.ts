@@ -95,6 +95,10 @@ export class Pool {
     //     return this.getCompetitors(competition).map(competitor => competitor.getName());
     // }
 
+    getStartDateTime(): Date {
+        return this.getAssemblePeriod().getViewPeriod().getStartDateTime();
+    }
+
     getCreateAndJoinPeriod(): ViewPeriod {
         return this.createAndJoinPeriod;
     }

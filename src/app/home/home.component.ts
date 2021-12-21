@@ -7,6 +7,7 @@ import { PoolShell, PoolShellFilter, PoolShellRepository } from '../lib/pool/she
 import { Role } from '../lib/role';
 import { PoolRepository } from '../lib/pool/repository';
 import { timeout } from 'rxjs/operators';
+import { GlobalEventsManager } from '../shared/commonmodule/eventmanager';
 
 @Component({
   selector: 'app-home',
@@ -36,10 +37,10 @@ export class HomeComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private poolShellRepos: PoolShellRepository
+    private poolShellRepos: PoolShellRepository,
+    protected globalEventsManager: GlobalEventsManager
   ) {
-    // this.linethroughDate = new Date();
-    // this.linethroughDate.setHours(this.linethroughDate.getHours() + this.defaultHourRange.start);
+    this.globalEventsManager.navHeaderInfo.emit(undefined);
   }
 
   ngOnInit() {

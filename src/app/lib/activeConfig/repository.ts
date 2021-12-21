@@ -8,7 +8,9 @@ import { APIRepository } from '../repository';
 import { JsonActiveConfig } from './json';
 import { ActiveConfigMapper } from './mapper';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ActiveConfigRepository extends APIRepository {
     private url: string;
     constructor(

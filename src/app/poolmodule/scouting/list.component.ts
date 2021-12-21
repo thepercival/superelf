@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
+import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
 import { ScoutedPlayer } from '../../lib/scoutedPlayer';
@@ -12,6 +13,7 @@ import { S11Player } from '../../lib/player';
 import { ViewPeriod } from '../../lib/period/view';
 import { Person, Team } from 'ngx-sport';
 import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addremovemodal.component';
+import { PoolUser } from '../../lib/pool/user';
 
 @Component({
   selector: 'app-pool-scouting-list',
@@ -27,7 +29,8 @@ export class ScoutingListComponent extends PoolComponent implements OnInit {
     router: Router,
     poolRepository: PoolRepository,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private poolUserRepository: PoolUserRepository
   ) {
     super(route, router, poolRepository);
   }
@@ -35,8 +38,20 @@ export class ScoutingListComponent extends PoolComponent implements OnInit {
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.pool = pool;
+      this.initPoolUser(pool);
       this.initScoutedPlayers(pool);
     });
+  }
+
+  initPoolUser(pool: Pool) {
+    this.poolUserRepository.getObjectFromSession(pool)
+      .subscribe({
+        next: (poolUser: PoolUser | undefined) => {
+          this.poolUser = poolUser;
+          console.log(poolUser);
+        },
+        error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
+      });
   }
 
   initScoutedPlayers(pool: Pool) {
@@ -98,6 +113,10 @@ export class ScoutingListComponent extends PoolComponent implements OnInit {
       },
       complete: () => this.processing = false
     });
+  }
+
+  showCopyToTeam(): boolean {
+    return this.pool.getAssemblePeriod().isIn() && this.poolUser?.getAssembleFormation() !== undefined;
   }
 
   copyToTeam(s11Player: S11Player) {

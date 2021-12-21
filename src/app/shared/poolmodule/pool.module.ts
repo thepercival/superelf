@@ -3,7 +3,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt, faMedal, faSpinner,
-  faLevelUpAlt, faMinus, faPlus
+  faMinus, faPlus
 } from '@fortawesome/free-solid-svg-icons';
 import { EndRankingComponent } from './ranking/end.component';
 import { PouleRankingComponent } from './ranking/poule.component';
@@ -45,7 +45,7 @@ import { facStructure, facReferee, facScoreboard } from './icons';
 export class PoolSharedModule {
   constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, alertConfig: NgbAlertConfig) {
     library.addIcons(faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
-      faMedal, faSpinner, faLevelUpAlt, faMinus, faPlus,
+      faMedal, faSpinner, faMinus, faPlus,
       facStructure, facReferee, facScoreboard);
     modalConfig.centered = true;
     modalConfig.scrollable = true;

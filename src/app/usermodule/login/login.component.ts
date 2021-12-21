@@ -6,6 +6,7 @@ import { AuthService } from '../../lib/auth/auth.service';
 import { IAlert } from '../../shared/commonmodule/alert';
 import { User } from '../../lib/user';
 import { AuthComponent } from '../component';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 
 @Component({
   selector: 'app-login',
@@ -27,9 +28,10 @@ export class LoginComponent extends AuthComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     authService: AuthService,
+    eventsManager: GlobalEventsManager,
     fb: FormBuilder
   ) {
-    super(authService);
+    super(authService, eventsManager);
     this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,

@@ -5,6 +5,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faAngleDoubleDown,
+  faLevelUpAlt,
   faPlusCircle,
   faSave,
   faSpinner,
@@ -25,6 +26,7 @@ import { PoolShellRepository } from './lib/pool/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { LayoutSharedModule } from './shared/layoutmodule/layout.module';
 import { facSoccerField, facFavicon } from './lib/icons';
+import { GlobalEventsManager } from './shared/commonmodule/eventmanager';
 
 @NgModule({
   declarations: [
@@ -45,14 +47,15 @@ import { facSoccerField, facFavicon } from './lib/icons';
     AuthUserGuardService,
     PoolShellRepository,
     UserMapper,
-    MyNavigation
+    MyNavigation,
+    GlobalEventsManager
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(faPlusCircle, faSpinner, faAngleDoubleDown, faUserShield, faUserFriends, faSave, faUserCircle,
-      facSoccerField, facFavicon
+      facSoccerField, facFavicon, faLevelUpAlt
     );
   }
 }

@@ -3,22 +3,22 @@
 </h2>
 <div class="row justify-content-center g-0">
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-        <div *ngIf="!processing && s11Player">
-
-            <div class="d-flex justify-content-beteween">
-                <h1 class="text-truncate">
-                    {{s11Player.getPerson().getName()}}
+        <div *ngIf="!processing && againstGame">
+            <div class="d-flex justify-content-center">
+                <app-againstgame-title [againstGame]="againstGame"></app-againstgame-title>
+                <!-- <h1 class="text-truncate">
+                    <app-againstgame-title [againstGame]="currentGame"></app-againstgame-title>
                 </h1>
                 <div class="ms-3 me-1 mt-1">
                     <button (click)="navigateBack()" type="button" class="btn btn-outline-dark">
                         <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
                         <span class="ms-1 d-none d-md-inline"> terug</span>
                     </button>
-                </div>
+                </div> -->
             </div>
 
             <div *ngIf="pool" class="card card-person border-0">
-                <div class="card-body py-1 px-2">
+                <!-- <div class="card-body py-1 px-2">
                     <app-player-basics [player]="player" [points]="getCurrentGameRoundPoints()" class="text-center">
                     </app-player-basics>
 
@@ -54,7 +54,7 @@
                             [line]="s11Player.getLine()" [points]="pool.getPoints()">
                         </app-s11player-gameround-statistics>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

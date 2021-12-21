@@ -17,6 +17,7 @@ import { Location } from '@angular/common';
 import { ChoosePlayersFilter } from '../chooseplayers/list.component';
 import { ThrowStmt } from '@angular/compiler';
 import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addremovemodal.component';
+import { MyNavigation } from '../../shared/commonmodule/navigation';
 
 @Component({
   selector: 'app-pool-scouting-search',
@@ -36,6 +37,7 @@ export class ScoutingSearchComponent extends PoolComponent implements OnInit {
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
     fb: FormBuilder,
     private location: Location,
+    public myNavigation: MyNavigation,
     private modalService: NgbModal
   ) {
     super(route, router, poolRepository);

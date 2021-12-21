@@ -4,7 +4,9 @@ import { FormationMapper, Period } from 'ngx-sport';
 import { ActiveConfig } from '../activeConfig';
 import { JsonActiveConfig } from './json';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ActiveConfigMapper {
     constructor(protected formationMapper: FormationMapper
     ) { }

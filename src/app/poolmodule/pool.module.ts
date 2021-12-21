@@ -99,6 +99,7 @@ import { StatisticsRepository } from '../lib/statistics/repository';
 import { PlayerBasicsComponent } from './player/basics.component';
 import { ScoutingSearchComponent } from './scouting/search.component';
 import { PoolUserRemoveModalComponent } from './poolusers/removemodal.component';
+import { AgainstGameDetailsComponent } from './againstgame/details.component';
 
 @NgModule({
   imports: [
@@ -112,6 +113,7 @@ import { PoolUserRemoveModalComponent } from './poolusers/removemodal.component'
   ],
   declarations: [
     AgainstGameTitleComponent,
+    AgainstGameDetailsComponent,
     AssembleComponent,
     AssembleLineComponent,
     ChooseS11PlayersComponent,

@@ -8,6 +8,7 @@ import { UserRepository } from '../../lib/user/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { AuthComponent } from '../component';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 
 @Component({
   selector: 'app-profile',
@@ -27,11 +28,12 @@ export class ProfileComponent extends AuthComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     authService: AuthService,
+    eventsManager: GlobalEventsManager,
     private userRepository: UserRepository,
     public myNavigation: MyNavigation,
     fb: FormBuilder
   ) {
-    super(authService);
+    super(authService, eventsManager);
     this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,

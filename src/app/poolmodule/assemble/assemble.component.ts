@@ -21,6 +21,7 @@ import { ActiveConfig } from '../../lib/activeConfig';
 import { S11FormationLine } from '../../lib/formation/line';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { S11Formation } from '../../lib/formation';
+import { MyNavigation } from '../../shared/commonmodule/navigation';
 
 @Component({
   selector: 'app-pool-assemble',
@@ -87,7 +88,7 @@ export class AssembleComponent extends PoolComponent implements OnInit {
   }
 
   getFormationName(): string {
-    return this.poolUser.getAssembleFormation()?.getName() ?? 'kies formatie';
+    return this.poolUser?.getAssembleFormation()?.getName() ?? 'kies formatie';
   }
 
 

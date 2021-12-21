@@ -5,6 +5,7 @@ import { AuthService } from '../../lib/auth/auth.service';
 import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 import { AuthComponent } from '../component';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 
 @Component({
   selector: 'app-register',
@@ -26,9 +27,10 @@ export class RegisterComponent extends AuthComponent implements OnInit {
 
   constructor(
     authService: AuthService,
+    eventsManager: GlobalEventsManager,
     fb: FormBuilder
   ) {
-    super(authService);
+    super(authService, eventsManager);
     this.form = fb.group({
       emailaddress: ['', Validators.compose([
         Validators.required,

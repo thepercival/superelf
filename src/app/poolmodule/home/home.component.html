@@ -1,7 +1,5 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-    <app-title *ngIf="pool" [title]="pool.getName()" [center]="true"></app-title>
-
     <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
     <h2 *ngIf="processing" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -46,16 +44,14 @@
           </p>
         </div>
       </div>
-      <div *ngIf="pool.getAssemblePeriod().isIn()" class="card border-secondary pointer mt-3 mx-2"
+      <div *ngIf="inBeforeStart()" class="card border-secondary {{inAssembleMode() ? 'pointer' : ''}} mt-3 mx-2"
         (click)="linkToAssemble()">
         <div class="card-body">
           <h5 class="card-title">
             <fa-icon [icon]="['fas', 'users']"></fa-icon> team samenstellen
           </h5>
           <p class="card-text">
-            <span>
-              {{poolUser?.getNrOfAssembled()}} speler(s) gekozen
-            </span>
+            <span>{{getAssembleText()}}</span>
           </p>
         </div>
       </div>

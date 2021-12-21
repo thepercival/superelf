@@ -4,19 +4,19 @@
     <h5 class="card-title">
       <app-lineicon [line]="line.getNumber()" [abbreviate]="false"></app-lineicon>
     </h5>
-    <table class="table {{getBorderClass()}}">
+    <table class="table {{getLineClass()}}">
       <tbody>
         <ng-container *ngFor="let place of line.getStartingPlaces()" [ngTemplateOutlet]="placeRow"
-          [ngTemplateOutletContext]="{place:place, s11Player: place.getPlayer()}">
+          [ngTemplateOutletContext]="{place:place, s11Player: place.getPlayer(), currentTeam: getCurrentTeam(place.getPlayer()?.getPerson())}">
         </ng-container>
         <ng-container [ngTemplateOutlet]="placeRow"
-          [ngTemplateOutletContext]="{place:line.getSubstitute(), s11Player: line.getSubstitute().getPlayer()}">
+          [ngTemplateOutletContext]="{place:line.getSubstitute(), s11Player: line.getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line.getSubstitute().getPlayer()?.getPerson())}">
         </ng-container>
       </tbody>
     </table>
   </div>
 </div>
-<ng-template #placeRow let-place="place" let-s11Player="s11Player">
+<ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentTeam="currentTeam">
   <tr (click)="showPlayer(s11Player)" class="pointer">
     <td>
       <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
@@ -26,14 +26,14 @@
       <span *ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">res</span>
     </td>
     <td>
-      <img *ngIf="getCurrentTeam(s11Player?.getPerson())" src="{{getTeamImageUrl(s11Player.getPerson())}}"
+      <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
+      <!-- <img *ngIf="getCurrentTeam(s11Player?.getPerson())" src="{{getTeamImageUrl(s11Player.getPerson())}}"
         class="me-1 center-block" />
       <span *ngIf="getCurrentTeam(s11Player?.getPerson())"
-        class="align-bottom">{{getTeamAbbreviation(s11Player.getPerson())}}</span>
+        class="align-bottom">{{getTeamAbbreviation(s11Player.getPerson())}}</span> -->
     </td>
     <td class="text-end" (click)="$event.stopPropagation()">
-      <button *ngIf="selectedPlace !== place && !processing" type="button" class="btn btn-sm {{getButtonLineClass()}}"
-        (click)="select(place, true)">
+      <button *ngIf="!processing" type="button" class="btn btn-sm {{getLineClass()}}" (click)="select(place, true)">
         <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
       </button>
       <!-- <button *ngIf="selectedPlace !== place && !processing" type="button"

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { AuthComponent } from '../component';
 
 @Component({
@@ -18,8 +19,9 @@ export class ValidateComponent extends AuthComponent implements OnInit {
     protected route: ActivatedRoute,
     private router: Router,
     authService: AuthService,
+    eventsManager: GlobalEventsManager,
   ) {
-    super(authService);
+    super(authService, eventsManager);
   }
 
   ngOnInit() {
