@@ -22,11 +22,9 @@ export class AgainstGameTitleComponent implements OnInit {
   ngOnInit() {
     const competitors = this.againstGame.getPoule().getCompetition().getTeamCompetitors();
     this.competitorMap = new CompetitorMap(competitors);
-    // console.log('competitorMap', this.competitorMap);
   }
 
   // ngOnChanges(changes: SimpleChanges) {
-  //   console.log(changes);
   //   if (changes.againstGame.currentValue !== changes.againstGame.previousValue) {
   //     this.updateCompetitorMap(changes.againstGame.currentValue);
   //   }

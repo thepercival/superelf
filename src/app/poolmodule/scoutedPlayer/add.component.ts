@@ -14,17 +14,17 @@ import { ViewPeriod } from '../../lib/period/view';
 import { FootballLine, Person, Team, TeamCompetitor } from 'ngx-sport';
 import { HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
-import { ChoosePlayersFilter } from '../chooseplayers/list.component';
 import { ThrowStmt } from '@angular/compiler';
 import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addremovemodal.component';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
+import { ChoosePlayersFilter } from '../player/choose.component';
 
 @Component({
-  selector: 'app-pool-scouting-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss']
+  selector: 'app-pool-scouted-player-add',
+  templateUrl: './add.component.html',
+  styleUrls: ['./add.component.scss']
 })
-export class ScoutingSearchComponent extends PoolComponent implements OnInit {
+export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   form: FormGroup;
   scoutingList: ScoutingList = { scoutedPlayers: []/*, mappedPersons: new PersonMap()*/ };
   public oneTeamSimultaneous = new OneTeamSimultaneous();

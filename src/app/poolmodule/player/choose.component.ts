@@ -1,9 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 
 import { FootballLine, NameService, Person, PersonMap, Player, Team, TeamMap } from 'ngx-sport';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
 import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
 import { ViewPeriod } from '../../lib/period/view';
@@ -14,20 +12,19 @@ import { S11PlayerRepository } from '../../lib/player/repository';
 import { ImageRepository } from '../../lib/image/repository';
 
 @Component({
-  selector: 'app-pool-choose-players',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+  selector: 'app-pool-player-choose',
+  templateUrl: './choose.component.html',
+  styleUrls: ['./choose.component.scss']
 })
-export class ChooseS11PlayersComponent implements OnInit {
+export class S11PlayerChooseComponent implements OnInit {
   @Input() viewPeriod!: ViewPeriod;
   @Input() alreadyChosenPersons: Person[] | undefined;
   @Input() alreadyChosenTeams: Team[] | undefined;
   @Input() selectableLines: number = FootballLine.All;
   @Input() filter: ChoosePlayersFilter;
+  @Input() showAll: boolean = false;
 
-  // @Input() selectWarningTeamMap: TeamMap = new TeamMap();
   @Output() selectS11Player = new EventEmitter<S11Player>();
-  // @Output() close = new EventEmitter<void>();
   @Output() linkToS11Player = new EventEmitter<S11Player>();
   @Output() filterUpdate = new EventEmitter<ChoosePlayersFilter>();
 
@@ -46,9 +43,7 @@ export class ChooseS11PlayersComponent implements OnInit {
     protected playerRepository: S11PlayerRepository,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
     public imageRepository: ImageRepository,
-    fb: FormBuilder,
-    private router: Router,
-    private modalService: NgbModal
+    fb: FormBuilder
   ) {
     this.filter = {
       line: FootballLine.All,
@@ -75,23 +70,12 @@ export class ChooseS11PlayersComponent implements OnInit {
     this.alreadyChosenPersonsMap = new PersonMap();
     this.alreadyChosenPersons?.forEach((person: Person) => {
       this.alreadyChosenPersonsMap.set(+person.getId(), person);
-      // const team = this.oneTeamSimultaneous.getCurrentPlayer(person)?.getTeam();
-      // if (team) {
-      //   this.selectWarningTeamMap.set(+team.getId(), team);
-      // }
     });
     this.alreadyChosenTeamsMap = new TeamMap();
     this.alreadyChosenTeams?.forEach((team: Team) => {
       this.alreadyChosenTeamsMap.set(+team.getId(), team);
     });
-    // const team = this.oneTeamSimultaneous.getCurrentPlayer(person)?.getTeam();
-    // if (team) {
-    //   this.selectWarningTeamMap.set(+team.getId(), team);
-    // }
-
-
     this.searchPersons();
-
   }
 
   // ngOnChanges(changes: SimpleChanges) {
@@ -106,10 +90,6 @@ export class ChooseS11PlayersComponent implements OnInit {
   // }
 
   searchPersons() {
-    // haal alle persons op met viewperiods spelers op 
-    // dit is dan inclusief de statistics
-    // wanneer incl. en wanneer exclusief statistics?????
-
     this.playerRepository.getObjects(this.viewPeriod, this.filter.team, this.filter.line)
       .subscribe({
         next: (players: S11Player[]) => {
@@ -126,17 +106,6 @@ export class ChooseS11PlayersComponent implements OnInit {
     this.selectS11Player.emit(player);
   }
 
-  // getPlayers(competitionPersons: CompetitionPerson[]): Player[] {
-  //   const players: Player[] = [];
-  //   competitionPersons.forEach(competitionPerson => {
-  //     const player = competitionPerson.getPerson().getPlayerOneTeamSim();
-  //     if (player) {
-  //       players.push(player);
-  //     }
-  //   });
-  //   return players;
-  // }
-
   setChoosePersonItems(players: S11Player[]) {
     const choosePersonItems: ChoosePersonItem[] = [];
     players.forEach((player: S11Player) => {
@@ -149,10 +118,10 @@ export class ChooseS11PlayersComponent implements OnInit {
     this.choosePersonItems = choosePersonItems;
   }
 
-  isPlayerChoosable(player: Player): boolean {
-    // console.log('pac', this.personAlreadyChosen(player.getPerson()));
-    // console.log('tac', this.teamAlreadyChosen(player.getTeam()));
-    return !(this.personAlreadyChosen(player.getPerson()) || this.teamAlreadyChosen(player.getTeam()))
+  isChoosable(player: Player): boolean {
+    // console.log('pac' + player.getPerson().getName(), this.personAlreadyChosen(player.getPerson()));
+    // console.log('tac' + player.getPerson().getName(), this.teamAlreadyChosen(player.getTeam()));
+    return !this.personAlreadyChosen(player.getPerson()) && !this.teamAlreadyChosen(player.getTeam())
       && (this.selectableLines & player.getLine()) > 0;
   }
 
@@ -164,7 +133,6 @@ export class ChooseS11PlayersComponent implements OnInit {
     return this.alreadyChosenTeamsMap.has(+team.getId());
   }
 
-
   getTeamImageUrl(choosePersonItem: ChoosePersonItem): string {
     return this.imageRepository.getTeamUrl(choosePersonItem.player.getTeam());
   }
@@ -172,20 +140,6 @@ export class ChooseS11PlayersComponent implements OnInit {
   protected setAlert(type: string, message: string) {
     this.alert = { 'type': type, 'message': message };
   }
-
-  // searchPersonsAndGetScountingList(pool: Pool) {
-  //   const sourceCompetition = pool.getSourceCompetition();
-  //   const async = [
-  //     this.playerRepository.getObjects(sourceCompetition, this.teamFilter, this.lineFilter),
-  //     this.scoutedPersonRepository.getObjects(sourceCompetition)
-  //   ];
-  //   forkJoin(async).subscribe(responseList => {
-  //     this.foundPlayers = <Player[]>responseList[0];
-  //     this.scoutedPersons = <ScoutedPerson[]>responseList[1];
-  //   },
-  //     /* error path */(e: string) => { this.setAlert('danger', e); this.processing = false; },
-  //     /* onComplete */() => { this.processing = false });
-  // }
 
   linkToPlayer(s11Player: S11Player): void {
     this.linkToS11Player.emit(s11Player);

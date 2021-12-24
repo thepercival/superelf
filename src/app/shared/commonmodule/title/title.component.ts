@@ -18,11 +18,11 @@ export class TitleComponent {
   }
 
   navigateBack() {
-    if (this.poolId) {
-      this.router.navigate(['/pool', this.poolId]);
-    } else {
-      this.myNavigation.back();
-    }
+    // if (this.poolId) {
+    //   this.router.navigate(['/pool', this.poolId]);
+    // } else {
+    this.myNavigation.back();
+    // }
   }
 }
 

@@ -1,11 +1,9 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { concatMap, pairwise } from 'rxjs/operators';
+import { concatMap } from 'rxjs/operators';
 import { PoolUser } from '../../lib/pool/user';
 import { FormationRepository } from '../../lib/formation/repository';
-import { IAlert } from '../../shared/commonmodule/alert';
 import { Formation } from 'ngx-sport';
 import { S11Formation } from '../../lib/formation';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,12 +16,13 @@ import { PoolUserRepository } from '../../lib/pool/user/repository';
 
 @Component({
   selector: 'app-pool-chooseformation',
-  templateUrl: './chooseformation.component.html',
-  styleUrls: ['./chooseformation.component.scss']
+  templateUrl: './choose.component.html',
+  styleUrls: ['./choose.component.scss']
 })
-export class ChooseFormationComponent extends PoolComponent implements OnInit {
-  formations: Formation[] = [];
-  poolUser!: PoolUser;
+export class FormationChooseComponent extends PoolComponent implements OnInit {
+  public formations: Formation[] = [];
+  public poolUser!: PoolUser;
+  public currentFormation: Formation | undefined;
 
   constructor(
     route: ActivatedRoute,
@@ -46,7 +45,6 @@ export class ChooseFormationComponent extends PoolComponent implements OnInit {
           this.activeConfigRepository.getObject().pipe(
             concatMap((config: ActiveConfig) => {
               this.formations = config.getAvailableFormations();
-              console.log(this.formations);
               return this.poolUserRepository.getObjectFromSession(pool);
             })
           )
@@ -54,24 +52,9 @@ export class ChooseFormationComponent extends PoolComponent implements OnInit {
               next: (poolUser: PoolUser) => {
                 this.poolUser = poolUser;
                 const s11Formation = poolUser.getAssembleFormation();
-                if (!s11Formation) {
-
-                  //             const assembleFormation = this.poolUser.getAssembleFormation();
-                  //             if (!assembleFormation) {
-                  //               this.form.controls.formation.setValue(undefined);
-                  //               return;
-                  // }
-
-                  // this.form.controls.formation.setValue(this.availableFormations.find((formation: Formation) => {
-                  //   return formation.getName() === assembleFormation.getName();
-                  // }
-                  // ));
-
+                if (s11Formation !== undefined) {
+                  this.currentFormation = s11Formation.getEqualFormation(this.formations);
                 }
-                // this.form.controls.formation.setValue(this.availableFormations.find(formation => {
-                //   return s11Formation.getName() === formation.getName();
-                // }));
-                // this.assembleLines = this.getAssembleLines(formation);
               },
               error: (e) => {
                 this.setAlert('danger', e); this.processing = false;
@@ -90,7 +73,7 @@ export class ChooseFormationComponent extends PoolComponent implements OnInit {
       .subscribe({
         next: (s11Formation: S11Formation) => {
           this.poolUser.setAssembleFormation(s11Formation);
-          this.router.navigate(['/pool/assemble', this.pool.getId()]);
+          this.router.navigate(['/pool/formation/assemble', this.pool.getId()]);
         },
         error: (e) => {
           this.processing = false; this.setAlert('danger', e);

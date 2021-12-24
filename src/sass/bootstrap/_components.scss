@@ -65,7 +65,7 @@ $utilities: map-merge(
         values: map-merge(
           map-get(map-get($utilities, "border-color"), "values"),
           (
-            $custom-theme-border-colors
+            $custom-theme-colors/*$custom-theme-border-colors*/
           ),
         ),
       ),

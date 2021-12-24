@@ -31,7 +31,7 @@ export class S11PlayerAddRemoveModalComponent implements OnInit {
     get Remove(): PlayerAction { return PlayerAction.Remove }
 
     getLineClass(): string {
-        return this.cssService.getLine(this.s11Player.getLine());
+        return this.cssService.getLine2(this.s11Player.getLine());
     }
 }
 

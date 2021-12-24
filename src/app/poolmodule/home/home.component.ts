@@ -114,9 +114,9 @@ export class HomeComponent extends PoolComponent implements OnInit {
             return;
         }
         if (this.poolUser?.getAssembleFormation() !== undefined) {
-            this.router.navigate(['/pool/assemble', this.pool.getId()]);
+            this.router.navigate(['/pool/formation/assemble', this.pool.getId()]);
         } else {
-            this.router.navigate(['/pool/chooseformation', this.pool.getId()]);
+            this.router.navigate(['/pool/formation/choose', this.pool.getId()]);
         }
     }
 

@@ -144,7 +144,6 @@ export class S11PlayerComponent implements OnInit {
   previousGameRound(): void {
     this.currentGameRound = this.sliderGameRounds.pop();
     this.sliderGameRounds.unshift(this.currentGameRound);
-    console.log('currentGameRound', this.currentGameRound);
     this.updateGameRound();
   }
 

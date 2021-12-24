@@ -64,7 +64,9 @@ export class CSSService {
     //     return winnersOrLosers === QualifyGroup.WINNERS ? 'success' : (winnersOrLosers === QualifyGroup.LOSERS ? 'danger' : '');
     // }
 
-    getLine(line: FootballLine): string {
-        return 'bg-line-' + line;
+    getLine2(line: FootballLine, prefix: string = 'bg-'): string {
+        return prefix + 'line-' + line;
     }
+
+
 }

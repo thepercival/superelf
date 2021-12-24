@@ -10,7 +10,7 @@
 
       <div class="d-flex justify-content-between mb-3">
         <h2 class="me-2 text-truncate">
-          <fa-icon [icon]="['fas', 'users']"></fa-icon> spelers scouten
+          <fa-icon [icon]="['fas', 'users']"></fa-icon> speler scouten
         </h2>
         <button (click)="myNavigation.back()" type="button" class="btn btn-outline-dark">
           <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
@@ -19,10 +19,10 @@
       </div>
 
       <div class="d-flex justify-content-center">
-        <app-pool-choose-players class="w-100" (selectS11Player)="openAddModal($event)"
+        <app-pool-player-choose class="w-100" (selectS11Player)="openAddModal($event)"
           [viewPeriod]="pool.getCreateAndJoinPeriod()" [alreadyChosenPersons]="getPersons()"
           (linkToS11Player)="linkToPlayer($event)" (filterUpdate)="updateState($event)" [filter]="choosePlayersFilter">
-        </app-pool-choose-players>
+        </app-pool-player-choose>
         <!-- <app-s11player-info></app-s11player-info> -->
       </div>
     </div>

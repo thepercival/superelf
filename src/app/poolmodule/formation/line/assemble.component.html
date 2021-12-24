@@ -4,7 +4,7 @@
     <h5 class="card-title">
       <app-lineicon [line]="line.getNumber()" [abbreviate]="false"></app-lineicon>
     </h5>
-    <table class="table {{getLineClass()}}">
+    <table class="table {{getLineClass('border')}}">
       <tbody>
         <ng-container *ngFor="let place of line.getStartingPlaces()" [ngTemplateOutlet]="placeRow"
           [ngTemplateOutletContext]="{place:place, s11Player: place.getPlayer(), currentTeam: getCurrentTeam(place.getPlayer()?.getPerson())}">
@@ -17,30 +17,29 @@
   </div>
 </div>
 <ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentTeam="currentTeam">
-  <tr (click)="showPlayer(s11Player)" class="pointer">
+  <tr *ngIf="processing">
+    <td colspan=3 class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </td>
+  </tr>
+  <tr *ngIf="!processing" (click)="maybeLinkToPlayer(place)" [ngClass]="{'pointer': s11Player}">
     <td>
       <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
-      <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="select(place, true)">
+      <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="editPlace.emit(place)">
         kies een {{place.isSubstitute() ? 'wissel' : 'speler'}}
       </button>
       <span *ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">res</span>
     </td>
     <td>
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
-      <!-- <img *ngIf="getCurrentTeam(s11Player?.getPerson())" src="{{getTeamImageUrl(s11Player.getPerson())}}"
-        class="me-1 center-block" />
-      <span *ngIf="getCurrentTeam(s11Player?.getPerson())"
-        class="align-bottom">{{getTeamAbbreviation(s11Player.getPerson())}}</span> -->
     </td>
     <td class="text-end" (click)="$event.stopPropagation()">
-      <button *ngIf="!processing" type="button" class="btn btn-sm {{getLineClass()}}" (click)="select(place, true)">
+      <button *ngIf="!s11Player" type="button" class="btn btn-sm" (click)="editPlace.emit(place)">
         <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
       </button>
-      <!-- <button *ngIf="selectedPlace !== place && !processing" type="button"
-        class="btn btn-secondary btn-sm d-none d-md-inline" (click)="select(place, false)">
-        <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-      </button> -->
-      <!-- <fa-icon *ngIf="selectedPlace == place && processing" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon> -->
+      <button *ngIf="s11Player" type="button" class="btn btn-sm" (click)="emptyPlace(place)">
+        <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+      </button>
     </td>
   </tr>
 </ng-template>

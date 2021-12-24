@@ -28,7 +28,7 @@ export class S11FormationLine extends Identifiable {
 
     public getStartingPlaces(): S11FormationPlace[] {
         return this.places.filter((formationPlace: S11FormationPlace): boolean => {
-            return formationPlace.getNumber() > S11FormationLine.SUBSTITUTE_NUMBER;
+            return formationPlace.getNumber() !== S11FormationLine.SUBSTITUTE_NUMBER;
         });
     }
 

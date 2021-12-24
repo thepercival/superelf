@@ -12,7 +12,11 @@
     <div *ngIf="!processing && pool" class="d-flex flex-wrap justify-content-center">
       <div *ngFor="let formation of formations" class="card border-secondary pointer mt-3 mx-2"
         (click)="editFormation(formation)">
-        <div class="text-center card-header">{{formation.getName()}}</div>
+        <div class="text-center card-header">
+          <span>{{formation.getName()}}</span>
+          <fa-icon *ngIf="currentFormation === formation" class="ms-1" [icon]="['fas', 'check-circle']">
+          </fa-icon>
+        </div>
         <div class="card-body p-1">
           <div *ngFor="let formationLine of formation.getLines()" class="d-flex justify-content-around">
             <div *ngFor="let position of formationLine.getNumbers()">

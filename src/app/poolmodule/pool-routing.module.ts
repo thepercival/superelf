@@ -10,28 +10,30 @@ import { JoinComponent } from './join/join.component';
 import { AuthUserGuardService } from '../lib/auth/guard/userguard.service';
 import { PoolUsersComponent } from './poolusers/poolusers.component';
 import { InviteComponent } from './invite/invite.component';
-import { ChooseS11PlayersComponent } from './chooseplayers/list.component';
-import { AssembleComponent } from './assemble/assemble.component';
-import { ChooseFormationComponent } from './assemble/chooseformation.component';
 import { S11PlayerComponent } from './player/info.component';
-import { ScoutingListComponent } from './scouting/list.component';
-import { ScoutingSearchComponent } from './scouting/search.component';
+import { ScoutedPlayerListComponent } from './scoutedPlayer/list.component';
+import { ScoutedPlayerAddComponent } from './scoutedPlayer/add.component';
+import { FormationChooseComponent } from './formation/choose.component';
+import { FormationPlaceEditComponent } from './formation/place/edit.component';
+import { FormationAssembleComponent } from './formation/assemble.component';
 
 const routes: Routes = [
-  { path: 'prenew', component: PreNewComponent },
   { path: 'new', component: NewComponent, canActivate: [AuthUserGuardService] },
+  { path: 'prenew', component: PreNewComponent },
+
   { path: ':id', component: HomeComponent },
+
+  { path: 'formation/assemble/:id', component: FormationAssembleComponent, canActivate: [AuthUserGuardService] },
+  { path: 'formation/choose/:id', component: FormationChooseComponent, canActivate: [AuthUserGuardService] },
+  { path: 'formation/place/edit/:id/:placeId', component: FormationPlaceEditComponent, canActivate: [AuthUserGuardService] },
   { path: 'invite/:id', component: InviteComponent, canActivate: [AuthUserGuardService] },
   { path: 'join/:id/:key', component: JoinComponent, canActivate: [AuthUserGuardService] },
-  { path: 'users/:id', component: PoolUsersComponent, canActivate: [AuthUserGuardService] },
-  { path: 'scouting/list/:id', component: ScoutingListComponent, canActivate: [AuthUserGuardService] },
-  { path: 'scouting/search/:id', component: ScoutingSearchComponent, canActivate: [AuthUserGuardService] },
   { path: 'player/:id', component: S11PlayerComponent },
-  /*{ path: 'chooseplayers/:id', component: ChooseS11PlayersComponent, canActivate: [AuthUserGuardService] },*/
-  { path: 'chooseformation/:id', component: ChooseFormationComponent, canActivate: [AuthUserGuardService] },
-  { path: 'assemble/:id', component: AssembleComponent, canActivate: [AuthUserGuardService] },
   { path: 'rules/:id', component: RulesComponent },
-
+  { path: 'scouting/list/:id', component: ScoutedPlayerListComponent, canActivate: [AuthUserGuardService] },
+  { path: 'scouting/search/:id', component: ScoutedPlayerAddComponent, canActivate: [AuthUserGuardService] },
+  { path: 'users/:id', component: PoolUsersComponent, canActivate: [AuthUserGuardService] },
+  /*{ path: 'chooseplayers/:id', component: ChooseS11PlayersComponent, canActivate: [AuthUserGuardService] },*/
 ];
 
 @NgModule({

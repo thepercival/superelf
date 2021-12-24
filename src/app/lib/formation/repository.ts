@@ -52,14 +52,13 @@ export class FormationRepository extends APIRepository {
             map((jsonS11Formation: JsonS11Formation) => {
                 const formation = this.mapper.toObject(jsonS11Formation, poolUser, viewPeriod);
                 poolUser.setAssembleFormation(formation);
-                console.log(jsonS11Formation, formation);
                 return formation;
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    editPlace(place: S11FormationPlace, person: Person | null): Observable<S11Player | undefined> {
+    editPlace(place: S11FormationPlace, person: Person | undefined): Observable<S11Player | undefined> {
         const formation = place.getFormationLine().getFormation();
         const poolUser = formation.getPoolUser();
         const url = this.getUrl(poolUser, formation, place);

@@ -20,7 +20,7 @@ import { PoolUser } from '../../lib/pool/user';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ScoutingListComponent extends PoolComponent implements OnInit {
+export class ScoutedPlayerListComponent extends PoolComponent implements OnInit {
   scoutingList: ScoutingList = { scoutedPlayers: []/*, mappedPersons: new PersonMap()*/ };
   public oneTeamSimultaneous = new OneTeamSimultaneous();
 

@@ -49,7 +49,6 @@ export class TeamComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.pool = pool;
-        console.log(pool.getSourceCompetition().getTeamCompetitors());
         this.form.controls.searchTeam.setValue(undefined);
         this.searchTeams = pool.getSourceCompetition().getTeamCompetitors().map((teamCompetitor: TeamCompetitor) => teamCompetitor.getTeam());
 
@@ -119,7 +118,6 @@ export class TeamComponent extends PoolComponent implements OnInit {
 
   openConfirmModal(s11Player: S11Player) {
     const modalRef = this.modalService.open(ConfirmS11PlayerChoiceModalComponent);
-    // console.log(person);
     modalRef.componentInstance.s11Player = s11Player;
     modalRef.result.then((result) => {
       if (result === 'toscouting')

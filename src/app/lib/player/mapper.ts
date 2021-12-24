@@ -26,7 +26,6 @@ export class S11PlayerMapper {
         // }
         // player.setPoints(json.points);
         // player.setTotal(json.total);
-        // console.log(json.gameRoundScores)
 
         // json.gameRoundScores?.forEach((jsonGameRoundScore: JsonPlayerGameRoundScore) => {
         //     // const stats = new Map<number, boolean | number>();
