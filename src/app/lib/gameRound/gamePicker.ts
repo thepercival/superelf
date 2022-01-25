@@ -1,13 +1,14 @@
-import { AgainstGame, CompetitorMap, Person, Player, Team, TeamCompetitor, TeamMap } from "ngx-sport";
+import { AgainstGame, Competition, CompetitorMap, Player, Team, TeamCompetitor, TeamMap } from "ngx-sport";
 import { GameRound } from "../gameRound";
+import { S11Player } from "../player";
 
 export class GamePicker {
 
-    constructor(protected gameRound: GameRound) {
+    constructor(protected sourceCompetition: Competition, protected gameRound: GameRound) {
     }
 
-    public getGame(person: Person): AgainstGame | undefined {
-        const players = person.getPlayers();
+    public getGame(s11Player: S11Player): AgainstGame | undefined {
+        const players = s11Player.getPlayers();
         const teamMap = this.getTeamMap(players);
         const teamCompetitors = this.getTeamCompetitors(teamMap);
         const competitorMap = new CompetitorMap(teamCompetitors);
@@ -30,7 +31,7 @@ export class GamePicker {
     }
 
     protected getTeamCompetitors(teamMap: TeamMap): TeamCompetitor[] {
-        const teamCompetitors = this.gameRound.getViewPeriod().getSourceCompetition().getTeamCompetitors();
+        const teamCompetitors = this.sourceCompetition.getTeamCompetitors();
         return teamCompetitors.filter((teamCompetitor: TeamCompetitor): boolean => {
             return teamMap.has(+teamCompetitor.getTeam().getId());
         });

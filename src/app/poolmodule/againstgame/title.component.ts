@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase, CompetitorMap, ScoreConfigService, State, Team, TeamCompetitor } from 'ngx-sport';
+import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase, CompetitorMap, ScoreConfigService, GameState, Team, TeamCompetitor } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 
 @Component({
@@ -34,7 +34,7 @@ export class AgainstGameTitleComponent implements OnInit {
 
   // }
 
-  get Finished(): State { return State.Finished; }
+  get Finished(): GameState { return GameState.Finished; }
   get HomeSide(): AgainstSide { return AgainstSide.Home; }
   get AwaySide(): AgainstSide { return AgainstSide.Away; }
 
@@ -70,7 +70,7 @@ export class AgainstGameTitleComponent implements OnInit {
   }
 
   getAgainstScore(): string {
-    if (this.againstGame.getState() !== State.Finished) {
+    if (this.againstGame.getState() !== GameState.Finished) {
       return ' vs ';
     }
     const score = ' - ';

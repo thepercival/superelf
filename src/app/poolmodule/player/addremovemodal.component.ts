@@ -24,7 +24,7 @@ export class S11PlayerAddRemoveModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.player = (new OneTeamSimultaneous()).getCurrentPlayer(this.s11Player.getPerson());
+        this.player = (new OneTeamSimultaneous()).getCurrentPlayer(this.s11Player);
     }
 
     get Add(): PlayerAction { return PlayerAction.Add }

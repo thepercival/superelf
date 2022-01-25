@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { Competition } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 import { catchError, concatMap, map } from 'rxjs/operators';
-import { CompetitionRepository } from '../ngx-sport/competition/repository';
+import { CompetitionConfig } from '../competitionConfig';
+import { CompetitionConfigMapper } from '../competitionConfig/mapper';
 
 import { Pool } from '../pool';
 import { APIRepository } from '../repository';
@@ -21,7 +22,7 @@ export class PoolRepository extends APIRepository {
     constructor(
         private http: HttpClient,
         private mapper: PoolMapper,
-        private competitionRepository: CompetitionRepository) {
+        private competitionConfigMapper: CompetitionConfigMapper) {
         super();
         this.url = super.getApiUrl() + this.getUrlpostfix();
     }
@@ -37,23 +38,21 @@ export class PoolRepository extends APIRepository {
     getObject(id: number): Observable<Pool> {
         const url = super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix() + '/' + id;
         return this.http.get<JsonPool>(url, { headers: super.getHeaders() }).pipe(
-            concatMap((jsonPool: JsonPool) => {
-                return this.getObjectHelper(jsonPool, this.competitionRepository.getObject(jsonPool.sourceCompetitionId));
-            }),
+            map((jsonPool: JsonPool) => this.mapper.toObject(jsonPool)),
             catchError((err) => this.handleError(err))
         );
     }
 
-    getObjectHelper(jsonPool: JsonPool, obsCompetition: Observable<Competition>): Observable<Pool> {
-        return obsCompetition.pipe(
-            map((sourceCompetition: Competition) => this.mapper.toObject(jsonPool, sourceCompetition))
-        );
-    }
+    // getObjectHelper(jsonPool: JsonPool, obsCompetition: Observable<Competition>): Observable<Pool> {
+    //     return obsCompetition.pipe(
+    //         map((sourceCompetition: Competition) => this.mapper.toObject(jsonPool, sourceCompetition))
+    //     );
+    // }
 
-    createObject(name: string, sourceCompetition: Competition): Observable<Pool> {
-        const json = { name, sourceCompetitionId: sourceCompetition.getId() };
+    createObject(name: string, competitionConfig: CompetitionConfig): Observable<Pool> {
+        const json = { name, competitionConfigId: competitionConfig.getId() };
         return this.http.post<JsonPool>(this.url, json, { headers: super.getHeaders() }).pipe(
-            map((jsonPool: JsonPool) => this.mapper.toObject(jsonPool, sourceCompetition)),
+            map((jsonPool: JsonPool) => this.mapper.toObject(jsonPool)),
             catchError((err) => this.handleError(err))
         );
     }

@@ -20,8 +20,9 @@
 
       <div class="d-flex justify-content-center">
         <app-pool-player-choose class="w-100" (selectS11Player)="openAddModal($event)"
-          [viewPeriod]="pool.getCreateAndJoinPeriod()" [alreadyChosenPersons]="getPersons()"
-          (linkToS11Player)="linkToPlayer($event)" (filterUpdate)="updateState($event)" [filter]="choosePlayersFilter">
+          [competition]="pool.getSourceCompetition()" [viewPeriod]="pool.getCreateAndJoinPeriod()"
+          [alreadyChosenPersons]="getPersons()" (linkToS11Player)="linkToPlayer($event)"
+          (filterUpdate)="updateState($event)" [filter]="choosePlayersFilter">
         </app-pool-player-choose>
         <!-- <app-s11player-info></app-s11player-info> -->
       </div>

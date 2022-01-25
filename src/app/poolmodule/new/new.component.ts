@@ -6,11 +6,10 @@ import { IAlert } from '../../shared/commonmodule/alert';
 import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolCollection } from '../../lib/pool/collection';
-import { ActiveConfigRepository } from '../../lib/activeConfig/repository';
-import { JsonCompetitionShell } from '../../lib/activeConfig/json';
-import { ActiveConfig } from '../../lib/activeConfig';
 import { CompetitionRepository } from '../../lib/ngx-sport/competition/repository';
 import { Competition } from 'ngx-sport';
+import { CompetitionConfigRepository } from '../../lib/competitionConfig/repository';
+import { CompetitionConfig } from '../../lib/competitionConfig';
 
 
 @Component({
@@ -26,12 +25,12 @@ export class NewComponent implements OnInit {
     minlengthname: PoolCollection.MIN_LENGTH_NAME,
     maxlengthname: PoolCollection.MAX_LENGTH_NAME,
   };
-  activeConfig: ActiveConfig | undefined;
-  activeSourceCompetitionShell: JsonCompetitionShell | undefined;
+  competitionConfig!: CompetitionConfig;
+  // activeSourceCompetitionShell: JsonCompetitionShell | undefined;
 
   constructor(
     private router: Router,
-    private activeConfigRepository: ActiveConfigRepository,
+    private competitionConfigRepository: CompetitionConfigRepository,
     private poolRepository: PoolRepository,
     private competitionRepository: CompetitionRepository,
     fb: FormBuilder
@@ -46,17 +45,15 @@ export class NewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activeConfigRepository.getObject().subscribe({
-      next: (config: ActiveConfig) => {
-        this.activeConfig = config;
-        if (!this.inCreateAndJoinPeriod()) {
-          const period = this.activeConfig.getCreateAndJoinPeriod();
+    this.competitionConfigRepository.getActiveObjects().subscribe({
+      next: (competitionConfigs: CompetitionConfig[]) => {
+        const competitionConfig = competitionConfigs.pop();
+        if (competitionConfig === undefined) {
+          this.setAlert('danger', 'er is geen actieve inschrijfperiode');
+        } else if (!competitionConfig.getCreateAndJoinPeriod().isIn()) {
+          const period = competitionConfig.getCreateAndJoinPeriod();
           this.setAlert('danger', 'het opzetten van een pool kan alleen van ' + period.getStartDateTime().toLocaleString() + ' tot ' + period.getEndDateTime().toLocaleString());
-        }
-        else if (this.activeConfig.getCompetitions().length !== 1) {
-          this.setAlert('danger', 'het aantal actieve broncompetities moet altijd 1 zijn');
         } else {
-          this.activeSourceCompetitionShell = this.activeConfig.getCompetitions().pop();
           this.setAlert('info', 'wanneer je dezelfde naam gebruikt voor meerdere seizoenen, dan wordt er ook een alltime - ranking bijgehouden');
         }
 
@@ -68,11 +65,6 @@ export class NewComponent implements OnInit {
     });
   }
 
-  protected inCreateAndJoinPeriod(): boolean {
-    const now = new Date();
-    return this.activeConfig ? this.activeConfig.getCreateAndJoinPeriod().isIn(now) : false;
-  }
-
   create(): boolean {
 
     this.processing = true;
@@ -80,23 +72,15 @@ export class NewComponent implements OnInit {
 
     const name = this.form.controls.name.value;
 
-    if (!this.activeSourceCompetitionShell) {
-      return false;
-    }
 
-    this.competitionRepository.getObject(this.activeSourceCompetitionShell.id)
-      .subscribe(
-          /* happy path */(sourceCompetition: Competition) => {
-          this.poolRepository.createObject(name, sourceCompetition).subscribe({
-            next: (pool: Pool) => {
-              this.router.navigate(['/pool', pool.getId()]);
-            },
-            error: (e) => {
-              this.setAlert('danger', 'de pool kon niet worden aangemaakt: ' + e); this.processing = false;
-            }
-          });
-        }
-      );
+    this.poolRepository.createObject(name, this.competitionConfig).subscribe({
+      next: (pool: Pool) => {
+        this.router.navigate(['/pool', pool.getId()]);
+      },
+      error: (e) => {
+        this.setAlert('danger', 'de pool kon niet worden aangemaakt: ' + e); this.processing = false;
+      }
+    });
     return false;
   }
 

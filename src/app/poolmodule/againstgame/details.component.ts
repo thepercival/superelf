@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, CompetitorMap, Player, ScoreConfigService, State, Structure, Team, TeamCompetitor } from 'ngx-sport';
+import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, CompetitorMap, Player, ScoreConfigService, GameState, Structure, Team, TeamCompetitor } from 'ngx-sport';
 import { Observable, of } from 'rxjs';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { GameRound } from '../../lib/gameRound';

@@ -9,6 +9,7 @@ import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { Pool } from '../../lib/pool';
 import { PoolUserRemoveModalComponent } from './removemodal.component';
+import { Period } from 'ngx-sport';
 
 
 @Component({
@@ -19,6 +20,7 @@ import { PoolUserRemoveModalComponent } from './removemodal.component';
 export class PoolUsersComponent extends PoolComponent implements OnInit {
 
   poolUsers: PoolUser[] = [];
+  private nrOfDaysToRemoveAfterAssemblePeriod = 6;
 
   constructor(
     route: ActivatedRoute,
@@ -35,14 +37,14 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.pool = pool;
-        if (pool.isInEditPeriod()) {
-          this.poolUserRepository.getObjects(pool).subscribe({
-            next: (poolUsers: PoolUser[]) => this.poolUsers = poolUsers,
-            error: (e) => { this.setAlert('danger', e); this.processing = false; },
-            complete: () => this.processing = false
-          });
+        if (pool.getAssemblePeriod().isIn()) {
+          this.setAlert('info', 'vanaf de start tot ' + this.nrOfDaysToRemoveAfterAssemblePeriod + ' dagen erna zijn deelnemers te vewijderen');
         }
-        this.processing = false;
+        this.poolUserRepository.getObjects(pool).subscribe({
+          next: (poolUsers: PoolUser[]) => this.poolUsers = poolUsers,
+          error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
+          complete: () => this.processing = false
+        });
       },
       error: (e) => {
         this.setAlert('danger', e); this.processing = false;
@@ -69,5 +71,12 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
         complete: () => this.processing = false
       }
     );
+  }
+
+  canBeRemoved(): boolean {
+    const assemblePeriod = this.pool.getAssemblePeriod();
+    const endDateTime = new Date(assemblePeriod.getEndDateTime().getTime() + (1000 * 60 * 60 * 24 * this.nrOfDaysToRemoveAfterAssemblePeriod));
+    const period = new Period(assemblePeriod.getEndDateTime(), endDateTime);
+    return period.isIn();
   }
 }

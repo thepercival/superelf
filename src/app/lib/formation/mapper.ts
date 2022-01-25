@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Competition } from 'ngx-sport';
 import { S11Formation } from '../formation';
 import { ViewPeriod } from '../period/view';
 import { PoolUser } from '../pool/user';
@@ -16,7 +17,8 @@ export class S11FormationMapper {
     toObject(json: JsonS11Formation, poolUser: PoolUser, viewPeriod: ViewPeriod): S11Formation {
         const formation = new S11Formation(poolUser, viewPeriod);
         formation.setId(json.id);
-        json.lines.forEach((jsonLine: JsonS11FormationLine) => this.lineMapper.toObject(jsonLine, formation, viewPeriod));
+        const competition = poolUser.getPool().getCompetitionConfig().getSourceCompetition();
+        json.lines.forEach((jsonLine: JsonS11FormationLine) => this.lineMapper.toObject(jsonLine, formation, competition, viewPeriod));
         return formation;
     }
 

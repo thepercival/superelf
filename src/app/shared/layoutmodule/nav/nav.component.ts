@@ -30,6 +30,7 @@ export class NavComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.authService.getUser();
+    console.log('navcomponent::ngOnInit this.user', this.user);
   }
 
   getSeasonBadge(startDate: Date): string {

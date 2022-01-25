@@ -9,10 +9,9 @@ import { S11Formation } from '../../lib/formation';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PoolRepository } from '../../lib/pool/repository';
 import { Pool } from '../../lib/pool';
-import { ActiveConfigRepository } from '../../lib/activeConfig/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { ActiveConfig } from '../../lib/activeConfig';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
+import { CompetitionConfigRepository } from '../../lib/competitionConfig/repository';
 
 @Component({
   selector: 'app-pool-chooseformation',
@@ -29,8 +28,8 @@ export class FormationChooseComponent extends PoolComponent implements OnInit {
     router: Router,
     poolRepository: PoolRepository,
     protected formationRepository: FormationRepository,
+    protected competitionConfigRepository: CompetitionConfigRepository,
     private modalService: NgbModal,
-    protected activeConfigRepository: ActiveConfigRepository,
     protected poolUserRepository: PoolUserRepository,
   ) {
     super(route, router, poolRepository);
@@ -42,9 +41,9 @@ export class FormationChooseComponent extends PoolComponent implements OnInit {
         next: (pool: Pool) => {
           this.pool = pool;
 
-          this.activeConfigRepository.getObject().pipe(
-            concatMap((config: ActiveConfig) => {
-              this.formations = config.getAvailableFormations();
+          this.competitionConfigRepository.getAvailableFormations(pool.getCompetitionConfig()).pipe(
+            concatMap((formations: Formation[]) => {
+              this.formations = formations;
               return this.poolUserRepository.getObjectFromSession(pool);
             })
           )

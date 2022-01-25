@@ -7,6 +7,7 @@ import { EscapeHtmlPipe } from './escapehtmlpipe';
 import { FocusDirective } from './focus';
 import { LineIconComponent } from './lineicon/lineicon.component';
 import { TitleComponent } from './title/title.component';
+import { ViewPortManager } from './viewPortManager';
 
 @NgModule({
   declarations: [

@@ -35,7 +35,7 @@
               <span>{{scoutedPlayer.getPerson().getName()}}</span>
             </td>
             <td>
-              <app-team-name [team]="getCurrentTeam(scoutedPlayer.getPerson())"></app-team-name>
+              <app-team-name [team]="getCurrentTeam(scoutedPlayer.getS11Player())"></app-team-name>
             </td>
             <td>
               <span class="badge bg-totals">{{scoutedPlayer.getS11Player().getTotalPoints()}}</span>

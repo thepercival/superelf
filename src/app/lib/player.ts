@@ -1,4 +1,4 @@
-import { FootballLine, FormationLine, Identifiable, Person } from 'ngx-sport';
+import { FootballLine, FormationLine, Identifiable, Period, Person, Player, Team } from 'ngx-sport';
 import { ViewPeriod } from './period/view';
 import { JsonPlayerTotals } from './player/totals/json';
 import { Statistics } from './statistics';
@@ -27,6 +27,7 @@ export class S11Player extends Identifiable {
     constructor(
         protected viewPeriod: ViewPeriod,
         protected person: Person,
+        protected players: Player[],
         protected totals: JsonPlayerTotals,
         protected totalPoints: number) {
         super();
@@ -39,8 +40,6 @@ export class S11Player extends Identifiable {
     public getPerson(): Person {
         return this.person;
     }
-
-
 
     // public setTotal(total: number) {
     //     this.total = total;
@@ -55,7 +54,7 @@ export class S11Player extends Identifiable {
     // }
 
     public getLine(): FootballLine {
-        const player = this.getPerson().getPlayers()[0];
+        const player = this.getPlayers()[0];
         if (player === undefined) {
             throw new Error('s11player should always have a line');
         }
@@ -84,6 +83,36 @@ export class S11Player extends Identifiable {
 
     public getTotalPoints(): number {
         return this.totalPoints;
+    }
+
+    public getPlayers(team?: Team, period?: Period, line?: number): Player[] {
+        const filters: { (player: Player): boolean; }[] = [];
+        if (team) {
+            filters.push((player: Player) => player.getTeam() === team);
+        }
+        if (period) {
+            filters.push((player: Player) => player.overlaps(period));
+        }
+        if (line) {
+            filters.push((player: Player) => player.getLine() === line);
+        }
+        if (filters.length === 0) {
+            return this.players;
+        }
+        return this.players.filter((player: Player): boolean => {
+            return filters.every(filter => filter(player));
+        });
+    }
+
+    public getPlayer(team: Team, date?: Date): Player | undefined {
+        const checkDate = date ? date : new Date();
+        const filters: { (player: Player): boolean; }[] = [
+            (player: Player) => player.getTeam() === team,
+            (player: Player) => player.isIn(checkDate)
+        ]
+        return this.players.find((player: Player): boolean => {
+            return filters.every(filter => filter(player));
+        });
     }
 }
 

@@ -41,7 +41,7 @@ import { UserTitleComponent } from './title/title.component';
 })
 export class UserModule {
   constructor(library: FaIconLibrary, alertConfig: NgbAlertConfig) {
-    // library.addIcons(, faKey);
+    library.addIcons(faKey);
     alertConfig.dismissible = false;
   }
 }

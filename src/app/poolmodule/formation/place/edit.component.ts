@@ -79,7 +79,7 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
           // }
           // this.assembleLines = this.getAssembleLines(formation);
         },
-        error: (e) => {
+        error: (e: string) => {
           this.setAlert('danger', e); this.processing = false;
         },
         complete: () => this.processing = false
@@ -111,7 +111,7 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
   getChoosenTeams(): Team[] {
     const teams: Team[] = [];
     this.poolUser.getAssembleFormation()?.getPlayers().forEach((player: S11Player) => {
-      const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player.getPerson());
+      const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player);
       if (currentPlayer === undefined) {
         return;
       }

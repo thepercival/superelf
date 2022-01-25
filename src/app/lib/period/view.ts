@@ -1,10 +1,10 @@
-import { Competition, Period } from 'ngx-sport';
+import { Period } from 'ngx-sport';
 import { GameRound } from '../gameRound';
 
 export class ViewPeriod extends Period {
     protected id: number = 0;
     protected gameRounds: GameRound[] = [];
-    constructor(protected sourceCompetition: Competition, startDateTime: Date, endDateTime: Date) {
+    constructor(startDateTime: Date, endDateTime: Date) {
         super(startDateTime, endDateTime);
     }
 
@@ -26,9 +26,5 @@ export class ViewPeriod extends Period {
             throw new Error('gameRound could not be found for number "' + number + '"');
         }
         return gameRound;
-    }
-
-    getSourceCompetition(): Competition {
-        return this.sourceCompetition;
     }
 }

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Params, Router } from '@angular/router';
-import { AgainstGame, Competition, CompetitorMap, Player, State, Structure } from 'ngx-sport';
+import { AgainstGame, Competition, CompetitorMap, Player, GameState, Structure } from 'ngx-sport';
 import { concatMap, map, Observable, of } from 'rxjs';
 import { GameRound } from '../../lib/gameRound';
 import { GamePicker } from '../../lib/gameRound/gamePicker';
@@ -107,7 +107,7 @@ export class S11PlayerComponent implements OnInit {
   updateGameRound(): void {
     const currentGameRound = this.currentGameRound;
     if (currentGameRound === undefined) {
-      this.player = this.oneTeamSimultaneous.getCurrentPlayer(this.s11Player.getPerson());
+      this.player = this.oneTeamSimultaneous.getCurrentPlayer(this.s11Player);
       this.currentStatistics = undefined;
       this.currentGame = undefined;
       return;
@@ -115,7 +115,7 @@ export class S11PlayerComponent implements OnInit {
     this.currentStatistics = this.s11Player.getGameStatistics(currentGameRound.getNumber());
 
     if (currentGameRound.hasAgainstGames()) {
-      this.currentGame = (new GamePicker(currentGameRound)).getGame(this.s11Player.getPerson());
+      this.currentGame = (new GamePicker(this.pool.getSourceCompetition(), currentGameRound)).getGame(this.s11Player);
       return;
     }
     this.processingGames = true;
@@ -126,7 +126,7 @@ export class S11PlayerComponent implements OnInit {
 
         this.gameRepository.getSourceObjects(sourcePoule, currentGameRound).subscribe({
           next: (againstGames: AgainstGame[]) => {
-            this.currentGame = (new GamePicker(currentGameRound)).getGame(this.s11Player.getPerson());
+            this.currentGame = (new GamePicker(this.pool.getSourceCompetition(), currentGameRound)).getGame(this.s11Player);
           },
           complete: () => this.processingGames = false
         });

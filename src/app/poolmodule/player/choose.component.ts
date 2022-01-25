@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { FootballLine, NameService, Person, PersonMap, Player, Team, TeamMap } from 'ngx-sport';
+import { Competition, FootballLine, NameService, Person, PersonMap, Player, Team, TeamMap } from 'ngx-sport';
 import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
 import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
 import { ViewPeriod } from '../../lib/period/view';
@@ -17,6 +17,7 @@ import { ImageRepository } from '../../lib/image/repository';
   styleUrls: ['./choose.component.scss']
 })
 export class S11PlayerChooseComponent implements OnInit {
+  @Input() competition!: Competition;
   @Input() viewPeriod!: ViewPeriod;
   @Input() alreadyChosenPersons: Person[] | undefined;
   @Input() alreadyChosenTeams: Team[] | undefined;
@@ -57,7 +58,7 @@ export class S11PlayerChooseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.searchTeams = this.viewPeriod.getSourceCompetition().getTeamCompetitors().map((teamCompetitor: TeamCompetitor) => teamCompetitor.getTeam());
+    this.searchTeams = this.competition.getTeamCompetitors().map((teamCompetitor: TeamCompetitor) => teamCompetitor.getTeam());
     this.form.controls.searchTeam.setValue(this.filter.team);
 
     this.searchLines.push(FootballLine.All);
@@ -90,7 +91,7 @@ export class S11PlayerChooseComponent implements OnInit {
   // }
 
   searchPersons() {
-    this.playerRepository.getObjects(this.viewPeriod, this.filter.team, this.filter.line)
+    this.playerRepository.getObjects(this.competition, this.viewPeriod, this.filter.team, this.filter.line)
       .subscribe({
         next: (players: S11Player[]) => {
           this.setChoosePersonItems(players);
@@ -109,7 +110,7 @@ export class S11PlayerChooseComponent implements OnInit {
   setChoosePersonItems(players: S11Player[]) {
     const choosePersonItems: ChoosePersonItem[] = [];
     players.forEach((player: S11Player) => {
-      const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player.getPerson());
+      const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player);
       if (currentPlayer) {
         choosePersonItems.push({ player: currentPlayer, s11Player: player });
       }

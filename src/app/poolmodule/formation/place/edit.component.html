@@ -20,11 +20,11 @@
       </div>
 
       <div class="d-flex justify-content-center">
-        <app-pool-player-choose class="w-100" [viewPeriod]="pool.getCreateAndJoinPeriod()"
-          [alreadyChosenPersons]="alreadyChosenPersons" [alreadyChosenTeams]="alreadyChosenTeams"
-          [selectableLines]="selectableLines" [filter]="choosePlayersFilter" [showAll]="form.controls.showAll.value"
-          (selectS11Player)="editPlace($event)" (linkToS11Player)="linkToPlayer($event)"
-          (filterUpdate)="updateState($event)">
+        <app-pool-player-choose class="w-100" [competition]="pool.getSourceCompetition()"
+          [viewPeriod]="pool.getCreateAndJoinPeriod()" [alreadyChosenPersons]="alreadyChosenPersons"
+          [alreadyChosenTeams]="alreadyChosenTeams" [selectableLines]="selectableLines" [filter]="choosePlayersFilter"
+          [showAll]="form.controls.showAll.value" (selectS11Player)="editPlace($event)"
+          (linkToS11Player)="linkToPlayer($event)" (filterUpdate)="updateState($event)">
         </app-pool-player-choose>
       </div>
     </div>

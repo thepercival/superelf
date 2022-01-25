@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
-import { Formation, FormationMapper, Person, PersonMapper } from 'ngx-sport';
+import { Competition, Formation, FormationMapper, Person, PersonMapper } from 'ngx-sport';
 import { PoolUser } from '../pool/user';
 import { S11FormationMapper } from './mapper';
 import { S11Formation } from '../formation';
@@ -62,11 +62,13 @@ export class FormationRepository extends APIRepository {
         const formation = place.getFormationLine().getFormation();
         const poolUser = formation.getPoolUser();
         const url = this.getUrl(poolUser, formation, place);
-        const viewPeriod = poolUser.getPool().getAssemblePeriod().getViewPeriod();
+        const pool = poolUser.getPool();
+        const competition: Competition = pool.getCompetitionConfig().getSourceCompetition();
+        const viewPeriod = pool.getAssemblePeriod().getViewPeriod();
         const jsonPerson = person ? this.personMapper.toJson(person) : undefined;
         return this.http.post<JsonS11Player | undefined>(url, jsonPerson, { headers: super.getHeaders() }).pipe(
             map((jsonS11Player: JsonS11Player | undefined) => {
-                const s11Player = jsonS11Player ? this.s11PlayerMapper.toObject(jsonS11Player, viewPeriod) : undefined;
+                const s11Player = jsonS11Player ? this.s11PlayerMapper.toObject(jsonS11Player, competition, viewPeriod) : undefined;
                 place.setPlayer(s11Player);
                 return s11Player;
             }),

@@ -7,10 +7,10 @@
     <table class="table {{getLineClass('border')}}">
       <tbody>
         <ng-container *ngFor="let place of line.getStartingPlaces()" [ngTemplateOutlet]="placeRow"
-          [ngTemplateOutletContext]="{place:place, s11Player: place.getPlayer(), currentTeam: getCurrentTeam(place.getPlayer()?.getPerson())}">
+          [ngTemplateOutletContext]="{place:place, s11Player: place.getPlayer(), currentTeam: getCurrentTeam(place.getPlayer())}">
         </ng-container>
         <ng-container [ngTemplateOutlet]="placeRow"
-          [ngTemplateOutletContext]="{place:line.getSubstitute(), s11Player: line.getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line.getSubstitute().getPlayer()?.getPerson())}">
+          [ngTemplateOutletContext]="{place:line.getSubstitute(), s11Player: line.getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line.getSubstitute().getPlayer())}">
         </ng-container>
       </tbody>
     </table>

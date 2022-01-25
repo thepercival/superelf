@@ -72,7 +72,7 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   }
 
   initScoutedPlayers(pool: Pool) {
-    this.scoutedPlayerRepository.getObjects(pool.getCreateAndJoinPeriod()).subscribe({
+    this.scoutedPlayerRepository.getObjects(pool.getSourceCompetition(), pool.getCreateAndJoinPeriod()).subscribe({
       next: (scoutedPlayers: ScoutedPlayer[]) => {
         scoutedPlayers.forEach(scoutedPlayer => this.addToScoutingList(scoutedPlayer))
       },
@@ -108,7 +108,7 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
       return;
     }
     this.processing = true;
-    this.scoutedPlayerRepository.createObject(s11Player, this.pool.getCreateAndJoinPeriod()).subscribe({
+    this.scoutedPlayerRepository.createObject(s11Player, this.pool.getSourceCompetition(), this.pool.getCreateAndJoinPeriod()).subscribe({
       next: (scoutedPlayer: ScoutedPlayer) => {
         this.addToScoutingList(scoutedPlayer);
       },

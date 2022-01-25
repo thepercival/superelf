@@ -20,9 +20,8 @@ export class PoolShellRepository extends APIRepository {
         return super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix(withRole);
     }
 
-
-    canCreate(): Observable<boolean> {
-        return this.http.get<boolean>(super.getApiUrl() + 'public/cancreate', { headers: super.getHeaders() }).pipe(
+    canCreateAndJoinPool(): Observable<boolean> {
+        return this.http.get<boolean>(super.getApiUrl() + 'public/cancreateandjoinpool', { headers: super.getHeaders() }).pipe(
             catchError((err) => this.handleError(err))
         );
     }

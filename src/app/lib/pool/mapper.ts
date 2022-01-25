@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Competition, CompetitionMapper } from 'ngx-sport';
+import { CompetitionMapper } from 'ngx-sport';
 
 import { Pool } from '../pool';
 import { JsonPool } from './json';
 import { PoolCollectionMapper } from './collection/mapper';
-import { PoolUserMapper } from './user/mapper';
-import { AssemblePeriodMapper } from '../period/assemble/mapper';
-import { TransferPeriodMapper } from '../period/transfer/mapper';
-import { ViewPeriodMapper } from '../period/view/mapper';
-import { PointsMapper } from '../points/mapper';
+import { CompetitionConfig } from '../competitionConfig';
+import { CompetitionConfigMapper } from '../competitionConfig/mapper';
 
 @Injectable({
     providedIn: 'root'
@@ -16,20 +13,14 @@ import { PointsMapper } from '../points/mapper';
 export class PoolMapper {
     constructor(
         private collectionMapper: PoolCollectionMapper,
-        private viewPeriodMapper: ViewPeriodMapper,
-        private competitionMapper: CompetitionMapper,
-        private pointsMapper: PointsMapper,
-        private assemblePeriodMapper: AssemblePeriodMapper,
-        private transferPeriodMapper: TransferPeriodMapper) { }
+        private competitionConfigMapper: CompetitionConfigMapper,
+        private competitionMapper: CompetitionMapper) { }
 
-    toObject(json: JsonPool, sourceCompetition: Competition): Pool {
+    toObject(json: JsonPool): Pool {
+        const config: CompetitionConfig = this.competitionConfigMapper.toObject(json.competitionConfig)
         const pool = new Pool(
             this.collectionMapper.toObject(json.collection),
-            sourceCompetition,
-            this.pointsMapper.toObject(json.points),
-            this.viewPeriodMapper.toObject(json.createAndJoinPeriod, sourceCompetition),
-            this.assemblePeriodMapper.toObject(json.assemblePeriod, sourceCompetition),
-            this.transferPeriodMapper.toObject(json.transferPeriod, sourceCompetition));
+            config);
         json.competitions.forEach(jsonCompetition => {
             pool.getCompetitions().push(this.competitionMapper.toObject(jsonCompetition));
         });

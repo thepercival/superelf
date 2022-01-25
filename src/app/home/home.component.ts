@@ -58,7 +58,7 @@ export class HomeComponent implements OnInit {
     //   return;
     // }
 
-    this.poolShellRepos.canCreate()
+    this.poolShellRepos.canCreateAndJoinPool()
       .subscribe(
         {
           next: (canCreate: boolean) => {

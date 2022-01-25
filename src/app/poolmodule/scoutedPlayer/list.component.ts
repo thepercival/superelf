@@ -55,7 +55,7 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
   }
 
   initScoutedPlayers(pool: Pool) {
-    this.scoutedPlayerRepository.getObjects(pool.getCreateAndJoinPeriod()).subscribe({
+    this.scoutedPlayerRepository.getObjects(pool.getSourceCompetition(), pool.getCreateAndJoinPeriod()).subscribe({
       next: (scoutedPlayers: ScoutedPlayer[]) => {
         scoutedPlayers.forEach(scoutedPlayer => this.addToScoutingList(scoutedPlayer))
       },
@@ -78,11 +78,11 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
     return this.scoutingList.scoutedPlayers.map((scoutedPlayer: ScoutedPlayer) => scoutedPlayer.getPerson());
   }
 
-  getCurrentTeam(person: Person | undefined): Team | undefined {
-    if (!person) {
+  getCurrentTeam(s11Player: S11Player | undefined): Team | undefined {
+    if (!s11Player) {
       return undefined;
     }
-    const player = this.oneTeamSimultaneous.getCurrentPlayer(person);
+    const player = this.oneTeamSimultaneous.getCurrentPlayer(s11Player);
     if (!player) {
       return undefined;
     }

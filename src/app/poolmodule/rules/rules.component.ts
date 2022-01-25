@@ -1,14 +1,13 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FootballLine, Formation } from 'ngx-sport';
-import { ActiveConfigRepository } from '../../lib/activeConfig/repository';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { Pool } from '../../lib/pool';
-import { ActiveConfig } from '../../lib/activeConfig';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { SeasonScoreUnit } from '../../lib/ngx-sport/season/scoreUnit';
 import { PoolComponent } from '../../shared/poolmodule/component';
+import { CompetitionConfigRepository } from '../../lib/competitionConfig/repository';
 
 @Component({
   selector: 'app-pool-rules',
@@ -22,8 +21,8 @@ export class RulesComponent extends PoolComponent implements OnInit {
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
-    public nameService: SuperElfNameService,
-    protected activeConfigRepository: ActiveConfigRepository
+    protected competitionConfigRepository: CompetitionConfigRepository,
+    public nameService: SuperElfNameService
   ) {
     super(route, router, poolRepository);
   }
@@ -32,14 +31,11 @@ export class RulesComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.pool = pool;
-        this.activeConfigRepository.getObject()
+        this.competitionConfigRepository.getAvailableFormations(pool.getCompetitionConfig())
           .subscribe(
-            (config: ActiveConfig) => this.availableFormations = config.getAvailableFormations()
+            (formations: Formation[]) => this.availableFormations = formations
           );
         this.processing = false;
-      },
-      error: (e) => {
-        this.setAlert('danger', e); this.processing = false;
       }
     });
   }
@@ -58,7 +54,7 @@ export class RulesComponent extends PoolComponent implements OnInit {
       FootballLine.Forward];
   }
 
-  getPoolScoreUnits(formationLineDef: number): SeasonScoreUnit[] {
+  getPoolScoreUnits(line: FootballLine): SeasonScoreUnit[] {
     if (!this.pool) {
       return [];
     }

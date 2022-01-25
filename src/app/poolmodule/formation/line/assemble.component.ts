@@ -42,16 +42,16 @@ export class FormationLineAssembleComponent implements OnInit {
     return this.line.getPlaces().every((place: S11FormationPlace) => place.getPlayer());
   }
 
-  getTeamImageUrl(person: Person): string {
-    const team = this.getCurrentTeam(person);
+  getTeamImageUrl(s11Player: S11Player): string {
+    const team = this.getCurrentTeam(s11Player);
     return team ? this.imageRepository.getTeamUrl(team) : '';
   }
 
-  getCurrentTeam(person: Person | undefined): Team | undefined {
-    if (!person) {
+  getCurrentTeam(s11Player: S11Player | undefined): Team | undefined {
+    if (!s11Player) {
       return undefined;
     }
-    const player = this.oneTeamSimultaneous.getCurrentPlayer(person);
+    const player = this.oneTeamSimultaneous.getCurrentPlayer(s11Player);
     if (!player) {
       return undefined;
     }

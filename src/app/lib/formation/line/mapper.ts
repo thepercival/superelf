@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Competition } from 'ngx-sport';
 import { S11Formation } from '../../formation';
 import { ViewPeriod } from '../../period/view';
 import { S11PlayerMapper } from '../../player/mapper';
@@ -13,10 +14,10 @@ import { JsonS11FormationLine } from './json';
 export class S11FormationLineMapper {
     constructor(protected placeMapper: FormationPlaceMapper, protected playerMapper: S11PlayerMapper) { }
 
-    toObject(json: JsonS11FormationLine, formation: S11Formation, viewPeriod: ViewPeriod): S11FormationLine {
+    toObject(json: JsonS11FormationLine, formation: S11Formation, competition: Competition, viewPeriod: ViewPeriod): S11FormationLine {
         const formationLine = new S11FormationLine(formation, json.number);
         json.places.forEach((jsonPlace: JsonS11FormationPlace) => {
-            this.placeMapper.toObject(jsonPlace, formationLine, viewPeriod);
+            this.placeMapper.toObject(jsonPlace, formationLine, competition, viewPeriod);
         });
         return formationLine;
     }

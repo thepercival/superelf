@@ -1,13 +1,14 @@
-import { Person, Player } from 'ngx-sport';
+import { Player } from 'ngx-sport';
+import { S11Player } from './player';
 
 export class OneTeamSimultaneous {
-    public getCurrentPlayer(person: Person): Player | undefined {
-        return this.getPlayer(person, new Date());
+    public getCurrentPlayer(s11Player: S11Player,): Player | undefined {
+        return this.getPlayer(s11Player, new Date());
     }
 
-    public getPlayer(person: Person, date: Date): Player | undefined {
+    public getPlayer(s11Player: S11Player, date: Date): Player | undefined {
         const checkDate = date ? date : new Date();
-        return person.getPlayers().find((player: Player): boolean => {
+        return s11Player.getPlayers().find((player: Player): boolean => {
             return player.isIn(checkDate);
         });
     }

@@ -1,23 +1,22 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-6">
     <h2>
-      <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
+      <fa-icon [icon]="['fas', 'users']"></fa-icon> stand
     </h2>
 
     <h2 *ngIf="processing" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
 
-    <ngb-alert *ngIf="alert" [type]="alert.type">
-      {{ alert.message }}</ngb-alert>
+    <app-together-ranking *ngIf="!processing && pool && poule" [poule]="poule" [competitionSport]="competitionSport"
+      [competitorMap]="competitorMap" [header]="true">
+    </app-together-ranking>
 
-    <table *ngIf="!processing && pool" class="table">
+    <!-- <table class="table">
       <thead>
         <tr>
+          <th>pl</th>
           <th>naam</th>
-          <th *ngIf="pool.transferPeriodNotStarted()">
-            gekozen spelers
-          </th>
           <th *ngIf="pool.getTransferPeriod().isIn()">
             transfers
           </th>
@@ -47,6 +46,6 @@
           </td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
   </div>
 </div>

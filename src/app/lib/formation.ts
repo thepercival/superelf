@@ -52,8 +52,8 @@ export class S11Formation extends Identifiable {
 
     public getPlayer(team: Team, date?: Date): S11Player | undefined {
         const checkDate = date ? date : new Date();
-        return this.getPlayers().find((player: S11Player) => {
-            return player.getPerson().getPlayer(team, checkDate);
+        return this.getPlayers().find((s11Player: S11Player) => {
+            return s11Player.getPlayer(team, checkDate);
         });
     }
 

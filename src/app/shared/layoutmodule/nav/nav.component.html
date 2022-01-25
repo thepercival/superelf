@@ -14,13 +14,13 @@
     <span>{{getSeasonBadge(nameInfo.start)}}</span>
   </div>
 
-  <button *ngIf="!user" routerLink="/user/login" routerLinkActive="active" class="btn text-light" role="button"
-    aria-label="inloggen " tabindex="-1">
+  <button *ngIf="!authService.isLoggedIn()" routerLink="/user/login" routerLinkActive="active" class="btn text-light"
+    role="button" aria-label="inloggen " tabindex="-1">
     <fa-icon [icon]=" [ 'fas', 'sign-in-alt'] "></fa-icon>
     <span class="ms-1">inloggen</span>
   </button>
-  <button *ngIf="user" [routerLink]="['/user/profile', user.getId()]" class="btn text-light border-0 p-0 pt-1"
-    role="button" tabindex="-1" aria-label="account">
+  <button *ngIf="authService.isLoggedIn()" [routerLink]="['/user/profile', authService.getUser()?.getId()]"
+    class="btn text-light border-0 p-0 pt-1" role="button" tabindex="-1" aria-label="account">
     <fa-icon [icon]="[ 'fas', 'user-circle']" size="3x"></fa-icon>
   </button>
 

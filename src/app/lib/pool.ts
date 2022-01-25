@@ -1,80 +1,81 @@
-import { Association, Competition, Period, PlaceRange, Season } from 'ngx-sport';
+import { Association, Competition, CompetitionSport, Identifiable, PlaceRange, Season } from 'ngx-sport';
 
 import { PoolCollection } from './pool/collection';
 import { AssemblePeriod } from './period/assemble';
 import { TransferPeriod } from './period/transfer';
 import { ViewPeriod } from './period/view';
 import { Points } from './points';
+import { PoolUser } from './pool/user';
+import { CompetitionConfig } from './competitionConfig';
+import { PoolCompetitor } from './pool/competitor';
 
-export class Pool {
-    protected id: number = 0;
+export class Pool extends Identifiable {
     protected competitions: Competition[] = [];
+    protected users: PoolUser[] = [];
 
     static readonly PlaceRanges: PlaceRange[] = [
         { min: 1, max: 1, placesPerPoule: { min: 2, max: 40 } }
     ];
 
-    constructor(protected collection: PoolCollection, protected sourceCompetition: Competition,
-        protected points: Points,
-        protected createAndJoinPeriod: ViewPeriod, protected assemblePeriod: AssemblePeriod,
-        protected transferPeriod: TransferPeriod) {
+    constructor(protected collection: PoolCollection, protected competitionConfig: CompetitionConfig) {
+        super();
     }
 
-    getId(): number {
-        return this.id;
+    public getUsers(): PoolUser[] {
+        return this.users;
     }
 
-    setId(id: number): void {
-        this.id = id;
-    }
-
-    getCollection(): PoolCollection {
+    public getCollection(): PoolCollection {
         return this.collection;
     }
 
-    getSeason(): Season {
-        return this.sourceCompetition.getSeason();
+    public getCompetitionConfig(): CompetitionConfig {
+        return this.competitionConfig;
+    }
+
+    public getSourceCompetition(): Competition {
+        return this.competitionConfig.getSourceCompetition();
+    }
+
+    public getSeason(): Season {
+        return this.competitionConfig.getSourceCompetition().getSeason();
     }
 
     // setRoles(roles: Role[]): void {
     //     this.roles = roles;
     // }
 
-    getName(): string {
+    public getName(): string {
         return this.getCollection().getName();
     }
 
-    getCompetitions(): Competition[] {
+    public getCompetitions(): Competition[] {
         return this.competitions;
     }
 
-    getCompetition(leagueNr?: number): Competition | undefined {
+    public getCompetition(leagueNr?: number): Competition | undefined {
         const leagueName = this.getCollection().getLeagueName(leagueNr);
         return this.getCompetitions().find(competition => competition.getLeague().getName() === leagueName);
     }
 
-    getSourceCompetition(): Competition {
-        return this.sourceCompetition;
-    }
-
-    getAssociation(): Association | undefined {
+    public getAssociation(): Association | undefined {
         return this.getCompetition()?.getLeague().getAssociation();
     }
 
-    getPoints(): Points {
-        return this.points;
+    public getPoints(): Points {
+        return this.getCompetitionConfig().getPoints();
     }
 
-    getAssemblePeriod(): AssemblePeriod {
-        return this.assemblePeriod;
+    public getAssemblePeriod(): AssemblePeriod {
+        return this.getCompetitionConfig().getAssemblePeriod();
     }
 
-    getAssembleViewPeriod(): ViewPeriod {
-        return this.assemblePeriod.getViewPeriod();
+    public getAssembleViewPeriod(): ViewPeriod {
+        return this.getCompetitionConfig().getAssemblePeriod().getViewPeriod();
     }
 
-    getTransferPeriod(): TransferPeriod {
-        return this.transferPeriod;
+    public getTransferPeriod(): TransferPeriod {
+        return this.getCompetitionConfig().getTransferPeriod();
     }
 
     // getScoreUnits(formationLineDef?: number): PoolScoreUnit[] {
@@ -95,33 +96,58 @@ export class Pool {
     //     return this.getCompetitors(competition).map(competitor => competitor.getName());
     // }
 
-    getStartDateTime(): Date {
+    public getStartDateTime(): Date {
         return this.getAssemblePeriod().getViewPeriod().getStartDateTime();
     }
 
-    getCreateAndJoinPeriod(): ViewPeriod {
-        return this.createAndJoinPeriod;
+    public getCreateAndJoinPeriod(): ViewPeriod {
+        return this.getCompetitionConfig().getCreateAndJoinPeriod();
     }
 
-    isInCreateAndJoinPeriod(): boolean {
+    public isInCreateAndJoinPeriod(): boolean {
         return this.getCreateAndJoinPeriod().isIn();
     }
 
-    isInEditPeriod(): boolean {
+    public isInEditPeriod(): boolean {
         return this.getCreateAndJoinPeriod().isIn() || this.getAssemblePeriod().isIn() || this.getTransferPeriod().isIn();
     }
 
-    isInAssembleOrTransferPeriod(): boolean {
+    public isInAssembleOrTransferPeriod(): boolean {
         return this.getAssemblePeriod().isIn() || this.getTransferPeriod().isIn();
     }
 
-    assemblePeriodNotStarted(date?: Date): boolean {
+    public assemblePeriodNotStarted(date?: Date): boolean {
         const checkDate = date ? date : new Date();
         return checkDate < this.getAssemblePeriod().getStartDateTime();
     }
 
-    transferPeriodNotStarted(date?: Date): boolean {
+    public transferPeriodNotStarted(date?: Date): boolean {
         const checkDate = date ? date : new Date();
         return checkDate < this.getTransferPeriod().getStartDateTime();
+    }
+
+    public getCompetitionSport(leagueNr: number): CompetitionSport {
+        const competition = this.getCompetition(leagueNr);
+        if (competition === undefined) {
+            throw Error('competitionSport not found');
+        }
+        const competitionSport = competition.getSingleSport();
+        if (competitionSport === undefined) {
+            throw Error('competitionSport not found');
+        }
+        return competitionSport;
+    }
+
+    public getCompetitors(leagueNr: number): PoolCompetitor[] {
+        const poolCompetitors: PoolCompetitor[] = [];
+        const leagueName = this.getCollection().getLeagueName(leagueNr);
+        this.getUsers().forEach((poolUser: PoolUser) => {
+            poolUser.getCompetitors().forEach((poolCompetitor: PoolCompetitor) => {
+                if (poolCompetitor.getCompetition().getLeague().getName() === leagueName) {
+                    poolCompetitors.push(poolCompetitor);
+                }
+            })
+        });
+        return poolCompetitors;
     }
 }

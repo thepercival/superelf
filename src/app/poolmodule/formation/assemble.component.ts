@@ -1,27 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { NameService, Person, PersonMap, TeamMap, Team, FootballLine, Formation, Player } from 'ngx-sport';
+import { NameService, PersonMap, TeamMap, FootballLine } from 'ngx-sport';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
 import { Pool } from '../../lib/pool';
-import { ActiveConfigRepository } from '../../lib/activeConfig/repository';
-import { concatMap, map, pairwise } from 'rxjs/operators';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { PoolUser } from '../../lib/pool/user';
 import { FormationRepository } from '../../lib/formation/repository';
-import { Observable, of } from 'rxjs';
 import { S11Player } from '../../lib/player';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
-import { ActiveConfig } from '../../lib/activeConfig';
-import { S11FormationLine } from '../../lib/formation/line';
 import { S11FormationPlace } from '../../lib/formation/place';
-import { S11Formation } from '../../lib/formation';
-import { MyNavigation } from '../../shared/commonmodule/navigation';
 
 @Component({
   selector: 'app-pool-assemble',
@@ -43,7 +36,6 @@ export class FormationAssembleComponent extends PoolComponent implements OnInit 
     poolRepository: PoolRepository,
     protected playerRepository: PlayerRepository,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
-    protected activeConfigRepository: ActiveConfigRepository,
     protected poolUserRepository: PoolUserRepository,
     protected formationRepository: FormationRepository,
     fb: FormBuilder,
@@ -59,7 +51,7 @@ export class FormationAssembleComponent extends PoolComponent implements OnInit 
           this.pool = pool;
           this.poolUserRepository.getObjectFromSession(pool).subscribe({
             next: (poolUser: PoolUser) => this.poolUser = poolUser,
-            error: (e) => {
+            error: (e: string) => {
               this.setAlert('danger', e); this.processing = false;
             },
             complete: () => this.processing = false

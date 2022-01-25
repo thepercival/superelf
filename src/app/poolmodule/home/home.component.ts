@@ -58,7 +58,8 @@ export class HomeComponent extends PoolComponent implements OnInit {
         this.scoutingEnabled = pool.getCreateAndJoinPeriod().isIn() || pool.getAssemblePeriod().isIn();
         if (this.scoutingEnabled) {
             const viewPeriod = pool.getAssembleViewPeriod();
-            this.scoutedPlayerRepository.getObjects(viewPeriod).subscribe((scoutedPlayers: ScoutedPlayer[]) => {
+            const competition = this.pool.getSourceCompetition();
+            this.scoutedPlayerRepository.getObjects(competition, viewPeriod).subscribe((scoutedPlayers: ScoutedPlayer[]) => {
                 this.scoutedPlayers = scoutedPlayers;
             });
         }
@@ -67,13 +68,14 @@ export class HomeComponent extends PoolComponent implements OnInit {
             .subscribe({
                 next: (poolUser: PoolUser | undefined) => {
                     this.poolUser = poolUser;
+                    console.log('ssss', this.poolUser);
                     if (pool.isInEditPeriod() && this.isAdmin()) {
                         this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
                             this.poolUsers = poolUsers;
                         });
                     }
                 },
-                error: (e) => {
+                error: (e: string) => {
                     this.setAlert('danger', e); this.processing = false;
                 },
                 complete: () => this.processing = false
@@ -100,14 +102,14 @@ export class HomeComponent extends PoolComponent implements OnInit {
         return this.poolUsers.length === this.getNrOfPoolUsersHaveAssembled();
     }
 
-    getNrOfPoolUsersHaveTransfered(): number {
-        const max = this.pool.getTransferPeriod().getMaxNrOfTransfers();
-        return this.poolUsers.filter(poolUser => poolUser.getNrOfTransferedWithTeam() === max).length;
-    }
+    // getNrOfPoolUsersHaveTransfered(): number {
+    //     const max = this.pool.getTransferPeriod().getMaxNrOfTransfers();
+    //     return this.poolUsers.filter(poolUser => poolUser.getNrOfTransferedWithTeam() === max).length;
+    // }
 
-    allPoolUsersHaveTransfered(): boolean {
-        return this.poolUsers.length === this.getNrOfPoolUsersHaveTransfered();
-    }
+    // allPoolUsersHaveTransfered(): boolean {
+    //     return this.poolUsers.length === this.getNrOfPoolUsersHaveTransfered();
+    // }
 
     linkToAssemble() {
         if (!this.inAssembleMode()) {
@@ -137,10 +139,11 @@ export class HomeComponent extends PoolComponent implements OnInit {
         return this.pool.getAssemblePeriod().getStartDateTime().getTime() > (new Date()).getTime();
     }
 
-    getAssembleText(): string {
-        if (this.inBeforeAssemble()) {
-            return 'vanaf ' + this.dateFormatter.toString(this.pool.getAssemblePeriod().getStartDateTime(), this.dateFormatter.niceDateTime()) + ' uur';
-        }
-        return (this.poolUser?.getNrOfAssembled() ?? 0) + ' speler(s) gekozen';
+    getStartAssembleDate(): string {
+        return 'vanaf ' + this.dateFormatter.toString(this.pool.getAssemblePeriod().getStartDateTime(), this.dateFormatter.niceDateTime()) + ' uur';
+    }
+
+    getNrAssembled(): number {
+        return (this.poolUser?.getNrOfAssembled() ?? 0);
     }
 }

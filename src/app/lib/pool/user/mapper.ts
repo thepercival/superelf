@@ -19,15 +19,19 @@ export class PoolUserMapper {
         protected editActionMapper: EditActionMapper) { }
 
     toObject(json: JsonPoolUser, pool: Pool): PoolUser {
-        const poolUser = new PoolUser(pool, this.userMapper.toObject(json.user));
-        poolUser.setAdmin(json.admin);
-        poolUser.setId(json.id);
+        let poolUser = this.getPoolUser(pool, json);
+        if (poolUser === undefined) {
+            poolUser = new PoolUser(pool, this.userMapper.toObject(json.user));
+            poolUser.setAdmin(json.admin);
+            poolUser.setId(json.id);
+        }
+
         if (json.nrOfAssembled) {
             poolUser.setNrOfAssembled(json.nrOfAssembled);
         }
-        if (json.nrOfTransfersWithTeam) {
-            poolUser.setNrOfTransferedWithTeam(json.nrOfTransfersWithTeam);
-        }
+        // if (json.nrOfTransfersWithTeam) {
+        //     poolUser.setNrOfTransferedWithTeam(json.nrOfTransfersWithTeam);
+        // }
         const association = pool.getSourceCompetition().getAssociation();
         if (json.assembleFormation) {
             const formation = this.formationMapper.toObject(json.assembleFormation, poolUser, pool.getAssemblePeriod().getViewPeriod());
@@ -49,6 +53,19 @@ export class PoolUserMapper {
                 this.poolCompetitorMapper.toObject(jsonPoolCompetitor, poolUser, competition);
             }
         });
+        return poolUser;
+    }
+
+    private getPoolUser(pool: Pool, json: JsonPoolUser): PoolUser {
+        const existingPoolUser = pool.getUsers().find((poolUser: PoolUser): boolean => {
+            return poolUser.getId() === json.id;
+        });
+        if (existingPoolUser !== undefined) {
+            return existingPoolUser;
+        }
+        const poolUser = new PoolUser(pool, this.userMapper.toObject(json.user));
+        poolUser.setAdmin(json.admin);
+        poolUser.setId(json.id);
         return poolUser;
     }
 

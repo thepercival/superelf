@@ -30,13 +30,13 @@ export class PoolUserRepository extends APIRepository {
         return super.getApiUrl() + 'pools/' + pool.getId() + '/' + this.getUrlpostfix();
     }
 
-    getObject(pool: Pool, poolUserId: number): Observable<PoolUser> {
+    /*getObject(pool: Pool, poolUserId: number): Observable<PoolUser> {
         const user = this.authService.getUser();
         return this.http.get<JsonPoolUser>(this.getUrl(pool) + '/' + poolUserId, this.getOptions()).pipe(
             map((jsonPoolUser: JsonPoolUser) => this.mapper.toObject(jsonPoolUser, pool)),
             catchError((err) => this.handleError(err))
         );
-    }
+    }*/
 
     getObjectFromSession(pool: Pool): Observable<PoolUser> {
         const user = this.authService.getUser();

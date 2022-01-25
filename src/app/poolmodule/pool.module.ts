@@ -46,6 +46,8 @@ import { FormationPlaceEditComponent } from './formation/place/edit.component';
 import { FormationLineAssembleComponent } from './formation/line/assemble.component';
 import { FormationAssembleComponent } from './formation/assemble.component';
 import { S11PlayerChooseComponent } from './player/choose.component';
+import { PoolCompetitionComponent } from './leagues/competition.component';
+import { TogetherRankingComponent } from './leagues/togetherranking.component';
 
 @NgModule({
   imports: [
@@ -73,6 +75,7 @@ import { S11PlayerChooseComponent } from './player/choose.component';
     PoolUsersComponent,
     PreNewComponent,
     RulesComponent,
+    PoolCompetitionComponent,
     PoolUserRemoveModalComponent,
     S11PlayerComponent,
     PlayerBasicsComponent,
@@ -80,7 +83,8 @@ import { S11PlayerChooseComponent } from './player/choose.component';
     S11PlayerViewPeriodStatisticsComponent,
     ScoutedPlayerListComponent,
     ScoutedPlayerAddComponent,
-    TeamNameComponent
+    TeamNameComponent,
+    TogetherRankingComponent
   ],
   providers: [
   ]

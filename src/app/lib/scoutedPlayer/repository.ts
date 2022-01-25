@@ -10,6 +10,7 @@ import { ScoutedPlayer } from '../scoutedPlayer';
 import { ViewPeriod } from '../period/view';
 import { S11Player } from '../player';
 import { S11PlayerMapper } from '../player/mapper';
+import { Competition } from 'ngx-sport';
 
 @Injectable({
     providedIn: 'root'
@@ -24,23 +25,23 @@ export class ScoutedPlayerRepository extends APIRepository {
         return super.getApiUrl() + 'viewperiods/' + viewPeriod.getId() + '/scoutedplayers';
     }
 
-    getObjects(viewPeriod: ViewPeriod): Observable<ScoutedPlayer[]> {
+    getObjects(competition: Competition, viewPeriod: ViewPeriod): Observable<ScoutedPlayer[]> {
         return this.http.get<JsonScoutedPlayer[]>(this.getUrl(viewPeriod), this.getOptions()).pipe(
             map((jsonScoutedPlayers: JsonScoutedPlayer[]) => jsonScoutedPlayers.map(jsonScoutedPlayer => {
-                return this.mapper.toObject(jsonScoutedPlayer, viewPeriod);
+                return this.mapper.toObject(jsonScoutedPlayer, competition, viewPeriod);
             })),
             catchError((err) => this.handleError(err))
         );
     }
 
-    createObject(s11Player: S11Player, viewPeriod: ViewPeriod): Observable<ScoutedPlayer> {
+    createObject(s11Player: S11Player, competition: Competition, viewPeriod: ViewPeriod): Observable<ScoutedPlayer> {
         const json: JsonScoutedPlayer = {
             id: 0,
             s11Player: this.s11PlayerMapper.toJson(s11Player),
             nrOfStars: 0
         };
         return this.http.post<JsonScoutedPlayer>(this.getUrl(viewPeriod), json, { headers: super.getHeaders() }).pipe(
-            map((jsonScoutedPlayer: JsonScoutedPlayer) => this.mapper.toObject(jsonScoutedPlayer, viewPeriod)),
+            map((jsonScoutedPlayer: JsonScoutedPlayer) => this.mapper.toObject(jsonScoutedPlayer, competition, viewPeriod)),
             catchError((err) => this.handleError(err))
         );
     }
