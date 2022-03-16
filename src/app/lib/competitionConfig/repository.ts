@@ -27,7 +27,7 @@ export class CompetitionConfigRepository extends APIRepository {
     }
 
     getUrlpostfix(): string {
-        return 'pools';
+        return 'competitionconfigs';
     }
 
     getUrl(pool?: Pool): string {

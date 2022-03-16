@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faKey } from '@fortawesome/free-solid-svg-icons';
 import { NgbAlertConfig, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { LoginComponent } from './login/login.component';
@@ -15,6 +14,7 @@ import { UserRoutingModule } from './user-routing.module';
 import { ProfileComponent } from './profile/profile.component';
 import { UserRepository } from '../lib/user/repository';
 import { UserTitleComponent } from './title/title.component';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
 
 @NgModule({
   imports: [

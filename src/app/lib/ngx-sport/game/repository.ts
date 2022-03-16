@@ -1,10 +1,10 @@
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { AgainstGame, AgainstSportVariant, Competition, CompetitionSport, Game, GameMapper, JsonAgainstGame, JsonTogetherGame, Poule, TogetherGame } from 'ngx-sport';
+import { AgainstGame, Competition, GameMapper, JsonAgainstGame, Poule } from 'ngx-sport';
 import { GameRound } from '../../gameRound';
 
 @Injectable({

@@ -8,6 +8,7 @@ import { Points } from './points';
 import { PoolUser } from './pool/user';
 import { CompetitionConfig } from './competitionConfig';
 import { PoolCompetitor } from './pool/competitor';
+import { LeagueName } from './leagueName';
 
 export class Pool extends Identifiable {
     protected competitions: Competition[] = [];
@@ -53,14 +54,14 @@ export class Pool extends Identifiable {
         return this.competitions;
     }
 
-    public getCompetition(leagueNr?: number): Competition | undefined {
-        const leagueName = this.getCollection().getLeagueName(leagueNr);
+    public getCompetition(leagueName?: LeagueName): Competition | undefined {
+        // const leagueName = this.getCollection().getLeagueName(leagueNr);
         return this.getCompetitions().find(competition => competition.getLeague().getName() === leagueName);
     }
 
-    public getAssociation(): Association | undefined {
-        return this.getCompetition()?.getLeague().getAssociation();
-    }
+    // public getAssociation(): Association | undefined {
+    //     return this.getCompetition()?.getLeague().getAssociation();
+    // }
 
     public getPoints(): Points {
         return this.getCompetitionConfig().getPoints();
@@ -126,8 +127,8 @@ export class Pool extends Identifiable {
         return checkDate < this.getTransferPeriod().getStartDateTime();
     }
 
-    public getCompetitionSport(leagueNr: number): CompetitionSport {
-        const competition = this.getCompetition(leagueNr);
+    public getCompetitionSport(leagueName: LeagueName): CompetitionSport {
+        const competition = this.getCompetition(leagueName);
         if (competition === undefined) {
             throw Error('competitionSport not found');
         }
@@ -138,9 +139,8 @@ export class Pool extends Identifiable {
         return competitionSport;
     }
 
-    public getCompetitors(leagueNr: number): PoolCompetitor[] {
+    public getCompetitors(leagueName: LeagueName): PoolCompetitor[] {
         const poolCompetitors: PoolCompetitor[] = [];
-        const leagueName = this.getCollection().getLeagueName(leagueNr);
         this.getUsers().forEach((poolUser: PoolUser) => {
             poolUser.getCompetitors().forEach((poolCompetitor: PoolCompetitor) => {
                 if (poolCompetitor.getCompetition().getLeague().getName() === leagueName) {

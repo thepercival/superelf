@@ -11,6 +11,7 @@ import { Pool } from '../../lib/pool';
 import { CompetitionSport, CompetitorMap, GamePlaceStrategy, JsonPlanningConfig, Place, PlanningEditMode, Poule, Round, RoundNumber, SelfReferee, StructureEditor } from 'ngx-sport';
 import { PoolCollection } from '../../lib/pool/collection';
 import { PoolCompetitor } from '../../lib/pool/competitor';
+import { LeagueName } from '../../lib/leagueName';
 
 
 @Component({
@@ -49,18 +50,18 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => {
             this.poolUsers = poolUsers;
-            const competition = this.pool.getCompetition(PoolCollection.League_Default);
+            const competition = this.pool.getCompetition(LeagueName.Competition);
             if (competition === undefined) {
               throw Error('competitionSport not found');
             }
 
             // -----------  JE TOONT VOOR EEN BEPAALDE VIEWPERIODE -------------- //
             // DE GAMEROUNDS ZIJN DAN DE WEDSTRIJDEN EN DE POOLUSERS MET HUN PUNTEN PER GAMEROUND ZIJN DAN DE GAMEROUND-SCORE
-            const poolCompetitors = this.pool.getCompetitors(PoolCollection.League_Default);
+            const poolCompetitors = this.pool.getCompetitors(LeagueName.Competition);
             const structure = this.structureEditor.create(competition, [poolCompetitors.length])
             const round = structure.getRootRound();
             this.poule = round.getFirstPoule(); // ?? GET FROM BACKEND ?? this.pool.getCompetition(PoolCollection.League_Default).get;
-            this.competitionSport = this.pool.getCompetitionSport(PoolCollection.League_Default);
+            this.competitionSport = this.pool.getCompetitionSport(LeagueName.Competition);
             this.competitorMap = new CompetitorMap(poolCompetitors);
 
           },
