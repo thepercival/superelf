@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationStart, Params, Router } from '@angular/router';
-import { AgainstGame, Competition, CompetitorMap, Player, GameState, Structure } from 'ngx-sport';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AgainstGame, Competition, Player, StartLocationMap, Structure } from 'ngx-sport';
 import { concatMap, map, Observable, of } from 'rxjs';
 import { GameRound } from '../../lib/gameRound';
 import { GamePicker } from '../../lib/gameRound/gamePicker';
@@ -34,7 +34,7 @@ export class S11PlayerComponent implements OnInit {
   public currentStatistics: Statistics | undefined;
   public currentPoints: number | undefined;
   public sourceStructure: Structure | undefined;
-  public competitorMap!: CompetitorMap;
+  public startLocationMap!: StartLocationMap;
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public player: Player | undefined;
@@ -67,7 +67,7 @@ export class S11PlayerComponent implements OnInit {
       return
     }
 
-    this.competitorMap = new CompetitorMap(this.pool.getSourceCompetition().getTeamCompetitors());
+    this.startLocationMap = new StartLocationMap(this.pool.getSourceCompetition().getTeamCompetitors());
 
     this.initSliderGameRounds();
 
@@ -122,7 +122,7 @@ export class S11PlayerComponent implements OnInit {
     this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
       next: (structure: Structure) => {
         this.sourceStructure = structure;
-        const sourcePoule = structure.getRootRound().getFirstPoule();
+        const sourcePoule = structure.getSingleCategory().getRootRound().getFirstPoule();
 
         this.gameRepository.getSourceObjects(sourcePoule, currentGameRound).subscribe({
           next: (againstGames: AgainstGame[]) => {

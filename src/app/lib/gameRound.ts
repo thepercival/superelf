@@ -1,4 +1,4 @@
-import { AgainstGame, CompetitorMap, Player } from 'ngx-sport';
+import { AgainstGame } from 'ngx-sport';
 import { ViewPeriod } from './period/view';
 
 export class GameRound {

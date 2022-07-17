@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase, CompetitorMap, ScoreConfigService, GameState, Team, TeamCompetitor } from 'ngx-sport';
+import { Component, Input, OnInit } from '@angular/core';
+import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase, ScoreConfigService, GameState, Team, TeamCompetitor, StartLocationMap } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 
 @Component({
@@ -9,7 +9,7 @@ import { DateFormatter } from '../../lib/dateFormatter';
 })
 export class AgainstGameTitleComponent implements OnInit {
   @Input() againstGame!: AgainstGame;
-  private competitorMap!: CompetitorMap;
+  private startLocationMap!: StartLocationMap;
 
   private scoreConfigService: ScoreConfigService;
 
@@ -21,7 +21,7 @@ export class AgainstGameTitleComponent implements OnInit {
 
   ngOnInit() {
     const competitors = this.againstGame.getPoule().getCompetition().getTeamCompetitors();
-    this.competitorMap = new CompetitorMap(competitors);
+    this.startLocationMap = new StartLocationMap(competitors);
   }
 
   // ngOnChanges(changes: SimpleChanges) {
@@ -45,7 +45,7 @@ export class AgainstGameTitleComponent implements OnInit {
         return undefined;
       }
       const startLocation = gamePlace.getPlace().getStartLocation();
-      return startLocation ? this.competitorMap.getCompetitor(startLocation) : undefined;
+      return startLocation ? this.startLocationMap.getCompetitor(startLocation) : undefined;
     });
   }
 

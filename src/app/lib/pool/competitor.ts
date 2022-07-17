@@ -1,10 +1,11 @@
-import { Competition, Competitor, CompetitorBase } from 'ngx-sport';
+import { Competition, Competitor, CompetitorBase, StartLocation } from 'ngx-sport';
 import { User } from '../user';
 import { PoolUser } from './user';
 
 export class PoolCompetitor extends CompetitorBase implements Competitor {
-    constructor(private poolUser: PoolUser, competition: Competition, pouleNr: number, placeNr: number) {
-        super(competition, pouleNr, placeNr);
+    constructor(private poolUser: PoolUser, competition: Competition, startLocation: StartLocation) {
+        // const startLocation = new StartLocation(pouleNr, placeNr);
+        super(competition, startLocation);
         this.poolUser.getCompetitors().push(this);
     }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { PoolCompetitor } from '../competitor';
-import { Competition } from 'ngx-sport';
+import { Competition, StartLocation } from 'ngx-sport';
 import { JsonPoolCompetitor } from './json';
 import { PoolUser } from '../user';
 
@@ -13,7 +13,7 @@ export class PoolCompetitorMapper {
 
     toObject(json: JsonPoolCompetitor, poolUser: PoolUser, competition: Competition, competitor?: PoolCompetitor): PoolCompetitor {
         if (competitor === undefined) {
-            competitor = new PoolCompetitor(poolUser, competition, json.pouleNr, json.placeNr);
+            competitor = new PoolCompetitor(poolUser, competition, new StartLocation(json.categoryNr, json.pouleNr, json.placeNr));
         }
         competitor.setId(json.id);
         return competitor;
@@ -25,8 +25,9 @@ export class PoolCompetitorMapper {
             registered: competitor.getRegistered(),
             info: competitor.getInfo(),
             name: competitor.getName(),
-            pouleNr: competitor.getPouleNr(),
-            placeNr: competitor.getPlaceNr(),
+            categoryNr: competitor.getStartLocation().getCategoryNr(),
+            pouleNr: competitor.getStartLocation().getPouleNr(),
+            placeNr: competitor.getStartLocation().getPlaceNr(),
             competitionId: competitor.getCompetition().getId()
         };
     }

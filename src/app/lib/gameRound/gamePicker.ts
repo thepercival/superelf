@@ -1,4 +1,4 @@
-import { AgainstGame, Competition, CompetitorMap, Player, Team, TeamCompetitor, TeamMap } from "ngx-sport";
+import { AgainstGame, Competition, Player, StartLocationMap, Team, TeamCompetitor, TeamMap } from "ngx-sport";
 import { GameRound } from "../gameRound";
 import { S11Player } from "../player";
 
@@ -11,14 +11,14 @@ export class GamePicker {
         const players = s11Player.getPlayers();
         const teamMap = this.getTeamMap(players);
         const teamCompetitors = this.getTeamCompetitors(teamMap);
-        const competitorMap = new CompetitorMap(teamCompetitors);
+        const startLocationMap = new StartLocationMap(teamCompetitors);
 
         return this.gameRound.getAgainstGames().find((againstGame: AgainstGame): boolean => {
             return players.some((player: Player): boolean => {
                 if (!player.isIn(againstGame.getStartDateTime())) {
                     return false;
                 }
-                return againstGame.hasCompetitor(competitorMap);
+                return againstGame.hasCompetitor(startLocationMap);
             });
         });
     }

@@ -1,6 +1,6 @@
-<div *ngIf="poule && nameService" class="card border-1">
+<div *ngIf="poule && structureNameService" class="card border-1">
     <div *ngIf="header" class="card-header">
-        {{nameService.getPouleName(poule, true)}}
+        {{structureNameService.getPouleName(poule, true)}}
     </div>
     <div class="card-body p-0">
         <h2 *ngIf="processing" class="text-center">

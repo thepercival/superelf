@@ -1,8 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, Place } from 'ngx-sport';
-import { TypePredicateKind } from 'typescript';
+import { Poule, Place, StructureNameService } from 'ngx-sport';
 import { AuthService } from '../../../lib/auth/auth.service';
-import { PoolCompetitor } from '../../../lib/pool/competitor';
 
 import { CSSService } from '../../commonmodule/cssservice';
 
@@ -17,7 +15,7 @@ export class PouleRankingComponent implements OnInit {
   // @Input() placeLocationMap: PlaceLocationMap | undefined;
   @Input() header: boolean | undefined;
   // public placeLocationMap: PlaceLocationMap;
-  public nameService: NameService | undefined;
+  public structureNameService: StructureNameService | undefined;
   public showDifferenceDetail = false;
   public processing = true;
 

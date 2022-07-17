@@ -8,9 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { Pool } from '../../lib/pool';
-import { CompetitionSport, CompetitorMap, GamePlaceStrategy, JsonPlanningConfig, Place, PlanningEditMode, Poule, Round, RoundNumber, SelfReferee, StructureEditor } from 'ngx-sport';
-import { PoolCollection } from '../../lib/pool/collection';
-import { PoolCompetitor } from '../../lib/pool/competitor';
+import { CompetitionSport, Poule, StartLocationMap, StructureEditor } from 'ngx-sport';
 import { LeagueName } from '../../lib/leagueName';
 
 
@@ -26,7 +24,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
 
   public poule!: Poule;
   public competitionSport!: CompetitionSport;
-  public competitorMap!: CompetitorMap;
+  public startLocationMap!: StartLocationMap;
 
   constructor(
     route: ActivatedRoute,
@@ -59,10 +57,10 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
             // DE GAMEROUNDS ZIJN DAN DE WEDSTRIJDEN EN DE POOLUSERS MET HUN PUNTEN PER GAMEROUND ZIJN DAN DE GAMEROUND-SCORE
             const poolCompetitors = this.pool.getCompetitors(LeagueName.Competition);
             const structure = this.structureEditor.create(competition, [poolCompetitors.length])
-            const round = structure.getRootRound();
+            const round = structure.getSingleCategory().getRootRound();
             this.poule = round.getFirstPoule(); // ?? GET FROM BACKEND ?? this.pool.getCompetition(PoolCollection.League_Default).get;
             this.competitionSport = this.pool.getCompetitionSport(LeagueName.Competition);
-            this.competitorMap = new CompetitorMap(poolCompetitors);
+            this.startLocationMap = new StartLocationMap(poolCompetitors);
 
           },
           error: (e: string) => { this.setAlert('danger', e); this.processing = false; },

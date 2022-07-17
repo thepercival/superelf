@@ -38,7 +38,7 @@
                     class="badge badge-rank {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
             </td>
             <td class="text-break ps-0" [ngClass]="{ 'favitem': false}">
-                {{nameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
+                {{structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
             </td>
             <td *ngFor="let gameRound of getGameRounds()" class="text-end ps-0 {{viewPortManager.getClass(gameRound)}}">
                 {{getScore(sportRankingItem.getPlaceLocation(), gameRound )}}</td>

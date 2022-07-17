@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NameService, Poule, CompetitorMap, GameAmountConfig, GameState, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, Place, AgainstGpp, AgainstH2h, Single, AllInOneGame } from 'ngx-sport';
+import { Poule, GameAmountConfig, GameState, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, Place, AgainstGpp, AgainstH2h, Single, AllInOneGame, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../shared/commonmodule/viewPortManager';
 
 @Component({
@@ -9,13 +9,13 @@ import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../shared/
 })
 export class TogetherRankingComponent implements OnInit {
   @Input() poule!: Poule;
-  @Input() competitorMap!: CompetitorMap;
+  @Input() startLocationMap!: StartLocationMap;
   @Input() competitionSport!: CompetitionSport;
   @Input() header!: boolean;
   protected togetherRankingCalculator!: TogetherSportRoundRankingCalculator;
 
   public sportRankingItems!: SportRoundRankingItem[];
-  public nameService!: NameService;
+  public structureNameService!: StructureNameService;
   public viewPortManager!: ViewPortManager;
   protected gameAmountConfig!: GameAmountConfig;
   protected scoreMap = new ScoreMap();
@@ -29,14 +29,14 @@ export class TogetherRankingComponent implements OnInit {
 
   ngOnInit() {
     this.processing = true;
-    this.nameService = new NameService(this.competitorMap);
+    this.structureNameService = new StructureNameService(this.startLocationMap);
     this.togetherRankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport);
     this.sportRankingItems = this.togetherRankingCalculator.getItemsForPoule(this.poule);
     this.gameAmountConfig = this.poule.getRound().getNumber().getValidGameAmountConfig(this.competitionSport);
     //this.initGameRoundMap();    
     this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.getGameRounds().length);
     this.initTableData();
-    console.log(this.competitorMap);
+    // console.log(this.startLocationMap);
     this.processing = false;
   }
 
