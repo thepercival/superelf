@@ -52,7 +52,7 @@ export class NewComponent implements OnInit {
           this.setAlert('danger', 'er is geen actieve inschrijfperiode');
         } else if (!competitionConfig.getCreateAndJoinPeriod().isIn()) {
           const period = competitionConfig.getCreateAndJoinPeriod();
-          this.setAlert('danger', 'het opzetten van een pool kan alleen van ' + period.getStartDateTime().toLocaleString() + ' tot ' + period.getEndDateTime().toLocaleString());
+          this.setAlert('danger', 'het organiseren van een pool kan alleen van ' + period.getStartDateTime().toLocaleString() + ' tot ' + period.getEndDateTime().toLocaleString());
         } else {
           this.setAlert('info', 'wanneer je dezelfde naam gebruikt voor meerdere seizoenen, dan wordt er ook een alltime - ranking bijgehouden');
         }

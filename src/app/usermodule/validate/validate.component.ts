@@ -13,6 +13,7 @@ import { AuthComponent } from '../component';
 export class ValidateComponent extends AuthComponent implements OnInit {
   protected emailaddress: string | undefined;
   protected key: string | undefined;
+  protected referer: 'create' | undefined;
   public validated = false;
 
   constructor(
@@ -28,6 +29,7 @@ export class ValidateComponent extends AuthComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.emailaddress = params['emailaddress'];
       this.key = params['key'];
+      this.referer = params['referer'];
     });
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/', 'warning', 'je bent al ingelogd']);
@@ -47,7 +49,11 @@ export class ValidateComponent extends AuthComponent implements OnInit {
     this.authService.validate(this.emailaddress, this.key).subscribe({
       next: (validated: boolean) => {
         this.validated = validated;
-        this.setAlert('success', 'je emailadres is gevalideerd en je bent meteen ingelogd');
+        if (this.referer !== undefined && this.referer === 'create') {
+          this.router.navigate(['/pool/new']);
+        } else {
+          this.setAlert('success', 'je emailadres is gevalideerd en je bent meteen ingelogd');
+        }
       },
       error: (e) => {
         this.setAlert('danger', 'het valideren is niet gelukt: ' + e); this.processing = false;
