@@ -63,19 +63,22 @@
                   "maximumWarning": "6kb"
                 }
               ],
-              "optimization": true,
-              "outputHashing": "all",
-              "namedChunks": false,
-              "sourceMap": false,
-              "extractLicenses": true,
-              "vendorChunk": true,
-              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "optimization": {
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": true
+                },
+                "fonts": {
+                  "inline": true
+                }
+              },
+              "outputHashing": "all",
               "serviceWorker": true
             },
             "prod-nl": {
@@ -91,12 +94,17 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
+              "optimization": {
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": true
+                },
+                "fonts": {
+                  "inline": true
+                }
+              },
               "outputHashing": "all",
-              "sourceMap": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
+              "serviceWorker": true,
               "outputPath": "dist/nl/",
               "i18nFile": "src/locale/messages.nl.xlf",
               "i18nLocale": "fr",
