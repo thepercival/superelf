@@ -1,19 +1,28 @@
-import { Competition, Formation, Identifiable, Season } from 'ngx-sport';
+import { Competition, Identifiable, Season } from 'ngx-sport';
 import { AssemblePeriod } from './period/assemble';
 import { TransferPeriod } from './period/transfer';
 import { ViewPeriod } from './period/view';
-import { Points } from './points';
-
+import { FootballLineScore, FootballScore } from './score';
+import { LineScorePoints, LineScorePointsMap, ScorePoints } from './score/points';
 export class CompetitionConfig extends Identifiable {
+
+    protected scorePointsMap: Map<FootballScore, number>;
+    protected lineScorePointsMap: LineScorePointsMap;
 
     constructor(
         protected sourceCompetition: Competition,
-        protected points: Points,
+        protected scorePoints: ScorePoints[],
+        protected lineScorePoints: LineScorePoints[],
         protected createAndJoinPeriod: ViewPeriod,
         protected assamblePeriod: AssemblePeriod,
         protected transferPeriod: TransferPeriod
     ) {
         super();
+        this.scorePointsMap = new Map(scorePoints.map((points: ScorePoints) => {
+            return [points.score, points.points];
+        }),
+        );
+        this.lineScorePointsMap = new LineScorePointsMap(this.lineScorePoints);
     }
 
     public getSeason(): Season {
@@ -24,9 +33,33 @@ export class CompetitionConfig extends Identifiable {
         return this.sourceCompetition;
     }
 
-    public getPoints(): Points {
-        return this.points;
+    public getAllScorePoints(): ScorePoints[] {
+        return this.scorePoints;
     }
+
+    public getScorePoints(score: FootballScore): number {
+        const retVal = this.scorePointsMap.get(score);
+        if (retVal === undefined) {
+            throw new Error('scoreNotFound');
+        }
+        return retVal;
+    }
+
+    public getAllPointsForLines(): LineScorePoints[] {
+        return this.lineScorePoints;
+    }
+
+    public getLineScorePoints(lineScore: FootballLineScore): number {
+        return this.lineScorePointsMap.get(lineScore);
+    }
+
+    // public getPoints(score: Score | LineScore): number {
+    //     if (score.hasOwnProperty('line')) {
+    //         return this.lineScorePointsMap.get(score);
+    //     }
+    //     return this.scorePointsMap.get(score);
+
+    // }
 
     public getCreateAndJoinPeriod(): ViewPeriod {
         return this.createAndJoinPeriod;
@@ -58,3 +91,4 @@ export class CompetitionConfig extends Identifiable {
         });
     }
 }
+

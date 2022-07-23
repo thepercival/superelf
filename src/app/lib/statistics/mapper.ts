@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { PersonMapper } from 'ngx-sport';
-import { ScoreUnit } from '../scoreUnit';
 import { Statistics } from '../statistics';
 import { JsonStatistics } from './json';
 
@@ -15,9 +14,9 @@ export class StatisticsMapper {
         return new Statistics(json);
     }
 
-    toJson(scoreUnit: ScoreUnit): number {
-        return scoreUnit.getNumber();
-    }
+    // toJson(score: Score): number {
+    //     return score.getNumber();
+    // }
 }
 
 

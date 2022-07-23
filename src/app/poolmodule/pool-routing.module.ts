@@ -28,7 +28,7 @@ const routes: Routes = [
   { path: 'formation/choose/:id', component: FormationChooseComponent, canActivate: [AuthUserGuardService] },
   { path: 'formation/place/edit/:id/:placeId', component: FormationPlaceEditComponent, canActivate: [AuthUserGuardService] },
   { path: 'invite/:id', component: InviteComponent, canActivate: [AuthUserGuardService] },
-  { path: 'join/:id/:key', component: JoinComponent, canActivate: [AuthUserGuardService] },
+  { path: 'join/:id/:key', component: JoinComponent },
   { path: 'player/:id', component: S11PlayerComponent },
   { path: 'rules/:id', component: RulesComponent },
   { path: 'scouting/list/:id', component: ScoutedPlayerListComponent, canActivate: [AuthUserGuardService] },

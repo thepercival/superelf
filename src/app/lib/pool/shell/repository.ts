@@ -4,7 +4,9 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PoolShellRepository extends APIRepository {
 
     constructor(

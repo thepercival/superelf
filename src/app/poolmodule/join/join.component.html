@@ -1,17 +1,45 @@
-<app-title *ngIf="pool" [title]="pool.getName()"></app-title>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-xl-6">
 
-<h2>
-  <fa-icon [icon]="['fas', 'envelope']"></fa-icon> inschrijven
-</h2>
+      <h1 class="text-center">
+        <fa-icon [icon]="['fas', 'envelope']"></fa-icon> inschrijven
+      </h1>
 
-<h2 *ngIf="processing" class="text-center">
-  <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-</h2>
+      <h2 *ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </h2>
 
-<ngb-alert *ngIf="alert" [type]="alert.type">
-  {{ alert.message }}</ngb-alert>
+      <ngb-alert *ngIf="alert" [type]="alert.type" class="text-center">
+        {{ alert.message }}</ngb-alert>
 
+      <div *ngIf="!processing">
+        <div *ngIf="!joined && !alert">
+          <div *ngIf="!pool">
+            <div class="alert alert-info text-center" role="alert">kies 1 van onderstaande opties om je in te schrijven
+            </div>
+            <div class="d-flex justify-content-center my-4">
+              <button type="button" class="btn btn-lg btn-primary me-4" [routerLink]="['/user/register']">
+                <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> registreren
+              </button>
+              <button type="button" class="btn btn-xl btn-primary ms-4" [routerLink]="['/user/login']">
+                <fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon> inloggen
+              </button>
+            </div>
+          </div>
 
-<button *ngIf="!joined && pool" [routerLink]="['/pool', pool.getId()]" type="button" class="btn btn-primary btn-block">
-  ga naar de pool
-</button>
+          <button *ngIf="pool" [routerLink]="['/']" type="button" class="btn btn-primary btn-block">
+            ga naar de home-pagina
+          </button>
+        </div>
+
+        <div *ngIf="joined && pool">
+          <button [routerLink]="['/pool', pool.getId()]" type="button" class="btn btn-primary btn-block">
+            ga naar de pool
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

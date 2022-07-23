@@ -1,26 +1,26 @@
-import { Injectable } from '@angular/core';
-import { Season } from 'ngx-sport';
-import { ScoreUnitMapper } from '../../../scoreUnit/mapper';
-import { SeasonScoreUnit } from '../scoreUnit';
-import { JsonSeasonScoreUnit } from './json';
+// import { Injectable } from '@angular/core';
+// import { Season } from 'ngx-sport';
+// import { ScoreMapper } from '../../../score/mapper';
+// import { SeasonScore } from '../score';
+// import { JsonSeasonScore } from './json';
 
 
-@Injectable()
-export class SeasonScoreUnitMapper {
-    constructor(private scoreUnitMapper: ScoreUnitMapper) { }
+// @Injectable()
+// export class SeasonScoreMapper {
+//     constructor(private scoreMapper: ScoreMapper) { }
 
-    toObject(json: JsonSeasonScoreUnit, season: Season): SeasonScoreUnit {
-        return new SeasonScoreUnit(season, this.scoreUnitMapper.toObject(json.number), json.points);
-    }
+//     toObject(json: JsonSeasonScore, season: Season): SeasonScore {
+//         return new SeasonScore(season, score, json.points);
+//     }
 
-    toJson(seasonScoreUnit: SeasonScoreUnit): JsonSeasonScoreUnit {
-        return {
-            number: seasonScoreUnit.getBase().getNumber(),
-            points: seasonScoreUnit.getPoints()
-        };
-    }
-}
+//     toJson(seasonScore: SeasonScore): JsonSeasonScore {
+//         return {
+//             number: seasonScore.getBase().getNumber(),
+//             points: seasonScore.getPoints()
+//         };
+//     }
+// }
 
-export class ScoreUnitMap extends Map<number, number> {
+// export class ScoreMap extends Map<number, number> {
 
-}
+// }

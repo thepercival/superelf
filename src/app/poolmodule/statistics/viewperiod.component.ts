@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FootballLine } from 'ngx-sport';
+import { CompetitionConfig } from '../../lib/competitionConfig';
 import { ImageRepository } from '../../lib/image/repository';
 import { PlayerTotalsCalculator } from '../../lib/player/totals/calculator';
 import { JsonPlayerTotals } from '../../lib/player/totals/json';
-import { Points } from '../../lib/points';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { S11PlayerStatisticsComponent } from './base.component';
 
@@ -15,7 +15,7 @@ import { S11PlayerStatisticsComponent } from './base.component';
 export class S11PlayerViewPeriodStatisticsComponent extends S11PlayerStatisticsComponent implements OnInit {
   @Input() totals!: JsonPlayerTotals;
   @Input() line!: FootballLine;
-  @Input() points!: Points;
+  @Input() competitionConfig!: CompetitionConfig;
 
   public totalsCalculator: PlayerTotalsCalculator;
 
@@ -23,17 +23,20 @@ export class S11PlayerViewPeriodStatisticsComponent extends S11PlayerStatisticsC
     public imageRepository: ImageRepository,
     public cssService: CSSService) {
     super(imageRepository, cssService);
-    this.totalsCalculator = new PlayerTotalsCalculator();
+    this.totalsCalculator = new PlayerTotalsCalculator(this.competitionConfig);
   }
 
   ngOnInit() {
-    this.sheetActive = this.line === FootballLine.GoalKepeer || this.line === FootballLine.Defense;
+    const sheetLines = (this.line && FootballLine.GoalKeeper) & (this.line && FootballLine.Defense);
+    this.sheetActive = sheetLines > 0;
+
+    const sheetPoints = sheetLines > 0 ? this.totalsCalculator.getSheetPoints(sheetLines, this.totals) : 0
 
     this.categoryPoints = {
-      result: this.totalsCalculator.getResultPoints(this.totals, this.points),
-      goal: this.totalsCalculator.getGoalPoints(this.line, this.totals, this.points),
-      sheet: this.totalsCalculator.getSheetPoints(this.line, this.totals, this.points),
-      card: this.totalsCalculator.getCardPoints(this.totals, this.points),
+      result: this.totalsCalculator.getResultPoints(this.totals),
+      goal: this.totalsCalculator.getGoalPoints(this.line, this.totals),
+      sheet: sheetPoints,
+      card: this.totalsCalculator.getCardPoints(this.totals),
     }
     this.processing = false;
   }

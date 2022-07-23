@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Competition } from 'ngx-sport';
 import { ViewPeriod } from '../period/view';
 import { S11PlayerMapper } from '../player/mapper';
-import { ScoreUnit } from '../scoreUnit';
 import { ScoutedPlayer } from '../scoutedPlayer';
 import { JsonScoutedPlayer } from './json';
 
@@ -18,9 +17,9 @@ export class ScoutedPlayerMapper {
         return scoutedPlayer;
     }
 
-    toJson(scoreUnit: ScoreUnit): number {
-        return scoreUnit.getNumber();
-    }
+    // toJson(score: Score): number {
+    //     return score.getNumber();
+    // }
 }
 
 

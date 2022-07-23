@@ -3,10 +3,10 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
-import { IAlert } from '../../shared/commonmodule/alert';
 import { User } from '../../lib/user';
 import { AuthComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { StartSessionService } from '../../shared/commonmodule/startSessionService';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +16,6 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 export class LoginComponent extends AuthComponent implements OnInit {
   registered = false;
   form: FormGroup;
-  protected referer: 'create' | undefined;
 
   validations: any = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -27,7 +26,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
 
   constructor(
     protected route: ActivatedRoute,
-    private router: Router,
+    private startSessionService: StartSessionService,
     authService: AuthService,
     eventsManager: GlobalEventsManager,
     fb: FormBuilder
@@ -53,9 +52,6 @@ export class LoginComponent extends AuthComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.referer = params['referer'];
-    });
     this.route.queryParams.subscribe(
       (param: any) => {
         if (param.message !== undefined) {
@@ -85,11 +81,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
 
     this.authService.login(emailaddress, password).subscribe({
       next: (p: boolean) => {
-        if (this.referer !== undefined && this.referer === 'create') {
-          this.router.navigate(['/pool/new']);
-        } else {
-          this.router.navigate(['/']);
-        }
+        this.startSessionService.navigate();
       },
       error: (e) => {
         this.setAlert('danger', e); this.processing = false;

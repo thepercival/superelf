@@ -10,6 +10,7 @@ import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { Pool } from '../../lib/pool';
 import { PoolUserRemoveModalComponent } from './removemodal.component';
 import { Period } from 'ngx-sport';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 
 
 @Component({
@@ -26,17 +27,18 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
+    globalEventsManager: GlobalEventsManager,
     protected poolUserRepository: PoolUserRepository,
     private modalService: NgbModal
   ) {
-    super(route, router, poolRepository);
+    super(route, router, poolRepository, globalEventsManager);
 
   }
 
   ngOnInit() {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
-        this.pool = pool;
+        this.setPool(pool);
         if (pool.getAssemblePeriod().isIn()) {
           this.setAlert('info', 'vanaf de start tot ' + this.nrOfDaysToRemoveAfterAssemblePeriod + ' dagen erna zijn deelnemers te vewijderen');
         }

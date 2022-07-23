@@ -27,6 +27,7 @@ import { LayoutSharedModule } from './shared/layoutmodule/layout.module';
 import { facSoccerField, facFavicon } from './lib/icons';
 import { GlobalEventsManager } from './shared/commonmodule/eventmanager';
 import { CommonSharedModule } from './shared/commonmodule/common.module';
+import { StartSessionService } from './shared/commonmodule/startSessionService';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { CommonSharedModule } from './shared/commonmodule/common.module';
     PoolShellRepository,
     UserMapper,
     MyNavigation,
-    GlobalEventsManager
+    GlobalEventsManager,
+    StartSessionService
   ],
   bootstrap: [AppComponent]
 })

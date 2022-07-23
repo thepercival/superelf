@@ -1,24 +1,20 @@
-import { Season } from 'ngx-sport';
-import { ScoreUnit } from '../../scoreUnit';
+// import { Season } from 'ngx-sport';
+// import { ScoreEnum } from '../../score';
 
-export class SeasonScoreUnit {
-    constructor(protected season: Season, protected base: ScoreUnit, protected points: number) {
-        // this.season.getScoreUnits().push(this);
-    }
+// export class SeasonScore {
+//     constructor(protected season: Season, protected score: ScoreEnum, protected points: number) {
+//         // this.season.getScores().push(this);
+//     }
 
-    public getSeason(): Season {
-        return this.season;
-    }
+//     public getSeason(): Season {
+//         return this.season;
+//     }
 
-    public getBase(): ScoreUnit {
-        return this.base;
-    }
+//     public getEnum(): ScoreEnum {
+//         return this.score;
+//     }
 
-    public getNumber(): number {
-        return this.base.getNumber();
-    }
-
-    public getPoints(): number {
-        return this.points;
-    }
-}
+//     public getPoints(): number {
+//         return this.points;
+//     }
+// }

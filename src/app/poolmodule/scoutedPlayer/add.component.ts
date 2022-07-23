@@ -16,6 +16,7 @@ import { Location } from '@angular/common';
 import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addremovemodal.component';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { ChoosePlayersFilter } from '../player/choose.component';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 
 @Component({
   selector: 'app-pool-scouted-player-add',
@@ -32,24 +33,25 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
+    globalEventsManager: GlobalEventsManager,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
     fb: FormBuilder,
     private location: Location,
     public myNavigation: MyNavigation,
     private modalService: NgbModal
   ) {
-    super(route, router, poolRepository);
+    super(route, router, poolRepository, globalEventsManager);
     this.form = fb.group({
       url: [{ value: '', disabled: true }, Validators.compose([
       ])],
     });
     const state = this.router.getCurrentNavigation()?.extras.state ?? undefined;
-    this.choosePlayersFilter = state ? state.playerFilter : { line: FootballLine.All, team: undefined };
+    this.choosePlayersFilter = state ? state.playerFilter : { line: undefined, team: undefined };
   }
 
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
-      this.pool = pool;
+      this.setPool(pool);
       this.route.queryParams.subscribe(params => {
         if (params.line !== undefined) {
           this.choosePlayersFilter.line = +params.line;
@@ -135,7 +137,9 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
     this.choosePlayersFilter = choosePlayersFilter;
 
     let params = new HttpParams();
-    params = params.set('line', choosePlayersFilter.line);
+    if (choosePlayersFilter.line) {
+      params = params.set('line', choosePlayersFilter.line);
+    }
     if (choosePlayersFilter.team) {
       params = params.set('teamId', choosePlayersFilter.team.getId());
     }

@@ -5,9 +5,11 @@ import { SuperElfNameService } from '../../lib/nameservice';
 import { Pool } from '../../lib/pool';
 
 import { PoolRepository } from '../../lib/pool/repository';
-import { SeasonScoreUnit } from '../../lib/ngx-sport/season/scoreUnit';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { CompetitionConfigRepository } from '../../lib/competitionConfig/repository';
+import { CSSService } from '../../shared/commonmodule/cssservice';
+import { FootballScore } from '../../lib/score';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 
 @Component({
   selector: 'app-pool-rules',
@@ -21,16 +23,18 @@ export class RulesComponent extends PoolComponent implements OnInit {
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
+    globalEventsManager: GlobalEventsManager,
+    protected cssService: CSSService,
     protected competitionConfigRepository: CompetitionConfigRepository,
     public nameService: SuperElfNameService
   ) {
-    super(route, router, poolRepository);
+    super(route, router, poolRepository, globalEventsManager);
   }
 
   ngOnInit() {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
-        this.pool = pool;
+        this.setPool(pool);
         this.competitionConfigRepository.getAvailableFormations(pool.getCompetitionConfig())
           .subscribe(
             (formations: Formation[]) => this.availableFormations = formations
@@ -46,20 +50,52 @@ export class RulesComponent extends PoolComponent implements OnInit {
     }).join(", ");
   }
 
-  getLineDefs(): FootballLine[] {
-    return [
-      FootballLine.GoalKepeer,
-      FootballLine.Defense,
-      FootballLine.Midfield,
-      FootballLine.Forward];
+  // get points(): Points {
+  //   return this.pool.getCompetitionConfig().getPoints();
+  // }
+
+
+  getPossibleLines(): FootballLine[] {
+    const lines = [];
+    for (const [propertyKey, propertyValue] of Object.entries(FootballLine)) {
+      if ((typeof propertyValue === 'string')) {
+        continue;
+      }
+      lines.push(propertyValue);
+    }
+    return lines;
   }
 
-  getPoolScoreUnits(line: FootballLine): SeasonScoreUnit[] {
-    if (!this.pool) {
-      return [];
+  getLineClass(footballLine: FootballLine, prefix?: string): string {
+    return this.cssService.getLine(footballLine, prefix ? prefix + '-' : prefix);
+  }
+
+  getPointsItems(): PointsItem[] {
+    return [FootballScore.WinResult, FootballScore.DrawResult, FootballScore.PenaltyGoal,
+    FootballScore.OwnGoal, FootballScore.YellowCard, FootballScore.RedCard].map((score: FootballScore): PointsItem => {
+      return {
+        name: this.nameService.getScoreName(score), points: this.pool.getCompetitionConfig().getScorePoints(score)
+      }
+    });
+  }
+
+  getLinePointsItems(line: FootballLine): PointsItem[] {
+    const scores = [FootballScore.Goal, FootballScore.Assist];
+    if (line === FootballLine.GoalKeeper || line === FootballLine.Defense) {
+      scores.push(FootballScore.CleanSheet);
+      scores.push(FootballScore.SpottySheet);
     }
-    // @TODO get from repository
-    return [];
-    // return this.pool.getScoreUnits(formationLineDef);
+    return scores.map((score: FootballScore): PointsItem => {
+      return {
+        name: this.nameService.getScoreName(score), points: this.pool.getCompetitionConfig().getLineScorePoints({ line, score })
+      }
+    });
   }
 }
+
+interface PointsItem {
+  name: string;
+  points: number;
+}
+
+

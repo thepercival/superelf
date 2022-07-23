@@ -17,6 +17,7 @@ export class PoolMapper {
         private competitionMapper: CompetitionMapper) { }
 
     toObject(json: JsonPool): Pool {
+        console.log('competitionConfig', json.competitionConfig);
         const config: CompetitionConfig = this.competitionConfigMapper.toObject(json.competitionConfig)
         const pool = new Pool(
             this.collectionMapper.toObject(json.collection),

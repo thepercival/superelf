@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { AuthService } from '../../lib/auth/auth.service';
 import { Pool } from '../../lib/pool';
 
 import { PoolRepository } from '../../lib/pool/repository';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { StartSessionService } from '../../shared/commonmodule/startSessionService';
 import { PoolComponent } from '../../shared/poolmodule/component';
 
 
@@ -16,23 +19,33 @@ export class JoinComponent extends PoolComponent implements OnInit {
   joined: boolean = false;
 
   constructor(
+    protected authService: AuthService,
+    private startSessionService: StartSessionService,
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
+    globalEventsManager: GlobalEventsManager
   ) {
-    super(route, router, poolRepository);
+    super(route, router, poolRepository, globalEventsManager);
   }
 
   ngOnInit() {
-    super.parentNgOnInit().subscribe({
-      next: (pool: Pool) => {
-        this.pool = pool;
-        this.join(pool);
-      },
-      error: (e) => {
-        this.setAlert('danger', e); this.processing = false;
-      }
-    });
+    if (!this.authService.isLoggedIn()) {
+      this.route.params.subscribe(params => {
+        this.startSessionService.setJoinAction(params['id'], params['key']);;
+      });
+      this.processing = false;
+    } else {
+      super.parentNgOnInit().subscribe({
+        next: (pool: Pool) => {
+          this.setPool(pool);
+          this.join(pool);
+        },
+        error: (e) => {
+          this.setAlert('danger', e); this.processing = false;
+        }
+      });
+    }
   }
 
   protected join(pool: Pool) {

@@ -14,6 +14,7 @@ import { ViewPeriod } from '../../lib/period/view';
 import { Person, Team } from 'ngx-sport';
 import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addremovemodal.component';
 import { PoolUser } from '../../lib/pool/user';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 
 @Component({
   selector: 'app-pool-scouting-list',
@@ -30,14 +31,15 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
     poolRepository: PoolRepository,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
     private modalService: NgbModal,
-    private poolUserRepository: PoolUserRepository
+    private poolUserRepository: PoolUserRepository,
+    globalEventsManager: GlobalEventsManager
   ) {
-    super(route, router, poolRepository);
+    super(route, router, poolRepository, globalEventsManager);
   }
 
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
-      this.pool = pool;
+      this.setPool(pool);
       this.initPoolUser(pool);
       this.initScoutedPlayers(pool);
     });

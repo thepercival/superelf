@@ -37,11 +37,11 @@
                     </div>
                     <div>
                         <app-s11player-viewperiod-statistics *ngIf="!currentGameRound" [totals]="s11Player.getTotals()"
-                            [line]="s11Player.getLine()" [points]="pool.getPoints()">
+                            [line]="s11Player.getLine()" [competitionConfig]="pool.getCompetitionConfig()">
                         </app-s11player-viewperiod-statistics>
                         <app-s11player-gameround-statistics *ngIf="currentGameRound"
                             [statistics]="s11Player.getGameStatistics(currentGameRound.getNumber())"
-                            [line]="s11Player.getLine()" [points]="pool.getPoints()">
+                            [line]="s11Player.getLine()" [competitionConfig]="pool.getCompetitionConfig()">
                         </app-s11player-gameround-statistics>
                     </div>
                 </div>

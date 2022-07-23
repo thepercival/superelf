@@ -29,23 +29,22 @@ export class HomeComponent extends PoolComponent implements OnInit {
 
     constructor(
         route: ActivatedRoute,
-        public cssService: CSSService,
         router: Router,
+        poolRepository: PoolRepository,
+        globalEventsManager: GlobalEventsManager,
+        public cssService: CSSService,
         private dateFormatter: DateFormatter,
         private poolUserRepository: PoolUserRepository,
-        poolRepository: PoolRepository,
-        protected scoutedPlayerRepository: ScoutedPlayerRepository,
-        protected globalEventsManager: GlobalEventsManager
+        protected scoutedPlayerRepository: ScoutedPlayerRepository
     ) {
-        super(route, router, poolRepository);
+        super(route, router, poolRepository, globalEventsManager);
         this.translate = new TranslateService();
     }
 
     ngOnInit() {
         super.parentNgOnInit().subscribe({
             next: (pool: Pool) => {
-                this.pool = pool;
-                this.toggleNavHeader();
+                this.setPool(pool);
                 this.postNgOnInit(pool);
             },
             error: (e) => {
@@ -79,14 +78,6 @@ export class HomeComponent extends PoolComponent implements OnInit {
                     this.setAlert('danger', e); this.processing = false;
                 },
                 complete: () => this.processing = false
-            });
-    }
-
-    toggleNavHeader() {
-        this.globalEventsManager.navHeaderInfo.emit(
-            {
-                name: this.pool.getName(),
-                start: this.pool.getSeason().getStartDateTime()
             });
     }
 

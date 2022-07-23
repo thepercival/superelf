@@ -5,11 +5,11 @@
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
     <div *ngIf="!processing && poolUser" class="d-flex flex-wrap justify-content-center">
-      <div>eerste volgende wedstrijd tonen + voor welke competities deze gelden</div>
-      <br>
-      <div>competitie</div>
+      <!-- <div>eerste volgende wedstrijd tonen + voor welke competities deze gelden</div>
+      <br> -->
+      <!-- <div>competitie</div>
       <div>beker</div>
-      <div>supercup</div>
+      <div>supercup</div> -->
       <div *ngIf="inBeforeStart()" class="card border-secondary {{inAssembleMode() ? 'pointer' : ''}} mt-3 mx-2"
         (click)="linkToAssemble()">
         <div class="card-body">
@@ -47,12 +47,12 @@
       <div class="card card-sub pointer px-0" [routerLink]="['/pool/competition', pool.getId()]">
         <div class="card-body text-center p-1 pt-2">
           <h5 class="card-title">
-            <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
+            <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
           </h5>
           <div>stand</div>
         </div>
       </div>
-      <div class="card card-sub pointer px-0" [routerLink]="['/pool/cup', pool.getId()]">
+      <!-- <div class="card card-sub pointer px-0" [routerLink]="['/pool/cup', pool.getId()]">
         <div class="card-body text-center p-1 pt-2">
           <h5 class="card-title">
             <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
@@ -68,7 +68,7 @@
           <div>super</div>
           <div>cup</div>
         </div>
-      </div>
+      </div>-->
       <div class="card card-sub pointer px-0" [routerLink]="['/pool/rules', pool.getId()]">
         <div class="card-body text-center p-1 pt-2">
           <h5 class="card-title">
@@ -115,7 +115,7 @@
                 </span>
               </span>
 
-              <span>implement count of transfers</span>
+              <!-- <span>implement count of transfers</span> -->
               <!-- <span *ngIf="pool.getTransferPeriod().isIn() && allPoolUsersHaveTransfered()">
                 <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> iedereen heeft zijn
                 transfers gedaan

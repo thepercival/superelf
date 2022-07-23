@@ -6,6 +6,7 @@ import { PoolRepository } from '../../lib/pool/repository';
 import { Observable } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { PoolUser } from '../../lib/pool/user';
+import { GlobalEventsManager } from '../commonmodule/eventmanager';
 
 export class PoolComponent {
 
@@ -17,7 +18,8 @@ export class PoolComponent {
     constructor(
         protected route: ActivatedRoute,
         protected router: Router,
-        protected poolRepository: PoolRepository
+        protected poolRepository: PoolRepository,
+        protected globalEventsManager: GlobalEventsManager
     ) {
     }
 
@@ -35,5 +37,14 @@ export class PoolComponent {
 
     protected resetAlert(): void {
         this.alert = undefined;
+    }
+
+    protected setPool(pool: Pool): void {
+        this.pool = pool;
+        this.globalEventsManager.navHeaderInfo.emit({
+            name: pool.getName(),
+            start: pool.getSeason().getStartDateTime()
+        });
+        // this.globalEventsManager.showFooter.emit(false);
     }
 }

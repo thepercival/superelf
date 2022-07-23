@@ -25,6 +25,7 @@ import { MyNavigation } from '../../shared/commonmodule/navigation';
 export class S11PlayerComponent implements OnInit {
   public s11Player!: S11Player;
   public pool!: Pool;
+  private pointsCalculator!: PointsCalculator;
   public currentGameRound: GameRound | undefined;
 
   // @Input() team: Team | undefined;
@@ -39,7 +40,6 @@ export class S11PlayerComponent implements OnInit {
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public player: Player | undefined;
   private sliderGameRounds: (GameRound | undefined)[] = [];
-  private pointsCalculator: PointsCalculator;
 
   constructor(
     private statisticsRepository: StatisticsRepository,
@@ -56,7 +56,6 @@ export class S11PlayerComponent implements OnInit {
       this.pool = state.pool;
       this.currentGameRound = state.currentGameRound ?? undefined;
     }
-    this.pointsCalculator = new PointsCalculator();
   }
 
   ngOnInit() {
@@ -66,6 +65,8 @@ export class S11PlayerComponent implements OnInit {
       });
       return
     }
+
+    this.pointsCalculator = new PointsCalculator(this.pool.getCompetitionConfig());
 
     this.startLocationMap = new StartLocationMap(this.pool.getSourceCompetition().getTeamCompetitors());
 
@@ -168,7 +169,7 @@ export class S11PlayerComponent implements OnInit {
     if (this.currentStatistics === undefined) {
       return 0;
     }
-    return this.pointsCalculator.getPoints(this.s11Player.getLine(), this.currentStatistics, this.pool.getPoints());
+    return this.pointsCalculator.getPoints(this.s11Player.getLine(), this.currentStatistics);
   }
 
   navigateBack() {

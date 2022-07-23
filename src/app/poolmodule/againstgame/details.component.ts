@@ -18,6 +18,7 @@ import { MyNavigation } from '../../shared/commonmodule/navigation';
 export class AgainstGameDetailsComponent implements OnInit {
   public againstGame!: AgainstGame;
   public pool!: Pool;
+  private pointsCalculator!: PointsCalculator;
   // public currentGameRound: GameRound | undefined;
 
   // @Input() team: Team | undefined;
@@ -32,7 +33,7 @@ export class AgainstGameDetailsComponent implements OnInit {
   // public oneTeamSimultaneous = new OneTeamSimultaneous();
   // public player: Player | undefined;
   // private sliderGameRounds: (GameRound | undefined)[] = [];
-  private pointsCalculator: PointsCalculator;
+
 
   constructor(
     private statisticsRepository: StatisticsRepository,
@@ -49,7 +50,6 @@ export class AgainstGameDetailsComponent implements OnInit {
     //   this.pool = state.pool;
     //   this.currentGameRound = state.currentGameRound ?? undefined;
     // }
-    this.pointsCalculator = new PointsCalculator();
   }
 
   ngOnInit() {
@@ -59,6 +59,8 @@ export class AgainstGameDetailsComponent implements OnInit {
     //   });
     //   return
     // }
+
+    this.pointsCalculator = new PointsCalculator(this.pool.getCompetitionConfig());
 
     // this.competitorMap = new CompetitorMap(this.pool.getSourceCompetition().getTeamCompetitors());
 

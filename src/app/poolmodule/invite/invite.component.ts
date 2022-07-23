@@ -7,6 +7,7 @@ import { PoolRepository } from '../../lib/pool/repository';
 import { PoolCollection } from '../../lib/pool/collection';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { Pool } from '../../lib/pool';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 
 
 @Component({
@@ -25,9 +26,10 @@ export class InviteComponent extends PoolComponent implements OnInit {
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
+    globalEventsManager: GlobalEventsManager,
     fb: FormBuilder
   ) {
-    super(route, router, poolRepository);
+    super(route, router, poolRepository, globalEventsManager);
     this.form = fb.group({
       url: [{ value: '', disabled: true }, Validators.compose([
       ])],
@@ -37,7 +39,7 @@ export class InviteComponent extends PoolComponent implements OnInit {
   ngOnInit() {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
-        this.pool = pool;
+        this.setPool(pool);
         this.setAlert('info', 'gebruik de link om mensen uit te nodigen');
         this.initUrl(pool);
       },

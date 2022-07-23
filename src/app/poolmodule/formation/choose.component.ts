@@ -12,6 +12,7 @@ import { Pool } from '../../lib/pool';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { CompetitionConfigRepository } from '../../lib/competitionConfig/repository';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 
 @Component({
   selector: 'app-pool-chooseformation',
@@ -27,19 +28,20 @@ export class FormationChooseComponent extends PoolComponent implements OnInit {
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
+    globalEventsManager: GlobalEventsManager,
     protected formationRepository: FormationRepository,
     protected competitionConfigRepository: CompetitionConfigRepository,
     private modalService: NgbModal,
     protected poolUserRepository: PoolUserRepository,
   ) {
-    super(route, router, poolRepository);
+    super(route, router, poolRepository, globalEventsManager);
   }
 
   ngOnInit() {
     super.parentNgOnInit()
       .subscribe({
         next: (pool: Pool) => {
-          this.pool = pool;
+          this.setPool(pool);
 
           this.competitionConfigRepository.getAvailableFormations(pool.getCompetitionConfig()).pipe(
             concatMap((formations: Formation[]) => {

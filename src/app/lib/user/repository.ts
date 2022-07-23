@@ -7,7 +7,9 @@ import { User } from '../user';
 import { JsonUser, UserMapper } from './mapper';
 import { APIRepository } from '../repository';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserRepository extends APIRepository {
 
   constructor(

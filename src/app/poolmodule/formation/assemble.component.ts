@@ -15,6 +15,7 @@ import { FormationRepository } from '../../lib/formation/repository';
 import { S11Player } from '../../lib/player';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11FormationPlace } from '../../lib/formation/place';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 
 @Component({
   selector: 'app-pool-assemble',
@@ -26,7 +27,7 @@ export class FormationAssembleComponent extends PoolComponent implements OnInit 
   nameService = new NameService();
   teamPersonMap = new PersonMap();
   selectedPlace: S11FormationPlace | undefined;
-  selectedSearchLine: number = FootballLine.All;
+  selectedSearchLine: FootballLine | undefined;
   selectedTeamMap: TeamMap = new TeamMap();
   public oneTeamSimultaneous = new OneTeamSimultaneous();
 
@@ -34,6 +35,7 @@ export class FormationAssembleComponent extends PoolComponent implements OnInit 
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
+    globalEventsManager: GlobalEventsManager,
     protected playerRepository: PlayerRepository,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
     protected poolUserRepository: PoolUserRepository,
@@ -41,14 +43,14 @@ export class FormationAssembleComponent extends PoolComponent implements OnInit 
     fb: FormBuilder,
     private modalService: NgbModal
   ) {
-    super(route, router, poolRepository);
+    super(route, router, poolRepository, globalEventsManager);
   }
 
   ngOnInit() {
     super.parentNgOnInit()
       .subscribe({
         next: (pool: Pool) => {
-          this.pool = pool;
+          this.setPool(pool);
           this.poolUserRepository.getObjectFromSession(pool).subscribe({
             next: (poolUser: PoolUser) => this.poolUser = poolUser,
             error: (e: string) => {

@@ -75,7 +75,7 @@ export class FormationLineAssembleComponent implements OnInit {
   // }
 
   getLineClass(prefix: string): string {
-    return this.cssService.getLine2(this.line.getNumber(), prefix + '-');
+    return this.cssService.getLine(this.line.getNumber(), prefix + '-');
   }
 
   maybeLinkToPlayer(place: S11FormationPlace): void {

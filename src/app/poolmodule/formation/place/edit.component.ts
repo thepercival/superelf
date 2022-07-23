@@ -15,6 +15,7 @@ import { PoolUser } from '../../../lib/pool/user';
 import { PoolUserRepository } from '../../../lib/pool/user/repository';
 import { ScoutedPlayer } from '../../../lib/scoutedPlayer';
 import { ScoutedPlayerRepository } from '../../../lib/scoutedPlayer/repository';
+import { GlobalEventsManager } from '../../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../../shared/poolmodule/component';
 import { S11PlayerAddRemoveModalComponent, PlayerAction } from '../../player/addremovemodal.component';
@@ -34,12 +35,13 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
   public place!: S11FormationPlace;
   public alreadyChosenPersons: Person[] = [];
   public alreadyChosenTeams: Team[] = [];
-  public selectableLines: FootballLine = FootballLine.All;
+  public selectableLines: FootballLine | undefined;
 
   constructor(
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
+    globalEventsManager: GlobalEventsManager,
     protected poolUserRepository: PoolUserRepository,
     private location: Location,
     private formationRepository: FormationRepository,
@@ -47,19 +49,19 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
     private modalService: NgbModal,
     fb: FormBuilder
   ) {
-    super(route, router, poolRepository);
+    super(route, router, poolRepository, globalEventsManager);
     this.form = fb.group({
       showAll: false
     });
 
     const state = this.router.getCurrentNavigation()?.extras.state ?? undefined;
-    this.choosePlayersFilter = state ? state.playerFilter : { line: FootballLine.All, team: undefined };
+    this.choosePlayersFilter = state ? state.playerFilter : { line: undefined, team: undefined };
   }
 
 
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
-      this.pool = pool;
+      this.setPool(pool);
       this.route.queryParams.subscribe(params => {
         this.initPlayerChooseFilter(params);
       });
@@ -105,7 +107,7 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
   initPlayerChoose() {
     this.alreadyChosenPersons = [];
     this.alreadyChosenTeams = this.getChoosenTeams();
-    this.selectableLines = FootballLine.All;
+    this.selectableLines = undefined;
   }
 
   getChoosenTeams(): Team[] {
@@ -206,7 +208,9 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
     this.choosePlayersFilter = choosePlayersFilter;
 
     let params = new HttpParams();
-    params = params.set('line', choosePlayersFilter.line);
+    if (choosePlayersFilter.line) {
+      params = params.set('line', choosePlayersFilter.line);
+    }
     if (choosePlayersFilter.team) {
       params = params.set('teamId', choosePlayersFilter.team.getId());
     }

@@ -7,7 +7,9 @@ import { APIRepository } from '../../repository';
 import { Competition, JsonPerson, PersonMapper, Person, Team } from 'ngx-sport';
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PersonRepository extends APIRepository {
 
     constructor(

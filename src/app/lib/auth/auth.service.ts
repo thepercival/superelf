@@ -7,7 +7,9 @@ import { APIRepository } from '../repository';
 import { UserMapper, JsonUser } from '../user/mapper';
 import { User } from '../user';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService extends APIRepository {
   private auth: JsonAuth | undefined;
 

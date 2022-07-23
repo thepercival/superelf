@@ -4,7 +4,6 @@ import { PoolCollection } from './pool/collection';
 import { AssemblePeriod } from './period/assemble';
 import { TransferPeriod } from './period/transfer';
 import { ViewPeriod } from './period/view';
-import { Points } from './points';
 import { PoolUser } from './pool/user';
 import { CompetitionConfig } from './competitionConfig';
 import { PoolCompetitor } from './pool/competitor';
@@ -63,9 +62,9 @@ export class Pool extends Identifiable {
     //     return this.getCompetition()?.getLeague().getAssociation();
     // }
 
-    public getPoints(): Points {
-        return this.getCompetitionConfig().getPoints();
-    }
+    // public getPoints(): Points {
+    //     return this.getCompetitionConfig().getPoints();
+    // }
 
     public getAssemblePeriod(): AssemblePeriod {
         return this.getCompetitionConfig().getAssemblePeriod();
@@ -79,11 +78,11 @@ export class Pool extends Identifiable {
         return this.getCompetitionConfig().getTransferPeriod();
     }
 
-    // getScoreUnits(formationLineDef?: number): PoolScoreUnit[] {
+    // getScores(formationLineDef?: number): PoolScore[] {
     //     if (formationLineDef === undefined) {
-    //         return this.scoreUnits;
+    //         return this.scores;
     //     }
-    //     return this.scoreUnits.filter(scoreUnit => scoreUnit.getBase().getLineDef() === formationLineDef);
+    //     return this.scores.filter(score => score.getBase().getLineDef() === formationLineDef);
     // }
 
     // getCompetitors(competition?: Competition): PoolCompetitor[] {

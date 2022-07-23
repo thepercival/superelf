@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AgainstGame, FootballLine, Person, Player } from 'ngx-sport';
+import { CompetitionConfig } from '../../lib/competitionConfig';
 import { GameRound } from '../../lib/gameRound';
 import { ImageRepository } from '../../lib/image/repository';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
-import { Points } from '../../lib/points';
 import { PointsCalculator } from '../../lib/points/calculator';
 import { Statistics } from '../../lib/statistics';
 
@@ -19,9 +19,9 @@ import { S11PlayerStatisticsComponent } from './base.component';
 export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsComponent implements OnInit, OnChanges {
   @Input() statistics!: Statistics | undefined;
   @Input() line!: FootballLine;
-  @Input() points!: Points;
   @Input() gameRound!: GameRound;
-  public pointsCalculator: PointsCalculator;
+  @Input() competitionConfig!: CompetitionConfig;
+  public pointsCalculator!: PointsCalculator;
   // public oneTeamSimultaneous = new OneTeamSimultaneous();
   // public player: Player | undefined;
 
@@ -29,7 +29,6 @@ export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsCo
     imageRepository: ImageRepository,
     cssService: CSSService) {
     super(imageRepository, cssService);
-    this.pointsCalculator = new PointsCalculator();
   }
 
   ngOnInit() {
@@ -41,18 +40,21 @@ export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsCo
     // this.player = this.oneTeamSimultaneous.getCurrentPlayer(this.s11Player.getPerson());
 
     // this.updateCurrentGame();    
-    this.sheetActive = this.line === FootballLine.GoalKepeer || this.line === FootballLine.Defense;
+    this.pointsCalculator = new PointsCalculator(this.competitionConfig);
+    this.sheetActive = this.line === FootballLine.GoalKeeper || this.line === FootballLine.Defense;
     this.processing = false;
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.statistics.currentValue !== changes.statistics.previousValue
       && changes.statistics.currentValue !== undefined) {
+      const sheetLines = (this.line && FootballLine.GoalKeeper) & (this.line && FootballLine.Defense);
+      const sheetPoints = sheetLines > 0 ? this.pointsCalculator.getSheetPoints(this.line, changes.statistics.currentValue) : 0
       this.categoryPoints = {
-        result: this.pointsCalculator.getResultPoints(changes.statistics.currentValue, this.points),
-        goal: this.pointsCalculator.getGoalPoints(this.line, changes.statistics.currentValue, this.points),
-        sheet: this.pointsCalculator.getSheetPoints(this.line, changes.statistics.currentValue, this.points),
-        card: this.pointsCalculator.getCardPoints(changes.statistics.currentValue, this.points),
+        result: this.pointsCalculator.getResultPoints(changes.statistics.currentValue),
+        goal: this.pointsCalculator.getGoalPoints(this.line, changes.statistics.currentValue),
+        sheet: sheetPoints,
+        card: this.pointsCalculator.getCardPoints(changes.statistics.currentValue),
       }
     }
   }

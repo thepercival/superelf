@@ -11,16 +11,16 @@
 
   <h5 class="text-primary">teambeheer</h5>
   <p class="card-text">Het samenstellen van je team kan van
-    {{pool.getAssemblePeriod()?.getStartDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
+    {{pool.getAssemblePeriod().getStartDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
     false,'hour':'2-digit','minute':'2-digit'})}}
     tot
-    {{pool.getAssemblePeriod()?.getEndDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
+    {{pool.getAssemblePeriod().getEndDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
     false,'hour':'2-digit','minute':'2-digit'})}}.
     <br />De transferperiode is van
-    {{pool.getTransferPeriod()?.getStartDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
+    {{pool.getTransferPeriod().getStartDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
     false,'hour':'2-digit','minute':'2-digit'})}}
     tot
-    {{pool.getTransferPeriod()?.getStartDateTime()?.toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
+    {{pool.getTransferPeriod().getStartDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
     false,'hour':'2-digit','minute':'2-digit'})}}.
   </p>
 
@@ -60,16 +60,31 @@
       meegedaan</li>
   </ul>
 
-  <h5 class="text-primary">punten</h5>
+  <h5 class="text-primary">punten behalen</h5>
   <div class="d-flex flex-wrap justify-content-center">
-    <div class="card mb-3 mx-2" *ngFor="let lineDef of getLineDefs()">
+
+    <div class="card mb-3 mx-2">
       <div class="card-body">
-        <h5 class="card-title">{{nameService.getLineName(lineDef)}}</h5>
+        <h5 class="card-title">alle spelers</h5>
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between align-items-center ps-0"
-            *ngFor="let poolScoreUnit of getPoolScoreUnits(lineDef)">
-            <span>{{nameService.getScoreUnitName(poolScoreUnit.getBase())}}</span>
-            <span class="badge rounded-pill bg-primary ms-1">{{poolScoreUnit.getPoints()}}</span>
+            *ngFor="let pointsItem of getPointsItems()">
+            <span>{{pointsItem.name}}</span>
+            <span class="badge rounded-pill bg-primary ms-2">{{pointsItem.points}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card mb-3 mx-2 {{getLineClass(line, 'border')}}" *ngFor="let line of getPossibleLines()">
+      <div class="card-body">
+        <h5 class="card-title">{{nameService.getLineName(line)}}</h5>
+        <ul class="list-group list-group-flush">
+          <li
+            class="list-group-item d-flex justify-content-between align-items-center ps-0 {{getLineClass(line, 'border')}}"
+            *ngFor="let pointsItem of getLinePointsItems(line)">
+            <span>{{pointsItem.name}}</span>
+            <span class="badge rounded-pill {{getLineClass(line)}} ms-2">{{pointsItem.points}}</span>
           </li>
         </ul>
       </div>

@@ -1,38 +1,38 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+// import { HttpClient } from '@angular/common/http';
+// import { Injectable } from '@angular/core';
+// import { Observable } from 'rxjs';
+// import { catchError, map } from 'rxjs/operators';
 
-import { APIRepository } from '../../../repository';
-import { SeasonScoreUnitMapper } from './mapper';
-import { Season } from 'ngx-sport';
-import { SeasonScoreUnit } from '../scoreUnit';
-import { JsonSeasonScoreUnit } from './json';
+// import { APIRepository } from '../../../repository';
+// import { SeasonScoreMapper } from './mapper';
+// import { Season } from 'ngx-sport';
+// import { SeasonScore } from '../score';
+// import { JsonSeasonScore } from './json';
 
-@Injectable()
-export class SeasonScoreUnitRepository extends APIRepository {
+// @Injectable()
+// export class SeasonScoreRepository extends APIRepository {
 
-    constructor(
-        private http: HttpClient,
-        private mapper: SeasonScoreUnitMapper) {
-        super();
-    }
+//     constructor(
+//         private http: HttpClient,
+//         private mapper: SeasonScoreMapper) {
+//         super();
+//     }
 
-    getUrlpostfix(): string {
-        return 'scoreunits';
-    }
+//     getUrlpostfix(): string {
+//         return 'scores';
+//     }
 
 
-    getUrl(season: Season): string {
-        return super.getApiUrl() + 'seasons/' + season.getId() + '/scoreunits';
-    }
+//     getUrl(season: Season): string {
+//         return super.getApiUrl() + 'seasons/' + season.getId() + '/scores';
+//     }
 
-    getObjects(season: Season): Observable<SeasonScoreUnit[]> {
-        return this.http.get<JsonSeasonScoreUnit[]>(this.getUrl(season), this.getOptions()).pipe(
-            map((jsonScoreUnits: JsonSeasonScoreUnit[]) => jsonScoreUnits.map(jsonScoreUnit => {
-                return this.mapper.toObject(jsonScoreUnit, season);
-            })),
-            catchError((err) => this.handleError(err))
-        );
-    }
-}
+//     getObjects(season: Season): Observable<SeasonScore[]> {
+//         return this.http.get<JsonSeasonScore[]>(this.getUrl(season), this.getOptions()).pipe(
+//             map((jsonScores: JsonSeasonScore[]) => jsonScores.map(jsonScore => {
+//                 return this.mapper.toObject(jsonScore, season);
+//             })),
+//             catchError((err) => this.handleError(err))
+//         );
+//     }
+// }

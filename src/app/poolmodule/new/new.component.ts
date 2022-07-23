@@ -18,14 +18,14 @@ import { CompetitionConfig } from '../../lib/competitionConfig';
   styleUrls: ['./new.component.scss']
 })
 export class NewComponent implements OnInit {
-  form: FormGroup;
-  processing = true;
-  alert: IAlert | undefined;
-  validations: any = {
+  public form: FormGroup;
+  public processing = true;
+  public alert: IAlert | undefined;
+  public validations: any = {
     minlengthname: PoolCollection.MIN_LENGTH_NAME,
     maxlengthname: PoolCollection.MAX_LENGTH_NAME,
   };
-  competitionConfig!: CompetitionConfig;
+  public competitionConfig: CompetitionConfig | undefined;
   // activeSourceCompetitionShell: JsonCompetitionShell | undefined;
 
   constructor(
@@ -54,9 +54,9 @@ export class NewComponent implements OnInit {
           const period = competitionConfig.getCreateAndJoinPeriod();
           this.setAlert('danger', 'het organiseren van een pool kan alleen van ' + period.getStartDateTime().toLocaleString() + ' tot ' + period.getEndDateTime().toLocaleString());
         } else {
-          this.setAlert('info', 'wanneer je dezelfde naam gebruikt voor meerdere seizoenen, dan wordt er ook een alltime - ranking bijgehouden');
+          this.setAlert('info', 'wanneer je dezelfde naam gebruikt voor meerdere seizoenen, dan wordt er ook een alltime-ranking bijgehouden');
         }
-
+        this.competitionConfig = competitionConfig;
       },
       error: (e) => {
         this.setAlert('danger', e); this.processing = false;
@@ -65,7 +65,7 @@ export class NewComponent implements OnInit {
     });
   }
 
-  create(): boolean {
+  create(competitionConfig: CompetitionConfig): boolean {
 
     this.processing = true;
     this.setAlert('info', 'de pool wordt aangemaakt');
@@ -73,7 +73,7 @@ export class NewComponent implements OnInit {
     const name = this.form.controls.name.value;
 
 
-    this.poolRepository.createObject(name, this.competitionConfig).subscribe({
+    this.poolRepository.createObject(name, competitionConfig).subscribe({
       next: (pool: Pool) => {
         this.router.navigate(['/pool', pool.getId()]);
       },

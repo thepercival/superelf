@@ -1,18 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { Competitor, Competition } from 'ngx-sport';
 import { Pool } from '../../pool';
 import { PoolCompetitorMapper } from '../../pool/competitor/mapper';
-import { PoolCompetitor } from '../../pool/competitor';
-import { User } from '../../user';
-import { JsonPoolCompetitor } from '../../pool/competitor/json';
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CompetitorRepository extends APIRepository {
 
     constructor(

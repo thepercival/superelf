@@ -21,7 +21,7 @@ export class S11PlayerChooseComponent implements OnInit {
   @Input() viewPeriod!: ViewPeriod;
   @Input() alreadyChosenPersons: Person[] | undefined;
   @Input() alreadyChosenTeams: Team[] | undefined;
-  @Input() selectableLines: number = FootballLine.All;
+  @Input() selectableLines: FootballLine | undefined;
   @Input() filter: ChoosePlayersFilter;
   @Input() showAll: boolean = false;
 
@@ -32,7 +32,7 @@ export class S11PlayerChooseComponent implements OnInit {
   form: FormGroup;
   choosePersonItems: ChoosePersonItem[] = [];
   searchTeams: Team[] = [];
-  searchLines: number[] = [];
+  searchLines: (FootballLine | undefined)[] = [];
   nameService = new NameService();
   public alert: IAlert | undefined;
   public processing = true;
@@ -47,7 +47,7 @@ export class S11PlayerChooseComponent implements OnInit {
     fb: FormBuilder
   ) {
     this.filter = {
-      line: FootballLine.All,
+      line: undefined,
       team: undefined
     };
 
@@ -61,10 +61,15 @@ export class S11PlayerChooseComponent implements OnInit {
     this.searchTeams = this.competition.getTeamCompetitors().map((teamCompetitor: TeamCompetitor) => teamCompetitor.getTeam());
     this.form.controls.searchTeam.setValue(this.filter.team);
 
-    this.searchLines.push(FootballLine.All);
-    for (let line = 1; line < FootballLine.All; line *= 2) {
-      this.searchLines.push(line);
+    this.searchLines.push(undefined);
+    for (const [propertyKey, propertyValue] of Object.entries(FootballLine)) {
+      if ((typeof propertyValue === 'string')) {
+        continue;
+      }
+      this.searchLines.push(propertyValue);
     }
+    console.log();
+
     if (this.filter.line) {
       this.form.controls.searchLine.setValue(this.filter.line);
     }
@@ -123,7 +128,7 @@ export class S11PlayerChooseComponent implements OnInit {
     // console.log('pac' + player.getPerson().getName(), this.personAlreadyChosen(player.getPerson()));
     // console.log('tac' + player.getPerson().getName(), this.teamAlreadyChosen(player.getTeam()));
     return !this.personAlreadyChosen(player.getPerson()) && !this.teamAlreadyChosen(player.getTeam())
-      && (this.selectableLines & player.getLine()) > 0;
+      && (this.selectableLines === undefined || this.selectableLines & player.getLine()) > 0;
   }
 
   personAlreadyChosen(person: Person): boolean {
@@ -162,6 +167,6 @@ interface ChoosePersonItem {
 }
 
 export interface ChoosePlayersFilter {
-  line: FootballLine;
+  line: FootballLine | undefined;
   team: Team | undefined;
 }

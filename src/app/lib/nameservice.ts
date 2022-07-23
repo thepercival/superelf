@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FootballLine } from 'ngx-sport';
-import { ScoreUnit } from './scoreUnit';
+import { FootballScore } from './score';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +10,7 @@ export class SuperElfNameService {
     }
 
     getLineName(lineDef: number): string {
-        if (lineDef === FootballLine.GoalKepeer) {
+        if (lineDef === FootballLine.GoalKeeper) {
             return 'keeper';
         } else if (lineDef === FootballLine.Defense) {
             return 'verdediging';
@@ -22,35 +22,27 @@ export class SuperElfNameService {
         return 'alle linies';
     }
 
-    getScoreUnitName(scoreUnit: ScoreUnit): string {
-        switch (scoreUnit.getNumber()) {
-            case ScoreUnit.Points_Win:
+    getScoreName(score: FootballScore): string {
+        switch (score) {
+            case FootballScore.WinResult:
                 return 'gewonnen';
-            case ScoreUnit.Points_Draw:
+            case FootballScore.DrawResult:
                 return 'gelijk';
-            case ScoreUnit.Goal_Goalkeeper:
-            case ScoreUnit.Goal_Defender:
-            case ScoreUnit.Goal_Midfielder:
-            case ScoreUnit.Goal_Forward:
+            case FootballScore.Goal:
                 return 'goal';
-            case ScoreUnit.Assist_Goalkeeper:
-            case ScoreUnit.Assist_Defender:
-            case ScoreUnit.Assist_Midfielder:
-            case ScoreUnit.Assist_Forward:
+            case FootballScore.Assist:
                 return 'assist';
-            case ScoreUnit.Goal_Penalty:
+            case FootballScore.PenaltyGoal:
                 return 'penalty';
-            case ScoreUnit.Goal_Own:
+            case FootballScore.OwnGoal:
                 return 'eigen goal';
-            case ScoreUnit.Sheet_Clean_Goalkeeper:
-            case ScoreUnit.Sheet_Clean_Defender:
+            case FootballScore.CleanSheet:
                 return 'geen tegengoals';
-            case ScoreUnit.Sheet_Spotty_Goalkeeper:
-            case ScoreUnit.Sheet_Spotty_Defender:
+            case FootballScore.SpottySheet:
                 return 'te veel tegengoals';
-            case ScoreUnit.Card_Yellow:
+            case FootballScore.YellowCard:
                 return 'gele kaart';
-            case ScoreUnit.Card_Red:
+            case FootballScore.RedCard:
                 return 'rode kaart';
         }
         return '?';
