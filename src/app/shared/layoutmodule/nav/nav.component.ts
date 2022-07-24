@@ -33,8 +33,18 @@ export class NavComponent implements OnInit {
     console.log('navcomponent::ngOnInit this.user', this.user);
   }
 
-  getSeasonBadge(startDate: Date): string {
-    return this.dateFormatter.toString(startDate, { year: '2-digit' });
+  getSeasonStart(startDate: Date): string {
+    return this.convertDateToYear(startDate);
+  }
+
+  getSeasonEnd(startDate: Date): string {
+    const endDate = (new Date(startDate));
+    endDate.setFullYear(startDate.getFullYear() + 1);
+    return this.convertDateToYear(endDate);
+  }
+
+  private convertDateToYear(dDate: Date): string {
+    return this.dateFormatter.toString(dDate, { year: '2-digit' });
   }
 }
 

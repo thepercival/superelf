@@ -63,6 +63,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
             this.poule = round.getFirstPoule(); // ?? GET FROM BACKEND ?? this.pool.getCompetition(PoolCollection.League_Default).get;
             this.competitionSport = this.pool.getCompetitionSport(LeagueName.Competition);
             this.startLocationMap = new StartLocationMap(poolCompetitors);
+            console.log(poolCompetitors);
 
           },
           error: (e: string) => { this.setAlert('danger', e); this.processing = false; },

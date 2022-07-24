@@ -10,8 +10,15 @@
   </div>
 
   <div *ngIf="nameInfo">
-    <span class="text-truncate">{{nameInfo.name}}</span>
-    <span>{{getSeasonBadge(nameInfo.start)}}</span>
+    <h1 class="h3 text-truncate me-1 d-flex mb-0">
+      <span class="me-1">{{nameInfo.name}}</span>
+
+      <small class="d-flex flex-column p-0" style="font-size: 11px;">
+        <span>{{getSeasonStart(nameInfo.start)}}</span>
+        <span>{{getSeasonEnd(nameInfo.start)}}</span>
+      </small>
+
+    </h1>
   </div>
 
   <button *ngIf="!authService.isLoggedIn()" routerLink="/user/login" routerLinkActive="active" class="btn text-light"

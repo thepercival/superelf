@@ -1,13 +1,11 @@
-<app-title *ngIf="pool" [title]="pool.getName()"></app-title>
-
-<h2 class="text-center">
-  <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> spelregels
-</h2>
-
-<ngb-alert *ngIf="alert" [type]="alert.type">
-  {{ alert.message }}</ngb-alert>
-
 <div *ngIf="pool" class="ps-3">
+
+  <h2 class="mb-3">
+    <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> spelregels
+  </h2>
+
+  <ngb-alert *ngIf="alert" [type]="alert.type">
+    {{ alert.message }}</ngb-alert>
 
   <h5 class="text-primary">teambeheer</h5>
   <p class="card-text">Het samenstellen van je team kan van

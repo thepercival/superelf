@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -15,6 +15,9 @@ import { ScoutedPlayer } from '../../lib/scoutedPlayer';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { Period } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
+import { PoolCompetitor } from '../../lib/pool/competitor';
+import { LeagueName } from '../../lib/leagueName';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-pool-public',
@@ -35,7 +38,8 @@ export class HomeComponent extends PoolComponent implements OnInit {
         public cssService: CSSService,
         private dateFormatter: DateFormatter,
         private poolUserRepository: PoolUserRepository,
-        protected scoutedPlayerRepository: ScoutedPlayerRepository
+        protected scoutedPlayerRepository: ScoutedPlayerRepository,
+        protected modalService: NgbModal
     ) {
         super(route, router, poolRepository, globalEventsManager);
         this.translate = new TranslateService();
@@ -91,6 +95,17 @@ export class HomeComponent extends PoolComponent implements OnInit {
 
     allPoolUsersHaveAssembled(): boolean {
         return this.poolUsers.length === this.getNrOfPoolUsersHaveAssembled();
+    }
+
+    getCompetitionCompetitors(): PoolCompetitor[] {
+        return this.pool.getCompetitors(LeagueName.Competition);
+    }
+
+    openModal(modalContent: TemplateRef<any>) {
+        const activeModal = this.modalService.open(modalContent);
+        activeModal.result.then(() => {
+        }, () => {
+        });
     }
 
     // getNrOfPoolUsersHaveTransfered(): number {

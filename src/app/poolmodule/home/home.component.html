@@ -44,12 +44,24 @@
 
     <!-- option block -->
     <div *ngIf="!processing && pool" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
-      <div class="card card-sub pointer px-0" [routerLink]="['/pool/competition', pool.getId()]">
+
+      <div *ngIf="getCompetitionCompetitors().length > 0" class="card card-sub pointer px-0"
+        [routerLink]="['/pool/competition', pool.getId()]">
         <div class="card-body text-center p-1 pt-2">
           <h5 class="card-title">
             <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
           </h5>
           <div>stand</div>
+        </div>
+      </div>
+      <div *ngIf="getCompetitionCompetitors().length == 0" class="card card-sub pointer px-0"
+        (click)="openModal(contentpoolUsers)">
+        <div class="card-body text-center p-1 pt-2">
+          <h5 class="card-title">
+            <fa-icon [icon]="['fas', 'users']"></fa-icon>
+          </h5>
+          <div>deel</div>
+          <div>nemers</div>
         </div>
       </div>
       <!-- <div class="card card-sub pointer px-0" [routerLink]="['/pool/cup', pool.getId()]">
@@ -130,3 +142,16 @@
       </div>
     </div>
   </div>
+
+  <!-- remove modal -->
+  <ng-template #contentpoolUsers let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">deelnemers</h4>
+      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+    </div>
+    <div class="modal-body">
+      <ul class="list-group mb-3">
+        <li *ngFor="let poolUser of pool.getUsers()" class="list-group-item">{{poolUser.getName()}}</li>
+      </ul>
+    </div>
+  </ng-template>
