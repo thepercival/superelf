@@ -16,6 +16,8 @@
         </button>
       </div>
 
+      <ngb-alert *ngIf="scoutingList.scoutedPlayers.length === 0" type="info">
+        je hebt nog geen spelers gescout, begin met zoeken</ngb-alert>
 
       <table class="table">
         <tbody>

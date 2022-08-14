@@ -17,21 +17,20 @@ export class S11PlayerViewPeriodStatisticsComponent extends S11PlayerStatisticsC
   @Input() line!: FootballLine;
   @Input() competitionConfig!: CompetitionConfig;
 
-  public totalsCalculator: PlayerTotalsCalculator;
+  public totalsCalculator!: PlayerTotalsCalculator;
 
   constructor(
     public imageRepository: ImageRepository,
     public cssService: CSSService) {
     super(imageRepository, cssService);
-    this.totalsCalculator = new PlayerTotalsCalculator(this.competitionConfig);
   }
 
   ngOnInit() {
+    this.totalsCalculator = new PlayerTotalsCalculator(this.competitionConfig);
     const sheetLines = (this.line && FootballLine.GoalKeeper) & (this.line && FootballLine.Defense);
     this.sheetActive = sheetLines > 0;
 
     const sheetPoints = sheetLines > 0 ? this.totalsCalculator.getSheetPoints(sheetLines, this.totals) : 0
-
     this.categoryPoints = {
       result: this.totalsCalculator.getResultPoints(this.totals),
       goal: this.totalsCalculator.getGoalPoints(this.line, this.totals),

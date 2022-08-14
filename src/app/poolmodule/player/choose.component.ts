@@ -68,11 +68,9 @@ export class S11PlayerChooseComponent implements OnInit {
       }
       this.searchLines.push(propertyValue);
     }
-    console.log();
 
-    if (this.filter.line) {
-      this.form.controls.searchLine.setValue(this.filter.line);
-    }
+    this.form.controls.searchLine.setValue(this.filter.line);
+
     this.alreadyChosenPersonsMap = new PersonMap();
     this.alreadyChosenPersons?.forEach((person: Person) => {
       this.alreadyChosenPersonsMap.set(+person.getId(), person);

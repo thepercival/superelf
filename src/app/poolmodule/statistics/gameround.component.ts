@@ -40,7 +40,10 @@ export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsCo
     // this.player = this.oneTeamSimultaneous.getCurrentPlayer(this.s11Player.getPerson());
 
     // this.updateCurrentGame();    
-    this.pointsCalculator = new PointsCalculator(this.competitionConfig);
+    if (this.pointsCalculator === undefined) {
+      this.pointsCalculator = new PointsCalculator(this.competitionConfig);
+    }
+    // console.log('init pointsCaLCulator', this.pointsCalculator);
     this.sheetActive = this.line === FootballLine.GoalKeeper || this.line === FootballLine.Defense;
     this.processing = false;
   }
@@ -48,6 +51,10 @@ export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsCo
   ngOnChanges(changes: SimpleChanges) {
     if (changes.statistics.currentValue !== changes.statistics.previousValue
       && changes.statistics.currentValue !== undefined) {
+      if (this.pointsCalculator === undefined) {
+        this.pointsCalculator = new PointsCalculator(this.competitionConfig);
+      }
+      // console.log('first changes statistics', changes.statistics.currentValue);
       const sheetLines = (this.line && FootballLine.GoalKeeper) & (this.line && FootballLine.Defense);
       const sheetPoints = sheetLines > 0 ? this.pointsCalculator.getSheetPoints(this.line, changes.statistics.currentValue) : 0
       this.categoryPoints = {

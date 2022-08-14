@@ -30,7 +30,7 @@ export class NavComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.authService.getUser();
-    console.log('navcomponent::ngOnInit this.user', this.user);
+    // console.log('navcomponent::ngOnInit this.user', this.user);
   }
 
   getSeasonStart(startDate: Date): string {
