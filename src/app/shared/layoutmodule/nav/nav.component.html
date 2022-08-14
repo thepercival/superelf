@@ -10,7 +10,7 @@
   </div>
 
   <div *ngIf="nameInfo">
-    <h1 class="h3 text-truncate me-1 d-flex mb-0">
+    <h1 class="h3 text-truncate me-1 d-flex mb-0 pointer" (click)="navigateToPoolHome(nameInfo.id)">
       <span class="me-1">{{nameInfo.name}}</span>
 
       <small class="d-flex flex-column p-0" style="font-size: 11px;">

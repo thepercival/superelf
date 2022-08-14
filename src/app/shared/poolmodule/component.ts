@@ -42,6 +42,7 @@ export class PoolComponent {
     protected setPool(pool: Pool): void {
         this.pool = pool;
         this.globalEventsManager.navHeaderInfo.emit({
+            id: +pool.getId(),
             name: pool.getName(),
             start: pool.getSeason().getStartDateTime()
         });

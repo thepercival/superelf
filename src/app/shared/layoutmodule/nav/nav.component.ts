@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
 import { DateFormatter } from '../../../lib/dateFormatter';
@@ -21,7 +22,8 @@ export class NavComponent implements OnInit {
     public authService: AuthService,
     private dateFormatter: DateFormatter,
     private globalEventsManager: GlobalEventsManager,
-    public navigation: MyNavigation
+    public navigation: MyNavigation,
+    private router: Router
   ) {
     this.globalEventsManager.navHeaderInfo.subscribe((headerInfo: NavHeaderInfo | undefined) => {
       this.nameInfo = headerInfo;
@@ -46,9 +48,14 @@ export class NavComponent implements OnInit {
   private convertDateToYear(dDate: Date): string {
     return this.dateFormatter.toString(dDate, { year: '2-digit' });
   }
+
+  navigateToPoolHome(id: number): void {
+    this.router.navigate(['/pool', id]);
+  }
 }
 
 export interface NavHeaderInfo {
+  id: number;
   name: string;
   start: Date;
   showBackBtn?: boolean;
