@@ -11,7 +11,7 @@ export class PlayerTotalsCalculator {
     public getResultPoints(jsonTotals: JsonPlayerTotals): number {
         const resultWinPoints = this.competitionConfig.getScorePoints(FootballScore.WinResult);
         const resultDrawPoints = this.competitionConfig.getScorePoints(FootballScore.DrawResult);
-        return (jsonTotals.nrOfWins * resultWinPoints) + (jsonTotals.nrOfWins * resultDrawPoints);
+        return (jsonTotals.nrOfWins * resultWinPoints) + (jsonTotals.nrOfDraws * resultDrawPoints);
     }
 
     public getGoalPoints(line: FootballLine, jsonTotals: JsonPlayerTotals): number {
