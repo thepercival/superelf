@@ -29,10 +29,10 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
+    globalEventsManager: GlobalEventsManager,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
     private modalService: NgbModal,
     private poolUserRepository: PoolUserRepository,
-    globalEventsManager: GlobalEventsManager
   ) {
     super(route, router, poolRepository, globalEventsManager);
   }

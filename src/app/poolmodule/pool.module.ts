@@ -32,6 +32,7 @@ import { PoolUsersComponent } from './poolusers/poolusers.component';
 import { InviteComponent } from './invite/invite.component';
 import { ScoutedPlayerListComponent } from './scoutedPlayer/list.component';
 import { S11PlayerComponent } from './player/info.component';
+import { SourceGameComponent } from './againstgame/source.component';
 import { S11PlayerAddRemoveModalComponent } from './player/addremovemodal.component';
 import { TeamNameComponent } from './team/name.component';
 import { AgainstGameTitleComponent } from './againstgame/title.component';
@@ -78,6 +79,7 @@ import { TogetherRankingComponent } from './leagues/togetherranking.component';
     PoolCompetitionComponent,
     PoolUserRemoveModalComponent,
     S11PlayerComponent,
+    SourceGameComponent,
     PlayerBasicsComponent,
     S11PlayerGameRoundStatisticsComponent,
     S11PlayerViewPeriodStatisticsComponent,

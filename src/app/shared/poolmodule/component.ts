@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { PoolUser } from '../../lib/pool/user';
 import { GlobalEventsManager } from '../commonmodule/eventmanager';
+import { Competition, Structure } from 'ngx-sport';
 
 export class PoolComponent {
 

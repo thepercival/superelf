@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Competition, PersonMapper, Team } from 'ngx-sport';
+import { AgainstGame, Competition, PersonMapper, Team } from 'ngx-sport';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../repository';

@@ -17,6 +17,7 @@ import { FormationChooseComponent } from './formation/choose.component';
 import { FormationPlaceEditComponent } from './formation/place/edit.component';
 import { FormationAssembleComponent } from './formation/assemble.component';
 import { PoolCompetitionComponent } from './leagues/competition.component';
+import { SourceGameComponent } from './againstgame/source.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent, canActivate: [AuthUserGuardService] },
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'invite/:id', component: InviteComponent, canActivate: [AuthUserGuardService] },
   { path: 'join/:id/:key', component: JoinComponent },
   { path: 'player/:id', component: S11PlayerComponent },
+  { path: 'sourcegame/:id/:gameRound/:gameId', component: SourceGameComponent },
   { path: 'rules/:id', component: RulesComponent },
   { path: 'scouting/list/:id', component: ScoutedPlayerListComponent, canActivate: [AuthUserGuardService] },
   { path: 'scouting/search/:id', component: ScoutedPlayerAddComponent, canActivate: [AuthUserGuardService] },

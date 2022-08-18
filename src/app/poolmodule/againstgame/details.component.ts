@@ -64,6 +64,7 @@ export class AgainstGameDetailsComponent implements OnInit {
 
     // this.competitorMap = new CompetitorMap(this.pool.getSourceCompetition().getTeamCompetitors());
 
+
     // this.initSliderGameRounds();
 
     // this.updateGameRound();

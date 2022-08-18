@@ -42,8 +42,9 @@
                         <h2 *ngIf="processingGames" class="text-center">
                             <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
                         </h2>
-                        <button *ngIf="!processingGames && currentGame" type="button" class="btn btn-outline-primary"
-                            (click)="previousGameRound()">
+                        <button *ngIf="!processingGames && currentGame && currentGameRound" type="button"
+                            class="btn btn-outline-primary"
+                            [routerLink]="['/pool/sourcegame', pool.getId(), currentGameRound.getNumber(), currentGame.getId()]">
                             <app-againstgame-title [againstGame]="currentGame"></app-againstgame-title>
                         </button>
                     </div>
