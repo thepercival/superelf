@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { EndRankingComponent } from './ranking/end.component';
 import { PouleRankingComponent } from './ranking/poule.component';
-import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule, NgbModalConfig, NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbModalConfig, NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CommonSharedModule } from '../commonmodule/common.module';
 import { NameModalComponent } from './namemodal/namemodal.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -28,7 +28,7 @@ import { facStructure, facReferee, facScoreboard } from './icons';
     ReactiveFormsModule,
     CommonSharedModule,
     RouterModule,
-    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
+    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
     NgbNavModule,
   ],
   providers: [
@@ -38,7 +38,7 @@ import { facStructure, facReferee, facScoreboard } from './icons';
     EndRankingComponent,
     PouleRankingComponent,
     RankingRulesComponent,
-    NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule, NgbButtonsModule,
+    NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
     NgbNavModule,
   ]
 })

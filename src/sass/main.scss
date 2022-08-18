@@ -1,17 +1,8 @@
+@import './mixins';
+
 $enable-responsive-font-sizes: true !default;
-
-@import "./bootstrap/_variables";
-
-$line-1: $gray-700;
-$line-2: $gray-600;
-$line-4: $gray-500;
-$line-8: $gray-400;
-$totals: #673AB7;
-$points: #2211B7;
-
-
-@import "./bootstrap/_components";
-@import "./bootstrap/_bootswatch";
+@import "./bootstrap-custom-components"; // "~bootstrap/scss/bootstrap";
+@import "./bootswatch/bootswatch";
 
 // $custom-theme-colors: (
 //   "totals": #673AB7,
@@ -19,9 +10,6 @@ $points: #2211B7;
 // );
 
 // $theme-colors: map-merge($custom-theme-colors, $theme-colors);
-
-
-
 
 .current-user {
   @extend .text-primary !optional;

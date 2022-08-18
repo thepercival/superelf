@@ -216,7 +216,6 @@
       }
     }
   },
-  "defaultProject": "superelf",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

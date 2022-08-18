@@ -8,10 +8,8 @@
 // scss-docs-start import-stack
 // Configuration
 @import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
-@import "~bootstrap/scss/utilities";
 
+@import "./bootswatch/variables";
 $line-1: $gray-700;
 $line-2: $gray-600;
 $line-4: $gray-500;
@@ -19,60 +17,31 @@ $line-8: $gray-400;
 $totals: #673AB7;
 $points: #2211B7;
 $nopoints: #bbb;
-
+@import "~bootstrap/scss/variables";
 $custom-theme-colors: (
-    "totals": $totals,
-    "points": $points,
-    "nopoints": $nopoints,
-    "line-1": $line-1,
-    "line-2": $line-2,
-    "line-4": $line-4,
-    "line-8": $line-8,
-    "zero": #eee,
-    "positive": $gray-500,
-    "negative": $red-100,
+  "totals": $totals,
+  "points": $points,
+  "nopoints": $nopoints,
+  "line-1": $line-1,
+  "line-2": $line-2,
+  "line-4": $line-4,
+  "line-8": $line-8,
+  "zero": #eee,
+  "positive": $gray-500,
+  "negative": $red-100,
 );
-
-$utilities: map-merge(
-  $utilities,
-  (
-    "background-color": map-merge(
-      map-get($utilities, "background-color"),
-      (
-        values: map-merge(
-          map-get(map-get($utilities, "background-color"), "values"),
-          (
-            $custom-theme-colors
-          ),
-        ),
-      ),
-    ),
-  )
-);
-
 $custom-theme-border-colors: (
-    "zero": #ddd,
-    "positive": $blue,
-    "negative": $red-200,
+  "zero": #ddd,
+  "positive": $blue,
+  "negative": $red-200,
 );
+$theme-colors: map-merge($theme-colors, $custom-theme-colors);
+@import "~bootstrap/scss/maps";
 
-$utilities: map-merge(
-  $utilities,
-  (
-    "border-color": map-merge(
-      map-get($utilities, "border-color"),
-      (
-        values: map-merge(
-          map-get(map-get($utilities, "border-color"), "values"),
-          (
-            $custom-theme-colors/*$custom-theme-border-colors*/
-          ),
-        ),
-      ),
-    ),
-  )
-);
 
+@import "~bootstrap/scss/mixins";
+
+@import "~bootstrap/scss/utilities";
 
 // Layout & components
 @import "~bootstrap/scss/root";
