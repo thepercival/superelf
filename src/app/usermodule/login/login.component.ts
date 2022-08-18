@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -15,7 +15,7 @@ import { StartSessionService } from '../../shared/commonmodule/startSessionServi
 })
 export class LoginComponent extends AuthComponent implements OnInit {
   registered = false;
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   validations: any = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -29,7 +29,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
     private startSessionService: StartSessionService,
     authService: AuthService,
     eventsManager: GlobalEventsManager,
-    fb: FormBuilder
+    fb: UntypedFormBuilder
   ) {
     super(authService, eventsManager);
     this.form = fb.group({

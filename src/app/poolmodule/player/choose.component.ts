@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 import { Competition, FootballLine, NameService, Person, PersonMap, Player, Team, TeamMap } from 'ngx-sport';
 import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
@@ -29,7 +29,7 @@ export class S11PlayerChooseComponent implements OnInit {
   @Output() linkToS11Player = new EventEmitter<S11Player>();
   @Output() filterUpdate = new EventEmitter<ChoosePlayersFilter>();
 
-  form: FormGroup;
+  form: UntypedFormGroup;
   choosePersonItems: ChoosePersonItem[] = [];
   searchTeams: Team[] = [];
   searchLines: (FootballLine | undefined)[] = [];
@@ -44,7 +44,7 @@ export class S11PlayerChooseComponent implements OnInit {
     protected playerRepository: S11PlayerRepository,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
     public imageRepository: ImageRepository,
-    fb: FormBuilder
+    fb: UntypedFormBuilder
   ) {
     this.filter = {
       line: undefined,

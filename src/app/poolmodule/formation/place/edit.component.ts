@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FootballLine, Team, Person } from 'ngx-sport';
@@ -29,7 +29,7 @@ import { ChoosePlayersFilter } from '../../player/choose.component';
 export class FormationPlaceEditComponent extends PoolComponent implements OnInit {
   poolUser!: PoolUser;
   scoutingList: ScoutingList = { scoutedPlayers: []/*, mappedPersons: new PersonMap()*/ };
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public choosePlayersFilter: ChoosePlayersFilter;
   public place!: S11FormationPlace;
@@ -47,7 +47,7 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
     private formationRepository: FormationRepository,
     public myNavigation: MyNavigation,
     private modalService: NgbModal,
-    fb: FormBuilder
+    fb: UntypedFormBuilder
   ) {
     super(route, router, poolRepository, globalEventsManager);
     this.form = fb.group({

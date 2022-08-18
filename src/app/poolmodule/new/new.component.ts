@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { IAlert } from '../../shared/commonmodule/alert';
@@ -18,7 +18,7 @@ import { CompetitionConfig } from '../../lib/competitionConfig';
   styleUrls: ['./new.component.scss']
 })
 export class NewComponent implements OnInit {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public processing = true;
   public alert: IAlert | undefined;
   public validations: any = {
@@ -33,7 +33,7 @@ export class NewComponent implements OnInit {
     private competitionConfigRepository: CompetitionConfigRepository,
     private poolRepository: PoolRepository,
     private competitionRepository: CompetitionRepository,
-    fb: FormBuilder
+    fb: UntypedFormBuilder
   ) {
     this.form = fb.group({
       name: ['', Validators.compose([

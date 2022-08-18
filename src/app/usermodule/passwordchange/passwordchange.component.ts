@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -16,7 +16,7 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 })
 export class PasswordchangeComponent extends AuthComponent implements OnInit {
   passwordChanged = false;
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   validations: any = {
     minlengthcode: 100000,
@@ -30,7 +30,7 @@ export class PasswordchangeComponent extends AuthComponent implements OnInit {
     private route: ActivatedRoute,
     authService: AuthService,
     eventsManager: GlobalEventsManager,
-    fb: FormBuilder
+    fb: UntypedFormBuilder
   ) {
     super(authService, eventsManager);
     this.form = fb.group({

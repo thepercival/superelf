@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
@@ -40,7 +40,7 @@ export class FormationAssembleComponent extends PoolComponent implements OnInit 
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
     protected poolUserRepository: PoolUserRepository,
     protected formationRepository: FormationRepository,
-    fb: FormBuilder,
+    fb: UntypedFormBuilder,
     private modalService: NgbModal
   ) {
     super(route, router, poolRepository, globalEventsManager);

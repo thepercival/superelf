@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
@@ -24,7 +24,7 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
   styleUrls: ['./add.component.scss']
 })
 export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   scoutingList: ScoutingList = { scoutedPlayers: []/*, mappedPersons: new PersonMap()*/ };
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public choosePlayersFilter: ChoosePlayersFilter;
@@ -35,7 +35,7 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
     poolRepository: PoolRepository,
     globalEventsManager: GlobalEventsManager,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
-    fb: FormBuilder,
+    fb: UntypedFormBuilder,
     private location: Location,
     public myNavigation: MyNavigation,
     private modalService: NgbModal

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { IAlert } from '../../shared/commonmodule/alert';
@@ -16,7 +16,7 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
   styleUrls: ['./invite.component.scss']
 })
 export class InviteComponent extends PoolComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   validations: any = {
     minlengthname: PoolCollection.MIN_LENGTH_NAME,
     maxlengthname: PoolCollection.MAX_LENGTH_NAME,
@@ -27,7 +27,7 @@ export class InviteComponent extends PoolComponent implements OnInit {
     router: Router,
     poolRepository: PoolRepository,
     globalEventsManager: GlobalEventsManager,
-    fb: FormBuilder
+    fb: UntypedFormBuilder
   ) {
     super(route, router, poolRepository, globalEventsManager);
     this.form = fb.group({

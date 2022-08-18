@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { User } from '../../lib/user';
@@ -17,7 +17,7 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 })
 export class ProfileComponent extends AuthComponent implements OnInit {
   user: User | undefined;
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   validations: UserValidations = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -31,7 +31,7 @@ export class ProfileComponent extends AuthComponent implements OnInit {
     eventsManager: GlobalEventsManager,
     private userRepository: UserRepository,
     public myNavigation: MyNavigation,
-    fb: FormBuilder
+    fb: UntypedFormBuilder
   ) {
     super(authService, eventsManager);
     this.form = fb.group({

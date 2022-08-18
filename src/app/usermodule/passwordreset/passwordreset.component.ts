@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -15,7 +15,7 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 })
 export class PasswordresetComponent extends AuthComponent implements OnInit {
   codeSend = false;
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   validations: any = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -25,7 +25,7 @@ export class PasswordresetComponent extends AuthComponent implements OnInit {
   constructor(
     authService: AuthService,
     eventsManager: GlobalEventsManager,
-    fb: FormBuilder
+    fb: UntypedFormBuilder
   ) {
     super(authService, eventsManager);
     this.form = fb.group({
