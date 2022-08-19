@@ -9,7 +9,10 @@
 // Configuration
 @import "~bootstrap/scss/functions";
 
+
+
 @import "./bootswatch/variables";
+
 $line-1: $gray-700;
 $line-2: $gray-600;
 $line-4: $gray-500;
@@ -17,7 +20,9 @@ $line-8: $gray-400;
 $totals: #673AB7;
 $points: #2211B7;
 $nopoints: #bbb;
+
 @import "~bootstrap/scss/variables";
+
 $custom-theme-colors: (
   "totals": $totals,
   "points": $points,
@@ -35,12 +40,12 @@ $custom-theme-border-colors: (
   "positive": $blue,
   "negative": $red-200,
 );
+
 $theme-colors: map-merge($theme-colors, $custom-theme-colors);
+
 @import "~bootstrap/scss/maps";
 
-
 @import "~bootstrap/scss/mixins";
-
 @import "~bootstrap/scss/utilities";
 
 // Layout & components
