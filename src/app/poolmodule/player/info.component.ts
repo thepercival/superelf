@@ -9,20 +9,24 @@ import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player, StatisticsMap } from '../../lib/player';
+import { S11PlayerRepository } from '../../lib/player/repository';
 import { PointsCalculator } from '../../lib/points/calculator';
 import { Pool } from '../../lib/pool';
+import { PoolRepository } from '../../lib/pool/repository';
 import { Statistics } from '../../lib/statistics';
 import { StatisticsRepository } from '../../lib/statistics/repository';
 
 import { CSSService } from '../../shared/commonmodule/cssservice';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
+import { PoolComponent } from '../../shared/poolmodule/component';
 
 @Component({
   selector: 'app-s11player-info',
   templateUrl: './info.component.html',
   styleUrls: ['./info.component.scss']
 })
-export class S11PlayerComponent implements OnInit {
+export class S11PlayerComponent extends PoolComponent implements OnInit {
   public s11Player!: S11Player;
   public pool!: Pool;
   private pointsCalculator!: PointsCalculator;
@@ -42,48 +46,67 @@ export class S11PlayerComponent implements OnInit {
   private sliderGameRounds: (GameRound | undefined)[] = [];
 
   constructor(
+    route: ActivatedRoute,
+    router: Router,
+    poolRepository: PoolRepository,
+    globalEventsManager: GlobalEventsManager,
+    private playerRepository: S11PlayerRepository,
     private statisticsRepository: StatisticsRepository,
     private structureRepository: StructureRepository,
     private gameRepository: GameRepository,
     public imageRepository: ImageRepository,
     public cssService: CSSService,
     private myNavigation: MyNavigation,
-    private route: ActivatedRoute,
-    private router: Router) {
-    const state = this.router.getCurrentNavigation()?.extras.state ?? undefined;
-    if (state !== undefined) {
-      this.s11Player = state.s11Player;
-      this.pool = state.pool;
-      this.currentGameRound = state.currentGameRound ?? undefined;
-    }
+  ) {
+    super(route, router, poolRepository, globalEventsManager);
+    // const state = this.router.getCurrentNavigation()?.extras.state ?? undefined;
+    // if (state !== undefined) {
+    //   this.s11Player = state.s11Player;
+    //   this.pool = state.pool;
+    //   this.currentGameRound = state.currentGameRound ?? undefined;
+    // }
   }
 
   ngOnInit() {
-    if (this.s11Player === undefined) {
+    super.parentNgOnInit().subscribe((pool: Pool) => {
+
+      this.setPool(pool);
+
+      const competitionConfig = this.pool.getCompetitionConfig();
+      const currentViewPeriod = competitionConfig.getViewPeriodByDate(new Date());
+      if (currentViewPeriod === undefined) {
+        return;
+      }
       this.route.params.subscribe(params => {
-        this.router.navigate(['/pool', +params['id']]);
+        this.playerRepository.getObject(
+          +params.playerId,
+          competitionConfig.getSourceCompetition(),
+          currentViewPeriod
+        ).subscribe({
+          next: (s11Player: S11Player) => {
+            this.s11Player = s11Player;
+            this.statisticsRepository.getObjects(this.s11Player).subscribe({
+              next: (statistics: StatisticsMap) => {
+                this.s11Player.setStatistics(statistics);
+
+                this.pointsCalculator = new PointsCalculator(this.pool.getCompetitionConfig());
+
+                this.startLocationMap = new StartLocationMap(this.pool.getSourceCompetition().getTeamCompetitors());
+
+                this.initSliderGameRounds();
+
+                this.updateGameRound();
+              },
+              complete: () => this.processing = false
+            });
+          },
+          error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
+          complete: () => this.processing = false
+        });
       });
-      return
-    }
 
-    this.pointsCalculator = new PointsCalculator(this.pool.getCompetitionConfig());
 
-    this.startLocationMap = new StartLocationMap(this.pool.getSourceCompetition().getTeamCompetitors());
-
-    this.initSliderGameRounds();
-
-    this.updateGameRound();
-
-    if (!this.s11Player.hasStatistics()) {
-      this.statisticsRepository.getObjects(this.s11Player).subscribe({
-        next: (statistics: StatisticsMap) => {
-          this.s11Player.setStatistics(statistics);
-        },
-        complete: () => this.processing = false
-      });
-    } else {
-      this.processing = false;
-    }
+    });
   }
 
   private initSliderGameRounds(): void {

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AgainstGame, Competition, PersonMapper, Team } from 'ngx-sport';
 import { Observable } from 'rxjs';
@@ -25,6 +25,14 @@ export class S11PlayerRepository extends APIRepository {
 
     getUrl(): string {
         return super.getApiUrl() + this.getUrlpostfix();
+    }
+
+    getObject(id: number | string, competition: Competition, viewPeriod: ViewPeriod): Observable<S11Player> {
+        const url = this.getUrl() + '/' + id;
+        return this.http.get<JsonS11Player>(url, { headers: super.getHeaders() }).pipe(
+            map((jsonS11Player: JsonS11Player) => this.mapper.toObject(jsonS11Player, competition, viewPeriod)),
+            catchError((err: HttpErrorResponse) => this.handleError(err))
+        );
     }
 
     getObjects(competiton: Competition, viewPeriod: ViewPeriod, team?: Team, line?: number): Observable<S11Player[]> {

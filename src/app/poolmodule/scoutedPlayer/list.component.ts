@@ -130,9 +130,9 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
       return;
     }
 
-    this.router.navigate(['/pool/player/', this.pool.getId()], {
+    this.router.navigate(['/pool/player/', this.pool.getId(), s11Player.getId()]/*, {
       state: { s11Player, "pool": this.pool, currentGameRound: undefined }
-    });
+    }*/);
   }
 
   linkToSearch() {

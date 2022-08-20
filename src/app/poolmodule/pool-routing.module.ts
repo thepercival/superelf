@@ -30,7 +30,7 @@ const routes: Routes = [
   { path: 'formation/place/edit/:id/:placeId', component: FormationPlaceEditComponent, canActivate: [AuthUserGuardService] },
   { path: 'invite/:id', component: InviteComponent, canActivate: [AuthUserGuardService] },
   { path: 'join/:id/:key', component: JoinComponent },
-  { path: 'player/:id', component: S11PlayerComponent },
+  { path: 'player/:id/:playerId', component: S11PlayerComponent },
   { path: 'sourcegame/:id/:gameRound/:gameId', component: SourceGameComponent },
   { path: 'rules/:id', component: RulesComponent },
   { path: 'scouting/list/:id', component: ScoutedPlayerListComponent, canActivate: [AuthUserGuardService] },

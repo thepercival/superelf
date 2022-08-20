@@ -3,59 +3,65 @@
 </h2>
 <div class="row justify-content-center g-0">
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-        <div *ngIf="!processing && s11Player">
-            <div *ngIf="pool" class="card card-person border-0">
+        <div *ngIf="!processing">
 
+            <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+
+            <div *ngIf="pool && s11Player" class="card card-person border-0">
                 <div class="card-body py-1 px-2">
+                    <div class="d-flex flex-column">
 
-                    <div class="d-flex justify-content-between">
-                        <div></div>
-                        <!-- <button type="button" class="btn btn-outline-primary">
+                        <div class="d-flex justify-content-between">
+                            <div></div>
+                            <!-- <button type="button" class="btn btn-outline-primary">
                             <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
                         </button> -->
-                        <h2 class="text-center mb-0">
-                            {{s11Player.getPerson().getName()}}
-                        </h2>
-                        <button type="button" class="btn btn-outline-primary" (click)="navigateBack()">
-                            <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
-                            <span class="ms-1 d-none d-md-inline"> terug</span>
-                        </button>
-                    </div>
-                    <app-player-basics [player]="player" [points]="getCurrentGameRoundPoints()" class="text-center">
-                    </app-player-basics>
-
-                    <div class="d-flex justify-content-center">
-                        <div class="btn-group" role="group" aria-label="aantal">
-                            <button type="button" class="btn btn-outline-primary" (click)="previousGameRound()">
-                                <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
-                            </button>
-                            <button [disabled]="true" type="button" class="btn btn-outline-primary btn-fixed-width">
-                                {{getCurrentGameRoundLabel()}}
-                            </button>
-                            <button type="button" class="btn btn-outline-primary" (click)="nextGameRound()">
-                                <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+                            <h2 class="text-center mb-0">
+                                {{s11Player.getPerson().getName()}}
+                            </h2>
+                            <button type="button" class="btn btn-outline-primary" (click)="navigateBack()">
+                                <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
+                                <span class="ms-1 d-none d-md-inline"> terug</span>
                             </button>
                         </div>
-                    </div>
+                        <app-player-basics [player]="player" [points]="getCurrentGameRoundPoints()" class="text-center">
+                        </app-player-basics>
 
-                    <div class="text-center mt-3 mb-2">
-                        <h2 *ngIf="processingGames" class="text-center">
-                            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-                        </h2>
-                        <button *ngIf="!processingGames && currentGame && currentGameRound" type="button"
-                            class="btn btn-outline-primary"
-                            [routerLink]="['/pool/sourcegame', pool.getId(), currentGameRound.getNumber(), currentGame.getId()]">
-                            <app-againstgame-title [againstGame]="currentGame"></app-againstgame-title>
-                        </button>
-                    </div>
-                    <div>
-                        <app-s11player-viewperiod-statistics *ngIf="!currentGameRound" [totals]="s11Player.getTotals()"
-                            [line]="s11Player.getLine()" [competitionConfig]="pool.getCompetitionConfig()">
-                        </app-s11player-viewperiod-statistics>
-                        <app-s11player-gameround-statistics *ngIf="pool && currentGameRound"
-                            [statistics]="s11Player.getGameStatistics(currentGameRound.getNumber())"
-                            [line]="s11Player.getLine()" [competitionConfig]="pool.getCompetitionConfig()">
-                        </app-s11player-gameround-statistics>
+                        <div class="d-flex justify-content-center">
+                            <div class="btn-group" role="group" aria-label="aantal">
+                                <button type="button" class="btn btn-outline-primary" (click)="previousGameRound()">
+                                    <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+                                </button>
+                                <button [disabled]="true" type="button" class="btn btn-outline-primary btn-fixed-width">
+                                    {{getCurrentGameRoundLabel()}}
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" (click)="nextGameRound()">
+                                    <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-3 mb-2">
+                            <h2 *ngIf="processingGames" class="text-center">
+                                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+                            </h2>
+                            <button *ngIf="!processingGames && currentGame && currentGameRound" type="button"
+                                class="btn btn-outline-primary"
+                                [routerLink]="['/pool/sourcegame', pool.getId(), currentGameRound.getNumber(), currentGame.getId()]">
+                                <app-againstgame-title [againstGame]="currentGame"></app-againstgame-title>
+                            </button>
+                        </div>
+                        <div class="">
+                            <app-s11player-viewperiod-statistics *ngIf="!currentGameRound"
+                                [totals]="s11Player.getTotals()" [line]="s11Player.getLine()"
+                                [competitionConfig]="pool.getCompetitionConfig()">
+                            </app-s11player-viewperiod-statistics>
+                            <app-s11player-gameround-statistics *ngIf="pool && currentGameRound"
+                                [statistics]="s11Player.getGameStatistics(currentGameRound.getNumber())"
+                                [line]="s11Player.getLine()" [competitionConfig]="pool.getCompetitionConfig()">
+                            </app-s11player-gameround-statistics>
+                        </div>
+
                     </div>
                 </div>
             </div>
