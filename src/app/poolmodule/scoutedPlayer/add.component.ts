@@ -124,13 +124,14 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   }
 
   linkToPlayer(s11Player: S11Player | undefined): void {
+    console.log(s11Player);
     if (!s11Player) {
       return;
     }
 
-    this.router.navigate(['/pool/player/', this.pool.getId()], {
+    this.router.navigate(['/pool/player/', this.pool.getId(), s11Player.getId(), 0]/*, {
       state: { s11Player, "pool": this.pool, currentGameRound: undefined }
-    });
+    }*/);
   }
 
   updateState(choosePlayersFilter: ChoosePlayersFilter) {

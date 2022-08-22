@@ -59,11 +59,12 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
     private myNavigation: MyNavigation,
   ) {
     super(route, router, poolRepository, globalEventsManager);
+    console.log('12334');
     // const state = this.router.getCurrentNavigation()?.extras.state ?? undefined;
     // if (state !== undefined) {
     //   this.s11Player = state.s11Player;
     //   this.pool = state.pool;
-    //   this.currentGameRound = state.currentGameRound ?? undefined;
+    //   this.currentGameRound = state.gcurrentGameRound ?? undefined;
     // }
   }
 
@@ -78,6 +79,10 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
         return;
       }
       this.route.params.subscribe(params => {
+        const gameRoundNumber = +params.gameRound;
+        if (gameRoundNumber > 0) {
+          this.currentGameRound = currentViewPeriod.getGameRound(gameRoundNumber)
+        }
         this.playerRepository.getObject(
           +params.playerId,
           competitionConfig.getSourceCompetition(),

@@ -84,8 +84,8 @@ export class FormationAssembleComponent extends PoolComponent implements OnInit 
   }
 
   linkToPlayer(s11Player: S11Player): void {
-    this.router.navigate(['/pool/player/', this.pool.getId()], {
+    this.router.navigate(['/pool/player/', this.pool.getId(), s11Player.getId(), 0]/*, {
       state: { s11Player, "pool": this.pool, currentGameRound: undefined }
-    });
+    }*/);
   }
 }
