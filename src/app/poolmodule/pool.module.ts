@@ -49,6 +49,7 @@ import { FormationAssembleComponent } from './formation/assemble.component';
 import { S11PlayerChooseComponent } from './player/choose.component';
 import { PoolCompetitionComponent } from './leagues/competition.component';
 import { TogetherRankingComponent } from './leagues/togetherranking.component';
+import { WorldCupComponent } from './worldcup/worldcup.component';
 
 @NgModule({
   imports: [
@@ -86,7 +87,8 @@ import { TogetherRankingComponent } from './leagues/togetherranking.component';
     ScoutedPlayerListComponent,
     ScoutedPlayerAddComponent,
     TeamNameComponent,
-    TogetherRankingComponent
+    TogetherRankingComponent,
+    WorldCupComponent
   ],
   providers: [
   ]
