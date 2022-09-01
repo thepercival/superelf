@@ -15,7 +15,10 @@ export class UserMapper {
             user = new User(json.id);
             UserMapper.users[user.getId()] = user;
         }
-        user.setEmailaddress(json.emailaddress);
+        if (json.emailaddress !== undefined) {
+            user.setEmailaddress(json.emailaddress);
+        }
+
         if (json.name !== undefined) {
             user.setName(json.name);
         }

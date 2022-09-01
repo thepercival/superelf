@@ -71,7 +71,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
                 next: (poolUser: PoolUser | undefined) => {
                     this.poolUser = poolUser;
                     // console.log('ssss', this.poolUser);
-                    if (pool.isInEditPeriod() && this.isAdmin()) {
+                    if (pool.getCreateAndJoinPeriod().isIn() || pool.getAssemblePeriod().isIn()) {
                         this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
                             this.poolUsers = poolUsers;
                         });
