@@ -9,12 +9,14 @@ import { ScoutedPlayer } from '../../lib/scoutedPlayer';
 import { Pool } from '../../lib/pool';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
+import { FormationRepository } from '../../lib/formation/repository';
 import { S11Player } from '../../lib/player';
 import { ViewPeriod } from '../../lib/period/view';
-import { Person, Team } from 'ngx-sport';
+import { FootballLine, Person, Team } from 'ngx-sport';
 import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addremovemodal.component';
 import { PoolUser } from '../../lib/pool/user';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { S11FormationPlace } from '../../lib/formation/place';
 
 @Component({
   selector: 'app-pool-scouting-list',
@@ -24,6 +26,7 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 export class ScoutedPlayerListComponent extends PoolComponent implements OnInit {
   scoutingList: ScoutingList = { scoutedPlayers: []/*, mappedPersons: new PersonMap()*/ };
   public oneTeamSimultaneous = new OneTeamSimultaneous();
+  private assembleFormationPlayers: S11Player[] | undefined;
 
   constructor(
     route: ActivatedRoute,
@@ -33,6 +36,7 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
     private modalService: NgbModal,
     private poolUserRepository: PoolUserRepository,
+    private formationRepository: FormationRepository
   ) {
     super(route, router, poolRepository, globalEventsManager);
   }
@@ -41,7 +45,7 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.setPool(pool);
       this.initPoolUser(pool);
-      this.initScoutedPlayers(pool);
+
     });
   }
 
@@ -50,17 +54,21 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
       .subscribe({
         next: (poolUser: PoolUser | undefined) => {
           this.poolUser = poolUser;
-          console.log(poolUser);
+          // console.log(poolUser);
+          // need to know team first
+          this.initScoutedPlayers(pool);
         },
         error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
       });
   }
 
   initScoutedPlayers(pool: Pool) {
-    console.log('CDK');
     this.scoutedPlayerRepository.getObjects(pool.getSourceCompetition(), pool.getCreateAndJoinPeriod()).subscribe({
       next: (scoutedPlayers: ScoutedPlayer[]) => {
         scoutedPlayers.forEach(scoutedPlayer => this.addToScoutingList(scoutedPlayer))
+        if (pool.getAssemblePeriod().isIn()) {
+          this.assembleFormationPlayers = this.poolUser?.getAssembleFormation()?.getPlayers();
+        }
       },
       error: (e) => {
         this.setAlert('danger', e); this.processing = false;
@@ -118,13 +126,57 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
     });
   }
 
-  showCopyToTeam(): boolean {
-    return this.pool.getAssemblePeriod().isIn() && this.poolUser?.getAssembleFormation() !== undefined;
+  showCopyToTeam(s11Player: S11Player): boolean {
+    const assembleFormation = this.poolUser?.getAssembleFormation();
+    const assembleFormationPlayers = this.assembleFormationPlayers;
+    console.log(assembleFormationPlayers, assembleFormationPlayers?.indexOf(s11Player), s11Player);
+    return assembleFormation !== undefined &&
+      assembleFormationPlayers !== undefined && assembleFormationPlayers.find((s11PlayerIt: S11Player): boolean => {
+        return s11PlayerIt.getPerson() === s11Player.getPerson();
+      }) === undefined;
   }
 
   copyToTeam(s11Player: S11Player) {
 
+    const firstEmptyPlace = this.getFirstEmptyPlace(s11Player.getLine());
+    if (firstEmptyPlace === undefined) {
+      this.setAlert('danger', 'er is geen vrije plek in deze linie');
+      return;
+    }
+
+    this.processing = true;
+    this.formationRepository.editPlace(firstEmptyPlace, s11Player.getPerson()).subscribe({
+      next: () => {
+        // this.router.navigate(['/pool/formation/assemble/', this.pool.getId()]);
+        this.setAlert('success', 'speler is toegevoegd aan je team');
+      },
+      error: (e: string) => {
+        this.setAlert('danger', e);
+        this.processing = false
+      },
+      complete: () => this.processing = false
+    });
+
   }
+
+  getFirstEmptyPlace(line: FootballLine): S11FormationPlace | undefined {
+    const assembleFormation = this.poolUser?.getAssembleFormation();
+    if (assembleFormation === undefined) {
+      return undefined;
+    }
+    const formationLine = assembleFormation.getLine(line);
+    const firstEmptyPlace = formationLine.getStartingPlaces().find((formationPlace: S11FormationPlace): boolean => {
+      return formationPlace.getPlayer() === undefined;
+    });
+    if (firstEmptyPlace !== undefined) {
+      return firstEmptyPlace;
+    }
+    if (formationLine.getSubstitute().getPlayer() === undefined) {
+      return formationLine.getSubstitute();
+    }
+    return undefined;
+  }
+
 
   linkToPlayer(s11Player: S11Player | undefined): void {
     console.log(s11Player);

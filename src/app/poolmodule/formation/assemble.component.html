@@ -3,12 +3,19 @@
 
     <div class="d-flex justify-content-between mt-3 mb-1">
       <h2 class="me-2 text-truncate">
-        <fa-icon [icon]="['fas', 'users']"></fa-icon> team samenstellen
+        <fa-icon [icon]="['fas', 'users']"></fa-icon> mijn team
       </h2>
-      <button *ngIf="!processing && pool" class="btn btn-secondary"
-        [routerLink]="['/pool/formation/choose', pool.getId()]">
-        {{getFormationName()}}
-      </button>
+      <div *ngIf="!processing && pool">
+        <button *ngIf="pool.getAssemblePeriod().isIn()" class="btn btn-secondary mx-2"
+          [routerLink]="['/pool/scouting/list', pool.getId()]">
+          <fa-icon [icon]="['fas', 'user-secret']"></fa-icon> <span class="ms-1 d-none d-sm-inline">
+            scoutingslijst</span>
+        </button>
+        <button class="btn btn-secondary" [routerLink]="['/pool/formation/choose', pool.getId()]">
+          {{getFormationName()}}
+        </button>
+      </div>
+
     </div>
 
     <h2 *ngIf="processing" class="text-center">

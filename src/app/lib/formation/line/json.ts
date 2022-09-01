@@ -1,8 +1,8 @@
-import { JsonS11Player } from '../../player/json';
+import { FootballLine } from 'ngx-sport';
 import { JsonS11FormationPlace } from '../place/json';
 
 export interface JsonS11FormationLine {
-    number: number;
+    number: FootballLine;
     places: JsonS11FormationPlace[];
     // substitutionAppearances: Map<number, boolean>;    
 }

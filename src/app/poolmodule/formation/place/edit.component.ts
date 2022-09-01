@@ -14,11 +14,9 @@ import { PoolRepository } from '../../../lib/pool/repository';
 import { PoolUser } from '../../../lib/pool/user';
 import { PoolUserRepository } from '../../../lib/pool/user/repository';
 import { ScoutedPlayer } from '../../../lib/scoutedPlayer';
-import { ScoutedPlayerRepository } from '../../../lib/scoutedPlayer/repository';
 import { GlobalEventsManager } from '../../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../../shared/poolmodule/component';
-import { S11PlayerAddRemoveModalComponent, PlayerAction } from '../../player/addremovemodal.component';
 import { ChoosePlayersFilter } from '../../player/choose.component';
 
 @Component({
@@ -35,7 +33,7 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
   public place!: S11FormationPlace;
   public alreadyChosenPersons: Person[] = [];
   public alreadyChosenTeams: Team[] = [];
-  public selectableLines: FootballLine | undefined;
+  public selectableLine: FootballLine | undefined;
 
   constructor(
     route: ActivatedRoute,
@@ -107,7 +105,7 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
   initPlayerChoose() {
     this.alreadyChosenPersons = [];
     this.alreadyChosenTeams = this.getChoosenTeams();
-    this.selectableLines = undefined;
+    this.selectableLine = this.place.getFormationLine().getNumber();
   }
 
   getChoosenTeams(): Team[] {

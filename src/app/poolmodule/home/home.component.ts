@@ -13,7 +13,6 @@ import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { S11Formation } from '../../lib/formation';
 import { ScoutedPlayer } from '../../lib/scoutedPlayer';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
-import { Period } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { PoolCompetitor } from '../../lib/pool/competitor';
 import { LeagueName } from '../../lib/leagueName';
@@ -60,9 +59,9 @@ export class HomeComponent extends PoolComponent implements OnInit {
     postNgOnInit(pool: Pool) {
         this.scoutingEnabled = pool.getCreateAndJoinPeriod().isIn() || pool.getAssemblePeriod().isIn();
         if (this.scoutingEnabled) {
-            const viewPeriod = pool.getAssembleViewPeriod();
+            // const viewPeriod = pool.getAssembleViewPeriod();
             const competition = this.pool.getSourceCompetition();
-            this.scoutedPlayerRepository.getObjects(competition, viewPeriod).subscribe((scoutedPlayers: ScoutedPlayer[]) => {
+            this.scoutedPlayerRepository.getObjects(competition, pool.getCreateAndJoinPeriod()).subscribe((scoutedPlayers: ScoutedPlayer[]) => {
                 this.scoutedPlayers = scoutedPlayers;
             });
         }
@@ -83,6 +82,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
                 },
                 complete: () => this.processing = false
             });
+
     }
 
     isAdmin(): boolean {

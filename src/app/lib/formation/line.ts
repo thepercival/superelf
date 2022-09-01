@@ -1,4 +1,4 @@
-import { Identifiable } from 'ngx-sport';
+import { FootballLine, Identifiable } from 'ngx-sport';
 import { S11Formation } from '../formation';
 import { S11Player } from '../player';
 import { S11FormationPlace } from './place';
@@ -9,7 +9,7 @@ export class S11FormationLine extends Identifiable {
     protected places: S11FormationPlace[] = [];
     // protected substituteAppearances: Map<number, boolean> = {};
 
-    constructor(protected formation: S11Formation, protected number: number) {
+    constructor(protected formation: S11Formation, protected number: FootballLine) {
         super();
         formation.getLines().push(this);
     }
@@ -18,7 +18,7 @@ export class S11FormationLine extends Identifiable {
         return this.formation;
     }
 
-    public getNumber(): number {
+    public getNumber(): FootballLine {
         return this.number;
     }
 
@@ -34,6 +34,12 @@ export class S11FormationLine extends Identifiable {
 
     public getSubstitute(): S11FormationPlace {
         return this.getPlace(S11FormationLine.SUBSTITUTE_NUMBER);
+    }
+
+    public hasFreeSlot(): boolean {
+        return this.places.some((formationPlace: S11FormationPlace): boolean => {
+            return formationPlace.getPlayer() === undefined;
+        });
     }
 
     public getPlace(number: number): S11FormationPlace {

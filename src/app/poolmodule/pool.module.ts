@@ -17,7 +17,8 @@ import {
   faSearch,
   faPlusCircle,
   faPenAlt,
-  faPencilAlt
+  faPencilAlt,
+  faUserSecret
 } from '@fortawesome/free-solid-svg-icons';
 
 import { CommonSharedModule } from '../shared/commonmodule/common.module';
@@ -97,7 +98,7 @@ export class PoolModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
       faListOl, faChevronLeft, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
-      , faInfoCircle, faSearch, faPlusCircle, faPencilAlt/*faMoneyBillAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
+      , faInfoCircle, faSearch, faPlusCircle, faPencilAlt, faUserSecret/*faMoneyBillAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
       , faMedal, , faQrcode, faCopy, faDotCircle, faSync*/
     );

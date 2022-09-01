@@ -21,7 +21,7 @@ export class S11PlayerChooseComponent implements OnInit {
   @Input() viewPeriod!: ViewPeriod;
   @Input() alreadyChosenPersons: Person[] | undefined;
   @Input() alreadyChosenTeams: Team[] | undefined;
-  @Input() selectableLines: FootballLine | undefined;
+  @Input() selectableLine: FootballLine | undefined;
   @Input() filter: ChoosePlayersFilter;
   @Input() showAll: boolean = false;
 
@@ -70,6 +70,9 @@ export class S11PlayerChooseComponent implements OnInit {
     }
 
     this.form.controls.searchLine.setValue(this.filter.line);
+    if (this.selectableLine) {
+      this.form.controls.searchLine.disable();
+    }
 
     this.alreadyChosenPersonsMap = new PersonMap();
     this.alreadyChosenPersons?.forEach((person: Person) => {
@@ -126,7 +129,7 @@ export class S11PlayerChooseComponent implements OnInit {
     // console.log('pac' + player.getPerson().getName(), this.personAlreadyChosen(player.getPerson()));
     // console.log('tac' + player.getPerson().getName(), this.teamAlreadyChosen(player.getTeam()));
     return !this.personAlreadyChosen(player.getPerson()) && !this.teamAlreadyChosen(player.getTeam())
-      && (this.selectableLines === undefined || this.selectableLines & player.getLine()) > 0;
+      && (this.selectableLine === undefined || this.selectableLine === player.getLine());
   }
 
   personAlreadyChosen(person: Person): boolean {
