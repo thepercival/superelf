@@ -11,6 +11,9 @@
     <ngb-alert *ngIf="alert" [type]="alert.type">
       {{ alert.message }}</ngb-alert>
 
+    <ngb-alert *ngIf="pool.getAssemblePeriod().isIn()" type="warning">Let op: wanneer een team incompleet is, doet het
+      NIET mee</ngb-alert>
+
     <table *ngIf="!processing && pool" class="table">
       <thead>
         <tr>
