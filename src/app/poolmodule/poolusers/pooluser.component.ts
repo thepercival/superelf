@@ -52,12 +52,14 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       .subscribe({
         next: (pool: Pool) => {
           this.setPool(pool);
-          this.poolUserRepository.getObjectFromSession(pool).subscribe({
-            next: (poolUser: PoolUser) => this.poolUser = poolUser,
-            error: (e: string) => {
-              this.setAlert('danger', e); this.processing = false;
-            },
-            complete: () => this.processing = false
+          this.route.params.subscribe(params => {
+            this.poolUserRepository.getObject(pool, +params['poolUserId']).subscribe({
+              next: (poolUser: PoolUser) => this.poolUser = poolUser,
+              error: (e: string) => {
+                this.setAlert('danger', e); this.processing = false;
+              },
+              complete: () => this.processing = false
+            });
           });
         },
         error: (e) => {

@@ -133,7 +133,7 @@ export class TogetherRankingComponent implements OnInit {
       return;
     }
     const poolUser = competitor.getPoolUser();
-    this.router.navigate(['/pool/user', poolUser.getPool().getId(), poolUser.getId]);
+    this.router.navigate(['/pool/user', poolUser.getPool().getId(), poolUser.getId()]);
   }
 
   // getViewRange(viewport: number): VoetbalRange {
