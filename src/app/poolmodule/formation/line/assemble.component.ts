@@ -19,6 +19,7 @@ export class FormationLineAssembleComponent implements OnInit {
   @Input() line!: S11FormationLine;
   @Input() selectedPlace: S11FormationPlace | undefined;
   @Input() processing: boolean = true;
+  @Input() editable: boolean = false;
   @Output() editPlace = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
 

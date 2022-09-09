@@ -27,7 +27,7 @@
       <div *ngIf="!selectedPlace">
         <!-- lines-->
         <app-pool-assembleline *ngFor="let line of poolUser.getAssembleFormation()?.getLines()" [line]="line"
-          (editPlace)="editPlace($event)" (linkToPlayer)="linkToPlayer($event)">
+          (editPlace)="editPlace($event)" (linkToPlayer)="linkToPlayer($event)" [editable]="true">
         </app-pool-assembleline>
       </div>
     </div>

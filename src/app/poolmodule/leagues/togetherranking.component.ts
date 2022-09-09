@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Poule, GameAmountConfig, GameState, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, Place, AgainstGpp, AgainstH2h, Single, AllInOneGame, StartLocationMap, StructureNameService } from 'ngx-sport';
+import { PoolCompetitor } from '../../lib/pool/competitor';
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../shared/commonmodule/viewPortManager';
 
 @Component({
@@ -123,13 +124,16 @@ export class TogetherRankingComponent implements OnInit {
   }
 
   navigateToPoolUser(place: Place): void {
-    return;
-    // const competitor = this.startLocationMap.getCompetitor(place.getStartLocation());
-    // if (competitor == undefined) {
-    //   return;
-    // }
-    // const poolUser = competitor.getCompetition();
-    // this.router.navigate(['/user', this.pool.getId() shell.poolId]);
+    const startLocation = place.getStartLocation();
+    if (startLocation === undefined) {
+      return;
+    }
+    const competitor = <PoolCompetitor>this.startLocationMap.getCompetitor(startLocation);
+    if (competitor == undefined) {
+      return;
+    }
+    const poolUser = competitor.getPoolUser();
+    this.router.navigate(['/pool/user', poolUser.getPool().getId(), poolUser.getId]);
   }
 
   // getViewRange(viewport: number): VoetbalRange {

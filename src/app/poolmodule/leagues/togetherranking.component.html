@@ -33,12 +33,12 @@
     </thead>
     <tbody>
         <tr *ngFor="let sportRankingItem of sportRankingItems">
-            <td class="rankingnr text-end ps-0"
-                (click)="navigateToPoolUser(sportRankingItem.getPerformance().getPlace())">
+            <td class="rankingnr text-end ps-0">
                 <span
                     class="badge badge-rank {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
             </td>
-            <td class="text-break ps-0" [ngClass]="{ 'favitem': false}">
+            <td class="text-break ps-0 pointer" [ngClass]="{ 'favitem': false}"
+                (click)="navigateToPoolUser(sportRankingItem.getPerformance().getPlace())">
                 {{structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
             </td>
             <td *ngFor="let gameRound of getGameRounds()" class="text-end ps-0 {{viewPortManager.getClass(gameRound)}}">

@@ -33,13 +33,18 @@
     <td>
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
     </td>
-    <td class="text-end" (click)="$event.stopPropagation()">
+    <td *ngIf="editable" class="text-end" (click)="$event.stopPropagation()">
       <button *ngIf="!s11Player" type="button" class="btn btn-sm" (click)="editPlace.emit(place)">
         <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
       </button>
       <button *ngIf="s11Player" type="button" class="btn btn-sm" (click)="emptyPlace(place)">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
       </button>
+    </td>
+    <td *ngIf="!editable" class="text-end">
+      <div>
+        <span class="badge bg-totals">{{s11Player.getTotalPoints()}}</span>
+      </div>
     </td>
   </tr>
 </ng-template>
