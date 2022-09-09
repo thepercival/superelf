@@ -43,7 +43,8 @@
       </div>
     </div>
 
-    <ngb-alert class="mt-3 text-center" *ngIf="pool.getAssemblePeriod().isIn() && getNrAssembled() < 15" type="danger">
+    <ngb-alert class="mt-3 text-center"
+      *ngIf="!processing && pool && pool.getAssemblePeriod().isIn() && getNrAssembled() < 15" type="danger">
       je team is
       incompleet,
       je doet NIET mee</ngb-alert>
@@ -143,6 +144,14 @@
                 transfers gedaan
               </span> -->
             </p>
+          </div>
+        </div>
+        <div *ngIf="pool.getAssembleViewPeriod().isIn() && isAdmin()" class="card border-secondary pointer mt-3 mx-2">
+          <div class="card-body">
+            <h5 class="card-title text-center">
+              geen acties
+            </h5>
+            <!-- <p class="card-text">geen</p> -->
           </div>
         </div>
       </div>

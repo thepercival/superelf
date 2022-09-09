@@ -51,6 +51,7 @@ import { S11PlayerChooseComponent } from './player/choose.component';
 import { PoolCompetitionComponent } from './leagues/competition.component';
 import { TogetherRankingComponent } from './leagues/togetherranking.component';
 import { WorldCupComponent } from './worldcup/worldcup.component';
+import { PoolUserComponent } from './poolusers/pooluser.component';
 
 @NgModule({
   imports: [
@@ -65,28 +66,29 @@ import { WorldCupComponent } from './worldcup/worldcup.component';
   declarations: [
     AgainstGameTitleComponent,
     AgainstGameDetailsComponent,
-    S11PlayerChooseComponent,
     FormationAssembleComponent,
     FormationChooseComponent,
     FormationLineAssembleComponent,
     FormationPlaceEditComponent,
-    S11PlayerAddRemoveModalComponent,
-    NewComponent,
     HomeComponent,
     InviteComponent,
     JoinComponent,
+    NewComponent,
+    PlayerBasicsComponent,
+    PoolCompetitionComponent,
+    PoolUserComponent,
+    PoolUserRemoveModalComponent,
     PoolUsersComponent,
     PreNewComponent,
     RulesComponent,
-    PoolCompetitionComponent,
-    PoolUserRemoveModalComponent,
     S11PlayerComponent,
-    SourceGameComponent,
-    PlayerBasicsComponent,
+    S11PlayerChooseComponent,
+    S11PlayerAddRemoveModalComponent,
     S11PlayerGameRoundStatisticsComponent,
     S11PlayerViewPeriodStatisticsComponent,
     ScoutedPlayerListComponent,
     ScoutedPlayerAddComponent,
+    SourceGameComponent,
     TeamNameComponent,
     TogetherRankingComponent,
     WorldCupComponent

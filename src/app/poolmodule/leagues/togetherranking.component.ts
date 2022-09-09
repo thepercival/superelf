@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Poule, GameAmountConfig, GameState, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, Place, AgainstGpp, AgainstH2h, Single, AllInOneGame, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../shared/commonmodule/viewPortManager';
 
@@ -24,7 +25,8 @@ export class TogetherRankingComponent implements OnInit {
 
 
   constructor(
-    private scoreConfigService: ScoreConfigService) {
+    private scoreConfigService: ScoreConfigService,
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -118,6 +120,16 @@ export class TogetherRankingComponent implements OnInit {
   getQualifyPlaceClass(rankingItem: SportRoundRankingItem): string {
     const place = this.poule.getPlace(rankingItem.getUniqueRank());
     return ''; // place ? this.cssService.getQualifyPlace(place) : '';
+  }
+
+  navigateToPoolUser(place: Place): void {
+    return;
+    // const competitor = this.startLocationMap.getCompetitor(place.getStartLocation());
+    // if (competitor == undefined) {
+    //   return;
+    // }
+    // const poolUser = competitor.getCompetition();
+    // this.router.navigate(['/user', this.pool.getId() shell.poolId]);
   }
 
   // getViewRange(viewport: number): VoetbalRange {

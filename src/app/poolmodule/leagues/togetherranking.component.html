@@ -33,7 +33,8 @@
     </thead>
     <tbody>
         <tr *ngFor="let sportRankingItem of sportRankingItems">
-            <td class="rankingnr text-end ps-0">
+            <td class="rankingnr text-end ps-0"
+                (click)="navigateToPoolUser(sportRankingItem.getPerformance().getPlace())">
                 <span
                     class="badge badge-rank {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
             </td>
