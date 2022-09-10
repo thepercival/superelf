@@ -20,6 +20,7 @@ import { PoolCompetitionComponent } from './leagues/competition.component';
 import { SourceGameComponent } from './againstgame/source.component';
 import { WorldCupComponent } from './worldcup/worldcup.component';
 import { PoolUserComponent } from './poolusers/pooluser.component';
+import { ScheduleComponent } from './schedule/schedule.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent, canActivate: [AuthUserGuardService] },
@@ -34,6 +35,7 @@ const routes: Routes = [
   { path: 'join/:id/:key', component: JoinComponent },
   { path: 'player/:id/:playerId/:gameRound', component: S11PlayerComponent },
   { path: 'sourcegame/:id/:gameRound/:gameId', component: SourceGameComponent },
+  { path: 'schedule/:id/:gameRound', component: ScheduleComponent },
   { path: 'rules/:id', component: RulesComponent },
   { path: 'scouting/list/:id', component: ScoutedPlayerListComponent, canActivate: [AuthUserGuardService] },
   { path: 'scouting/search/:id', component: ScoutedPlayerAddComponent, canActivate: [AuthUserGuardService] },

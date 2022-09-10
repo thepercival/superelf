@@ -61,6 +61,15 @@
           <div>stand</div>
         </div>
       </div>
+      <div *ngIf="getCompetitionCompetitors().length > 0" class="card card-sub pointer px-0"
+        [routerLink]="['/pool/schedule', pool.getId(), 0]">
+        <div class="card-body text-center p-1 pt-2">
+          <h5 class="card-title">
+            <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+          </h5>
+          <div>wedstrijden</div>
+        </div>
+      </div>
       <div *ngIf="getCompetitionCompetitors().length == 0" class="card card-sub pointer px-0"
         (click)="openModal(contentpoolUsers)">
         <div class="card-body text-center p-1 pt-2">

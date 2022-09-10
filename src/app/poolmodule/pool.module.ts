@@ -52,6 +52,7 @@ import { PoolCompetitionComponent } from './leagues/competition.component';
 import { TogetherRankingComponent } from './leagues/togetherranking.component';
 import { WorldCupComponent } from './worldcup/worldcup.component';
 import { PoolUserComponent } from './poolusers/pooluser.component';
+import { ScheduleComponent } from './schedule/schedule.component';
 
 @NgModule({
   imports: [
@@ -86,6 +87,7 @@ import { PoolUserComponent } from './poolusers/pooluser.component';
     S11PlayerAddRemoveModalComponent,
     S11PlayerGameRoundStatisticsComponent,
     S11PlayerViewPeriodStatisticsComponent,
+    ScheduleComponent,
     ScoutedPlayerListComponent,
     ScoutedPlayerAddComponent,
     SourceGameComponent,
