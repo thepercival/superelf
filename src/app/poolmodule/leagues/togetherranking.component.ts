@@ -33,8 +33,9 @@ export class TogetherRankingComponent implements OnInit {
   ngOnInit() {
     this.processing = true;
     this.structureNameService = new StructureNameService(this.startLocationMap);
-    this.togetherRankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport);
+    this.togetherRankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport, [GameState.InProgress, GameState.Finished]);
     this.sportRankingItems = this.togetherRankingCalculator.getItemsForPoule(this.poule);
+    console.log(this.sportRankingItems);
     this.gameAmountConfig = this.poule.getRound().getNumber().getValidGameAmountConfig(this.competitionSport);
     //this.initGameRoundMap();    
     this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.getGameRounds().length);
@@ -98,12 +99,13 @@ export class TogetherRankingComponent implements OnInit {
   }
 
   getGameRounds(): number[] {
-    const gameRounds: number[] = [];
-    const iterator = (new Array(this.gameAmountConfig.getAmount())).keys();
-    for (const key of iterator) {
-      gameRounds.push(1 + key);
-    }
-    return gameRounds;
+    // const gameRounds: number[] = [];
+    // const iterator = (new Array(this.gameAmountConfig.getAmount())).keys();
+    // for (const key of iterator) {
+    //   gameRounds.push(1 + key);
+    // }
+    // console.log('gameRounds', gameRounds);
+    return [6]; // gameRounds;
   }
 
   getScore(placeLocation: PlaceLocation, gameRound: number): number {
@@ -111,6 +113,7 @@ export class TogetherRankingComponent implements OnInit {
     if (gameRoundMap === undefined) {
       return 0;
     }
+    console.log('score is ', gameRound, gameRoundMap[gameRound]);
     return gameRoundMap[gameRound];
   }
 

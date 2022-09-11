@@ -2,23 +2,23 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, Player, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
 import { concatMap, map, Observable, of } from 'rxjs';
-import { GameRound } from '../../lib/gameRound';
-import { GamePicker } from '../../lib/gameRound/gamePicker';
-import { ImageRepository } from '../../lib/image/repository';
-import { GameRepository } from '../../lib/ngx-sport/game/repository';
-import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
-import { S11Player, StatisticsMap } from '../../lib/player';
-import { PointsCalculator } from '../../lib/points/calculator';
-import { Pool } from '../../lib/pool';
-import { PoolRepository } from '../../lib/pool/repository';
-import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
-import { StatisticsRepository } from '../../lib/statistics/repository';
+import { GameRound } from '../../../lib/gameRound';
+import { GamePicker } from '../../../lib/gameRound/gamePicker';
+import { ImageRepository } from '../../../lib/image/repository';
+import { GameRepository } from '../../../lib/ngx-sport/game/repository';
+import { StructureRepository } from '../../../lib/ngx-sport/structure/repository';
+import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
+import { S11Player, StatisticsMap } from '../../../lib/player';
+import { PointsCalculator } from '../../../lib/points/calculator';
+import { Pool } from '../../../lib/pool';
+import { PoolRepository } from '../../../lib/pool/repository';
+import { PlayerRepository } from '../../../lib/ngx-sport/player/repository';
+import { StatisticsRepository } from '../../../lib/statistics/repository';
 
-import { CSSService } from '../../shared/commonmodule/cssservice';
-import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
-import { MyNavigation } from '../../shared/commonmodule/navigation';
-import { PoolComponent } from '../../shared/poolmodule/component';
+import { CSSService } from '../../../shared/commonmodule/cssservice';
+import { GlobalEventsManager } from '../../../shared/commonmodule/eventmanager';
+import { MyNavigation } from '../../../shared/commonmodule/navigation';
+import { PoolComponent } from '../../../shared/poolmodule/component';
 
 @Component({
   selector: 'app-game-source',

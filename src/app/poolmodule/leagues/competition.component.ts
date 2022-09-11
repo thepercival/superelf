@@ -8,9 +8,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { Pool } from '../../lib/pool';
-import { CompetitionSport, Poule, StartLocationMap, StructureEditor } from 'ngx-sport';
+import { CompetitionSport, Poule, StartLocationMap, Structure, StructureEditor } from 'ngx-sport';
 import { LeagueName } from '../../lib/leagueName';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     globalEventsManager: GlobalEventsManager,
     protected structureEditor: StructureEditor,
     protected poolUserRepository: PoolUserRepository,
+    protected structureRepository: StructureRepository,
     private modalService: NgbModal
   ) {
     super(route, router, poolRepository, globalEventsManager);
@@ -55,15 +57,27 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
               throw Error('competitionSport not found');
             }
 
-            // -----------  JE TOONT VOOR EEN BEPAALDE VIEWPERIODE -------------- //
-            // DE GAMEROUNDS ZIJN DAN DE WEDSTRIJDEN EN DE POOLUSERS MET HUN PUNTEN PER GAMEROUND ZIJN DAN DE GAMEROUND-SCORE
-            const poolCompetitors = this.pool.getCompetitors(LeagueName.Competition);
-            const structure = this.structureEditor.create(competition, [poolCompetitors.length])
-            const round = structure.getSingleCategory().getRootRound();
-            this.poule = round.getFirstPoule(); // ?? GET FROM BACKEND ?? this.pool.getCompetition(PoolCollection.League_Default).get;
-            this.competitionSport = this.pool.getCompetitionSport(LeagueName.Competition);
-            this.startLocationMap = new StartLocationMap(poolCompetitors);
-            console.log(poolCompetitors);
+            this.structureRepository.getObject(competition).subscribe({
+              next: (structure: Structure) => {
+
+                // -----------  JE TOONT VOOR EEN BEPAALDE VIEWPERIODE -------------- //
+                // DE GAMEROUNDS ZIJN DAN DE WEDSTRIJDEN EN DE POOLUSERS MET HUN PUNTEN PER GAMEROUND ZIJN DAN DE GAMEROUND-SCORE
+                const poolCompetitors = this.pool.getCompetitors(LeagueName.Competition);
+                const round = structure.getSingleCategory().getRootRound();
+                this.poule = round.getFirstPoule(); // ?? GET FROM BACKEND ?? this.pool.getCompetition(PoolCollection.League_Default).get;
+                this.competitionSport = this.pool.getCompetitionSport(LeagueName.Competition);
+                this.startLocationMap = new StartLocationMap(poolCompetitors);
+
+                // gameRoundScores voor competitors of poolCompetitions
+                // getGAMES!! 
+                console.log(poolCompetitors);
+
+              },
+              error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
+              complete: () => this.processing = false
+            });
+
+
 
           },
           error: (e: string) => { this.setAlert('danger', e); this.processing = false; },

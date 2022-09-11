@@ -17,31 +17,32 @@ import { FormationChooseComponent } from './formation/choose.component';
 import { FormationPlaceEditComponent } from './formation/place/edit.component';
 import { FormationAssembleComponent } from './formation/assemble.component';
 import { PoolCompetitionComponent } from './leagues/competition.component';
-import { SourceGameComponent } from './againstgame/source.component';
 import { WorldCupComponent } from './worldcup/worldcup.component';
 import { PoolUserComponent } from './poolusers/pooluser.component';
 import { ScheduleComponent } from './schedule/schedule.component';
+import { PoolTogetherGameComponent } from './game/pool/together/togethergame.component';
+import { SourceGameComponent } from './game/source/source.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent, canActivate: [AuthUserGuardService] },
   { path: 'prenew', component: PreNewComponent },
 
   { path: ':id', component: HomeComponent },
-
+  { path: 'competition/:id', component: PoolCompetitionComponent, canActivate: [AuthUserGuardService] },
   { path: 'formation/assemble/:id', component: FormationAssembleComponent, canActivate: [AuthUserGuardService] },
   { path: 'formation/choose/:id', component: FormationChooseComponent, canActivate: [AuthUserGuardService] },
   { path: 'formation/place/edit/:id/:placeId', component: FormationPlaceEditComponent, canActivate: [AuthUserGuardService] },
   { path: 'invite/:id', component: InviteComponent, canActivate: [AuthUserGuardService] },
   { path: 'join/:id/:key', component: JoinComponent },
   { path: 'player/:id/:playerId/:gameRound', component: S11PlayerComponent },
-  { path: 'sourcegame/:id/:gameRound/:gameId', component: SourceGameComponent },
-  { path: 'schedule/:id/:gameRound', component: ScheduleComponent },
   { path: 'rules/:id', component: RulesComponent },
+  { path: 'schedule/:id/:gameRound', component: ScheduleComponent },
   { path: 'scouting/list/:id', component: ScoutedPlayerListComponent, canActivate: [AuthUserGuardService] },
   { path: 'scouting/search/:id', component: ScoutedPlayerAddComponent, canActivate: [AuthUserGuardService] },
+  { path: 'sourcegame/:id/:gameRound/:gameId', component: SourceGameComponent },
+  { path: 'togethergame/:id/:gameRound/:gameId', component: PoolTogetherGameComponent },
   { path: 'users/:id', component: PoolUsersComponent, canActivate: [AuthUserGuardService] },
   { path: 'user/:id/:poolUserId', component: PoolUserComponent, canActivate: [AuthUserGuardService] },
-  { path: 'competition/:id', component: PoolCompetitionComponent, canActivate: [AuthUserGuardService] },
   { path: 'worldcup/:id', component: WorldCupComponent },
   /*{ path: 'chooseplayers/:id', component: ChooseS11PlayersComponent, canActivate: [AuthUserGuardService] },*/
 ];

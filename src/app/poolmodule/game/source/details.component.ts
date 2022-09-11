@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgainstGame, Player } from 'ngx-sport';
-import { ImageRepository } from '../../lib/image/repository';
-import { GameRepository } from '../../lib/ngx-sport/game/repository';
-import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { PointsCalculator } from '../../lib/points/calculator';
-import { Pool } from '../../lib/pool';
-import { StatisticsRepository } from '../../lib/statistics/repository';
-import { CSSService } from '../../shared/commonmodule/cssservice';
-import { MyNavigation } from '../../shared/commonmodule/navigation';
+import { ImageRepository } from '../../../lib/image/repository';
+import { GameRepository } from '../../../lib/ngx-sport/game/repository';
+import { StructureRepository } from '../../../lib/ngx-sport/structure/repository';
+import { PointsCalculator } from '../../../lib/points/calculator';
+import { Pool } from '../../../lib/pool';
+import { StatisticsRepository } from '../../../lib/statistics/repository';
+import { CSSService } from '../../../shared/commonmodule/cssservice';
+import { MyNavigation } from '../../../shared/commonmodule/navigation';
 
 @Component({
   selector: 'app-againstgame-details',

@@ -33,16 +33,13 @@ import { PoolUsersComponent } from './poolusers/poolusers.component';
 import { InviteComponent } from './invite/invite.component';
 import { ScoutedPlayerListComponent } from './scoutedPlayer/list.component';
 import { S11PlayerComponent } from './player/info.component';
-import { SourceGameComponent } from './againstgame/source.component';
 import { S11PlayerAddRemoveModalComponent } from './player/addremovemodal.component';
 import { TeamNameComponent } from './team/name.component';
-import { AgainstGameTitleComponent } from './againstgame/title.component';
 import { S11PlayerGameRoundStatisticsComponent } from './statistics/gameround.component';
 import { S11PlayerViewPeriodStatisticsComponent } from './statistics/viewperiod.component';
 import { PlayerBasicsComponent } from './player/basics.component';
 import { ScoutedPlayerAddComponent } from './scoutedPlayer/add.component';
 import { PoolUserRemoveModalComponent } from './poolusers/removemodal.component';
-import { AgainstGameDetailsComponent } from './againstgame/details.component';
 import { FormationChooseComponent } from './formation/choose.component';
 import { FormationPlaceEditComponent } from './formation/place/edit.component';
 import { FormationLineAssembleComponent } from './formation/line/assemble.component';
@@ -53,6 +50,10 @@ import { TogetherRankingComponent } from './leagues/togetherranking.component';
 import { WorldCupComponent } from './worldcup/worldcup.component';
 import { PoolUserComponent } from './poolusers/pooluser.component';
 import { ScheduleComponent } from './schedule/schedule.component';
+import { AgainstGameDetailsComponent } from './game/source/details.component';
+import { AgainstGameTitleComponent } from './game/source/title.component';
+import { SourceGameComponent } from './game/source/source.component';
+import { PoolTogetherGameComponent } from './game/pool/together/togethergame.component';
 
 @NgModule({
   imports: [
@@ -77,6 +78,7 @@ import { ScheduleComponent } from './schedule/schedule.component';
     NewComponent,
     PlayerBasicsComponent,
     PoolCompetitionComponent,
+    PoolTogetherGameComponent,
     PoolUserComponent,
     PoolUserRemoveModalComponent,
     PoolUsersComponent,

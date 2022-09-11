@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase, ScoreConfigService, GameState, Team, TeamCompetitor, StartLocationMap } from 'ngx-sport';
-import { DateFormatter } from '../../lib/dateFormatter';
+import { DateFormatter } from '../../../lib/dateFormatter';
 
 @Component({
   selector: 'app-againstgame-title',

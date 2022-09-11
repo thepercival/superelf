@@ -15,7 +15,7 @@
         </span>
     </div>
 
-    <div class="ps-5" [ngClass]="{'text-decoration-line-through': againstGame.getState() === Finished}">
+    <div class="ps-3 " [ngClass]="{'text-decoration-line-through': againstGame.getState() === Finished}">
         {{dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.date())}}
         <span *ngIf="againstGame.getState() !== Finished">{{dateFormatter.toString(againstGame.getStartDateTime(),
             dateFormatter.time())}}</span>

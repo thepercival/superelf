@@ -34,11 +34,18 @@
                             <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
                         </h2>
 
-                        <div *ngIf="!processingGames" class="text-center mt-3 mb-2">
-                            <div *ngFor="let game of againstGames" class="text-center mt-3 mb-2">
+                        <div *ngIf="!processingGames" class="">
+                            <div *ngFor="let game of againstGames"
+                                class="d-flex flex-wrap justify-content-between mt-3 mb-2">
+
                                 <button type="button" class="btn btn-outline-primary"
                                     [routerLink]="['/pool/sourcegame', pool.getId(), currentGameRound.getNumber(), game.getId()]">
                                     <app-againstgame-title [againstGame]="game"></app-againstgame-title>
+                                </button>
+
+                                <button type="button" class="btn btn-outline-primary ms-2"
+                                    [routerLink]="['/pool/togethergame', pool.getId(), currentGameRound.getNumber(), game.getId()]">
+                                    <fa-icon [icon]="['fas', 'users']"></fa-icon>
                                 </button>
                             </div>
                         </div>

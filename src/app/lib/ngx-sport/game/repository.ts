@@ -4,8 +4,9 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../../repository';
-import { AgainstGame, Competition, GameMapper, JsonAgainstGame, Poule } from 'ngx-sport';
+import { AgainstGame, Competition, GameMapper, JsonAgainstGame, JsonTogetherGame, Poule, TogetherGame } from 'ngx-sport';
 import { GameRound } from '../../gameRound';
+import { ViewPeriod } from '../../period/view';
 
 @Injectable({
     providedIn: 'root'
@@ -17,15 +18,16 @@ export class GameRepository extends APIRepository {
         super();
     }
 
-    getUrl(sourceCompetition: Competition, gameRoundNumber: number): string {
-        return this.getApiUrl() + 'competitions/' + sourceCompetition.getId() + '/gamerounds/' + gameRoundNumber;
+    getUrl(sourceCompetition: Competition): string {
+        return this.getApiUrl() + 'competitions/' + sourceCompetition.getId();
     }
 
     getSourceObjects(poule: Poule, gameRound: GameRound): Observable<AgainstGame[]> {
         if (gameRound.hasAgainstGames()) {
             return of(gameRound.getAgainstGames());
         }
-        return this.http.get<JsonAgainstGame[]>(this.getUrl(poule.getCompetition(), gameRound.getNumber()), this.getOptions()).pipe(
+        const url = this.getUrl(poule.getCompetition()) + '/gamerounds/' + gameRound.getNumber();
+        return this.http.get<JsonAgainstGame[]>(url, this.getOptions()).pipe(
             map((jsonAgainstGames: JsonAgainstGame[]) => {
                 const againstGames = jsonAgainstGames.map((jsonAgainstGame: JsonAgainstGame) => {
                     return this.mapper.toNewAgainst(jsonAgainstGame, poule, poule.getCompetition().getSingleSport());
@@ -36,4 +38,19 @@ export class GameRepository extends APIRepository {
             catchError((err) => this.handleError(err))
         );
     }
+
+    // getPoolCompetitionObjects(poule: Poule, viewPeriod: ViewPeriod): Observable<TogetherGame[]> {
+    //     // if (poule.getTogetherGames().length > 0) {
+    //     //     return of(gameRound.getAgainstGames());
+    //     // }
+    //     const url = this.getUrl(poule.getCompetition()) + '/viewperiods/' + viewPeriod.getId();
+    //     return this.http.get<JsonTogetherGame[]>(url, this.getOptions()).pipe(
+    //         map((jsonGames: JsonTogetherGame[]) => {
+    //             return jsonGames.map((jsonGames: JsonTogetherGame) => {
+    //                 return this.mapper.toNewTogether(jsonGames, poule, poule.getCompetition().getSingleSport());
+    //             });
+    //         }),
+    //         catchError((err) => this.handleError(err))
+    //     );
+    // }
 }
