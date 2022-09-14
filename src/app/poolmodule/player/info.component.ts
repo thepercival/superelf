@@ -134,12 +134,18 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
       this.player = this.oneTeamSimultaneous.getCurrentPlayer(this.s11Player);
       this.currentStatistics = undefined;
       this.currentGame = undefined;
+      if (disableProcessing) {
+        this.processing = false
+      }
       return;
     }
     this.currentStatistics = this.s11Player.getGameStatistics(currentGameRound.getNumber());
 
     if (currentGameRound.hasAgainstGames()) {
       this.currentGame = (new GamePicker(this.pool.getSourceCompetition(), currentGameRound)).getGame(this.s11Player);
+      if (disableProcessing) {
+        this.processing = false
+      }
       return;
     }
     this.processingGames = true;
