@@ -34,8 +34,7 @@
     <tbody>
         <tr *ngFor="let sportRankingItem of sportRankingItems">
             <td class="rankingnr text-end ps-0">
-                <span
-                    class="badge badge-rank {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
+                <span class="badge text-bg-success">1{{sportRankingItem.getUniqueRank()}}</span>
             </td>
             <td class="text-break ps-0"
                 [ngClass]="{ 'favitem': favorites.hasCompetitor(competitorMap.getCompetitor(sportRankingItem.getPlaceLocation())) }">

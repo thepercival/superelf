@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FootballLine } from 'ngx-sport';
 import { CompetitionConfig } from '../../lib/competitionConfig';
 import { ImageRepository } from '../../lib/image/repository';
-import { PlayerTotalsCalculator } from '../../lib/player/totals/calculator';
-import { JsonPlayerTotals } from '../../lib/player/totals/json';
+import { TotalsCalculator } from '../../lib/totals/calculator';
+import { JsonTotals } from '../../lib/totals/json';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { S11PlayerStatisticsComponent } from './base.component';
 
@@ -13,11 +13,11 @@ import { S11PlayerStatisticsComponent } from './base.component';
   styleUrls: ['./viewperiod.component.scss']
 })
 export class S11PlayerViewPeriodStatisticsComponent extends S11PlayerStatisticsComponent implements OnInit {
-  @Input() totals!: JsonPlayerTotals;
+  @Input() totals!: JsonTotals;
   @Input() line!: FootballLine;
   @Input() competitionConfig!: CompetitionConfig;
 
-  public totalsCalculator!: PlayerTotalsCalculator;
+  public totalsCalculator!: TotalsCalculator;
 
   constructor(
     public imageRepository: ImageRepository,
@@ -26,8 +26,9 @@ export class S11PlayerViewPeriodStatisticsComponent extends S11PlayerStatisticsC
   }
 
   ngOnInit() {
-    this.totalsCalculator = new PlayerTotalsCalculator(this.competitionConfig);
-    const sheetLines = (this.line && FootballLine.GoalKeeper) & (this.line && FootballLine.Defense);
+    this.totalsCalculator = new TotalsCalculator(this.competitionConfig);
+    const sheetLines: number = (this.line & FootballLine.GoalKeeper) + (this.line & FootballLine.Defense);
+    console.log(sheetLines);
     this.sheetActive = sheetLines > 0;
 
     const sheetPoints = sheetLines > 0 ? this.totalsCalculator.getSheetPoints(sheetLines, this.totals) : 0

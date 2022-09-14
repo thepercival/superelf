@@ -1,21 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgainstGame, Competition, Player, StartLocationMap, Structure } from 'ngx-sport';
-import { concatMap, map, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { GameRound } from '../../lib/gameRound';
-import { GamePicker } from '../../lib/gameRound/gamePicker';
-import { GameRoundRepository } from '../../lib/gameRound/repository';
+import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
 import { ImageRepository } from '../../lib/image/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { ViewPeriod } from '../../lib/period/view';
-import { S11Player, StatisticsMap } from '../../lib/player';
-import { S11PlayerRepository } from '../../lib/player/repository';
 import { PointsCalculator } from '../../lib/points/calculator';
 import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
-import { Statistics } from '../../lib/statistics';
 import { StatisticsRepository } from '../../lib/statistics/repository';
 
 import { CSSService } from '../../shared/commonmodule/cssservice';
@@ -34,6 +30,7 @@ export class ScheduleComponent extends PoolComponent implements OnInit {
   public viewPeriod!: ViewPeriod;
   private pointsCalculator!: PointsCalculator;
   public currentGameRound: GameRound | undefined;
+  public gameRounds: (GameRound | undefined)[] = [];
   public againstGames: AgainstGame[] = [];
 
   // @Input() team: Team | undefined;
@@ -46,7 +43,6 @@ export class ScheduleComponent extends PoolComponent implements OnInit {
   public startLocationMap!: StartLocationMap;
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
-  private sliderGameRounds: (GameRound | undefined)[] = [];
 
   constructor(
     route: ActivatedRoute,
@@ -76,37 +72,66 @@ export class ScheduleComponent extends PoolComponent implements OnInit {
           return;
         }
         this.viewPeriod = currentViewPeriod;
-        this.initSliderGameRounds();
         this.route.params.subscribe(params => {
-          // const gameRoundNumber = +params.gameRound;
-          // if (gameRoundNumber > 0) {
-          //   this.currentGameRound = currentViewPeriod.getGameRound(gameRoundNumber)
-          // }
-          this.gameRoundRepository.getFirstObjectNotFinished(
-            competitionConfig,
-            currentViewPeriod
-          ).subscribe({
-            next: (gameRound: GameRound | undefined) => {
-              this.currentGameRound = gameRound;
-              this.updateGameRound();
-            },
-            error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
-            complete: () => this.processing = false
-          });
+          this.initGameRounds(+params.gameRound);
         });
       },
       error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
     })
   }
 
-  private initSliderGameRounds(): void {
-    this.sliderGameRounds = this.viewPeriod.getGameRounds().slice();
-    if (this.currentGameRound !== undefined) {
-      const idx = this.sliderGameRounds.indexOf(this.currentGameRound);
-      if (idx >= 0) {
-        this.sliderGameRounds = this.sliderGameRounds.splice(idx).concat(this.sliderGameRounds);
-      }
+  private getCurrentGameRound(gameRoundParam: number): Observable<GameRound | undefined | CurrentGameRoundNumbers> {
+
+    let currentGameRound = undefined;
+    if (gameRoundParam > 0) {
+      currentGameRound = this.viewPeriod.getGameRound(gameRoundParam);
     }
+    if (currentGameRound !== undefined) {
+      return of(currentGameRound);
+    }
+    return this.gameRoundRepository.getCurrentNumbers(this.pool.getCompetitionConfig(), this.viewPeriod);
+  }
+
+  // private convertObservable(observable: Observable<CurrentGameRoundNumbers>): Observable<GameRound | undefined> {
+
+  //   let currentGameRound = undefined;
+  //   if (gameRoundParam > 0) {
+  //     currentGameRound = this.viewPeriod.getGameRound(gameRoundParam);
+  //   }
+  //   if (currentGameRound !== undefined) {
+  //     return of(currentGameRound);
+  //   }
+  //   return this.gameRoundRepository.getCurrentNumbers(this.pool.getCompetitionConfig(), this.viewPeriod);
+  // }
+
+
+  private initGameRounds(gameRoundParam: number): void {
+
+    this.getCurrentGameRound(gameRoundParam).subscribe({
+      next: (object: GameRound | undefined | CurrentGameRoundNumbers) => {
+        let currentGameRound;
+        if (object instanceof GameRound) {
+          currentGameRound = object;
+        } else if (object !== undefined && object.hasOwnProperty('firstNotFinished')) {
+          const firstNotFinished = object.firstNotFinished;
+          if (typeof firstNotFinished === 'number') {
+            currentGameRound = this.viewPeriod.getGameRound(firstNotFinished);
+          }
+        }
+        this.currentGameRound = currentGameRound;
+
+        this.gameRounds = this.viewPeriod.getGameRounds().slice();
+        if (currentGameRound !== undefined) {
+          const idx = this.gameRounds.indexOf(this.currentGameRound);
+          if (idx >= 0) {
+            this.gameRounds = this.gameRounds.splice(idx).concat(this.gameRounds);
+          }
+        }
+        this.updateGameRound(currentGameRound);
+      },
+      error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
+      complete: () => this.processing = false
+    });
   }
 
   getTeamImageUrl(player: Player): string {
@@ -117,25 +142,24 @@ export class ScheduleComponent extends PoolComponent implements OnInit {
     return this.imageRepository.getPlayerUrl(player);
   }
 
-  updateGameRound(): void {
-    const gameRound = this.currentGameRound;
-    if (gameRound === undefined) {
-      //this.currentStatistics = undefined;
-      return;
-    }
-    // this.currentStatistics = this.s11Player.getGameStatistics(currentGameRound.getNumber());
-
-    if (gameRound.hasAgainstGames()) {
-      //  this.currentGame = (new GamePicker(this.pool.getSourceCompetition(), currentGameRound)).getGame(this.s11Player);
-      return;
-    }
+  updateGameRound(currentGameRound: GameRound | undefined): void {
     this.processingGames = true;
+    if (currentGameRound === undefined) {
+      this.processingGames = false;
+      return;
+    }
+
+    if (currentGameRound.hasAgainstGames()) {
+      //  this.currentGame = (new GamePicker(this.pool.getSourceCompetition(), currentGameRound)).getGame(this.s11Player);
+      this.processingGames = false;
+      return;
+    }
     this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
       next: (structure: Structure) => {
         this.sourceStructure = structure;
         const sourcePoule = structure.getSingleCategory().getRootRound().getFirstPoule();
 
-        this.gameRepository.getSourceObjects(sourcePoule, gameRound).subscribe({
+        this.gameRepository.getSourceObjects(sourcePoule, currentGameRound).subscribe({
           next: (againstGames: AgainstGame[]) => {
             this.againstGames = againstGames;;
           },
@@ -150,19 +174,6 @@ export class ScheduleComponent extends PoolComponent implements OnInit {
       return of(this.sourceStructure);
     }
     return this.structureRepository.getObject(competition);
-  }
-
-  previousGameRound(): void {
-    this.currentGameRound = this.sliderGameRounds.pop();
-    this.sliderGameRounds.unshift(this.currentGameRound);
-    this.updateGameRound();
-  }
-
-  nextGameRound(): void {
-    this.sliderGameRounds.push(this.sliderGameRounds.shift());
-    this.currentGameRound = this.sliderGameRounds.shift();
-    this.sliderGameRounds.unshift(this.currentGameRound);
-    this.updateGameRound();
   }
 
   getCurrentGameRoundLabel(): string {

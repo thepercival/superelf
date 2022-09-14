@@ -73,6 +73,15 @@ input.is-warning {
   background-color: #98978b;
 }
 
+span.badge-rank {
+  background-color: inherit;
+  color: inherit;
+  border-style: solid;
+  border-color: white;
+  border-width: 1px;
+  font-size: 100%;
+}
+
 .modal-content-info .modal-content {
   border: 5px;
   @extend .border-info;

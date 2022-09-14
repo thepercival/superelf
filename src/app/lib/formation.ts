@@ -2,9 +2,11 @@
 import { Formation, FormationLine, Identifiable, Person, Team } from 'ngx-sport';
 import { S11FormationLine } from './formation/line';
 import { S11FormationPlace } from './formation/place';
+import { GameRound } from './gameRound';
 import { ViewPeriod } from './period/view';
 import { S11Player } from './player';
 import { PoolUser } from './pool/user';
+import { ScorePoints } from './score/points';
 
 export class S11Formation extends Identifiable {
     static readonly FootbalNrOfPersons: number = 11;
@@ -73,5 +75,13 @@ export class S11Formation extends Identifiable {
                     && formationLine.getNrOfPersons() === s11Line.getStartingPlaces().length;
             });
         });
+    }
+
+    getPoints(gameRound: GameRound | undefined): number {
+        let points = 0;
+        for (let line of this.getLines()) {
+            points += line.getPoints(gameRound);
+        }
+        return points;
     }
 }

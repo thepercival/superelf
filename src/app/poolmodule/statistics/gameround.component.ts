@@ -54,8 +54,10 @@ export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsCo
       if (this.pointsCalculator === undefined) {
         this.pointsCalculator = new PointsCalculator(this.competitionConfig);
       }
+      // console.log(changes.statistics.currentValue, changes.statistics.currentValue.getSpottySheet23());
+
       // console.log('first changes statistics', changes.statistics.currentValue);
-      const sheetLines = (this.line && FootballLine.GoalKeeper) & (this.line && FootballLine.Defense);
+      const sheetLines = (this.line & FootballLine.GoalKeeper) + (this.line & FootballLine.Defense);
       const sheetPoints = sheetLines > 0 ? this.pointsCalculator.getSheetPoints(this.line, changes.statistics.currentValue) : 0
       this.categoryPoints = {
         result: this.pointsCalculator.getResultPoints(changes.statistics.currentValue),

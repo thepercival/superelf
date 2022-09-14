@@ -129,7 +129,7 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
   showCopyToTeam(s11Player: S11Player): boolean {
     const assembleFormation = this.poolUser?.getAssembleFormation();
     const assembleFormationPlayers = this.assembleFormationPlayers;
-    console.log(assembleFormationPlayers, assembleFormationPlayers?.indexOf(s11Player), s11Player);
+    //console.log(assembleFormationPlayers, assembleFormationPlayers?.indexOf(s11Player), s11Player);
     return assembleFormation !== undefined &&
       assembleFormationPlayers !== undefined && assembleFormationPlayers.find((s11PlayerIt: S11Player): boolean => {
         return s11PlayerIt.getPerson() === s11Player.getPerson();
@@ -179,7 +179,7 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
 
 
   linkToPlayer(s11Player: S11Player | undefined): void {
-    console.log(s11Player);
+    //console.log(s11Player);
     if (!s11Player) {
       return;
     }

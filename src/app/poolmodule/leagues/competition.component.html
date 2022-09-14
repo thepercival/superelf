@@ -8,9 +8,22 @@
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
 
-    <app-together-ranking *ngIf="!processing && pool && poule" [poule]="poule" [competitionSport]="competitionSport"
-      [startLocationMap]="startLocationMap" [header]="true">
-    </app-together-ranking>
+    <div *ngIf="!processing && pool && poule">
+
+      <div class="d-flex justify-content-between mt-3 mb-1 ms-3 me-4">
+        <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
+          (update)="updateGameRound($event)">
+        </app-gameround-scroller>
+        <div>
+          <!-- <span class="badge bg-totals">{{getTotalPoints()}}</span> -->
+        </div>
+      </div>
+
+      <app-together-ranking [poule]="poule" [competitionSport]="competitionSport" [startLocationMap]="startLocationMap"
+        [header]="true" [currentGameRound]="currentGameRound">
+      </app-together-ranking>
+
+    </div>
 
     <!-- <table class="table">
       <thead>

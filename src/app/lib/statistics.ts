@@ -1,6 +1,5 @@
-import { FootballLine } from 'ngx-sport';
-import { GameRound } from './gameRound';
-import { S11Player } from './player';
+import { AgainstResult, FootballLine } from 'ngx-sport';
+import { Sheet } from './sheet';
 import { JsonStatistics } from './statistics/json';
 
 export class Statistics {
@@ -8,7 +7,7 @@ export class Statistics {
         protected json: JsonStatistics) {
     }
 
-    public getResult(): number {
+    public getResult(): AgainstResult {
         return this.json.result;
     }
 
@@ -53,11 +52,23 @@ export class Statistics {
     }
 
     public hasCleanSheet(): boolean {
-        return this.json.cleanSheet;
+        return this.json.sheet === Sheet.Clean;
     }
 
     public hasSpottySheet(): boolean {
-        return this.json.spottySheet;
+        return this.json.sheet === Sheet.Spotty;
+    }
+
+    // public getSpottySheet(): Sheet {
+    //     return this.json.spottySheet;
+    // }
+
+    // public getSpottySheet23(): string {
+    //     return this.json.spottySheet.toString();
+    // }
+
+    public getJson(): JsonStatistics {
+        return this.json;
     }
 
     public getNrOfYellowCards(): number {

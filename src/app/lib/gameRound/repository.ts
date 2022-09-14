@@ -24,16 +24,15 @@ export class GameRoundRepository extends APIRepository {
         return this.getApiUrl() + 'competitionconfigs/' + competitionConfig.getSourceCompetition().getId() + '/viewperiods/' + viewPeriod.getId();
     }
 
-    getFirstObjectNotFinished(competitionConfig: CompetitionConfig, viewPeriod: ViewPeriod): Observable<GameRound | undefined> {
-        const url = this.getUrl(competitionConfig, viewPeriod) + '/firstnotfinished';
-        return this.http.get<JsonGameRound | undefined>(url, this.getOptions()).pipe(
-            map((jsonGameRound: JsonGameRound | undefined) => {
-                if (jsonGameRound === undefined) {
-                    return undefined;
-                }
-                return this.mapper.toObject(jsonGameRound, viewPeriod);
-            }),
+    getCurrentNumbers(competitionConfig: CompetitionConfig, viewPeriod: ViewPeriod): Observable<CurrentGameRoundNumbers> {
+        const url = this.getUrl(competitionConfig, viewPeriod) + '/fetchcustom';
+        return this.http.get<CurrentGameRoundNumbers>(url, this.getOptions()).pipe(
             catchError((err) => this.handleError(err))
         );
     }
+}
+
+export interface CurrentGameRoundNumbers {
+    firstNotFinished: number | undefined,
+    firstInProgressOrFinished: number | undefined
 }

@@ -44,7 +44,6 @@ export class WorldCupComponent implements OnInit {
         protected scoutedPlayerRepository: ScoutedPlayerRepository,
         protected modalService: NgbModal
     ) {
-        console.log('123');
         //   super(route, router, poolRepository, globalEventsManager);
         this.translate = new TranslateService();
     }

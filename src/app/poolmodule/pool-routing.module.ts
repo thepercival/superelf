@@ -42,7 +42,7 @@ const routes: Routes = [
   { path: 'sourcegame/:id/:gameRound/:gameId', component: SourceGameComponent },
   { path: 'togethergame/:id/:gameRound/:gameId', component: PoolTogetherGameComponent },
   { path: 'users/:id', component: PoolUsersComponent, canActivate: [AuthUserGuardService] },
-  { path: 'user/:id/:poolUserId', component: PoolUserComponent, canActivate: [AuthUserGuardService] },
+  { path: 'user/:id/:poolUserId/:gameRound', component: PoolUserComponent, canActivate: [AuthUserGuardService] },
   { path: 'worldcup/:id', component: WorldCupComponent },
   /*{ path: 'chooseplayers/:id', component: ChooseS11PlayersComponent, canActivate: [AuthUserGuardService] },*/
 ];

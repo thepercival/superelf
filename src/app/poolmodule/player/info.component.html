@@ -27,19 +27,8 @@
                         <app-player-basics [player]="player" [points]="getCurrentGameRoundPoints()" class="text-center">
                         </app-player-basics>
 
-                        <div class="d-flex justify-content-center">
-                            <div class="btn-group" role="group" aria-label="aantal">
-                                <button type="button" class="btn btn-outline-primary" (click)="previousGameRound()">
-                                    <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
-                                </button>
-                                <button [disabled]="true" type="button" class="btn btn-outline-primary btn-fixed-width">
-                                    {{getCurrentGameRoundLabel()}}
-                                </button>
-                                <button type="button" class="btn btn-outline-primary" (click)="nextGameRound()">
-                                    <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
-                                </button>
-                            </div>
-                        </div>
+                        <app-gameround-scroller [gameRounds]="sliderGameRounds" [current]="currentGameRound"
+                            (update)="updateGameRound($event)"></app-gameround-scroller>
 
                         <div class="text-center mt-3 mb-2">
                             <h2 *ngIf="processingGames" class="text-center">

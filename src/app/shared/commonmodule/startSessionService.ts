@@ -61,7 +61,6 @@ export class StartSessionService {
 
     private getNextActionFromStorage(): ActivateSessionAction | undefined {
         let stringFromStorage = localStorage.getItem(this.storageId);
-        console.log(stringFromStorage, stringFromStorage ? JSON.parse(stringFromStorage) : undefined);
         if (stringFromStorage === null) {
             return undefined;
         }

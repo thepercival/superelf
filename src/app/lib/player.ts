@@ -1,7 +1,7 @@
-import { FootballLine, FormationLine, Identifiable, Period, Person, Player, Team } from 'ngx-sport';
+import { FootballLine, Identifiable, Period, Person, Player, Team } from 'ngx-sport';
 import { ViewPeriod } from './period/view';
-import { JsonPlayerTotals } from './player/totals/json';
 import { Statistics } from './statistics';
+import { JsonTotals } from './totals/json';
 
 export class S11Player extends Identifiable {
     // static readonly Sheet_Spotty_Threshold = 4;
@@ -28,7 +28,7 @@ export class S11Player extends Identifiable {
         protected viewPeriod: ViewPeriod,
         protected person: Person,
         protected players: Player[],
-        protected totals: JsonPlayerTotals,
+        protected totals: JsonTotals,
         protected totalPoints: number) {
         super();
     }
@@ -65,6 +65,10 @@ export class S11Player extends Identifiable {
         return this.statistics !== undefined;
     }
 
+    public hasSomeStatistics(): boolean {
+        return this.statistics !== undefined && this.statistics.size > 0;
+    }
+
     public getGameStatistics(gameRound: number): Statistics | undefined {
         return this.statistics?.get(gameRound) ?? undefined;
     }
@@ -77,7 +81,7 @@ export class S11Player extends Identifiable {
         return this.statistics = statisticsMap;
     }
 
-    public getTotals(): JsonPlayerTotals {
+    public getTotals(): JsonTotals {
         return this.totals;
     }
 
@@ -113,6 +117,10 @@ export class S11Player extends Identifiable {
         return this.players.find((player: Player): boolean => {
             return filters.every(filter => filter(player));
         });
+    }
+
+    hasAppeared(): boolean {
+        return this.getTotals().nrOfTimesStarted > 0 || this.getTotals().nrOfTimesSubstitute > 0;
     }
 }
 

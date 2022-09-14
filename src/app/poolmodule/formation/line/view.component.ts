@@ -13,16 +13,15 @@ import { S11Player } from '../../../lib/player';
 import { CSSService } from '../../../shared/commonmodule/cssservice';
 
 @Component({
-  selector: 'app-pool-formationline-assemble',
-  templateUrl: './assemble.component.html',
-  styleUrls: ['./assemble.component.scss']
+  selector: 'app-pool-formationline-view',
+  templateUrl: './view.component.html',
+  styleUrls: ['./view.component.scss']
 })
-export class FormationLineAssembleComponent implements OnInit {
+export class FormationLineViewComponent implements OnInit {
   @Input() line!: S11FormationLine;
   @Input() selectedPlace: S11FormationPlace | undefined;
-  @Input() viewGameRound: GameRound | undefined;
+  @Input() gameRound: GameRound | undefined;
   @Input() processing: boolean = true;
-  @Output() editPlace = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
@@ -82,15 +81,7 @@ export class FormationLineAssembleComponent implements OnInit {
   }
 
   getPointsTotalsClass() {
-    return this.viewGameRound === undefined ? 'bg-totals' : 'bg-points';
-  }
-
-  hasAppearances(place: S11FormationPlace): boolean {
-    const viewGameRound = this.viewGameRound;
-    if (viewGameRound === undefined) {
-      return true;
-    }
-    return place.getPlayer()?.getGameStatistics(viewGameRound.getNumber())?.hasAppeared() === true;
+    return this.gameRound === undefined ? 'bg-totals' : 'bg-points';
   }
 
   maybeLinkToPlayer(place: S11FormationPlace): void {

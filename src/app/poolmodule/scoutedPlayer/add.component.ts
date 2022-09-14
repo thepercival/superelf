@@ -124,7 +124,7 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   }
 
   linkToPlayer(s11Player: S11Player | undefined): void {
-    console.log(s11Player);
+    //console.log(s11Player);
     if (!s11Player) {
       return;
     }

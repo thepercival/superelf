@@ -43,6 +43,7 @@ import { PoolUserRemoveModalComponent } from './poolusers/removemodal.component'
 import { FormationChooseComponent } from './formation/choose.component';
 import { FormationPlaceEditComponent } from './formation/place/edit.component';
 import { FormationLineAssembleComponent } from './formation/line/assemble.component';
+import { FormationLineViewComponent } from './formation/line/view.component';
 import { FormationAssembleComponent } from './formation/assemble.component';
 import { S11PlayerChooseComponent } from './player/choose.component';
 import { PoolCompetitionComponent } from './leagues/competition.component';
@@ -54,6 +55,7 @@ import { AgainstGameDetailsComponent } from './game/source/details.component';
 import { AgainstGameTitleComponent } from './game/source/title.component';
 import { SourceGameComponent } from './game/source/source.component';
 import { PoolTogetherGameComponent } from './game/pool/together/togethergame.component';
+import { GameRoundScrollerComponent } from './gameRound/gameRoundScroller.component';
 
 @NgModule({
   imports: [
@@ -71,7 +73,9 @@ import { PoolTogetherGameComponent } from './game/pool/together/togethergame.com
     FormationAssembleComponent,
     FormationChooseComponent,
     FormationLineAssembleComponent,
+    FormationLineViewComponent,
     FormationPlaceEditComponent,
+    GameRoundScrollerComponent,
     HomeComponent,
     InviteComponent,
     JoinComponent,

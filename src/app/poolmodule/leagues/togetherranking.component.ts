@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Poule, GameAmountConfig, GameState, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, Place, AgainstGpp, AgainstH2h, Single, AllInOneGame, StartLocationMap, StructureNameService } from 'ngx-sport';
+import { GameRound } from '../../lib/gameRound';
 import { PoolCompetitor } from '../../lib/pool/competitor';
+import { CSSService } from '../../shared/commonmodule/cssservice';
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../shared/commonmodule/viewPortManager';
 
 @Component({
@@ -13,21 +15,20 @@ export class TogetherRankingComponent implements OnInit {
   @Input() poule!: Poule;
   @Input() startLocationMap!: StartLocationMap;
   @Input() competitionSport!: CompetitionSport;
+  @Input() currentGameRound: GameRound | undefined;
   @Input() header!: boolean;
   protected togetherRankingCalculator!: TogetherSportRoundRankingCalculator;
 
   public sportRankingItems!: SportRoundRankingItem[];
   public structureNameService!: StructureNameService;
-  public viewPortManager!: ViewPortManager;
   protected gameAmountConfig!: GameAmountConfig;
   protected scoreMap = new ScoreMap();
-  nrOfGameRounds!: number;
   public processing = true;
-
 
   constructor(
     private scoreConfigService: ScoreConfigService,
-    private router: Router) {
+    private router: Router,
+    private cssService: CSSService) {
   }
 
   ngOnInit() {
@@ -38,21 +39,11 @@ export class TogetherRankingComponent implements OnInit {
     console.log(this.sportRankingItems);
     this.gameAmountConfig = this.poule.getRound().getNumber().getValidGameAmountConfig(this.competitionSport);
     //this.initGameRoundMap();    
-    this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.getGameRounds().length);
     this.initTableData();
     // console.log(this.startLocationMap);
     this.processing = false;
   }
 
-  protected getViewPortNrOfColumnsMap(): ViewPortNrOfColumnsMap {
-    const viewPortNrOfColumnsMap = new ViewPortNrOfColumnsMap();
-    viewPortNrOfColumnsMap.set(ViewPort.xs, 2);
-    viewPortNrOfColumnsMap.set(ViewPort.sm, 5);
-    viewPortNrOfColumnsMap.set(ViewPort.md, 10);
-    viewPortNrOfColumnsMap.set(ViewPort.lg, 15);
-    viewPortNrOfColumnsMap.set(ViewPort.xl, 30);
-    return viewPortNrOfColumnsMap;
-  }
 
   /**
    * door door games en plaats elke gameplace ergens in een map
@@ -83,7 +74,6 @@ export class TogetherRankingComponent implements OnInit {
         gameRoundMap[gameRoundNr] = finalScore;
       });
     });
-    this.viewPortManager.initViewPorts(gameRoundWithFinishedGame);
   }
 
   protected getTogetherGames(): TogetherGame[] {
@@ -108,13 +98,13 @@ export class TogetherRankingComponent implements OnInit {
     return [6]; // gameRounds;
   }
 
-  getScore(placeLocation: PlaceLocation, gameRound: number): number {
+  getScore(placeLocation: PlaceLocation, gameRound: GameRound): number {
     const gameRoundMap = this.scoreMap.get(placeLocation.getRoundLocationId());
     if (gameRoundMap === undefined) {
       return 0;
     }
-    console.log('score is ', gameRound, gameRoundMap[gameRound]);
-    return gameRoundMap[gameRound];
+    // console.log('score is ', gameRound, gameRoundMap[gameRound]);
+    return gameRoundMap[gameRound.getNumber()];
   }
 
   // getGameRound(competitionSport: CompetitionSport, gameRound: number): number {
@@ -123,10 +113,15 @@ export class TogetherRankingComponent implements OnInit {
 
   getQualifyPlaceClass(rankingItem: SportRoundRankingItem): string {
     const place = this.poule.getPlace(rankingItem.getUniqueRank());
-    return ''; // place ? this.cssService.getQualifyPlace(place) : '';
+    // console.log('place', place, place ? this.cssService.getQualifyPlace(place) : '');
+    return this.getQualifyPlaceCSS(rankingItem.getUniqueRank());
   }
 
-  navigateToPoolUser(place: Place): void {
+  getQualifyPlaceCSS(uniqueRank: number): string {
+    return uniqueRank <= 2 ? 'text-bg-success' : 'text-black';
+  }
+
+  navigateToPoolUser(place: Place, gameRound: GameRound | undefined): void {
     const startLocation = place.getStartLocation();
     if (startLocation === undefined) {
       return;
@@ -136,7 +131,8 @@ export class TogetherRankingComponent implements OnInit {
       return;
     }
     const poolUser = competitor.getPoolUser();
-    this.router.navigate(['/pool/user', poolUser.getPool().getId(), poolUser.getId()]);
+
+    this.router.navigate(['/pool/user', poolUser.getPool().getId(), poolUser.getId(), gameRound ? gameRound.getNumber() : 0]);
   }
 
   // getViewRange(viewport: number): VoetbalRange {

@@ -1,5 +1,6 @@
 import { FootballLine } from "ngx-sport";
 import { JsonGameRound } from "../gameRound/json";
+import { Sheet } from "../sheet";
 
 export interface JsonStatistics {
     gameRound: JsonGameRound,
@@ -10,8 +11,7 @@ export interface JsonStatistics {
     nrOfAssists: number,
     nrOfPenalties: number,
     nrOfOwnGoals: number,
-    cleanSheet: boolean,
-    spottySheet: boolean,
+    sheet: Sheet,
     nrOfYellowCards: number,
     directRedCard: boolean,
     playerLine: FootballLine

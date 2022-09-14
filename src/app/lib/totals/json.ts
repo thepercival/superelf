@@ -1,4 +1,4 @@
-export interface JsonPlayerTotals {
+export interface JsonTotals {
     nrOfWins: number;
     nrOfDraws: number;
     nrOfTimesStarted: number;

@@ -1,6 +1,9 @@
 import { FootballLine, Identifiable } from 'ngx-sport';
 import { S11Formation } from '../formation';
+import { GameRound } from '../gameRound';
 import { S11Player } from '../player';
+import { PointsCalculator } from '../points/calculator';
+import { ScorePoints } from '../score/points';
 import { S11FormationPlace } from './place';
 
 export class S11FormationLine extends Identifiable {
@@ -9,7 +12,10 @@ export class S11FormationLine extends Identifiable {
     protected places: S11FormationPlace[] = [];
     // protected substituteAppearances: Map<number, boolean> = {};
 
-    constructor(protected formation: S11Formation, protected number: FootballLine) {
+    constructor(
+        protected formation: S11Formation,
+        protected number: FootballLine,
+        protected substituteAppearances: Map<number, boolean>) {
         super();
         formation.getLines().push(this);
     }
@@ -52,6 +58,14 @@ export class S11FormationLine extends Identifiable {
         return place;
     }
 
+    public hasSubstituteAppareance(gameRound: GameRound | undefined): boolean {
+        if (gameRound === undefined) {
+            console.log('cdk', this.substituteAppearances.size);
+            return this.substituteAppearances.size > 0;
+        }
+        return this.substituteAppearances.has(gameRound.getNumber());
+    }
+
     // public getSubstituteAppearances(): Map<number, boolean> {
     //     return this.substituteAppearances;
     // }
@@ -74,5 +88,13 @@ export class S11FormationLine extends Identifiable {
             players.push(player);
         });
         return players;
+    }
+
+    getPoints(gameRound: GameRound | undefined): number {
+        let points = 0;
+        for (let place of this.getPlaces()) {
+            points += place.getPoints(gameRound);
+        }
+        return points;
     }
 }

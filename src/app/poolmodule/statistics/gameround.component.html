@@ -66,6 +66,7 @@
                 <fa-icon *ngIf="statistics.hasCleanSheet()" [icon]="['fas', 'check-circle']"
                     class="float-end ms-1 text-success"></fa-icon>
             </div>
+
             <div>
                 <span [ngClass]="{'text-decoration-line-through': !statistics.hasSpottySheet()}">&gt; 3</span>
                 <fa-icon *ngIf="statistics.hasSpottySheet()" [icon]="['fas', 'check-circle']"

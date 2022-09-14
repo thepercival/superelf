@@ -5,7 +5,6 @@ import { S11Player } from "./player";
 // unable to determine line, class is of no use
 export class Totals {
     public constructor(
-        protected player: S11Player,
         protected wins: number,
         protected draws: number,
         protected played: number,
@@ -21,13 +20,13 @@ export class Totals {
     ) {
     }
 
-    getPlayer(): S11Player {
-        return this.player;
-    }
+    // getPlayer(): S11Player {
+    //     return this.player;
+    // }
 
-    getViewPeriod(): ViewPeriod {
-        return this.player.getViewPeriod();;
-    }
+    // getViewPeriod(): ViewPeriod {
+    //     return this.player.getViewPeriod();;
+    // }
 
     // getWins(): number {
     //     return this.wins;

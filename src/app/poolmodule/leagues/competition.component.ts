@@ -12,6 +12,10 @@ import { CompetitionSport, Poule, StartLocationMap, Structure, StructureEditor }
 import { LeagueName } from '../../lib/leagueName';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { GameRound } from '../../lib/gameRound';
+import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
+import { CompetitionConfig } from '../../lib/competitionConfig';
+import { ViewPeriod } from '../../lib/period/view';
 
 
 @Component({
@@ -27,6 +31,8 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   public poule!: Poule;
   public competitionSport!: CompetitionSport;
   public startLocationMap!: StartLocationMap;
+  public currentGameRound: GameRound | undefined;
+  public gameRounds: GameRound[] = [];
 
   constructor(
     route: ActivatedRoute,
@@ -36,6 +42,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     protected structureEditor: StructureEditor,
     protected poolUserRepository: PoolUserRepository,
     protected structureRepository: StructureRepository,
+    private gameRoundRepository: GameRoundRepository,
     private modalService: NgbModal
   ) {
     super(route, router, poolRepository, globalEventsManager);
@@ -49,11 +56,18 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
         if (pool.getAssemblePeriod().isIn()) {
           this.setAlert('info', 'vanaf de start tot ' + this.nrOfDaysToRemoveAfterAssemblePeriod + ' dagen erna zijn deelnemers te vewijderen');
         }
+        const competitionConfig = this.pool.getCompetitionConfig();
+        const currentViewPeriod = competitionConfig.getViewPeriodByDate(new Date());
+        if (currentViewPeriod === undefined) {
+          return;
+        }
+        this.gameRounds = this.pool.getAssembleViewPeriod().getGameRounds();
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => {
             this.poolUsers = poolUsers;
             const competition = this.pool.getCompetition(LeagueName.Competition);
             if (competition === undefined) {
+              this.processing = false;
               throw Error('competitionSport not found');
             }
 
@@ -69,24 +83,39 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
                 this.startLocationMap = new StartLocationMap(poolCompetitors);
 
                 // gameRoundScores voor competitors of poolCompetitions
-                // getGAMES!! 
-                console.log(poolCompetitors);
+                // getGAMES!!
 
+                this.initCurrentGameRound(competitionConfig, currentViewPeriod);
               },
-              error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
-              complete: () => this.processing = false
+              error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
             });
-
-
-
           },
-          error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
-          complete: () => this.processing = false
+          error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
         });
       },
       error: (e) => {
         this.setAlert('danger', e); this.processing = false;
       }
     });
+  }
+
+  initCurrentGameRound(competitionConfig: CompetitionConfig, viewPeriod: ViewPeriod): void {
+    this.gameRoundRepository.getCurrentNumbers(competitionConfig, viewPeriod).subscribe({
+      next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
+        let currentGameRound;
+        if (currentGameRoundNumbers.firstInProgressOrFinished) {
+          currentGameRound = viewPeriod.getGameRound(currentGameRoundNumbers.firstInProgressOrFinished);
+        }
+        this.currentGameRound = currentGameRound;
+
+        this.updateGameRound(currentGameRound);
+      },
+      error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
+      complete: () => this.processing = false
+    });
+  }
+
+  updateGameRound(gameRound: GameRound | undefined): void {
+    this.currentGameRound = gameRound;
   }
 }
