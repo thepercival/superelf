@@ -213,7 +213,6 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
       params = params.set('teamId', choosePlayersFilter.team.getId());
     }
     params = params.set('showAll', this.form.controls.showAll.value);
-    console.log(params.toString());
 
     this.location.replaceState(
       location.pathname,

@@ -25,7 +25,6 @@ export class S11FormationLineMapper {
     protected getAppearanceMap(appearances: number[]): Map<number, boolean> {
         const map = new Map();
         const stats = new Map<number, boolean>();
-        console.log(123);
         for (let i = 0; i < appearances.length; i++) {
             map.set(appearances[i], true);
         }

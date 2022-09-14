@@ -10,7 +10,6 @@ export class PointsCalculator {
     public getPoints(line: FootballLine, statistics: Statistics): number {
         let total = this.getResultPoints(statistics);
         total += this.getGoalPoints(line, statistics);
-        total += this.getAssistPoints(line, statistics);
         total += this.getSheetPoints(line, statistics);
         total += this.getCardPoints(statistics);
         return total;
@@ -40,7 +39,7 @@ export class PointsCalculator {
     }
 
 
-    public getAssistPoints(line: FootballLine, statistics: Statistics): number {
+    protected getAssistPoints(line: FootballLine, statistics: Statistics): number {
         const assistPoints = this.competitionConfig.getLineScorePoints({ line, score: FootballScore.Assist });
         return statistics.getNrOfAssists() * assistPoints;
     }

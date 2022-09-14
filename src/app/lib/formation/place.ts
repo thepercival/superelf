@@ -92,9 +92,6 @@ export class S11FormationPlace extends Identifiable {
         if (gameRound === undefined) {
             return player.hasSomeStatistics();
         }
-        if (this.isSubstitute() && this.getLine() === FootballLine.Midfield) {
-            console.log('diemers');
-        }
         const statistics = player.getGameStatistics(gameRound.getNumber());
         if (statistics === undefined) {
             return false;

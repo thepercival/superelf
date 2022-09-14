@@ -28,7 +28,6 @@ export class S11PlayerViewPeriodStatisticsComponent extends S11PlayerStatisticsC
   ngOnInit() {
     this.totalsCalculator = new TotalsCalculator(this.competitionConfig);
     const sheetLines: number = (this.line & FootballLine.GoalKeeper) + (this.line & FootballLine.Defense);
-    console.log(sheetLines);
     this.sheetActive = sheetLines > 0;
 
     const sheetPoints = sheetLines > 0 ? this.totalsCalculator.getSheetPoints(sheetLines, this.totals) : 0

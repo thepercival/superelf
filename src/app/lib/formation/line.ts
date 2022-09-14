@@ -60,7 +60,6 @@ export class S11FormationLine extends Identifiable {
 
     public hasSubstituteAppareance(gameRound: GameRound | undefined): boolean {
         if (gameRound === undefined) {
-            console.log('cdk', this.substituteAppearances.size);
             return this.substituteAppearances.size > 0;
         }
         return this.substituteAppearances.has(gameRound.getNumber());
