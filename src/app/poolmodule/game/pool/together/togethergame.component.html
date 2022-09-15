@@ -26,20 +26,29 @@
                     <tr *ngFor="let poolUser of poolUsers">
                         <td>{{poolUser.getName()}}</td>
                         <td>
-                            <ng-container [ngTemplateOutlet]="contentSidePlayer"
-                                [ngTemplateOutletContext]="{player:getPlayer(sourceGame, HomeSide, poolUser)}">
+                            <ng-container [ngTemplateOutlet]="contentForamtionPlaces"
+                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(sourceGame, HomeSide, poolUser)}">
                             </ng-container>
                         </td>
                         <td>
-                            <ng-container [ngTemplateOutlet]="contentSidePlayer"
-                                [ngTemplateOutletContext]="{player:getPlayer(sourceGame, AwaySide, poolUser)}">
+                            <ng-container [ngTemplateOutlet]="contentForamtionPlaces"
+                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(sourceGame, AwaySide, poolUser)}">
                             </ng-container>
                         </td>
                     </tr>
                 </tbody>
             </table>
 
-            <ng-template #contentSidePlayer let-s11Player="player">
+            <ng-template #contentForamtionPlaces let-formationPlaces="formationPlaces">
+                <div *ngFor="let formationPlace of formationPlaces">
+                    <ng-container [ngTemplateOutlet]="contentPlayer"
+                        [ngTemplateOutletContext]="{s11Player:formationPlace.getPlayer()}">
+                    </ng-container>
+                    <span *ngIf="formationPlace.isSubstitute()" class="badge badge-reserve ms-1">r</span>
+                </div>
+            </ng-template>
+
+            <ng-template #contentPlayer let-s11Player="s11Player">
                 <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
             </ng-template>
 

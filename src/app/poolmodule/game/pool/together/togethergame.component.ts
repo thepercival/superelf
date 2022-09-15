@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
 import { Observable } from 'rxjs';
 import { S11Formation } from '../../../../lib/formation';
+import { S11FormationPlace } from '../../../../lib/formation/place';
 import { GameRound } from '../../../../lib/gameRound';
 import { ImageRepository } from '../../../../lib/image/repository';
 import { GameRepository } from '../../../../lib/ngx-sport/game/repository';
@@ -113,6 +114,24 @@ export class PoolTogetherGameComponent extends PoolComponent implements OnInit {
 
   isCompetitor(sideCompetitor: Competitor | undefined): boolean {
     return sideCompetitor instanceof CompetitorBase;
+  }
+
+  getFormationPlaces(sourceGame: AgainstGame, side: AgainstSide, poolUser: PoolUser): S11FormationPlace[] {
+    const editPeriod = this.getCurrentEditPeriod(poolUser.getPool());
+    const formation = editPeriod ? poolUser.getFormation(editPeriod) : undefined;
+    const team = this.getTeam(sourceGame.getSidePlaces(side));
+    if (formation === undefined || team === undefined) {
+      return [];
+    }
+    return formation.getPlaces().filter((formationPlace: S11FormationPlace): boolean => {
+      return formationPlace.getPlayer()?.getPlayer(team) !== undefined;
+    });
+  }
+  getPlace(sourceGame: AgainstGame, side: AgainstSide, poolUser: PoolUser): S11Player | undefined {
+    const editPeriod = this.getCurrentEditPeriod(poolUser.getPool());
+    const formation = editPeriod ? poolUser.getFormation(editPeriod) : undefined;
+    const team = this.getTeam(sourceGame.getSidePlaces(side));
+    return team ? formation?.getPlayer(team, sourceGame.getStartDateTime()) : undefined;
   }
 
   getPlayer(sourceGame: AgainstGame, side: AgainstSide, poolUser: PoolUser): S11Player | undefined {
