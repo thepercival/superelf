@@ -8,6 +8,8 @@ import { concatMap } from 'rxjs/operators';
 import { PoolUser } from '../../lib/pool/user';
 import { GlobalEventsManager } from '../commonmodule/eventmanager';
 import { Competition, Structure } from 'ngx-sport';
+import { AssemblePeriod } from '../../lib/period/assemble';
+import { TransferPeriod } from '../../lib/period/transfer';
 
 export class PoolComponent {
 
@@ -48,5 +50,16 @@ export class PoolComponent {
             start: pool.getSeason().getStartDateTime()
         });
         // this.globalEventsManager.showFooter.emit(false);
+    }
+
+    protected getCurrentEditPeriod(pool: Pool): AssemblePeriod | TransferPeriod | undefined {
+        const date = new Date();
+        if (date.getTime() > pool.getTransferPeriod().getStartDateTime().getTime()) {
+            return pool.getTransferPeriod();
+        }
+        if (date.getTime() > pool.getAssemblePeriod().getStartDateTime().getTime()) {
+            return pool.getAssemblePeriod();
+        }
+        return undefined;
     }
 }

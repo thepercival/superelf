@@ -3,6 +3,8 @@ import { Pool } from '../pool';
 import { User } from '../user';
 import { S11Formation } from '../formation';
 import { Identifiable } from 'ngx-sport';
+import { AssemblePeriod } from '../period/assemble';
+import { TransferPeriod } from '../period/transfer';
 
 export class PoolUser extends Identifiable {
     private admin: boolean = false;
@@ -71,5 +73,14 @@ export class PoolUser extends Identifiable {
 
     setTransferFormation(formation: S11Formation | undefined) {
         return this.transferFormation = formation;
+    }
+
+    getFormation(editPeriod: AssemblePeriod | TransferPeriod): S11Formation | undefined {
+        if (editPeriod instanceof AssemblePeriod) {
+            return this.assembleFormation;
+        } else if (editPeriod instanceof TransferPeriod) {
+            return this.transferFormation;
+        }
+        return undefined;
     }
 }
