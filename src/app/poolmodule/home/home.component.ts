@@ -131,11 +131,17 @@ export class HomeComponent extends PoolComponent implements OnInit {
         if (competition === undefined) {
             return 'border-zero';
         }
-        return leagueName === LeagueName.Cup ? 'border-zero' : 'border-positive';
+        return leagueName === LeagueName.Competition || (leagueName === LeagueName.SuperCup && this.pool.getName() === 'kamp duim') ? 'border-positive' : 'border-zero';
     }
 
     getPointer(leagueName: LeagueName): string {
-        return leagueName === LeagueName.Cup ? '' : 'pointer';
+        return leagueName === LeagueName.Competition || (leagueName === LeagueName.SuperCup && this.pool.getName() === 'kamp duim') ? 'pointer' : '';
+    }
+
+    linkToSuperCup(): void {
+        if (this.pool.getName() === 'kamp duim') {
+            this.router.navigate(['/pool/againstgame', this.pool.getId(), this.LeagueNameSuperCup]);
+        }
     }
 
     // getNrOfPoolUsersHaveTransfered(): number {

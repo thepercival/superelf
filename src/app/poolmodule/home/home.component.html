@@ -55,7 +55,7 @@
 
             <div *ngIf="true"
               class="card card-sub pointer px-0 {{getPointer(LeagueNameSuperCup)}} {{getBorderClass(LeagueNameSuperCup)}}"
-              [routerLink]="['/pool/againstgame', pool.getId(), LeagueNameSuperCup]">
+              (click)="linkToSuperCup()">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
                   <app-superelf-icon [name]="'super-cup'"></app-superelf-icon>
