@@ -24,7 +24,6 @@ import { HomeComponent } from './home/home.component';
 import { PoolShellRepository } from './lib/pool/shell/repository';
 import { UserMapper } from './lib/user/mapper';
 import { LayoutSharedModule } from './shared/layoutmodule/layout.module';
-import { facSoccerField, facFavicon } from './lib/icons';
 import { GlobalEventsManager } from './shared/commonmodule/eventmanager';
 import { CommonSharedModule } from './shared/commonmodule/common.module';
 import { StartSessionService } from './shared/commonmodule/startSessionService';
@@ -56,8 +55,7 @@ import { StartSessionService } from './shared/commonmodule/startSessionService';
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faPlusCircle, faSpinner, faAngleDoubleDown, faUserShield, faUserFriends, faSave, faUserCircle,
-      facSoccerField, facFavicon, faLevelUpAlt
+    library.addIcons(faPlusCircle, faSpinner, faAngleDoubleDown, faUserShield, faUserFriends, faSave, faUserCircle, faLevelUpAlt
     );
   }
 }

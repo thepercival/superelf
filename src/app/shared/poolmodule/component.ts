@@ -10,10 +10,12 @@ import { GlobalEventsManager } from '../commonmodule/eventmanager';
 import { Competition, Structure } from 'ngx-sport';
 import { AssemblePeriod } from '../../lib/period/assemble';
 import { TransferPeriod } from '../../lib/period/transfer';
+import { ViewPeriod } from '../../lib/period/view';
 
 export class PoolComponent {
 
     public pool!: Pool;
+    public currentViewPeriod!: ViewPeriod;
     public poolUser: PoolUser | undefined;
     public alert: IAlert | undefined;
     public processing = true;
@@ -44,12 +46,24 @@ export class PoolComponent {
 
     protected setPool(pool: Pool): void {
         this.pool = pool;
+        this.currentViewPeriod = this.getCurrentViewPeriod(pool);
         this.globalEventsManager.navHeaderInfo.emit({
             id: +pool.getId(),
             name: pool.getName(),
             start: pool.getSeason().getStartDateTime()
         });
         // this.globalEventsManager.showFooter.emit(false);
+    }
+
+    private getCurrentViewPeriod(pool: Pool): ViewPeriod {
+        const date = new Date();
+        if (date.getTime() > pool.getTransferPeriod().getEndDateTime().getTime()) {
+            return pool.getTransferPeriod().getViewPeriod();
+        }
+        if (date.getTime() > pool.getAssemblePeriod().getEndDateTime().getTime()) {
+            return pool.getAssemblePeriod().getViewPeriod();
+        }
+        return pool.getCreateAndJoinPeriod();
     }
 
     protected getCurrentEditPeriod(pool: Pool): AssemblePeriod | TransferPeriod | undefined {

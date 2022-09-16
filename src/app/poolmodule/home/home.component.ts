@@ -17,17 +17,19 @@ import { DateFormatter } from '../../lib/dateFormatter';
 import { PoolCompetitor } from '../../lib/pool/competitor';
 import { LeagueName } from '../../lib/leagueName';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
 
 @Component({
     selector: 'app-pool-public',
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css']
+    styleUrls: ['./home.component.scss']
 })
 export class HomeComponent extends PoolComponent implements OnInit {
-    translate: TranslateService;
-    scoutedPlayers: ScoutedPlayer[] = [];
-    scoutingEnabled: boolean = false;
-    poolUsers: PoolUser[] = [];
+    public translate: TranslateService;
+    public scoutedPlayers: ScoutedPlayer[] = [];
+    public scoutingEnabled: boolean = false;
+    public poolUsers: PoolUser[] = [];
+    public currentGameRoundNumbers: CurrentGameRoundNumbers | undefined;
 
     constructor(
         route: ActivatedRoute,
@@ -38,6 +40,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
         private dateFormatter: DateFormatter,
         private poolUserRepository: PoolUserRepository,
         protected scoutedPlayerRepository: ScoutedPlayerRepository,
+        protected gameRoundRepository: GameRoundRepository,
         protected modalService: NgbModal
     ) {
         super(route, router, poolRepository, globalEventsManager);
@@ -57,6 +60,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
     }
 
     postNgOnInit(pool: Pool) {
+        const competitionConfig = pool.getCompetitionConfig();
         this.scoutingEnabled = pool.getCreateAndJoinPeriod().isIn() || pool.getAssemblePeriod().isIn();
         if (this.scoutingEnabled) {
             // const viewPeriod = pool.getAssembleViewPeriod();
@@ -76,11 +80,21 @@ export class HomeComponent extends PoolComponent implements OnInit {
                             this.poolUsers = poolUsers;
                         });
                     }
+                    if (this.afterAssemblePeriod()) {
+                        this.gameRoundRepository.getCurrentNumbers(competitionConfig, this.currentViewPeriod).subscribe({
+                            next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
+                                this.currentGameRoundNumbers = currentGameRoundNumbers;
+                            },
+                            error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
+                            complete: () => this.processing = false
+                        });
+                    } else {
+                        this.processing = false;
+                    }
                 },
                 error: (e: string) => {
                     this.setAlert('danger', e); this.processing = false;
-                },
-                complete: () => this.processing = false
+                }
             });
 
     }
@@ -106,6 +120,22 @@ export class HomeComponent extends PoolComponent implements OnInit {
         activeModal.result.then(() => {
         }, () => {
         });
+    }
+
+    get LeagueNameCompetition(): LeagueName { return LeagueName.Competition };
+    get LeagueNameCup(): LeagueName { return LeagueName.Cup };
+    get LeagueNameSuperCup(): LeagueName { return LeagueName.SuperCup };
+
+    getBorderClass(leagueName: LeagueName): string {
+        const competition = this.pool.getCompetition(leagueName);
+        if (competition === undefined) {
+            return 'border-zero';
+        }
+        return leagueName === LeagueName.Cup ? 'border-zero' : 'border-positive';
+    }
+
+    getPointer(leagueName: LeagueName): string {
+        return leagueName === LeagueName.Cup ? '' : 'pointer';
     }
 
     // getNrOfPoolUsersHaveTransfered(): number {
@@ -137,8 +167,8 @@ export class HomeComponent extends PoolComponent implements OnInit {
         return this.pool.getAssemblePeriod().isIn();
     }
 
-    inBeforeStart(): boolean {
-        return this.pool.getStartDateTime().getTime() > (new Date()).getTime();
+    inBeforeStart(pool: Pool): boolean {
+        return pool.getStartDateTime().getTime() > (new Date()).getTime();
     }
 
     inBeforeAssemble(): boolean {
@@ -151,5 +181,9 @@ export class HomeComponent extends PoolComponent implements OnInit {
 
     getNrAssembled(): number {
         return (this.poolUser?.getNrOfAssembled() ?? 0);
+    }
+
+    afterAssemblePeriod(): boolean {
+        return this.pool.getAssemblePeriod().getEndDateTime().getTime() < (new Date()).getTime();
     }
 }

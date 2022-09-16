@@ -4,64 +4,130 @@
     <h2 *ngIf="processing" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
-    <div *ngIf="!processing && poolUser" class="d-flex flex-wrap justify-content-center">
 
-      <!-- <div>eerste volgende wedstrijd tonen + voor welke competities deze gelden</div>
-      <br> -->
-      <!-- <div>competitie</div>
-      <div>beker</div>
-      <div>supercup</div> -->
-      <div *ngIf="inBeforeStart()" class="card border-secondary {{inAssembleMode() ? 'pointer' : ''}} mt-3 mx-2"
-        (click)="linkToAssemble()">
-        <div class="card-body">
-          <h5 class="card-title">
-            <fa-icon [icon]="['fas', 'users']"></fa-icon> mijn team
-          </h5>
-          <p class="card-text">
-            <span *ngIf="!inBeforeAssemble()">
-              <fa-icon *ngIf="getNrAssembled() < 15" [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon>
-              <fa-icon *ngIf="getNrAssembled() == 15" [icon]="['fas', 'check-circle']" class="text-success"></fa-icon>
-              {{getNrAssembled()}} speler(s) gekozen
-            </span>
+    <div *ngIf="!processing && pool && poolUser" class="d-flex flex-wrap justify-content-center">
 
-            <span *ngIf="inBeforeAssemble()">{{getStartAssembleDate()}}</span>
-          </p>
-        </div>
-      </div>
-      <div *ngIf="scoutingEnabled" class="card border-secondary pointer mt-3 mx-2"
-        [routerLink]="['/pool/scouting/list', pool.getId()]">
+      <div *ngIf="afterAssemblePeriod() && currentGameRoundNumbers?.firstNotFinished"
+        class="card border-secondary {{inAssembleMode() ? 'pointer' : ''}} mt-3 mx-2" (click)="linkToAssemble()">
         <div class="card-body">
-          <h5 class="card-title">
-            <fa-icon [icon]="['fas', 'user-secret']"></fa-icon> scoutingslijst
-          </h5>
-          <p class="card-text">
-            <span>
-              {{scoutedPlayers.length}} speler(s) gescout
-            </span>
-          </p>
+
+          <div class="card-text d-flex flex-nowrap gap-3 justify-content-between">
+
+            <h5 class="card-title text-center text-nowrap">
+              <fa-icon class="align-middle" [icon]="['fas', 'calendar-alt']"></fa-icon>
+              <span class="ms-1 align-middle">programma</span>
+            </h5>
+
+            <div *ngIf="true" class="card border-0 card-sub px-0">
+              <div class="card-body text-center p-1 pt-0">
+                <div>ronde</div>
+                <h5 class="card-title">
+                  {{currentGameRoundNumbers?.firstNotFinished}}
+                </h5>
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="card-text d-flex flex-nowrap gap-3 justify-content-center mt-3">
+
+            <div *ngIf="true"
+              class="card card-sub pointer px-0 {{getPointer(LeagueNameCompetition)}} {{getBorderClass(LeagueNameCompetition)}}"
+              [routerLink]="['/pool/schedule', pool.getId(), 0]">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
+                </h5>
+                <div>competitie</div>
+              </div>
+            </div>
+
+            <div *ngIf="true"
+              class="card card-sub px-0 {{getPointer(LeagueNameCup)}} {{getBorderClass(LeagueNameCup)}}">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <app-superelf-icon [name]="'super-cup'"></app-superelf-icon>
+                </h5>
+                <div>beker</div>
+              </div>
+            </div>
+
+            <div *ngIf="true"
+              class="card card-sub pointer px-0 {{getPointer(LeagueNameSuperCup)}} {{getBorderClass(LeagueNameSuperCup)}}"
+              [routerLink]="['/pool/againstgame', pool.getId(), LeagueNameSuperCup]">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <app-superelf-icon [name]="'super-cup'"></app-superelf-icon>
+                </h5>
+                <div>super cup</div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </div>
     </div>
+    <br />
 
-    <ngb-alert class="mt-3 text-center"
-      *ngIf="!processing && pool && pool.getAssemblePeriod().isIn() && getNrAssembled() < 15" type="danger">
-      je team is
-      incompleet,
-      je doet NIET mee</ngb-alert>
 
-    <!-- option block -->
-    <div *ngIf="!processing && pool" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+    <!-- <div>eerste volgende wedstrijd tonen + voor welke competities deze gelden</div>
+      <br> -->
+    <!-- <div>competitie</div>
+      <div>beker</div>
+      <div>supercup</div> -->
+    <div *ngIf="pool && inBeforeStart(pool)"
+      class="card border-secondary {{inAssembleMode() ? 'pointer' : ''}} mt-3 mx-2" (click)="linkToAssemble()">
+      <div class="card-body">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'users']"></fa-icon> mijn team
+        </h5>
+        <p class="card-text">
+          <span *ngIf="!inBeforeAssemble()">
+            <fa-icon *ngIf="getNrAssembled() < 15" [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon>
+            <fa-icon *ngIf="getNrAssembled() == 15" [icon]="['fas', 'check-circle']" class="text-success"></fa-icon>
+            {{getNrAssembled()}} speler(s) gekozen
+          </span>
 
-      <div *ngIf="getCompetitionCompetitors().length > 0" class="card card-sub pointer px-0"
-        [routerLink]="['/pool/competition', pool.getId()]">
-        <div class="card-body text-center p-1 pt-2">
-          <h5 class="card-title">
-            <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
-          </h5>
-          <div>stand</div>
-        </div>
+          <span *ngIf="inBeforeAssemble()">{{getStartAssembleDate()}}</span>
+        </p>
       </div>
-      <div *ngIf="getCompetitionCompetitors().length > 0" class="card card-sub pointer px-0"
+    </div>
+    <div *ngIf="scoutingEnabled" class="card border-secondary pointer mt-3 mx-2"
+      [routerLink]="['/pool/scouting/list', pool.getId()]">
+      <div class="card-body">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'user-secret']"></fa-icon> scoutingslijst
+        </h5>
+        <p class="card-text">
+          <span>
+            {{scoutedPlayers.length}} speler(s) gescout
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <ngb-alert class="mt-3 text-center"
+    *ngIf="!processing && pool && pool.getAssemblePeriod().isIn() && getNrAssembled() < 15" type="danger">
+    je team is
+    incompleet,
+    je doet NIET mee</ngb-alert>
+
+  <!-- option block -->
+  <div *ngIf="!processing && pool" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+
+    <div *ngIf="getCompetitionCompetitors().length > 0" class="card card-sub pointer px-0"
+      [routerLink]="['/pool/competition', pool.getId()]">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
+        </h5>
+        <div>stand</div>
+      </div>
+    </div>
+    <!-- <div *ngIf="getCompetitionCompetitors().length > 0" class="card card-sub pointer px-0"
         [routerLink]="['/pool/schedule', pool.getId(), 0]">
         <div class="card-body text-center p-1 pt-2">
           <h5 class="card-title">
@@ -69,18 +135,18 @@
           </h5>
           <div>wedstrijden</div>
         </div>
+      </div> -->
+    <div *ngIf="getCompetitionCompetitors().length == 0" class="card card-sub pointer px-0"
+      (click)="openModal(contentpoolUsers)">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'users']"></fa-icon>
+        </h5>
+        <div>deel</div>
+        <div>nemers</div>
       </div>
-      <div *ngIf="getCompetitionCompetitors().length == 0" class="card card-sub pointer px-0"
-        (click)="openModal(contentpoolUsers)">
-        <div class="card-body text-center p-1 pt-2">
-          <h5 class="card-title">
-            <fa-icon [icon]="['fas', 'users']"></fa-icon>
-          </h5>
-          <div>deel</div>
-          <div>nemers</div>
-        </div>
-      </div>
-      <!-- <div class="card card-sub pointer px-0" [routerLink]="['/pool/cup', pool.getId()]">
+    </div>
+    <!-- <div class="card card-sub pointer px-0" [routerLink]="['/pool/cup', pool.getId()]">
         <div class="card-body text-center p-1 pt-2">
           <h5 class="card-title">
             <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
@@ -97,54 +163,54 @@
           <div>cup</div>
         </div>
       </div>-->
-      <div class="card card-sub pointer px-0" [routerLink]="['/pool/rules', pool.getId()]">
-        <div class="card-body text-center p-1 pt-2">
-          <h5 class="card-title">
-            <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
-          </h5>
-          <div>spel</div>
-          <div>regels</div>
-        </div>
+    <div class="card card-sub pointer px-0" [routerLink]="['/pool/rules', pool.getId()]">
+      <div class="card-body text-center p-1 pt-2">
+        <h5 class="card-title">
+          <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
+        </h5>
+        <div>spel</div>
+        <div>regels</div>
       </div>
     </div>
+  </div>
 
-    <!-- option admin block -->
-    <div *ngIf="!processing && pool && isAdmin()">
-      <hr />
-      <h4 class="text-center mt-3 mb-0">beheer</h4>
-      <div class="d-flex flex-wrap justify-content-center">
-        <div *ngIf="pool.getCreateAndJoinPeriod().isIn() && isAdmin()" class="card border-secondary pointer mt-3 mx-2"
-          [routerLink]="['/pool/invite', pool.getId()]">
-          <div class="card-body">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'envelope']"></fa-icon> uitnodigen
-            </h5>
-            <p class="card-text">via een link
-            </p>
-          </div>
+  <!-- option admin block -->
+  <div *ngIf="!processing && pool && isAdmin()">
+    <hr />
+    <h4 class="text-center mt-3 mb-0">beheer</h4>
+    <div class="d-flex flex-wrap justify-content-center">
+      <div *ngIf="pool.getCreateAndJoinPeriod().isIn() && isAdmin()" class="card border-secondary pointer mt-3 mx-2"
+        [routerLink]="['/pool/invite', pool.getId()]">
+        <div class="card-body">
+          <h5 class="card-title">
+            <fa-icon [icon]="['fas', 'envelope']"></fa-icon> uitnodigen
+          </h5>
+          <p class="card-text">via een link
+          </p>
         </div>
-        <div *ngIf="pool.isInEditPeriod() && isAdmin()" class="card border-secondary pointer mt-3 mx-2"
-          [routerLink]="['/pool/users', pool.getId()]">
-          <div class="card-body">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
-            </h5>
-            <p class="card-text">
-              <span *ngIf="pool.getCreateAndJoinPeriod().isIn()">
-                <span *ngIf="!pool.getAssemblePeriod().isIn()">
-                  {{poolUsers.length}} deelnemer(s) ingeschreven
-                </span>
-                <span *ngIf="pool.getAssemblePeriod().isIn() && allPoolUsersHaveAssembled()">
-                  <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> iedereen heeft zijn team
-                  samengesteld
-                </span>
-                <span *ngIf="pool.getAssemblePeriod().isIn() && !allPoolUsersHaveAssembled()">
-                  <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> incomplete teams
-                </span>
+      </div>
+      <div *ngIf="pool.isInEditPeriod() && isAdmin()" class="card border-secondary pointer mt-3 mx-2"
+        [routerLink]="['/pool/users', pool.getId()]">
+        <div class="card-body">
+          <h5 class="card-title">
+            <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
+          </h5>
+          <p class="card-text">
+            <span *ngIf="pool.getCreateAndJoinPeriod().isIn()">
+              <span *ngIf="!pool.getAssemblePeriod().isIn()">
+                {{poolUsers.length}} deelnemer(s) ingeschreven
               </span>
+              <span *ngIf="pool.getAssemblePeriod().isIn() && allPoolUsersHaveAssembled()">
+                <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> iedereen heeft zijn team
+                samengesteld
+              </span>
+              <span *ngIf="pool.getAssemblePeriod().isIn() && !allPoolUsersHaveAssembled()">
+                <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> incomplete teams
+              </span>
+            </span>
 
-              <!-- <span>implement count of transfers</span> -->
-              <!-- <span *ngIf="pool.getTransferPeriod().isIn() && allPoolUsersHaveTransfered()">
+            <!-- <span>implement count of transfers</span> -->
+            <!-- <span *ngIf="pool.getTransferPeriod().isIn() && allPoolUsersHaveTransfered()">
                 <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> iedereen heeft zijn
                 transfers gedaan
               </span>
@@ -152,30 +218,30 @@
                 <fa-icon [icon]="['fas', 'times-circle']" class="text-warning"></fa-icon> niet iedereen heeft zijn
                 transfers gedaan
               </span> -->
-            </p>
-          </div>
+          </p>
         </div>
-        <div *ngIf="pool.getAssembleViewPeriod().isIn() && isAdmin()" class="card border-secondary pointer mt-3 mx-2">
-          <div class="card-body">
-            <h5 class="card-title text-center">
-              geen acties
-            </h5>
-            <!-- <p class="card-text">geen</p> -->
-          </div>
+      </div>
+      <div *ngIf="pool.getAssembleViewPeriod().isIn() && isAdmin()" class="card border-secondary pointer mt-3 mx-2">
+        <div class="card-body">
+          <h5 class="card-title text-center">
+            geen acties
+          </h5>
+          <!-- <p class="card-text">geen</p> -->
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- remove modal -->
-  <ng-template #contentpoolUsers let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">deelnemers</h4>
-      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
-    </div>
-    <div class="modal-body">
-      <ul class="list-group mb-3">
-        <li *ngFor="let poolUser of pool.getUsers()" class="list-group-item">{{poolUser.getName()}}</li>
-      </ul>
-    </div>
-  </ng-template>
+<!-- remove modal -->
+<ng-template #contentpoolUsers let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">deelnemers</h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group mb-3">
+      <li *ngFor="let poolUser of pool.getUsers()" class="list-group-item">{{poolUser.getName()}}</li>
+    </ul>
+  </div>
+</ng-template>

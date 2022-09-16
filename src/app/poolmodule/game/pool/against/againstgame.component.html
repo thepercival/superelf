@@ -1,0 +1,57 @@
+<h2 *ngIf="processing" class="text-center">
+    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</h2>
+<div class="row justify-content-center g-0">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+        <!-- <ngb-alert *ngIf="!processing && !sourceGame" type="danger">de wedstrijd kan niet gevonden worden</ngb-alert> -->
+        <div *ngIf="!processing && (true ||sourceGame)">
+            <div class="d-flex justify-content-center">
+                <!-- <div class="mt-2">
+                    <app-againstgame-title [againstGame]="sourceGame"></app-againstgame-title>
+                </div> -->
+
+                <!-- <h1 class="text-truncate">
+                    <app-againstgame-title [againstGame]="currentGame"></app-againstgame-title>
+                </h1> -->
+                <div class="ms-3 me-1 mt-1">
+                    <button (click)="navigateBack()" type="button" class="btn btn-outline-dark">
+                        <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
+                        <span class="ms-1 d-none d-md-inline"> terug</span>
+                    </button>
+                </div>
+            </div>
+
+            <table class="table" *ngIf="poolCompetitors.length > 0">
+                <tbody>
+                    <tr *ngFor="let poolCompetitor of poolCompetitors">
+                        <td>{{poolCompetitor.getName()}}</td>
+                        <td>
+                            <!-- <ng-container [ngTemplateOutlet]="contentForamtionPlaces"
+                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(sourceGame, HomeSide, poolUser)}">
+                            </ng-container> -->
+                        </td>
+                        <td>
+                            <!-- <ng-container [ngTemplateOutlet]="contentForamtionPlaces"
+                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(sourceGame, AwaySide, poolUser)}">
+                            </ng-container> -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- <ng-template #contentForamtionPlaces let-formationPlaces="formationPlaces">
+                <div *ngFor="let formationPlace of formationPlaces">
+                    <ng-container [ngTemplateOutlet]="contentPlayer"
+                        [ngTemplateOutletContext]="{s11Player:formationPlace.getPlayer()}">
+                    </ng-container>
+                    <span *ngIf="formationPlace.isSubstitute()" class="badge badge-reserve ms-1">r</span>
+                </div>
+            </ng-template>
+
+            <ng-template #contentPlayer let-s11Player="s11Player">
+                <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
+            </ng-template> -->
+
+        </div>
+    </div>
+</div>

@@ -56,6 +56,7 @@ import { AgainstGameTitleComponent } from './game/source/title.component';
 import { SourceGameComponent } from './game/source/source.component';
 import { PoolTogetherGameComponent } from './game/pool/together/togethergame.component';
 import { GameRoundScrollerComponent } from './gameRound/gameRoundScroller.component';
+import { PoolAgainstGameComponent } from './game/pool/against/againstgame.component';
 
 @NgModule({
   imports: [
@@ -83,6 +84,7 @@ import { GameRoundScrollerComponent } from './gameRound/gameRoundScroller.compon
     PlayerBasicsComponent,
     PoolCompetitionComponent,
     PoolTogetherGameComponent,
+    PoolAgainstGameComponent,
     PoolUserComponent,
     PoolUserRemoveModalComponent,
     PoolUsersComponent,

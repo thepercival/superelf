@@ -13,14 +13,16 @@ import { NameModalComponent } from './namemodal/namemodal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RankingRulesComponent } from './rankingrules/rankingrules.component';
-import { facStructure, facReferee, facScoreboard } from './icons';
+import { facPineCone, facStructure, facSuperCup } from './icons';
+import { SuperElfIconComponent } from './icon/icon.component';
 
 @NgModule({
   declarations: [
     NameModalComponent,
     EndRankingComponent,
     PouleRankingComponent,
-    RankingRulesComponent
+    RankingRulesComponent,
+    SuperElfIconComponent
   ],
   imports: [
     CommonModule,
@@ -40,13 +42,14 @@ import { facStructure, facReferee, facScoreboard } from './icons';
     RankingRulesComponent,
     NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
     NgbNavModule,
+    SuperElfIconComponent
   ]
 })
 export class PoolSharedModule {
   constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, alertConfig: NgbAlertConfig) {
     library.addIcons(faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
       faMedal, faSpinner, faMinus, faPlus,
-      facStructure, facReferee, facScoreboard);
+      facPineCone, facStructure, facSuperCup);
     modalConfig.centered = true;
     modalConfig.scrollable = true;
     modalConfig.size = 'lg';
