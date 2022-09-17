@@ -112,10 +112,10 @@ export class ScheduleComponent extends PoolComponent implements OnInit {
         let currentGameRound;
         if (object instanceof GameRound) {
           currentGameRound = object;
-        } else if (object !== undefined && object.hasOwnProperty('firstNotFinished')) {
-          const firstNotFinished = object.firstCreatedOrInProgress;
-          if (typeof firstNotFinished === 'number') {
-            currentGameRound = this.viewPeriod.getGameRound(firstNotFinished);
+        } else if (object !== undefined && object.hasOwnProperty('firstCreatedOrInProgress')) {
+          const firstCreatedOrInProgress = object.firstCreatedOrInProgress;
+          if (typeof firstCreatedOrInProgress === 'number') {
+            currentGameRound = this.viewPeriod.getGameRound(firstCreatedOrInProgress);
           }
         }
         this.currentGameRound = currentGameRound;
