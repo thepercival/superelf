@@ -103,11 +103,18 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     this.gameRoundRepository.getCurrentNumbers(competitionConfig, viewPeriod).subscribe({
       next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
         let currentGameRound;
-        if (currentGameRoundNumbers.firstInProgressOrFinished) {
-          currentGameRound = viewPeriod.getGameRound(currentGameRoundNumbers.firstInProgressOrFinished);
+        if (currentGameRoundNumbers.lastFinishedOrInPorgress) {
+          currentGameRound = viewPeriod.getGameRound(currentGameRoundNumbers.lastFinishedOrInPorgress);
         }
         this.currentGameRound = currentGameRound;
-
+        if (this.currentGameRound !== undefined) {
+          while (this.currentGameRound !== this.gameRounds[0]) {
+            const gameRound = this.gameRounds.shift();
+            if (gameRound !== undefined) {
+              this.gameRounds.push(gameRound);
+            }
+          }
+        }
         this.updateGameRound(currentGameRound);
       },
       error: (e: string) => { this.setAlert('danger', e); this.processing = false; },

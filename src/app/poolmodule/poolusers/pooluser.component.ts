@@ -115,7 +115,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
         if (object instanceof GameRound) {
           currentGameRound = object;
         } else if (object !== undefined && object.hasOwnProperty('firstNotFinished')) {
-          const firstNotFinished = object.firstNotFinished;
+          const firstNotFinished = object.lastFinishedOrInPorgress;
           if (typeof firstNotFinished === 'number') {
             currentGameRound = this.viewPeriod.getGameRound(firstNotFinished);
           }

@@ -33,17 +33,44 @@
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
     </td>
-    <td *ngIf="gameRound" class="text-end {{getSubstituteClass(place.isSubstitute())}}">
-      <div *ngIf="place.hasStatistics(gameRound)">
-        <span *ngIf="place.hasAppeared(gameRound)" class="badge {{getPointsTotalsClass()}}">
-          {{place.getPoints(gameRound)}}</span>
-        <span *ngIf="!place.hasAppeared(gameRound)" class="badge bg-nopoints">x</span>
-      </div>
+    <ng-container *ngIf="gameRound;else viewPeriod">
+      <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
+        <ng-container *ngIf="!place.isSubstitute();else substitute">
+          <ng-container *ngIf="place.hasStatistics(gameRound)">
 
-    </td>
-    <td *ngIf="!gameRound" class="text-end {{getSubstituteClass(place.isSubstitute())}}">
-      <span *ngIf="place.hasAppeared()" class="badge {{getPointsTotalsClass()}}">
-        {{place.getPoints(gameRound)}}</span>
-    </td>
+            <ng-container *ngIf="place.hasAppeared();else startingNotAppeared">
+              <span class="badge {{getPointsTotalsClass()}}">
+                {{place.getPoints(gameRound)}}</span>
+            </ng-container>
+            <ng-template #startingNotAppeared>
+              <span class="badge bg-nopoints">x</span>
+            </ng-template>
+
+          </ng-container>
+
+
+        </ng-container>
+        <ng-template #substitute>
+          <div *ngIf="place.getFormationLine().hasSubstituteAppareance(gameRound)">
+            <ng-container *ngIf="place.hasAppeared();else substituteNotAppeared">
+              <span class="badge {{getPointsTotalsClass()}}">
+                {{place.getPoints(gameRound)}}</span>
+            </ng-container>
+            <ng-template #substituteNotAppeared>
+              <span class="badge bg-nopoints">x</span>
+            </ng-template>
+          </div>
+        </ng-template>
+
+      </td>
+    </ng-container>
+    <ng-template #viewPeriod>
+      <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
+        <span class="badge {{getPointsTotalsClass()}}">
+          {{place.getPoints(gameRound)}}</span>
+      </td>
+    </ng-template>
+
+
   </tr>
 </ng-template>

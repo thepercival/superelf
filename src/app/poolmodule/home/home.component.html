@@ -7,7 +7,7 @@
 
     <div *ngIf="!processing && pool && poolUser" class="d-flex flex-wrap justify-content-center">
 
-      <div *ngIf="afterAssemblePeriod() && currentGameRoundNumbers?.firstNotFinished"
+      <div *ngIf="afterAssemblePeriod() && currentGameRoundNumbers?.firstCreatedOrInProgress"
         class="card border-secondary {{inAssembleMode() ? 'pointer' : ''}} mt-3 mx-2" (click)="linkToAssemble()">
         <div class="card-body">
 
@@ -22,7 +22,7 @@
               <div class="card-body text-center p-1 pt-0">
                 <div>ronde</div>
                 <h5 class="card-title">
-                  {{currentGameRoundNumbers?.firstNotFinished}}
+                  {{currentGameRoundNumbers?.firstCreatedOrInProgress}}
                 </h5>
               </div>
             </div>

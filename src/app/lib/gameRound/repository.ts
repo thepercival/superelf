@@ -33,6 +33,6 @@ export class GameRoundRepository extends APIRepository {
 }
 
 export interface CurrentGameRoundNumbers {
-    firstNotFinished: number | undefined,
-    firstInProgressOrFinished: number | undefined
+    firstCreatedOrInProgress: number | undefined,
+    lastFinishedOrInPorgress: number | undefined
 }
