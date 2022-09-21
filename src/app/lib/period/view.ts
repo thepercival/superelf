@@ -27,4 +27,10 @@ export class ViewPeriod extends Period {
         }
         return gameRound;
     }
+
+    mapGameRoundNumbers(gameRoundNumbers: number[]): GameRound[] {
+        return gameRoundNumbers.map((gameRoundNumber: number): GameRound => {
+            return this.getGameRound(gameRoundNumber);
+        });
+    }
 }

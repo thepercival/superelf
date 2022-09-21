@@ -140,7 +140,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
 
     linkToSuperCup(): void {
         if (this.pool.getName() === 'kamp duim') {
-            this.router.navigate(['/pool/againstgame', this.pool.getId(), this.LeagueNameSuperCup]);
+            this.router.navigate(['/pool/poule', this.pool.getId(), this.LeagueNameSuperCup]);
         }
     }
 

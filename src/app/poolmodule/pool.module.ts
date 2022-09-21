@@ -18,7 +18,8 @@ import {
   faPlusCircle,
   faPenAlt,
   faPencilAlt,
-  faUserSecret
+  faUserSecret,
+  faMessage
 } from '@fortawesome/free-solid-svg-icons';
 
 import { CommonSharedModule } from '../shared/commonmodule/common.module';
@@ -54,9 +55,11 @@ import { ScheduleComponent } from './schedule/schedule.component';
 import { AgainstGameDetailsComponent } from './game/source/details.component';
 import { AgainstGameTitleComponent } from './game/source/title.component';
 import { SourceGameComponent } from './game/source/source.component';
-import { PoolTogetherGameComponent } from './game/pool/together/togethergame.component';
 import { GameRoundScrollerComponent } from './gameRound/gameRoundScroller.component';
-import { PoolAgainstGameComponent } from './game/pool/against/againstgame.component';
+import { GameScrollerComponent } from './game/source/gameScroller.component';
+import { PoolSuperCupPouleComponent } from './supercup/poule.component';
+import { PoolTogetherGameComponent } from './game/pool/togethergame.component';
+import { PoolChatComponent } from './chat/chat.component';
 
 @NgModule({
   imports: [
@@ -77,14 +80,16 @@ import { PoolAgainstGameComponent } from './game/pool/against/againstgame.compon
     FormationLineViewComponent,
     FormationPlaceEditComponent,
     GameRoundScrollerComponent,
+    GameScrollerComponent,
     HomeComponent,
     InviteComponent,
     JoinComponent,
     NewComponent,
     PlayerBasicsComponent,
+    PoolChatComponent,
     PoolCompetitionComponent,
+    PoolSuperCupPouleComponent,
     PoolTogetherGameComponent,
-    PoolAgainstGameComponent,
     PoolUserComponent,
     PoolUserRemoveModalComponent,
     PoolUsersComponent,
@@ -110,7 +115,7 @@ export class PoolModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
       faListOl, faChevronLeft, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
-      , faInfoCircle, faSearch, faPlusCircle, faPencilAlt, faUserSecret/*faMoneyBillAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
+      , faInfoCircle, faSearch, faPlusCircle, faPencilAlt, faUserSecret, faMessage/*faMoneyBillAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
       faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
       , faMedal, , faQrcode, faCopy, faDotCircle, faSync*/
     );

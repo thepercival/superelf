@@ -8,8 +8,8 @@
     <div *ngIf="!processing && pool && poolUser" class="d-flex flex-wrap justify-content-center">
 
       <div *ngIf="afterAssemblePeriod() && currentGameRoundNumbers?.firstCreatedOrInProgress"
-        class="card border-secondary {{inAssembleMode() ? 'pointer' : ''}} mt-3 mx-2" (click)="linkToAssemble()">
-        <div class="card-body">
+        class="card mt-3 mx-2 border-0 border-bottom" (click)="linkToAssemble()">
+        <div class="card-body pt-0">
 
           <div class="card-text d-flex flex-nowrap gap-3 justify-content-between">
 
@@ -30,11 +30,11 @@
           </div>
 
 
-          <div class="card-text d-flex flex-nowrap gap-3 justify-content-center mt-3">
+          <div class="card-text d-flex flex-nowrap gap-3 justify-content-center mt-0">
 
             <div *ngIf="true"
               class="card card-sub pointer px-0 {{getPointer(LeagueNameCompetition)}} {{getBorderClass(LeagueNameCompetition)}}"
-              [routerLink]="['/pool/schedule', pool.getId(), 0]">
+              [routerLink]="['/pool/togethergame', pool.getId(), currentGameRoundNumbers?.firstCreatedOrInProgress, 0]">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
                   <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
@@ -68,6 +68,7 @@
 
         </div>
       </div>
+
     </div>
     <br />
 

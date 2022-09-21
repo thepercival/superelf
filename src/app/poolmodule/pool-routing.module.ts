@@ -20,9 +20,10 @@ import { PoolCompetitionComponent } from './leagues/competition.component';
 import { WorldCupComponent } from './worldcup/worldcup.component';
 import { PoolUserComponent } from './poolusers/pooluser.component';
 import { ScheduleComponent } from './schedule/schedule.component';
-import { PoolTogetherGameComponent } from './game/pool/together/togethergame.component';
 import { SourceGameComponent } from './game/source/source.component';
-import { PoolAgainstGameComponent } from './game/pool/against/againstgame.component';
+import { PoolSuperCupPouleComponent } from './supercup/poule.component';
+import { PoolChatComponent } from './chat/chat.component';
+import { PoolTogetherGameComponent } from './game/pool/togethergame.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent, canActivate: [AuthUserGuardService] },
@@ -37,12 +38,13 @@ const routes: Routes = [
   { path: 'join/:id/:key', component: JoinComponent },
   { path: 'player/:id/:playerId/:gameRound', component: S11PlayerComponent },
   { path: 'rules/:id', component: RulesComponent },
-  { path: 'schedule/:id/:gameRound', component: ScheduleComponent },
+  // { path: 'schedule/:id/:gameRound', component: ScheduleComponent },
   { path: 'scouting/list/:id', component: ScoutedPlayerListComponent, canActivate: [AuthUserGuardService] },
   { path: 'scouting/search/:id', component: ScoutedPlayerAddComponent, canActivate: [AuthUserGuardService] },
   { path: 'sourcegame/:id/:gameRound/:gameId', component: SourceGameComponent },
   { path: 'togethergame/:id/:gameRound/:gameId', component: PoolTogetherGameComponent },
-  { path: 'againstgame/:id/:leagueName', component: PoolAgainstGameComponent },
+  { path: 'poule/:id/:leagueName', component: PoolSuperCupPouleComponent },
+  { path: 'chat/:id/:leagueName/:pouleId', component: PoolChatComponent },
   { path: 'users/:id', component: PoolUsersComponent, canActivate: [AuthUserGuardService] },
   { path: 'user/:id/:poolUserId/:gameRound', component: PoolUserComponent, canActivate: [AuthUserGuardService] },
   { path: 'worldcup/:id', component: WorldCupComponent },

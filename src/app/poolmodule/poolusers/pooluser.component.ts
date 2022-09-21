@@ -151,19 +151,13 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       this.currentGameRound = gameRound;
       return;
     }
+    const formation = this.poolUser.getAssembleFormation();
+    if (formation === undefined) {
+      return;
+    }
     this.processingStatistics = true;
 
-    const setStatistics: Observable<StatisticsMap>[] = [];
-
-    this.poolUser.getAssembleFormation()?.getLines().forEach((line: S11FormationLine) => {
-      line.getPlaces().forEach((formationPlace: S11FormationPlace) => {
-        const s11Player = formationPlace.getPlayer();
-        if (s11Player === undefined || s11Player.hasStatistics()) {
-          return;
-        }
-        setStatistics.push(this.statisticsRepository.setPlayerObjects(s11Player));
-      });
-    });
+    const setStatistics: Observable<StatisticsMap>[] = this.statisticsRepository.getFormationRequests(formation);
 
     if (setStatistics.length === 0) {
       this.processingStatistics = false;
