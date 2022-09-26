@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FootballLine } from 'ngx-sport';
+import { LeagueName } from './leagueName';
 import { FootballScore } from './score';
 
 @Injectable({
@@ -44,6 +45,18 @@ export class SuperElfNameService {
                 return 'gele kaart';
             case FootballScore.RedCard:
                 return 'rode kaart';
+        }
+        return '?';
+    }
+
+    getLeagueName(leagueName: LeagueName): string {
+        switch (leagueName) {
+            case LeagueName.Competition:
+                return 'competitie';
+            case LeagueName.Cup:
+                return 'beker';
+            case LeagueName.SuperCup:
+                return 'super cup';
         }
         return '?';
     }

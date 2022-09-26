@@ -3,8 +3,8 @@
 
         <div class="d-flex justify-content-between mt-2">
             <h2 class="ms-3">
-                <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
-                <span class="ms-1">Super Cup</span>
+                <app-superelf-icon [name]="cssService.getIconName(leagueName)"></app-superelf-icon>
+                <span class="ms-1">{{nameService.getLeagueName(leagueName)}}</span>
             </h2>
             <div>
                 <button *ngIf="poolPoule" (click)="navigateToChat(poolPoule)" type="button"
@@ -29,9 +29,8 @@
 
         <div *ngIf="!processing && poolPoule && homeCompetitor && awayCompetitor">
             <h2 class="d-flex justify-content-center">
-                <span>{{homeCompetitor.getName()}}</span>
-                <span class="px-2">{{getRankingScore()}}</span>
-                <span>{{awayCompetitor.getName()}}</span>
+                <app-poule-title [poule]="poolPoule" [poolCompetitors]="pool.getCompetitors(leagueName)">
+                </app-poule-title>
             </h2>
 
             <div class="d-flex justify-content-center mt-2">
@@ -62,7 +61,7 @@
 
                 <tbody *ngFor="let sourceGame of sourceGames">
                     <tr>
-                        <td colspan="4" class="border-bottom-0 pb-0">
+                        <td colspan="4" class="border-bottom-0 pt-3 pb-0">
                             <app-againstgame-title [againstGame]="sourceGame"></app-againstgame-title>
                         </td>
                     </tr>

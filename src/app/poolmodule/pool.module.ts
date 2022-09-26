@@ -19,7 +19,8 @@ import {
   faPenAlt,
   faPencilAlt,
   faUserSecret,
-  faMessage
+  faMessage,
+  faPaperPlane
 } from '@fortawesome/free-solid-svg-icons';
 
 import { CommonSharedModule } from '../shared/commonmodule/common.module';
@@ -47,8 +48,6 @@ import { FormationLineAssembleComponent } from './formation/line/assemble.compon
 import { FormationLineViewComponent } from './formation/line/view.component';
 import { FormationAssembleComponent } from './formation/assemble.component';
 import { S11PlayerChooseComponent } from './player/choose.component';
-import { PoolCompetitionComponent } from './leagues/competition.component';
-import { TogetherRankingComponent } from './leagues/togetherranking.component';
 import { WorldCupComponent } from './worldcup/worldcup.component';
 import { PoolUserComponent } from './poolusers/pooluser.component';
 import { ScheduleComponent } from './schedule/schedule.component';
@@ -57,9 +56,14 @@ import { AgainstGameTitleComponent } from './game/source/title.component';
 import { SourceGameComponent } from './game/source/source.component';
 import { GameRoundScrollerComponent } from './gameRound/gameRoundScroller.component';
 import { GameScrollerComponent } from './game/source/gameScroller.component';
-import { PoolSuperCupPouleComponent } from './supercup/poule.component';
+import { PoolPouleComponent } from './poule/poule.component';
 import { PoolTogetherGameComponent } from './game/pool/togethergame.component';
 import { PoolChatComponent } from './chat/chat.component';
+import { PouleTitleComponent } from './poule/title.component';
+import { PoolCompetitionComponent } from './competition/competition.component';
+import { PoolCupComponent } from './cup/structure.component';
+import { PoolCupRoundComponent } from './cup/round.component';
+import { TogetherRankingComponent } from './competition/togetherranking.component';
 
 @NgModule({
   imports: [
@@ -88,11 +92,14 @@ import { PoolChatComponent } from './chat/chat.component';
     PlayerBasicsComponent,
     PoolChatComponent,
     PoolCompetitionComponent,
-    PoolSuperCupPouleComponent,
+    PoolCupComponent,
+    PoolCupRoundComponent,
+    PoolPouleComponent,
     PoolTogetherGameComponent,
     PoolUserComponent,
     PoolUserRemoveModalComponent,
     PoolUsersComponent,
+    PouleTitleComponent,
     PreNewComponent,
     RulesComponent,
     S11PlayerComponent,
@@ -115,9 +122,7 @@ export class PoolModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
       faListOl, faChevronLeft, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
-      , faInfoCircle, faSearch, faPlusCircle, faPencilAlt, faUserSecret, faMessage/*faMoneyBillAlt, faCircle, faTimesCircle, faListUl, faCogs, faMinus, faTh,
-      faCompressAlt, faExpandAlt, faFileExport, faFileExcel, faPrint, faSort, faRandom, faSquare, faCheckSquare,
-      , faMedal, , faQrcode, faCopy, faDotCircle, faSync*/
+      , faInfoCircle, faSearch, faPlusCircle, faPencilAlt, faUserSecret, faMessage, faPaperPlane
     );
     /*library.addIcons(
       faProductHunt

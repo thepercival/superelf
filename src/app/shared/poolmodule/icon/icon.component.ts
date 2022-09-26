@@ -13,4 +13,4 @@ export class SuperElfIconComponent {
     get iconName(): IconName { return <IconName>this.name; }
 }
 
-type CustomIconName = 'pine-cone' | 'super-cup' | 'structure';
+export type CustomIconName = 'cup' | 'super-cup' | 'structure';

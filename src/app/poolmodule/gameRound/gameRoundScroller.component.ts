@@ -20,7 +20,7 @@ export class GameRoundScrollerComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('cdk', changes.current, this.gameRounds.slice());
+    // console.log('cdk', changes.current, this.gameRounds.slice());
     if (changes.current.firstChange && changes.current.currentValue && this.gameRounds) {
       while (this.current !== this.gameRounds[0]) {
         const gameRound = this.gameRounds.shift();
@@ -28,26 +28,26 @@ export class GameRoundScrollerComponent implements OnInit, OnChanges {
           this.gameRounds.push(gameRound);
         }
       }
-      console.log('cdk2', changes.current.currentValue, this.gameRounds.slice());
+      // console.log('cdk2', changes.current.currentValue, this.gameRounds.slice());
     }
   }
 
 
   previous(): void {
-    console.log('scroller->previous pre', this.gameRounds.slice());
+    //console.log('scroller->previous pre', this.gameRounds.slice());
     this.current = this.gameRounds.pop();
     this.gameRounds.unshift(this.current);
-    console.log('scroller->previous post', this.gameRounds.slice());
+    //console.log('scroller->previous post', this.gameRounds.slice());
     this.update.emit(this.current);
   }
 
   next(): void {
-    console.log('scroller->next pre', this.gameRounds.slice());
+    //console.log('scroller->next pre', this.gameRounds.slice());
     this.gameRounds.push(this.gameRounds.shift());
     const gameRound = this.gameRounds.shift();
     this.current = gameRound;
     this.gameRounds.unshift(gameRound);
-    console.log('scroller->next post', this.gameRounds.slice());
+    //console.log('scroller->next post', this.gameRounds.slice());
     this.update.emit(this.current);
   }
 

@@ -18,6 +18,8 @@ import { PoolCompetitor } from '../../lib/pool/competitor';
 import { LeagueName } from '../../lib/leagueName';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
+import { GameState, Poule, Round, Structure, StructureCell } from 'ngx-sport';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 
 @Component({
     selector: 'app-pool-public',
@@ -30,6 +32,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
     public scoutingEnabled: boolean = false;
     public poolUsers: PoolUser[] = [];
     public currentGameRoundNumbers: CurrentGameRoundNumbers | undefined;
+    public cupStructure: Structure | undefined;
 
     constructor(
         route: ActivatedRoute,
@@ -41,6 +44,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
         private poolUserRepository: PoolUserRepository,
         protected scoutedPlayerRepository: ScoutedPlayerRepository,
         protected gameRoundRepository: GameRoundRepository,
+        protected structureRepository: StructureRepository,
         protected modalService: NgbModal
     ) {
         super(route, router, poolRepository, globalEventsManager);
@@ -78,6 +82,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
                     if (pool.getCreateAndJoinPeriod().isIn() || pool.getAssemblePeriod().isIn()) {
                         this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
                             this.poolUsers = poolUsers;
+                            this.initCupStructure();
                         });
                     }
                     if (this.afterAssemblePeriod()) {
@@ -91,12 +96,26 @@ export class HomeComponent extends PoolComponent implements OnInit {
                     } else {
                         this.processing = false;
                     }
+
                 },
                 error: (e: string) => {
                     this.setAlert('danger', e); this.processing = false;
                 }
             });
 
+    }
+
+    initCupStructure(): void {
+        const cup = this.pool.getCompetition(LeagueName.Cup);
+        if (cup === undefined) {
+            return;
+        }
+        this.structureRepository.getObject(cup).subscribe({
+            next: (structure: Structure) => {
+                this.cupStructure = structure;
+            },
+            error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
+        });
     }
 
     isAdmin(): boolean {
@@ -113,6 +132,10 @@ export class HomeComponent extends PoolComponent implements OnInit {
 
     getCompetitionCompetitors(): PoolCompetitor[] {
         return this.pool.getCompetitors(LeagueName.Competition);
+    }
+
+    getCupCompetitors(): PoolCompetitor[] {
+        return this.pool.getCompetitors(LeagueName.Cup);
     }
 
     openModal(modalContent: TemplateRef<any>) {
@@ -138,10 +161,51 @@ export class HomeComponent extends PoolComponent implements OnInit {
         return leagueName === LeagueName.Competition || (leagueName === LeagueName.SuperCup && this.pool.getName() === 'kamp duim') ? 'pointer' : '';
     }
 
-    linkToSuperCup(): void {
-        if (this.pool.getName() === 'kamp duim') {
-            this.router.navigate(['/pool/poule', this.pool.getId(), this.LeagueNameSuperCup]);
+    linkToSuperCupOrCup(leagueName: LeagueName): void {
+        const competition = this.pool.getCompetition(leagueName);
+        if (competition === undefined) {
+            return;
         }
+        if (leagueName === LeagueName.SuperCup) {
+            this.router.navigate(['/pool/poule', this.pool.getId(), leagueName, 0]);
+            return;
+        }
+        if (this.poolUser === undefined) {
+            return;
+        }
+        const currentPoule = this.getCurrentCupPoule(this.poolUser);
+        if (currentPoule !== undefined) {
+            this.router.navigate(['/pool/poule', this.pool.getId(), leagueName, currentPoule.getId()]);
+        } else {
+            this.router.navigate(['/pool/cup', this.pool.getId()]);
+        }
+    }
+
+    getCurrentCupPoule(poolUser: PoolUser): Poule | undefined {
+        if (this.cupStructure === undefined) {
+            return undefined;
+        }
+        const competitor = poolUser.getCompetitor(LeagueName.Cup)
+        if (competitor === undefined) {
+            return undefined;
+        }
+        const structureCell = this.getCurrentStructureCell(this.cupStructure.getSingleCategory().getFirstStructureCell());
+        return structureCell.getPoules().find((poule: Poule): boolean => {
+            return poule.getPlaceByStartLocation(competitor.getStartLocation()) !== undefined;
+        });
+
+    }
+
+    getCurrentStructureCell(structureCell: StructureCell): StructureCell {
+        const gamesState = structureCell.getGamesState();
+        if (gamesState !== GameState.Finished) {
+            return structureCell;
+        }
+        const nextStructureCell = structureCell.getNext();
+        if (nextStructureCell === undefined) {
+            return structureCell;
+        }
+        return this.getCurrentStructureCell(nextStructureCell);
     }
 
     // getNrOfPoolUsersHaveTransfered(): number {

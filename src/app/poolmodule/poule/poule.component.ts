@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportRoundRankingCalculator, Competition, CompetitionSport, Competitor, CompetitorBase, GameState, Place, Poule, SportRoundRankingItem, StartLocationMap, Structure, Team, TeamCompetitor, TogetherSportRoundRankingCalculator } from 'ngx-sport';
+import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportRoundRankingCalculator, Competition, CompetitionSport, Competitor, CompetitorBase, GameState, Place, Poule, Round, SportRoundRankingItem, StartLocationMap, Structure, Team, TeamCompetitor, TogetherSportRoundRankingCalculator } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 import { S11Formation } from '../../lib/formation';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GameRound } from '../../lib/gameRound';
 import { ImageRepository } from '../../lib/image/repository';
 import { LeagueName } from '../../lib/leagueName';
+import { SuperElfNameService } from '../../lib/nameservice';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
@@ -25,17 +26,18 @@ import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
 
 @Component({
-  selector: 'app-pool-supercup',
+  selector: 'app-pool-poule',
   templateUrl: './poule.component.html',
   styleUrls: ['./poule.component.scss']
 })
-export class PoolSuperCupPouleComponent extends PoolComponent implements OnInit {
+export class PoolPouleComponent extends PoolComponent implements OnInit {
   public gameRounds: (GameRound | undefined)[] = [];
   public currentGameRound: GameRound | undefined;
 
   public homeCompetitor: PoolCompetitor | undefined;
   public awayCompetitor: PoolCompetitor | undefined;
 
+  public leagueName!: LeagueName;
   public sourceGames: AgainstGame[] = [];
   public poolPoule: Poule | undefined;
   public poolStartLocationMap!: StartLocationMap;
@@ -45,10 +47,7 @@ export class PoolSuperCupPouleComponent extends PoolComponent implements OnInit 
   public processingPoolUsers = true;
   public processingGameRound = true;
   public poolCompetitors: PoolCompetitor[] = [];
-  public sportRankingItems!: SportRoundRankingItem[];
   public gotStatistics: boolean = false;
-
-  public competitionSport: CompetitionSport | undefined;
 
   public sourcePoule!: Poule;
 
@@ -63,6 +62,7 @@ export class PoolSuperCupPouleComponent extends PoolComponent implements OnInit 
     private gameRepository: GameRepository,
     public imageRepository: ImageRepository,
     public cssService: CSSService,
+    public nameService: SuperElfNameService,
     private myNavigation: MyNavigation) {
     super(route, router, poolRepository, globalEventsManager);
   }
@@ -72,45 +72,43 @@ export class PoolSuperCupPouleComponent extends PoolComponent implements OnInit 
       this.setPool(pool);
 
       this.route.params.subscribe(params => {
+        this.leagueName = params['leagueName'];
 
-
-        this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
-          const poolCompetitors = pool.getCompetitors(params['leagueName']);
-          this.homeCompetitor = poolCompetitors.shift();
-          this.awayCompetitor = poolCompetitors.pop();
-        });
-
-        // begin met het ophalen van de wedstrijden van de poolcompetitie "SuperCup"
-        const superCup = this.pool.getCompetition(LeagueName.SuperCup);
-        if (superCup === undefined) {
+        // begin met het ophalen van de wedstrijden van de poolcompetitie
+        const poolCompetition = this.pool.getCompetition(this.leagueName);
+        if (poolCompetition === undefined) {
           this.processing = false;
           throw Error('competitionSport not found');
         }
 
 
 
-        this.structureRepository.getObject(superCup).subscribe({
+        this.structureRepository.getObject(poolCompetition).subscribe({
           next: (structure: Structure) => {
 
-            const poolCompetitors = this.pool.getCompetitors(LeagueName.SuperCup);
+            const poolCompetitors = this.pool.getCompetitors(this.leagueName);
             const round = structure.getSingleCategory().getRootRound();
-            const poule = round.getFirstPoule();
+            const poule = this.getPouleById(round, +params.pouleId);
             this.poolPoule = poule;
-            this.competitionSport = this.pool.getCompetitionSport(LeagueName.SuperCup);
+
+            this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
+              const poolCompetitors = pool.getCompetitors(this.leagueName);
+              this.initPouleCompetitors(poule, poolCompetitors);
+            });
+
             this.poolStartLocationMap = new StartLocationMap(poolCompetitors);
             const gameRoundNumbers: number[] = poule.getAgainstGames().map((game: AgainstGame) => game.getGameRoundNumber());
             const currentGameRoundNumber = this.getCurrentSourceGameRoundNumber(poule);
 
-            const rankingCalculator = new AgainstSportRoundRankingCalculator(this.competitionSport, [GameState.Finished]);
-            this.sportRankingItems = rankingCalculator.getItemsForPoule(poule);
+
 
             // source
             this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
               next: (structure: Structure) => {
-                const poule = structure.getSingleCategory().getRootRound().getFirstPoule();
-                this.sourcePoule = poule;
+                const sourcePoule = structure.getSingleCategory().getRootRound().getFirstPoule();
+                this.sourcePoule = sourcePoule;
 
-                const competitors = poule.getCompetition().getTeamCompetitors();
+                const competitors = sourcePoule.getCompetition().getTeamCompetitors();
                 this.startLocationMap = new StartLocationMap(competitors);
 
                 const currentViewPeriod = this.getCurrentViewPeriod(this.pool);
@@ -135,6 +133,28 @@ export class PoolSuperCupPouleComponent extends PoolComponent implements OnInit 
   get Finished(): GameState { return GameState.Finished; }
   get HomeSide(): AgainstSide { return AgainstSide.Home; }
   get AwaySide(): AgainstSide { return AgainstSide.Away; }
+
+  private getPouleById(round: Round, pouleId: number): Poule {
+    if (pouleId === 0) {
+      return round.getFirstPoule();
+    }
+    const poule = round.getPoules().find((poule: Poule): boolean => poule.getId() === pouleId);
+    if (poule !== undefined) {
+      return poule;
+    }
+    throw new Error('poule not found for pouleId ' + pouleId);
+  }
+
+  private initPouleCompetitors(poolPoule: Poule, poolCompetitors: PoolCompetitor[]): void {
+    const homeStartLocation = poolPoule.getPlace(1).getStartLocation();
+    if (homeStartLocation) {
+      this.homeCompetitor = poolCompetitors.find((competitor: PoolCompetitor) => competitor.getStartLocation().equals(homeStartLocation));
+    }
+    const awayStartLocation = poolPoule.getPlace(2).getStartLocation();
+    if (awayStartLocation) {
+      this.awayCompetitor = poolCompetitors.find((competitor: PoolCompetitor) => competitor.getStartLocation().equals(awayStartLocation));
+    }
+  }
 
   getCurrentSourceGameRoundNumber(poule: Poule): number {
     const firstInPogress = poule.getAgainstGames().find((game: AgainstGame) => game.getState() === GameState.InProgress);
@@ -263,31 +283,6 @@ export class PoolSuperCupPouleComponent extends PoolComponent implements OnInit 
 
 
 
-  getRankingScore(): string {
-    return this.getSideRankingScore(this.getSportRankingItem(AgainstSide.Home))
-      + ' - '
-      + this.getSideRankingScore(this.getSportRankingItem(AgainstSide.Away));
-  }
-
-  getSideRankingScore(sportRankingItem: SportRoundRankingItem | undefined): string {
-    if (sportRankingItem === undefined) {
-      return '';
-    }
-    const performance = sportRankingItem.getPerformance();
-    if (performance === undefined) {
-      return '';
-    }
-    return '' + performance.getPoints();
-  }
-
-
-  getSportRankingItem(side: AgainstSide): SportRoundRankingItem | undefined {
-    if (side === AgainstSide.Away) {
-      return this.sportRankingItems[1];
-    }
-    return this.sportRankingItems[0];
-  }
-
   hasPoolCompetitor(game: AgainstGame, side: AgainstSide, competitor: PoolCompetitor): boolean {
     return game.getSidePlaces(side).some((gamePlace: AgainstGamePlace): boolean => {
       const startLocation = gamePlace.getPlace().getStartLocation();
@@ -366,6 +361,6 @@ export class PoolSuperCupPouleComponent extends PoolComponent implements OnInit 
   }
 
   navigateToChat(poolPoule: Poule): void {
-    this.router.navigate(['/pool/chat', this.pool.getId(), LeagueName.SuperCup, poolPoule.getId()]);
+    this.router.navigate(['/pool/chat', this.pool.getId(), this.leagueName, poolPoule.getId()]);
   }
 }

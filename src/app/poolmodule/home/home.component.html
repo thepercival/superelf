@@ -32,7 +32,7 @@
 
           <div class="card-text d-flex flex-nowrap gap-3 justify-content-center mt-0">
 
-            <div *ngIf="true"
+            <div
               class="card card-sub pointer px-0 {{getPointer(LeagueNameCompetition)}} {{getBorderClass(LeagueNameCompetition)}}"
               [routerLink]="['/pool/togethergame', pool.getId(), currentGameRoundNumbers?.firstCreatedOrInProgress, 0]">
               <div class="card-body text-center p-1 pt-2">
@@ -43,11 +43,11 @@
               </div>
             </div>
 
-            <div *ngIf="true"
-              class="card card-sub px-0 {{getPointer(LeagueNameCup)}} {{getBorderClass(LeagueNameCup)}}">
+            <div class="card card-sub px-0 pointer {{getBorderClass(LeagueNameCup)}}"
+              (click)="linkToSuperCupOrCup(LeagueNameCup)">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
-                  <app-superelf-icon [name]="'super-cup'"></app-superelf-icon>
+                  <app-superelf-icon [name]="'cup'"></app-superelf-icon>
                 </h5>
                 <div>beker</div>
               </div>
@@ -55,7 +55,7 @@
 
             <div *ngIf="true"
               class="card card-sub pointer px-0 {{getPointer(LeagueNameSuperCup)}} {{getBorderClass(LeagueNameSuperCup)}}"
-              (click)="linkToSuperCup()">
+              (click)="linkToSuperCupOrCup(LeagueNameSuperCup)">
               <div class="card-body text-center p-1 pt-2">
                 <h5 class="card-title">
                   <app-superelf-icon [name]="'super-cup'"></app-superelf-icon>
@@ -72,12 +72,69 @@
     </div>
     <br />
 
+    <div *ngIf="!processing && pool && poolUser" class="d-flex flex-wrap justify-content-center">
+
+      <div *ngIf="afterAssemblePeriod() && currentGameRoundNumbers?.firstCreatedOrInProgress"
+        class="card mt-3 mx-2 border-0 border-bottom" (click)="linkToAssemble()">
+        <div class="card-body pt-0">
+
+          <div class="card-text d-flex flex-nowrap gap-3 justify-content-center mt-0">
+
+            <div *ngIf="getCompetitionCompetitors().length > 0" class="card card-sub pointer px-0"
+              [routerLink]="['/pool/competition', pool.getId()]">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
+                </h5>
+                <div>comp.</div>
+                <div>stand</div>
+              </div>
+            </div>
+            <div *ngIf="getCompetitionCompetitors().length == 0" class="card card-sub pointer px-0"
+              (click)="openModal(contentpoolUsers)">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="['fas', 'users']"></fa-icon>
+                </h5>
+                <div>deel</div>
+                <div>nemers</div>
+              </div>
+            </div>
+            <div *ngIf="getCupCompetitors().length > 0" class="card card-sub pointer px-0"
+              [routerLink]="['/pool/cup', pool.getId()]">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <app-superelf-icon [name]="'structure'"></app-superelf-icon>
+                </h5>
+                <div>beker</div>
+                <div>struct.</div>
+              </div>
+            </div>
+            <div class="card card-sub pointer px-0" [routerLink]="['/pool/rules', pool.getId()]">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
+                </h5>
+                <div>spel</div>
+                <div>regels</div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    <br />
 
     <!-- <div>eerste volgende wedstrijd tonen + voor welke competities deze gelden</div>
       <br> -->
     <!-- <div>competitie</div>
       <div>beker</div>
       <div>supercup</div> -->
+
+
     <div *ngIf="pool && inBeforeStart(pool)"
       class="card border-secondary {{inAssembleMode() ? 'pointer' : ''}} mt-3 mx-2" (click)="linkToAssemble()">
       <div class="card-body">
@@ -116,67 +173,8 @@
     incompleet,
     je doet NIET mee</ngb-alert>
 
-  <!-- option block -->
-  <div *ngIf="!processing && pool" class="d-flex flex-wrap gap-3 justify-content-center mt-3">
-
-    <div *ngIf="getCompetitionCompetitors().length > 0" class="card card-sub pointer px-0"
-      [routerLink]="['/pool/competition', pool.getId()]">
-      <div class="card-body text-center p-1 pt-2">
-        <h5 class="card-title">
-          <fa-icon [icon]="['fas', 'list-ol']"></fa-icon>
-        </h5>
-        <div>stand</div>
-      </div>
-    </div>
-    <!-- <div *ngIf="getCompetitionCompetitors().length > 0" class="card card-sub pointer px-0"
-        [routerLink]="['/pool/schedule', pool.getId(), 0]">
-        <div class="card-body text-center p-1 pt-2">
-          <h5 class="card-title">
-            <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
-          </h5>
-          <div>wedstrijden</div>
-        </div>
-      </div> -->
-    <div *ngIf="getCompetitionCompetitors().length == 0" class="card card-sub pointer px-0"
-      (click)="openModal(contentpoolUsers)">
-      <div class="card-body text-center p-1 pt-2">
-        <h5 class="card-title">
-          <fa-icon [icon]="['fas', 'users']"></fa-icon>
-        </h5>
-        <div>deel</div>
-        <div>nemers</div>
-      </div>
-    </div>
-    <!-- <div class="card card-sub pointer px-0" [routerLink]="['/pool/cup', pool.getId()]">
-        <div class="card-body text-center p-1 pt-2">
-          <h5 class="card-title">
-            <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
-          </h5>
-          <div>beker</div>
-        </div>
-      </div>
-      <div class="card card-sub pointer px-0" [routerLink]="['/pool/supercup', pool.getId()]">
-        <div class="card-body text-center p-1 pt-2">
-          <h5 class="card-title">
-            <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
-          </h5>
-          <div>super</div>
-          <div>cup</div>
-        </div>
-      </div>-->
-    <div class="card card-sub pointer px-0" [routerLink]="['/pool/rules', pool.getId()]">
-      <div class="card-body text-center p-1 pt-2">
-        <h5 class="card-title">
-          <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
-        </h5>
-        <div>spel</div>
-        <div>regels</div>
-      </div>
-    </div>
-  </div>
-
   <!-- option admin block -->
-  <div *ngIf="!processing && pool && isAdmin()">
+  <div *ngIf="!processing && pool && isAdmin() && (pool.getCreateAndJoinPeriod().isIn() || pool.isInEditPeriod())">
     <hr />
     <h4 class="text-center mt-3 mb-0">beheer</h4>
     <div class="d-flex flex-wrap justify-content-center">
@@ -220,14 +218,6 @@
                 transfers gedaan
               </span> -->
           </p>
-        </div>
-      </div>
-      <div *ngIf="pool.getAssembleViewPeriod().isIn() && isAdmin()" class="card border-secondary pointer mt-3 mx-2">
-        <div class="card-body">
-          <h5 class="card-title text-center">
-            geen acties
-          </h5>
-          <!-- <p class="card-text">geen</p> -->
         </div>
       </div>
     </div>

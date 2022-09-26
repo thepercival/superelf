@@ -1,13 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Poule, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportRoundRankingCalculator, Competition, CompetitionSport, Competitor, CompetitorBase, GameState, Poule, SportRoundRankingItem, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
 import { Observable } from 'rxjs';
+import { ChatMessage } from '../../lib/chatMessage';
+import { ChatMessageRepository } from '../../lib/chatMessage/repository';
+import { DateFormatter } from '../../lib/dateFormatter';
 import { ImageRepository } from '../../lib/image/repository';
+import { LeagueName } from '../../lib/leagueName';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
+import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
@@ -25,56 +31,95 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
   // public sourceGameRoundGames: AgainstGame[] = [];
   // public currentSourceGame: AgainstGame | undefined;
   // private startLocationMap!: StartLocationMap;
+  form: UntypedFormGroup;
 
   public processing = true;
+  public leagueName!: LeagueName;
   public poolPoule: Poule | undefined;
+  public chatMessages: ChatMessage[] | undefined;
   // public processingPoolUsers = true;
   // public processingGames = true;
-  // public poolUsers: PoolUser[] = [];
+  public poolUsers!: PoolUser[];
   // private sourceStructure!: Structure;
+  public sportRankingItems!: SportRoundRankingItem[];
 
   constructor(
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
     globalEventsManager: GlobalEventsManager,
-    private playerRepository: PlayerRepository,
-    private poolUserRepository: PoolUserRepository,
     private structureRepository: StructureRepository,
-    private gameRepository: GameRepository,
+    private poolUserRepository: PoolUserRepository,
+    private chatMessageRepository: ChatMessageRepository,
+    private dateFormatter: DateFormatter,
     public imageRepository: ImageRepository,
     public cssService: CSSService,
-    private myNavigation: MyNavigation) {
+    private myNavigation: MyNavigation,
+    fb: UntypedFormBuilder) {
     super(route, router, poolRepository, globalEventsManager);
+    this.form = fb.group({
+      message: '',
+    });
   }
 
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.setPool(pool);
-      this.processing = false;
-      // this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
-      //   this.poolUsers = poolUsers;
-      // });
 
-      // this.gameRounds = this.getCurrentViewPeriod(pool).getGameRounds();
+      this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
+        this.poolUsers = poolUsers;
 
-      // this.route.params.subscribe(params => {
+        this.route.params.subscribe((params: Params) => {
+          this.leagueName = params.leagueName;
 
-      //   this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
-      //     next: (structure: Structure) => {
-      //       this.sourceStructure = structure;
+          // begin met het ophalen van de wedstrijden van de poolcompetitie 
+          const competition = this.pool.getCompetition(this.leagueName);
+          if (competition === undefined) {
+            this.processing = false;
+            throw Error('competition not found');
+          }
 
-      //       const gameRoundFromUrl = this.getGameRoundByNumber(+params['gameRound']);
-      //       this.updateGameRound(gameRoundFromUrl, +params['gameId']);
-      //     }
-      //   });
+          this.structureRepository.getObject(competition).subscribe({
+            next: (structure: Structure) => {
 
-      // });
+              const round = structure.getSingleCategory().getRootRound();
+              const poule = round.getFirstPoule();
+              this.poolPoule = poule;
+
+              // this.poolStartLocationMap = new StartLocationMap(poolCompetitors);
+              // const gameRoundNumbers: number[] = poule.getAgainstGames().map((game: AgainstGame) => game.getGameRoundNumber());
+              // const currentGameRoundNumber = this.getCurrentSourceGameRoundNumber(poule);
+
+              const competitionSport = this.pool.getCompetitionSport(this.leagueName);
+              const rankingCalculator = new AgainstSportRoundRankingCalculator(competitionSport, [GameState.Finished]);
+              this.sportRankingItems = rankingCalculator.getItemsForPoule(poule);
+
+              this.chatMessageRepository.getObjects(poule, pool).subscribe({
+                next: (chatMessages: ChatMessage[]) => {
+                  this.chatMessages = chatMessages;
+                },
+                complete: () => {
+                  this.processing = false;
+                }
+              });
+
+              // this.initCurrentGameRound(competitionConfig, currentViewPeriod);
+            },
+            error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
+          });
+        });
+      });
     });
   }
 
   get HomeSide(): AgainstSide { return AgainstSide.Home; }
   get AwaySide(): AgainstSide { return AgainstSide.Away; }
+
+  getMessageDate(date: Date): string {
+    return this.dateFormatter.toString(date, this.dateFormatter.niceDateTime()) + ' uur';
+  }
+
+
 
   // getSourceStructure(competition: Competition): Observable<Structure> {
   //   // if (this.sourceStructure !== undefined) {
@@ -122,21 +167,7 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
   //     return;
   //   }
 
-  //   this.gameRepository.getSourceObjects(poule, this.currentGameRound).subscribe({
-  //     next: (games: AgainstGame[]) => {
-  //       this.sourceGameRoundGames = games;
-  //       let game = games.find((game: AgainstGame) => game.getId() === gameId);
-  //       if (game == undefined) {
-  //         game = this.getDefaultGame(games);
-  //       }
-  //       const competitors = game.getPoule().getCompetition().getTeamCompetitors();
-  //       this.startLocationMap = new StartLocationMap(competitors);
-  //       this.updateSourceGame(game)
-  //     },
-  //     complete: () => {
-  //       this.processing = false; this.processingGames = false;
-  //     }
-  //   });
+
   // }
 
   // updateSourceGame(sourceGame: AgainstGame): void {
