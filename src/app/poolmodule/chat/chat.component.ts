@@ -36,6 +36,7 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
   public processing = true;
   public leagueName!: LeagueName;
   public poolPoule: Poule | undefined;
+  public processingMessage = false;
   public chatMessages: ChatMessage[] | undefined;
   // public processingPoolUsers = true;
   // public processingGames = true;
@@ -97,8 +98,6 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
               this.chatMessageRepository.getObjects(poule, pool).subscribe({
                 next: (chatMessages: ChatMessage[]) => {
                   this.chatMessages = chatMessages;
-                },
-                complete: () => {
                   this.processing = false;
                 }
               });
@@ -115,10 +114,24 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
   get HomeSide(): AgainstSide { return AgainstSide.Home; }
   get AwaySide(): AgainstSide { return AgainstSide.Away; }
 
+  get CupOrSuperCup(): boolean { return this.leagueName === LeagueName.Cup || this.leagueName === LeagueName.SuperCup; }
+
   getMessageDate(date: Date): string {
     return this.dateFormatter.toString(date, this.dateFormatter.niceDateTime()) + ' uur';
   }
 
+  sendMessage(poule: Poule): void {
+    this.processingMessage = true;
+    const message = this.form.controls.message.value;
+    this.chatMessageRepository.createObject(message, poule, this.pool).subscribe({
+      next: (chatMessage: ChatMessage) => {
+        this.chatMessages?.unshift(chatMessage);
+        this.form.controls.message.reset();
+        this.processingMessage = false;
+      },
+      error: (e: string) => { this.setAlert('danger', e); this.processingMessage = false; }
+    });
+  }
 
 
   // getSourceStructure(competition: Competition): Observable<Structure> {

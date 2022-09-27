@@ -1,14 +1,27 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-6">
-    <h2>
-      <fa-icon [icon]="['fas', 'users']"></fa-icon> stand
-    </h2>
 
     <h2 *ngIf="processing" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
 
     <div *ngIf="!processing && pool && poule">
+
+      <div class="d-flex justify-content-between mt-2">
+        <h2 class="ms-3">
+          <fa-icon [icon]="['fas', 'users']"></fa-icon> stand
+        </h2>
+        <button *ngIf="poule" (click)="navigateToChat(poule)" type="button"
+          class="btn btn-outline-dark me-3 position-relative">
+          <fa-icon [icon]="['fas', 'message']"></fa-icon>
+          <span class="ms-1"> chat</span>
+          <span *ngIf="nrOfUnreadMessages > 0"
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{nrOfUnreadMessages}}
+            <span class="visually-hidden">ongelezen berichten</span>
+          </span>
+        </button>
+      </div>
 
       <div class="d-flex justify-content-between mt-3 mb-1 ms-3 me-4">
         <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
@@ -25,40 +38,5 @@
 
     </div>
 
-    <!-- <table class="table">
-      <thead>
-        <tr>
-          <th>pl</th>
-          <th>naam</th>
-          <th *ngIf="pool.getTransferPeriod().isIn()">
-            transfers
-          </th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let poolUser of poolUsers">
-          <td>
-            {{poolUser.getName()}}
-          </td>
-          <td *ngIf="pool.transferPeriodNotStarted()">
-            <fa-icon *ngIf="poolUser.getNrOfAssembled() < 15" [icon]="['fas', 'times-circle']" class="text-danger">
-            </fa-icon>
-            <fa-icon *ngIf="poolUser.getNrOfAssembled() == 15" [icon]="['fas', 'check-circle']" class="text-success">
-            </fa-icon>
-            {{poolUser.getNrOfAssembled()}}/15
-          </td>
-          <td *ngIf="pool.getTransferPeriod().isIn()">
-            0/2
-          </td>
-          <td class="text-end">
-            <button *ngIf="!poolUser.getAdmin() && !canBeRemoved()" type="button" class="btn btn-sm btn-danger"
-              [disabled]="processing" (click)="openRemoveApprovalModal(poolUser)">
-              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table> -->
   </div>
 </div>

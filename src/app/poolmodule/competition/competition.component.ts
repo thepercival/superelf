@@ -16,6 +16,8 @@ import { GameRound } from '../../lib/gameRound';
 import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
 import { CompetitionConfig } from '../../lib/competitionConfig';
 import { ViewPeriod } from '../../lib/period/view';
+import { ChatMessageRepository } from '../../lib/chatMessage/repository';
+import { AuthService } from '../../lib/auth/auth.service';
 
 
 @Component({
@@ -29,10 +31,12 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   private nrOfDaysToRemoveAfterAssemblePeriod = 6;
 
   public poule!: Poule;
+  public leagueName = LeagueName.Competition;
   public competitionSport!: CompetitionSport;
   public startLocationMap!: StartLocationMap;
   public currentGameRound: GameRound | undefined;
   public gameRounds: GameRound[] = [];
+  public nrOfUnreadMessages = 0;
 
   constructor(
     route: ActivatedRoute,
@@ -41,8 +45,10 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     globalEventsManager: GlobalEventsManager,
     protected structureEditor: StructureEditor,
     protected poolUserRepository: PoolUserRepository,
+    protected chatMessageRepository: ChatMessageRepository,
     protected structureRepository: StructureRepository,
     private gameRoundRepository: GameRoundRepository,
+    private authService: AuthService,
     private modalService: NgbModal
   ) {
     super(route, router, poolRepository, globalEventsManager);
@@ -61,11 +67,13 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
         if (currentViewPeriod === undefined) {
           return;
         }
+        const user = this.authService.getUser();
         this.gameRounds = this.pool.getAssembleViewPeriod().getGameRounds();
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => {
             this.poolUsers = poolUsers;
-            const competition = this.pool.getCompetition(LeagueName.Competition);
+            this.poolUser = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
+            const competition = this.pool.getCompetition(this.leagueName);
             if (competition === undefined) {
               this.processing = false;
               throw Error('competitionSport not found');
@@ -74,21 +82,26 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
             this.structureRepository.getObject(competition).subscribe({
               next: (structure: Structure) => {
 
-                // -----------  JE TOONT VOOR EEN BEPAALDE VIEWPERIODE -------------- //
-                // DE GAMEROUNDS ZIJN DAN DE WEDSTRIJDEN EN DE POOLUSERS MET HUN PUNTEN PER GAMEROUND ZIJN DAN DE GAMEROUND-SCORE
-                const poolCompetitors = this.pool.getCompetitors(LeagueName.Competition);
+                const poolCompetitors = this.pool.getCompetitors(this.leagueName);
                 const round = structure.getSingleCategory().getRootRound();
                 this.poule = round.getFirstPoule(); // ?? GET FROM BACKEND ?? this.pool.getCompetition(PoolCollection.League_Default).get;
-                this.competitionSport = this.pool.getCompetitionSport(LeagueName.Competition);
+                this.competitionSport = this.pool.getCompetitionSport(this.leagueName);
                 this.startLocationMap = new StartLocationMap(poolCompetitors);
 
-                // gameRoundScores voor competitors of poolCompetitions
-                // getGAMES!!
+                if (this.poolUser && this.poule) {
+                  this.chatMessageRepository.getNrOfUnreadObjects(this.poule, pool).subscribe({
+                    next: (nrOfUnreadMessages: number) => {
+                      this.nrOfUnreadMessages = nrOfUnreadMessages;
+                    }
+                  });
+                }
 
                 this.initCurrentGameRound(competitionConfig, currentViewPeriod);
               },
               error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
             });
+
+
           },
           error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
         });
@@ -124,5 +137,9 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
 
   updateGameRound(gameRound: GameRound | undefined): void {
     this.currentGameRound = gameRound;
+  }
+
+  navigateToChat(poolPoule: Poule): void {
+    this.router.navigate(['/pool/chat', this.pool.getId(), this.leagueName, poolPoule.getId()]);
   }
 }

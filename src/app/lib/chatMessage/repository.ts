@@ -20,15 +20,30 @@ export class ChatMessageRepository extends APIRepository {
         super();
     }
 
-    getUrl(pool: Pool, poule: Poule): string {
-        return this.getApiUrl() + 'pools/' + pool.getId() + '/poules/' + poule.getId() + '/messages';
+    getUrl(pool: Pool, poule: Poule, suffix: string): string {
+        return this.getApiUrl() + 'pools/' + pool.getId() + '/poules/' + poule.getId() + '/' + suffix;
+    }
+
+    createObject(message: string, poule: Poule, pool: Pool): Observable<ChatMessage> {
+        const json = { message };
+        return this.http.post<JsonChatMessage>(this.getUrl(pool, poule, 'messages'), json, { headers: super.getHeaders() }).pipe(
+            map((json: JsonChatMessage) => this.mapper.toObject(json, pool.getUsers())),
+            catchError((err) => this.handleError(err))
+        );
     }
 
     getObjects(poule: Poule, pool: Pool): Observable<ChatMessage[]> {
-        return this.http.get<JsonChatMessage[]>(this.getUrl(pool, poule), this.getOptions()).pipe(
+        return this.http.get<JsonChatMessage[]>(this.getUrl(pool, poule, 'messages'), this.getOptions()).pipe(
             map((jsonMessages: JsonChatMessage[]) => jsonMessages.map((jsonMessage: JsonChatMessage): ChatMessage => {
                 return this.mapper.toObject(jsonMessage, pool.getUsers());
             })),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    getNrOfUnreadObjects(poule: Poule, pool: Pool): Observable<number> {
+        return this.http.get<JsonChatMessage[]>(this.getUrl(pool, poule, 'nrofunreadmessages'), this.getOptions()).pipe(
+            map((json: any) => json.nrOfUnreadMessages),
             catchError((err) => this.handleError(err))
         );
     }

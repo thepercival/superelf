@@ -5,6 +5,6 @@ export interface JsonChatMessage extends JsonIdentifiable {
 
     user: JsonUser,
     date: string,
-    text: string
+    message: string
 }
 

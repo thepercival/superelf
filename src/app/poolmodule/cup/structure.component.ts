@@ -67,12 +67,11 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
         if (currentViewPeriod === undefined) {
           return;
         }
+        const user = this.authService.getUser();
         this.gameRounds = this.pool.getAssembleViewPeriod().getGameRounds();
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => {
             this.poolUsers = poolUsers;
-
-            const user = this.authService.getUser();
             this.poolUser = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
 
             const competition = this.pool.getCompetition(this.leagueName);

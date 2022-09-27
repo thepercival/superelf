@@ -95,7 +95,7 @@
             </table>
 
             <ng-template #contentForamtionPlaces let-formationPlaces="formationPlaces" let-away="away">
-                <div *ngFor="let formationPlace of formationPlaces" class="d-flex"
+                <div *ngFor="let formationPlace of formationPlaces" class="d-flex align-items-start"
                     [ngClass]="{'flex-row-reverse': away}">
                     <app-lineicon *ngIf="formationPlace.getPlayer()" [line]="formationPlace.getPlayer().getLine()">
                     </app-lineicon>
