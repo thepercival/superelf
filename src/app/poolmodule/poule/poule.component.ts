@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportRoundRankingCalculator, Competition, CompetitionSport, Competitor, CompetitorBase, GameState, Place, Poule, Round, SportRoundRankingItem, StartLocationMap, Structure, Team, TeamCompetitor, TogetherSportRoundRankingCalculator } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
+import { AuthService } from '../../lib/auth/auth.service';
+import { ChatMessageRepository } from '../../lib/chatMessage/repository';
 import { S11Formation } from '../../lib/formation';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GameRound } from '../../lib/gameRound';
@@ -50,6 +52,7 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
   public gotStatistics: boolean = false;
 
   public sourcePoule!: Poule;
+  public nrOfUnreadMessages = 0;
 
   constructor(
     route: ActivatedRoute,
@@ -59,10 +62,12 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
     private statisticsRepository: StatisticsRepository,
     private poolUserRepository: PoolUserRepository,
     private structureRepository: StructureRepository,
+    protected chatMessageRepository: ChatMessageRepository,
     private gameRepository: GameRepository,
     public imageRepository: ImageRepository,
     public cssService: CSSService,
     public nameService: SuperElfNameService,
+    private authService: AuthService,
     private myNavigation: MyNavigation) {
     super(route, router, poolRepository, globalEventsManager);
   }
@@ -80,8 +85,7 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
           this.processing = false;
           throw Error('competitionSport not found');
         }
-
-
+        const user = this.authService.getUser();
 
         this.structureRepository.getObject(poolCompetition).subscribe({
           next: (structure: Structure) => {
@@ -92,15 +96,22 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
             this.poolPoule = poule;
 
             this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
+              this.poolUser = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
               const poolCompetitors = pool.getCompetitors(this.leagueName);
               this.initPouleCompetitors(poule, poolCompetitors);
+              this.poolStartLocationMap = new StartLocationMap(poolCompetitors);
+
+              if (this.poolUser) {
+                this.chatMessageRepository.getNrOfUnreadObjects(poule, pool).subscribe({
+                  next: (nrOfUnreadMessages: number) => {
+                    this.nrOfUnreadMessages = nrOfUnreadMessages;
+                  }
+                });
+              }
             });
 
-            this.poolStartLocationMap = new StartLocationMap(poolCompetitors);
             const gameRoundNumbers: number[] = poule.getAgainstGames().map((game: AgainstGame) => game.getGameRoundNumber());
             const currentGameRoundNumber = this.getCurrentSourceGameRoundNumber(poule);
-
-
 
             // source
             this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
@@ -187,6 +198,7 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
       return 0;
     }
     const side = this.hasPoolCompetitor(poolGame, AgainstSide.Home, competitor) ? AgainstSide.Home : AgainstSide.Away;
+
     return side === AgainstSide.Home ? finalScore.getHome() : finalScore.getAway();
   }
 

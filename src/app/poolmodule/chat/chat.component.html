@@ -3,7 +3,9 @@
         <div class="d-flex justify-content-between mt-2">
             <h2>chat</h2>
             <h2 class="ms-1">
-                <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
+                <fa-icon *ngIf="!CupOrSuperCup" [icon]="['fas', 'list-ol']"></fa-icon>
+                <app-superelf-icon *ngIf="CupOrSuperCup" [name]="'super-cup'"></app-superelf-icon>
+
                 <span class="ms-1">{{leagueName}}</span>
             </h2>
             <button (click)="navigateBack()" type="button" class="btn btn-outline-dark ms-1">
@@ -40,7 +42,7 @@
                     [ngTemplateOutletContext]="{message, end: i % 2 === 1}">
                 </ng-container>
                 <div class="d-flex" [ngClass]="{'flex-row-reverse': i % 2 === 1}"><span
-                        class="badge bg-primary">{{message.getText()}}</span></div>
+                        class="badge bg-light">{{message.getText()}}</span></div>
             </div>
 
         </div>

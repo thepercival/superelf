@@ -11,9 +11,10 @@
                     class="btn btn-outline-dark me-3 position-relative">
                     <fa-icon [icon]="['fas', 'message']"></fa-icon>
                     <span class="ms-1"> chat</span>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        99+
-                        <span class="visually-hidden">unread messages</span>
+                    <span *ngIf="nrOfUnreadMessages > 0"
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{nrOfUnreadMessages}}
+                        <span class="visually-hidden">ongelezen berichten</span>
                     </span>
                 </button>
                 <button (click)="navigateBack()" type="button" class="btn btn-outline-dark">
