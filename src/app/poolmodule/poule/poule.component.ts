@@ -90,7 +90,6 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
         this.structureRepository.getObject(poolCompetition).subscribe({
           next: (structure: Structure) => {
 
-            const poolCompetitors = this.pool.getCompetitors(this.leagueName);
             const round = structure.getSingleCategory().getRootRound();
             const poule = this.getPouleById(round, +params.pouleId);
             this.poolPoule = poule;
@@ -238,41 +237,27 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
 
     this.currentGameRound = gameRound;
 
-    let processingGames = true;
-    let processingStatistics = true;
-
     this.gameRepository.getSourceObjects(this.sourcePoule, gameRound).subscribe({
       next: (games: AgainstGame[]) => {
         this.sourceGames = games;
-        if (!processingStatistics) {
+
+        if (this.gotStatistics) {
           this.processingGameRound = false;
-        } else {
-          processingGames = false;
+          return;
         }
+        forkJoin(this.getStatisticsRequests(editPeriod)).subscribe({
+          next: () => {
+            this.processingGameRound = false;
+            this.gotStatistics = true;
+          },
+          error: (e) => {
+            this.processingGameRound = false;
+          }
+        });
       }
     });
 
-    if (this.gotStatistics) {
-      if (!processingGames) {
-        this.processingGameRound = false;
-      } else {
-        processingStatistics = false;
-      }
-    } else {
-      forkJoin(this.getStatisticsRequests(editPeriod)).subscribe({
-        next: () => {
-          if (!processingGames) {
-            this.processingGameRound = false;
-          } else {
-            processingStatistics = false;
-          }
-          this.gotStatistics = true;
-        },
-        error: (e) => {
-          this.processingGameRound = false;
-        }
-      });
-    }
+
   }
 
   getStatisticsRequests(editPeriod: AssemblePeriod | TransferPeriod): Observable<StatisticsMap>[] {
