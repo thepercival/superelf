@@ -19,7 +19,7 @@
             <div *ngIf="!processingGames && sourceGameRoundGames.length > 0 && currentSourceGame"
                 class="d-flex justify-content-center my-3">
                 <app-game-scroller [games]="sourceGameRoundGames" [current]="currentSourceGame"
-                    (update)="updateSourceGame($event)">
+                    (update)="updateSourceGame($event)" (navigate)="navigateToSourceGame($event)">
                 </app-game-scroller>
             </div>
 

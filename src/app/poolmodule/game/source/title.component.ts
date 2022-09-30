@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase, ScoreConfigService, GameState, Team, TeamCompetitor, StartLocationMap } from 'ngx-sport';
 import { DateFormatter } from '../../../lib/dateFormatter';
+import { SuperElfNameService } from '../../../lib/nameservice';
 
 @Component({
   selector: 'app-againstgame-title',
@@ -9,14 +10,14 @@ import { DateFormatter } from '../../../lib/dateFormatter';
 })
 export class AgainstGameTitleComponent implements OnInit {
   @Input() againstGame!: AgainstGame;
+  @Input() showDate: boolean = true;
   private startLocationMap!: StartLocationMap;
 
-  private scoreConfigService: ScoreConfigService;
-
   constructor(
-    public dateFormatter: DateFormatter
+    public dateFormatter: DateFormatter,
+    public nameService: SuperElfNameService
   ) {
-    this.scoreConfigService = new ScoreConfigService();
+
   }
 
   ngOnInit() {
@@ -69,17 +70,7 @@ export class AgainstGameTitleComponent implements OnInit {
     return teamCompetitor?.getTeam() ?? undefined;
   }
 
-  getAgainstScore(): string {
-    if (this.againstGame.getState() !== GameState.Finished) {
-      return ' vs ';
-    }
-    const score = ' - ';
-    const finalScore = this.scoreConfigService.getFinalAgainstScore(this.againstGame);
-    if (finalScore === undefined) {
-      return score;
-    }
-    return finalScore.getHome() + score + finalScore.getAway();
-  }
+
 
   // getName(team: Team): string {
   //   return this.fullName ? team.getName() : team.getAbbreviation() ?? '';

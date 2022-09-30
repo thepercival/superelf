@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FootballLine } from 'ngx-sport';
+import { AgainstGame, FootballLine, GameState, ScoreConfigService } from 'ngx-sport';
 import { LeagueName } from './leagueName';
 import { FootballScore } from './score';
 
@@ -7,7 +7,11 @@ import { FootballScore } from './score';
     providedIn: 'root'
 })
 export class SuperElfNameService {
+
+    private scoreConfigService: ScoreConfigService;
+
     constructor() {
+        this.scoreConfigService = new ScoreConfigService();
     }
 
     getLineName(lineDef: number): string {
@@ -59,5 +63,17 @@ export class SuperElfNameService {
                 return 'super cup';
         }
         return '?';
+    }
+
+    getAgainstScore(againstGame: AgainstGame): string {
+        if (againstGame.getState() !== GameState.Finished) {
+            return ' vs ';
+        }
+        const score = ' - ';
+        const finalScore = this.scoreConfigService.getFinalAgainstScore(againstGame);
+        if (finalScore === undefined) {
+            return score;
+        }
+        return finalScore.getHome() + score + finalScore.getAway();
     }
 }

@@ -10,6 +10,7 @@ export class GameScrollerComponent implements OnInit {
   @Input() games: AgainstGame[] = [];
   @Input() current!: AgainstGame;
   @Output() update = new EventEmitter<AgainstGame>();
+  @Output() navigate = new EventEmitter<AgainstGame>();
 
   constructor() {
   }

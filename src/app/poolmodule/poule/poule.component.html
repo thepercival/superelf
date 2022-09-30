@@ -17,10 +17,6 @@
                         <span class="visually-hidden">ongelezen berichten</span>
                     </span>
                 </button>
-                <button (click)="navigateBack()" type="button" class="btn btn-outline-dark">
-                    <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
-                    <span class="ms-1 d-none d-md-inline"> terug</span>
-                </button>
             </div>
         </div>
 
@@ -44,36 +40,65 @@
                 <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
             </h2>
             <table class="table" *ngIf="currentGameRound && !processingGameRound">
-                <thead>
-                    <tr>
-                        <th class="border-bottom-0"></th>
-                        <th class="border-bottom-0 text-right">
+                <tbody *ngFor="let sourceGame of sourceGames; let first = first;">
+                    <tr *ngIf="first">
+                        <td class="border-bottom-0 pt-3 pb-0"></td>
+                        <td class="border-bottom-0 text-end pt-3 pb-0">
                             <span *ngIf="getCurrentPoolGame(currentGameRound)?.getState() !== Created"
                                 class="badge bg-totals">
                                 {{getPoolGamePoints(currentGameRound, homeCompetitor)}}</span>
-                        </th>
-                        <th class="border-bottom-0"><span
-                                *ngIf="getCurrentPoolGame(currentGameRound)?.getState() !== Created"
-                                class="badge bg-totals">
-                                {{getPoolGamePoints(currentGameRound, awayCompetitor)}}</span></th>
-                        <th class="border-bottom-0"></th>
-                    </tr>
-                </thead>
-
-                <tbody *ngFor="let sourceGame of sourceGames">
-                    <tr>
-                        <td colspan="4" class="border-bottom-0 pt-3 pb-0">
-                            <app-againstgame-title [againstGame]="sourceGame"></app-againstgame-title>
                         </td>
+                        <td class="border-bottom-0 pt-3 pb-0">
+                            <span *ngIf="getCurrentPoolGame(currentGameRound)?.getState() !== Created"
+                                class="badge bg-totals">
+                                {{getPoolGamePoints(currentGameRound, awayCompetitor)}}</span>
+                        </td>
+                        <td class="border-bottom-0 pt-3 pb-0"></td>
+                    </tr>
+                    <tr>
+                        <td class="border-bottom-0 pt-3 pb-0 text-end">
+                            <span *ngFor="let sideCompetitor of getCompetitors(sourceGame, HomeSide)">
+                                <app-team-name *ngIf="isTeamCompetitor(sideCompetitor)" [team]="getTeam(sideCompetitor)"
+                                    class="d-flex flex-row-reverse"></app-team-name>
+                            </span>
+                        </td>
+                        <td colspan="2" class="border-bottom-0 text-center pt-3 pb-0">
+                            <a href=""
+                                [routerLink]="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
+                                <ng-container *ngIf="sourceGame.getState() === Finished;else notFinished">
+                                    {{nameService.getAgainstScore(sourceGame)}}</ng-container>
+                                <ng-template #notFinished>
+
+                                    <ng-container *ngIf="isToday(sourceGame.getStartDateTime());else aDayBeforeToday">
+                                        {{nameService.getAgainstScore(sourceGame)}}
+                                    </ng-container>
+                                    <ng-template #aDayBeforeToday>
+                                        {{dateFormatter.toString(sourceGame.getStartDateTime(),dateFormatter.time())}}
+                                    </ng-template>
+
+                                </ng-template>
+
+                            </a>
+
+                        </td>
+                        <td class="border-bottom-0 pt-3 pb-0">
+                            <span *ngFor="let sideCompetitor of getCompetitors(sourceGame, AwaySide)">
+                                <app-team-name *ngIf="isTeamCompetitor(sideCompetitor)"
+                                    [team]="getTeam(sideCompetitor)"></app-team-name>
+                            </span>
+
+                        </td>
+
+
                     </tr>
 
                     <tr>
-                        <td>
+                        <td class="text-end">
                             <ng-container [ngTemplateOutlet]="contentForamtionPlaces"
-                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(sourceGame, homeCompetitor)}">
+                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(sourceGame, homeCompetitor), away: true}">
                             </ng-container>
                         </td>
-                        <td>
+                        <td class="text-end">
                             <ng-container *ngIf="sourceGame.getState() === Finished"
                                 [ngTemplateOutlet]="contentForamtionPlacesScores"
                                 [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(sourceGame, homeCompetitor)}">
@@ -85,9 +110,9 @@
                                 [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(sourceGame, awayCompetitor)}">
                             </ng-container>
                         </td>
-                        <td class="text-end">
+                        <td>
                             <ng-container [ngTemplateOutlet]="contentForamtionPlaces"
-                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(sourceGame, awayCompetitor), away: true}">
+                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(sourceGame, awayCompetitor)}">
                             </ng-container>
                         </td>
                     </tr>

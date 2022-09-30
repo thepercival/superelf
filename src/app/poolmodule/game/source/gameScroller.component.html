@@ -3,7 +3,7 @@
         <button type="button" class="btn btn-outline-primary" (click)="previous()">
             <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
         </button>
-        <button [disabled]="true" type="button" class="btn btn-outline-primary btn-fixed-width">
+        <button type="button" class="btn btn-outline-primary btn-fixed-width" (click)="navigate.emit(current)">
             <app-againstgame-title [againstGame]="current"></app-againstgame-title>
         </button>
         <button type="button" class="btn btn-outline-primary" (click)="next()">

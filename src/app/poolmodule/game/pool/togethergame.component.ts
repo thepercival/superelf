@@ -192,6 +192,10 @@ export class PoolTogetherGameComponent extends PoolComponent implements OnInit {
     return teams.find((team: Team | undefined): boolean => team !== undefined);
   }
 
+  navigateToSourceGame(game: AgainstGame): void {
+    this.router.navigate(['/pool/sourcegame', this.pool.getId(), game.getGameRoundNumber(), game.getId()]);
+  }
+
   navigateBack() {
     this.myNavigation.back();
   }

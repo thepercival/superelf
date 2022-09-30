@@ -53,7 +53,7 @@ import { PoolUserComponent } from './poolusers/pooluser.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { AgainstGameDetailsComponent } from './game/source/details.component';
 import { AgainstGameTitleComponent } from './game/source/title.component';
-import { SourceGameComponent } from './game/source/source.component';
+import { SourceGameComponent } from './game/source.component';
 import { GameRoundScrollerComponent } from './gameRound/gameRoundScroller.component';
 import { GameScrollerComponent } from './game/source/gameScroller.component';
 import { PoolPouleComponent } from './poule/poule.component';

@@ -19,12 +19,12 @@ import { FormationAssembleComponent } from './formation/assemble.component';
 import { WorldCupComponent } from './worldcup/worldcup.component';
 import { PoolUserComponent } from './poolusers/pooluser.component';
 import { ScheduleComponent } from './schedule/schedule.component';
-import { SourceGameComponent } from './game/source/source.component';
 import { PoolChatComponent } from './chat/chat.component';
 import { PoolTogetherGameComponent } from './game/pool/togethergame.component';
 import { PoolCompetitionComponent } from './competition/competition.component';
 import { PoolCupComponent } from './cup/structure.component';
 import { PoolPouleComponent } from './poule/poule.component';
+import { SourceGameComponent } from './game/source.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent, canActivate: [AuthUserGuardService] },

@@ -4,6 +4,7 @@ import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportRoundRankingCal
 import { forkJoin, Observable } from 'rxjs';
 import { AuthService } from '../../lib/auth/auth.service';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
+import { DateFormatter } from '../../lib/dateFormatter';
 import { S11Formation } from '../../lib/formation';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GameRound } from '../../lib/gameRound';
@@ -67,6 +68,7 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
     public imageRepository: ImageRepository,
     public cssService: CSSService,
     public nameService: SuperElfNameService,
+    public dateFormatter: DateFormatter,
     private authService: AuthService,
     private myNavigation: MyNavigation) {
     super(route, router, poolRepository, globalEventsManager);
@@ -351,6 +353,33 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
       const competitor = <TeamCompetitor>this.startLocationMap.getCompetitor(startLocation);
       return competitor?.getTeam();
     });
+  }
+
+  isToday(date: Date): boolean {
+    var today = new Date();
+    return date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
+  }
+
+  getCompetitors(game: AgainstGame, side: AgainstSide): (Competitor | undefined)[] {
+    return game.getSidePlaces(side).map((gamePlace: AgainstGamePlace): Competitor | undefined => {
+      if (gamePlace === undefined) {
+        return undefined;
+      }
+      const startLocation = gamePlace.getPlace().getStartLocation();
+      return startLocation ? this.startLocationMap.getCompetitor(startLocation) : undefined;
+    });
+  }
+
+  getTeam(sideCompetitor: Competitor | undefined): Team | undefined {
+    const teamCompetitor = this.getTeamCompetitor(sideCompetitor);
+    return teamCompetitor?.getTeam() ?? undefined;
+  }
+
+  getTeamCompetitor(sideCompetitor: Competitor | undefined): TeamCompetitor | undefined {
+    if (this.isTeamCompetitor(sideCompetitor)) {
+      return <TeamCompetitor>sideCompetitor;
+    }
+    return undefined;
   }
 
   navigateBack() {
