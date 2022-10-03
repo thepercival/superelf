@@ -86,20 +86,6 @@
             <span>{{eventItem.minute}}"</span>
             <span class="px-1">{{getCode(eventItem)}}</span>
             <span>{{eventItem.player.getPerson().getName()}}</span>
-            <!-- <div>
-                <app-lineicon [line]="lineupItem.player.getLine()"></app-lineicon>
-                
-            </div>
-            <div *ngIf="lineupItem.substitute">
-                <span class="px-2">{{lineupItem.substitute.minute}}"</span>
-                <app-lineicon [line]="lineupItem.substitute.player.getLine()"></app-lineicon>
-                <span class="ps-1">{{lineupItem.substitute.player.getPerson().getName()}}</span>
-            </div>
-            <div *ngIf="lineupItem.substitute && lineupItem.substitute.substitute">
-                <span class="ps-4 pe-2">{{lineupItem.substitute.substitute.minute}}"</span>
-                <app-lineicon [line]="lineupItem.substitute.substitute.player.getLine()"></app-lineicon>
-                <span class="ps-1">{{lineupItem.substitute.substitute.player.getPerson().getName()}}</span>
-            </div> -->
         </li>
     </ul>
 </ng-template>
