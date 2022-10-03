@@ -21,16 +21,16 @@
                     class="badge {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
             </td>
 
-            <td class="text-break ps-0 pointer" [ngClass]="{ 'favitem': false}"
-                (click)="navigateToPoolUser(sportRankingItem.getPerformance().getPlace(), undefined)">
-                <ins>{{structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}</ins>
+            <td class="text-break ps-0 pointer" [ngClass]="{ 'favitem': false}">
+                {{structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
 
             </td>
             <td *ngIf="currentGameRound" class="text-end ps-0 pointer"
                 (click)="navigateToPoolUser(sportRankingItem.getPerformance().getPlace(), currentGameRound)">
                 <ins>{{getScore(sportRankingItem.getPlaceLocation(),currentGameRound )}}</ins>
             </td>
-            <td class="text-end ps-0">{{sportRankingItem.getPerformance().getPoints()}}</td>
+            <td class="text-end ps-0" (click)="navigateToPoolUser(sportRankingItem.getPerformance().getPlace(), undefined)">
+                <ins>{{sportRankingItem.getPerformance().getPoints()}}</ins></td>
         </tr>
     </tbody>
 </table>

@@ -1,5 +1,4 @@
 import { JsonPlayer, Player } from "ngx-sport";
-import { S11Player } from "../../player";
 import { FootballCard, FootballGoal } from "../../score";
 
 export interface JsonAgainstGameLineupItem {
@@ -20,14 +19,28 @@ export interface AgainstGameSubstitute extends AgainstGameLineupItem {
     minute: number;
 }
 
-export interface AgainstGameEvent {
+export interface JsonAgainstGameEvent {
     minute: number;
     player: JsonPlayer;
 }
 
+export interface JsonAgainstGameGoalEvent extends JsonAgainstGameEvent {
+    score: FootballGoal;
+    assistPlayer: JsonPlayer | undefined;
+}
+
+export interface JsonAgainstGameCardEvent extends JsonAgainstGameEvent {
+    color: FootballCard;
+}
+
+export interface AgainstGameEvent {
+    minute: number;
+    player: Player;
+}
+
 export interface AgainstGameGoalEvent extends AgainstGameEvent {
     score: FootballGoal;
-    assistS11Player: S11Player | undefined;
+    assistPlayer: Player | undefined;
 }
 
 export interface AgainstGameCardEvent extends AgainstGameEvent {

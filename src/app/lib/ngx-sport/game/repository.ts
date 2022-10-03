@@ -7,7 +7,7 @@ import { APIRepository } from '../../repository';
 import { AgainstGame, AgainstSide, Competition, GameMapper, JsonAgainstGame, JsonTogetherGame, Poule, TogetherGame } from 'ngx-sport';
 import { GameRound } from '../../gameRound';
 import { ViewPeriod } from '../../period/view';
-import { AgainstGameLineupItem, JsonAgainstGameLineupItem } from './football';
+import { AgainstGameCardEvent, AgainstGameEvent, AgainstGameGoalEvent, AgainstGameLineupItem, JsonAgainstGameCardEvent, JsonAgainstGameEvent, JsonAgainstGameGoalEvent, JsonAgainstGameLineupItem } from './football';
 import { AgainstGameMapper } from './mapper';
 
 @Injectable({
@@ -48,6 +48,18 @@ export class GameRepository extends APIRepository {
         return this.http.get<JsonAgainstGameLineupItem[]>(url, this.getOptions()).pipe(
             map((jsonAgainstGameLineupItems: JsonAgainstGameLineupItem[]) => {
                 return this.againstMapper.toLineup(jsonAgainstGameLineupItems, competition);
+            }),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    getSourceObjectEvents(game: AgainstGame, side: AgainstSide): Observable<(AgainstGameGoalEvent|AgainstGameCardEvent)[]> {
+        const competition = game.getPoule().getCompetition();
+        const url = this.getUrl(competition) + '/sourcegames/' + game.getId() + '/events/' + side;
+
+        return this.http.get<(JsonAgainstGameGoalEvent|JsonAgainstGameCardEvent)[]>(url, this.getOptions()).pipe(
+            map((jsonAgainstGameEvents: (JsonAgainstGameGoalEvent|JsonAgainstGameCardEvent)[]) => {
+                return this.againstMapper.toEvents(jsonAgainstGameEvents, competition);
             }),
             catchError((err) => this.handleError(err))
         );

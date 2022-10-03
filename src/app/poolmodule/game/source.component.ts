@@ -15,7 +15,8 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { AgainstGameEvent, AgainstGameLineupItem } from '../../lib/ngx-sport/game/football';
+import { AgainstGameCardEvent, AgainstGameEvent, AgainstGameGoalEvent, AgainstGameLineupItem } from '../../lib/ngx-sport/game/football';
+import { FootballCard, FootballGoal } from '../../lib/score';
 
 @Component({
   selector: 'app-game-source',
@@ -27,7 +28,7 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
 
   private startLocationMap!: StartLocationMap;
   private lineupSidesMap: Map<AgainstSide, AgainstGameLineupItem[]> = new Map();
-  private eventsSidesMap: Map<AgainstSide, AgainstGameEvent[]> = new Map();
+  private eventsSidesMap: Map<AgainstSide, (AgainstGameGoalEvent|AgainstGameCardEvent)[]> = new Map();
 
   public processing = true;
   public processingLineups = true;
@@ -84,12 +85,12 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
 
                   const eventsRequests = [AgainstSide.Home, AgainstSide.Away].map((side: AgainstSide) => {
                     return this.gameRepository.getSourceObjectEvents(game, side).pipe(
-                      map((events: AgainstGameEvent[]) => {
+                      map((events: (AgainstGameGoalEvent|AgainstGameCardEvent)[]) => {
                         this.eventsSidesMap.set(side, events);
                       })
                     );
                   });
-                  forkJoin(lineupRequests).subscribe({
+                  forkJoin(eventsRequests).subscribe({
                     next: (results) => {
                       this.processingEvents = false;
                     }
@@ -123,6 +124,31 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
   getEvents(side: AgainstSide): AgainstGameEvent[] {
     const item = this.eventsSidesMap.get(side);
     return item !== undefined ? item : [];
+  }
+
+  instanceOfGoalEvent(event: any): event is AgainstGameGoalEvent {
+    return 'score' in event;
+  }
+
+  instanceOfCardEvent(event: any): event is AgainstGameCardEvent {
+    return 'color' in event;
+  }
+
+  getCode(eventItem: AgainstGameGoalEvent|AgainstGameCardEvent): string {
+    if( this.instanceOfGoalEvent(eventItem) ) {
+      if( eventItem.score === FootballGoal.Normal) {
+        return 'G';
+      }
+      if( eventItem.score === FootballGoal.Penalty) {
+        return 'P';
+      }
+      return 'OG';
+    }
+
+    if( eventItem.color === FootballCard.Yellow) {
+      return 'YC';
+    }
+    return 'RC';
   }
 
   get HomeSide(): AgainstSide { return AgainstSide.Home; }

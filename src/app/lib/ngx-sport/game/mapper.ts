@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Association, Competition, JsonPerson, Person, PersonMapper, PlayerMapper } from 'ngx-sport';
+import { Association, Competition, JsonPerson, Person, PersonMapper, Player, PlayerMapper } from 'ngx-sport';
 import { ViewPeriod } from '../../period/view';
 import { JsonS11Player } from '../../player/json';
-import { AgainstGameLineupItem, AgainstGameSubstitute, JsonAgainstGameLineupItem, JsonAgainstGameSubstitute } from './football';
+import { AgainstGameCardEvent, AgainstGameEvent, AgainstGameGoalEvent, AgainstGameLineupItem, AgainstGameSubstitute, JsonAgainstGameCardEvent, JsonAgainstGameEvent, JsonAgainstGameGoalEvent, JsonAgainstGameLineupItem, JsonAgainstGameSubstitute } from './football';
 
 @Injectable({
     providedIn: 'root'
@@ -17,11 +17,11 @@ export class AgainstGameMapper {
         // const association = competition.getLeague().getAssociation();
         // const person = this.personMapper.toObject(json.person, association, undefined);
         return json.map((jsonLineupItem: JsonAgainstGameLineupItem): AgainstGameLineupItem => {
-            return this.toObject(jsonLineupItem, competition);
+            return this.toLineupItem(jsonLineupItem, competition);
         });
     }
 
-    toObject(jsonLineupItem: JsonAgainstGameLineupItem, competition: Competition): AgainstGameLineupItem {
+    toLineupItem(jsonLineupItem: JsonAgainstGameLineupItem, competition: Competition): AgainstGameLineupItem {
         const person = this.toPerson(jsonLineupItem.player.person, competition.getAssociation());
         const lineupItem: AgainstGameLineupItem = {
             player: this.playerMapper.toObject(jsonLineupItem.player, competition.getAssociation(), person),
@@ -33,13 +33,7 @@ export class AgainstGameMapper {
         return lineupItem;
     }
 
-    toPerson(jsonPerson: JsonPerson | undefined, association: Association): Person {
-        if (jsonPerson === undefined) {
-            throw new Error('person should be set');
-        }
-        return this.personMapper.toObject(jsonPerson, association);
-    }
-
+   
     toSubstitute(jsonSubstitute: JsonAgainstGameSubstitute, competition: Competition): AgainstGameSubstitute {
         const person = this.toPerson(jsonSubstitute.player.person, competition.getAssociation());
         const substitute: AgainstGameSubstitute = {
@@ -52,6 +46,64 @@ export class AgainstGameMapper {
         }
         return substitute;
     }
+
+     instanceOfGoalEvent(event: any): event is JsonAgainstGameGoalEvent {
+        return 'score' in event;
+    }
+
+    instanceOfCardEvent(event: any): event is JsonAgainstGameCardEvent {
+        return 'color' in event;
+    }
+
+    toEvents(json: (JsonAgainstGameGoalEvent | JsonAgainstGameCardEvent)[], competition: Competition): (AgainstGameGoalEvent | AgainstGameCardEvent)[] {
+
+        // const association = competition.getLeague().getAssociation();
+        // const person = this.personMapper.toObject(json.person, association, undefined);
+        return json.map((jsonEvent: JsonAgainstGameGoalEvent | JsonAgainstGameCardEvent): AgainstGameGoalEvent | AgainstGameCardEvent => {
+            if( this.instanceOfGoalEvent(jsonEvent) ) {
+                return this.toGoalEvent(jsonEvent, competition);
+            }
+            // if( this.instanceOfGoalEvent(jsonEvent) ) {
+                return this.toCardEvent(jsonEvent, competition);
+            // }
+        });
+    }
+
+    toGoalEvent(json: JsonAgainstGameGoalEvent, competition: Competition): AgainstGameGoalEvent {
+
+        const person = this.toPerson(json.player.person, competition.getAssociation());
+        
+        const goalEvent: AgainstGameGoalEvent = {
+            minute: json.minute,
+            player: this.playerMapper.toObject(json.player, competition.getAssociation(), person),
+            score: json.score,
+            assistPlayer: undefined
+        };
+        if( json.assistPlayer) {
+            const subPerson = this.toPerson(json.assistPlayer.person, competition.getAssociation());
+            goalEvent.assistPlayer = this.playerMapper.toObject(json.assistPlayer, competition.getAssociation(), subPerson);
+        }
+        return goalEvent;
+
+    }
+
+    toCardEvent(json: JsonAgainstGameCardEvent, competition: Competition): AgainstGameCardEvent {
+
+        const person = this.toPerson(json.player.person, competition.getAssociation());
+        return {
+            minute: json.minute,
+            player: this.playerMapper.toObject(json.player, competition.getAssociation(), person),
+            color: json.color
+        };
+    }
+
+    toPerson(jsonPerson: JsonPerson | undefined, association: Association): Person {
+        if (jsonPerson === undefined) {
+            throw new Error('person should be set');
+        }
+        return this.personMapper.toObject(jsonPerson, association);
+    }
+
 
 
     // toJson(player: S11Player): JsonS11Player {

@@ -31,13 +31,14 @@
                 </div>
             </div>
 
+            <h4 class="text-center mt-3">gebeurtenissen</h4>
+
             <h2 *ngIf="processingEvents" class="text-center">
                 <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
             </h2>
 
-
             <div *ngIf="!processingEvents" class="d-flex justify-content-center">
-
+                
 
                 <div class="me-3">
                     <ng-container [ngTemplateOutlet]="eventsSide"
@@ -82,10 +83,12 @@
 <ng-template #eventsSide let-eventItems="eventItems">
     <ul class="list-group list-group-flush">
         <li class="list-group-item" *ngFor="let eventItem of eventItems">
-            minuut {{eventItem.minute}}
+            <span>{{eventItem.minute}}"</span>
+            <span class="px-1">{{getCode(eventItem)}}</span>
+            <span>{{eventItem.player.getPerson().getName()}}</span>
             <!-- <div>
                 <app-lineicon [line]="lineupItem.player.getLine()"></app-lineicon>
-                <span class="ps-1">{{lineupItem.player.getPerson().getName()}}</span>
+                
             </div>
             <div *ngIf="lineupItem.substitute">
                 <span class="px-2">{{lineupItem.substitute.minute}}"</span>
