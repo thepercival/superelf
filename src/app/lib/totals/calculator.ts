@@ -1,6 +1,6 @@
 import { FootballLine } from "ngx-sport";
 import { CompetitionConfig } from "../competitionConfig";
-import { FootballScore } from "../score";
+import { FootballCard, FootballGoal, FootballResult, FootballScore, FootballSheet } from "../score";
 import { JsonTotals } from "./json";
 
 export class TotalsCalculator {
@@ -9,16 +9,16 @@ export class TotalsCalculator {
     }
 
     public getResultPoints(jsonTotals: JsonTotals): number {
-        const resultWinPoints = this.competitionConfig.getScorePoints(FootballScore.WinResult);
-        const resultDrawPoints = this.competitionConfig.getScorePoints(FootballScore.DrawResult);
+        const resultWinPoints = this.competitionConfig.getScorePoints(FootballResult.Win);
+        const resultDrawPoints = this.competitionConfig.getScorePoints(FootballResult.Draw);
         return (jsonTotals.nrOfWins * resultWinPoints) + (jsonTotals.nrOfDraws * resultDrawPoints);
     }
 
     public getGoalPoints(line: FootballLine, jsonTotals: JsonTotals): number {
-        const fieldGoalPoints = this.competitionConfig.getLineScorePoints({ line, score: FootballScore.Goal });
-        const assistPoints = this.competitionConfig.getLineScorePoints({ line, score: FootballScore.Assist });
-        const penaltyGoalPoints = this.competitionConfig.getScorePoints(FootballScore.PenaltyGoal);
-        const ownGoalPoints = this.competitionConfig.getScorePoints(FootballScore.OwnGoal);
+        const fieldGoalPoints = this.competitionConfig.getLineScorePoints({ line, score: FootballGoal.Normal });
+        const assistPoints = this.competitionConfig.getLineScorePoints({ line, score: FootballGoal.Assist });
+        const penaltyGoalPoints = this.competitionConfig.getScorePoints(FootballGoal.Penalty);
+        const ownGoalPoints = this.competitionConfig.getScorePoints(FootballGoal.Own);
 
         let total = (jsonTotals.nrOfFieldGoals * fieldGoalPoints) + (jsonTotals.nrOfAssists * assistPoints);
         total += (jsonTotals.nrOfPenalties * penaltyGoalPoints) + (jsonTotals.nrOfOwnGoals * ownGoalPoints);
@@ -27,7 +27,7 @@ export class TotalsCalculator {
 
 
     public getAssistPoints(line: FootballLine, jsonTotals: JsonTotals): number {
-        const assistPoints = this.competitionConfig.getLineScorePoints({ line, score: FootballScore.Assist });
+        const assistPoints = this.competitionConfig.getLineScorePoints({ line, score: FootballGoal.Assist });
         return jsonTotals.nrOfAssists * assistPoints;
     }
 
@@ -36,18 +36,18 @@ export class TotalsCalculator {
     }
 
     public getCleanSheetPoints(line: FootballLine.GoalKeeper | FootballLine.Defense, jsonTotals: JsonTotals): number {
-        const points = this.competitionConfig.getLineScorePoints({ line, score: FootballScore.CleanSheet });
+        const points = this.competitionConfig.getLineScorePoints({ line, score: FootballSheet.Clean });
         return jsonTotals.nrOfCleanSheets * points;
     }
 
     public getSpottySheetPoints(line: FootballLine.GoalKeeper | FootballLine.Defense, jsonTotals: JsonTotals): number {
-        const points = this.competitionConfig.getLineScorePoints({ line, score: FootballScore.SpottySheet });
+        const points = this.competitionConfig.getLineScorePoints({ line, score: FootballSheet.Spotty });
         return jsonTotals.nrOfSpottySheets * points;
     }
 
     public getCardPoints(jsonTotals: JsonTotals): number {
-        const yellowCardPoints = this.competitionConfig.getScorePoints(FootballScore.YellowCard);
-        const redCardPoints = this.competitionConfig.getScorePoints(FootballScore.RedCard);
+        const yellowCardPoints = this.competitionConfig.getScorePoints(FootballCard.Yellow);
+        const redCardPoints = this.competitionConfig.getScorePoints(FootballCard.Red);
         return (jsonTotals.nrOfYellowCards * yellowCardPoints) + (jsonTotals.nrOfRedCards * redCardPoints);
     }
 }

@@ -8,7 +8,7 @@ import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { CompetitionConfigRepository } from '../../lib/competitionConfig/repository';
 import { CSSService } from '../../shared/commonmodule/cssservice';
-import { FootballScore } from '../../lib/score';
+import { FootballCard, FootballGoal, FootballResult, FootballScore, FootballSheet } from '../../lib/score';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 
 @Component({
@@ -71,8 +71,8 @@ export class RulesComponent extends PoolComponent implements OnInit {
   }
 
   getPointsItems(): PointsItem[] {
-    return [FootballScore.WinResult, FootballScore.DrawResult, FootballScore.PenaltyGoal,
-    FootballScore.OwnGoal, FootballScore.YellowCard, FootballScore.RedCard].map((score: FootballScore): PointsItem => {
+    return [FootballResult.Win, FootballResult.Draw, FootballGoal.Penalty,
+    FootballGoal.Own, FootballCard.Yellow, FootballCard.Red].map((score: FootballScore): PointsItem => {
       return {
         name: this.nameService.getScoreName(score), points: this.pool.getCompetitionConfig().getScorePoints(score)
       }
@@ -80,10 +80,10 @@ export class RulesComponent extends PoolComponent implements OnInit {
   }
 
   getLinePointsItems(line: FootballLine): PointsItem[] {
-    const scores = [FootballScore.Goal, FootballScore.Assist];
+    const scores: FootballScore[] = [FootballGoal.Normal, FootballGoal.Assist];
     if (line === FootballLine.GoalKeeper || line === FootballLine.Defense) {
-      scores.push(FootballScore.CleanSheet);
-      scores.push(FootballScore.SpottySheet);
+      scores.push(FootballSheet.Clean);
+      scores.push(FootballSheet.Spotty);
     }
     return scores.map((score: FootballScore): PointsItem => {
       return {

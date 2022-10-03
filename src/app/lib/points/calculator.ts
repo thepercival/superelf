@@ -1,6 +1,6 @@
 import { AgainstResult, FootballLine } from "ngx-sport";
 import { CompetitionConfig } from "../competitionConfig";
-import { FootballScore } from "../score";
+import { FootballCard, FootballGoal, FootballResult, FootballScore, FootballSheet } from "../score";
 import { Statistics } from "../statistics";
 
 export class PointsCalculator {
@@ -18,18 +18,18 @@ export class PointsCalculator {
     public getResultPoints(statistics: Statistics): number {
         const result = statistics.getResult();
         if (result === AgainstResult.Win) {
-            return this.competitionConfig.getScorePoints(FootballScore.WinResult);
+            return this.competitionConfig.getScorePoints(FootballResult.Win);
         } else if (result === AgainstResult.Draw) {
-            return this.competitionConfig.getScorePoints(FootballScore.DrawResult);
+            return this.competitionConfig.getScorePoints(FootballResult.Draw);
         }
         return 0;
     }
 
     public getGoalPoints(line: FootballLine, statistics: Statistics): number {
-        const fieldGoalPoints = this.competitionConfig.getLineScorePoints({ line, score: FootballScore.Goal });
-        const assistPoints = this.competitionConfig.getLineScorePoints({ line, score: FootballScore.Assist });
-        const penaltyGoalPoints = this.competitionConfig.getScorePoints(FootballScore.PenaltyGoal);
-        const ownGoalPoints = this.competitionConfig.getScorePoints(FootballScore.OwnGoal);
+        const fieldGoalPoints = this.competitionConfig.getLineScorePoints({ line, score: FootballGoal.Normal });
+        const assistPoints = this.competitionConfig.getLineScorePoints({ line, score: FootballGoal.Assist });
+        const penaltyGoalPoints = this.competitionConfig.getScorePoints(FootballGoal.Penalty);
+        const ownGoalPoints = this.competitionConfig.getScorePoints(FootballGoal.Own);
 
         let total = statistics.getNrOfFieldGoals() * fieldGoalPoints;
         total += statistics.getNrOfAssists() * assistPoints;
@@ -40,7 +40,7 @@ export class PointsCalculator {
 
 
     protected getAssistPoints(line: FootballLine, statistics: Statistics): number {
-        const assistPoints = this.competitionConfig.getLineScorePoints({ line, score: FootballScore.Assist });
+        const assistPoints = this.competitionConfig.getLineScorePoints({ line, score: FootballGoal.Assist });
         return statistics.getNrOfAssists() * assistPoints;
     }
 
@@ -53,18 +53,18 @@ export class PointsCalculator {
     }
 
     public getCleanSheetPoints(line: FootballLine, statistics: Statistics): number {
-        const points = this.competitionConfig.getLineScorePoints({ line, score: FootballScore.CleanSheet });
+        const points = this.competitionConfig.getLineScorePoints({ line, score: FootballSheet.Clean });
         return statistics.hasCleanSheet() ? points : 0;
     }
 
     public getSpottySheetPoints(line: FootballLine, statistics: Statistics): number {
-        const points = this.competitionConfig.getLineScorePoints({ line, score: FootballScore.SpottySheet });
+        const points = this.competitionConfig.getLineScorePoints({ line, score: FootballSheet.Spotty });
         return statistics.hasSpottySheet() ? points : 0;
     }
 
     public getCardPoints(statistics: Statistics): number {
-        const yellowCardPoints = this.competitionConfig.getScorePoints(FootballScore.YellowCard);
-        const redCardPoints = this.competitionConfig.getScorePoints(FootballScore.RedCard);
+        const yellowCardPoints = this.competitionConfig.getScorePoints(FootballCard.Yellow);
+        const redCardPoints = this.competitionConfig.getScorePoints(FootballCard.Red);
         let total = statistics.getNrOfYellowCards() * yellowCardPoints;
         total += statistics.gotDirectRedCard() ? redCardPoints : 0;
         return total;

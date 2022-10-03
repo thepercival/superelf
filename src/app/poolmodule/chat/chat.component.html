@@ -42,7 +42,7 @@
                     [ngTemplateOutletContext]="{message, end: i % 2 === 1}">
                 </ng-container>
                 <div class="d-flex" [ngClass]="{'flex-row-reverse': i % 2 === 1}"><span
-                        class="badge bg-light">{{message.getText()}}</span></div>
+                        class="badge bg-light py-3 px-2 fs-6">{{message.getText()}}</span></div>
             </div>
 
         </div>
@@ -50,7 +50,7 @@
 </div>
 
 <ng-template #contentMessageTitle let-message="message" let-end="end">
-    <div class="d-flex" [ngClass]="{'flex-row-reverse': end}">
+    <div class="d-flex mx-1" [ngClass]="{'flex-row-reverse': end}">
         <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
 
         <span class="ms-1">{{message.getUser().getName()}}</span>

@@ -1,15 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, Player, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
-import { concatMap, map, Observable, of } from 'rxjs';
+import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
+import { forkJoin, map, Observable } from 'rxjs';
 import { GameRound } from '../../lib/gameRound';
-import { GamePicker } from '../../lib/gameRound/gamePicker';
 import { ImageRepository } from '../../lib/image/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
-import { S11Player, StatisticsMap } from '../../lib/player';
-import { PointsCalculator } from '../../lib/points/calculator';
 import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
@@ -19,6 +15,7 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
+import { AgainstGameEvent, AgainstGameLineupItem } from '../../lib/ngx-sport/game/football';
 
 @Component({
   selector: 'app-game-source',
@@ -27,23 +24,14 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 })
 export class SourceGameComponent extends PoolComponent implements OnInit {
   public game: AgainstGame | undefined;
-  // public pool!: Pool;
-  // private pointsCalculator!: PointsCalculator;
-  // public currentGameRound: GameRound | undefined;
+
   private startLocationMap!: StartLocationMap;
+  private lineupSidesMap: Map<AgainstSide, AgainstGameLineupItem[]> = new Map();
+  private eventsSidesMap: Map<AgainstSide, AgainstGameEvent[]> = new Map();
 
-  // @Input() team: Team | undefined;
   public processing = true;
-  // public processingGames = false;
-  // public currentGame: AgainstGame | undefined;
-  // public currentStatistics: Statistics | undefined;
-  // public currentPoints: number | undefined;
-  // public sourceStructure: Structure | undefined;
-  // public startLocationMap!: StartLocationMap;
-
-  // public oneTeamSimultaneous = new OneTeamSimultaneous();
-  // public player: Player | undefined;
-  // private sliderGameRounds: (GameRound | undefined)[] = [];
+  public processingLineups = true;
+  public processingEvents = true;
 
   constructor(
     route: ActivatedRoute,
@@ -78,10 +66,38 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
                   const competitors = game.getPoule().getCompetition().getTeamCompetitors();
                   this.startLocationMap = new StartLocationMap(competitors);
 
-                  // const teams = [this.getTeam(AgainstSide.Home), this.getTeam(AgainstSide.Away)];
-                  // this.playerRepository.getObjects(pool.getSourceCompetition(), pool.getCreateAndJoinPeriod()).subscribe({
-                  //   next: (scoutedPlayers: ScoutedPlayer[]) => {
-                  //     scoutedPlayers.forEach(scoutedPlayer => this.addToScoutingList(scoutedPlayer))
+                  // (AgainstGameGoalEvent | AgainstGameCardEvent)[]
+                  // AgainstGameLineupItem[]
+
+                  const lineupRequests = [AgainstSide.Home, AgainstSide.Away].map((side: AgainstSide) => {
+                    return this.gameRepository.getSourceObjectLineup(game, side).pipe(
+                      map((lineupItems: AgainstGameLineupItem[]) => {
+                        this.lineupSidesMap.set(side, lineupItems);
+                      })
+                    );
+                  });
+                  forkJoin(lineupRequests).subscribe({
+                    next: (results) => {
+                      this.processingLineups = false;
+                    }
+                  });
+
+                  const eventsRequests = [AgainstSide.Home, AgainstSide.Away].map((side: AgainstSide) => {
+                    return this.gameRepository.getSourceObjectEvents(game, side).pipe(
+                      map((events: AgainstGameEvent[]) => {
+                        this.eventsSidesMap.set(side, events);
+                      })
+                    );
+                  });
+                  forkJoin(lineupRequests).subscribe({
+                    next: (results) => {
+                      this.processingEvents = false;
+                    }
+                  });
+
+                  // this.gameRepository.getSourceObjectLineup(game, AgainstSide.Home).subscribe({
+                  //   next: (lineupItems: AgainstGameLineupItem[]) => {
+                  //     this.lineupSidesMap.set(AgainstSide.Home, lineupItems);
                   //   },
                   //   error: (e) => {
                   //     this.setAlert('danger', e); this.processing = false;
@@ -95,26 +111,18 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
             });
           }
         });
-
       });
-      // this.initPoolUser(pool);
-      // this.initScoutedPlayers(pool);
     });
+  }
 
-    // this.pointsCalculator = new PointsCalculator(this.pool.getCompetitionConfig());
+  getLineUp(side: AgainstSide): AgainstGameLineupItem[] {
+    const item = this.lineupSidesMap.get(side);
+    return item !== undefined ? item : [];
+  }
 
-    // this.startLocationMap = new StartLocationMap(this.pool.getSourceCompetition().getTeamCompetitors());
-
-    // this.initSliderGameRounds();
-
-    // this.updateGameRound();
-
-
-
-
-
-
-
+  getEvents(side: AgainstSide): AgainstGameEvent[] {
+    const item = this.eventsSidesMap.get(side);
+    return item !== undefined ? item : [];
   }
 
   get HomeSide(): AgainstSide { return AgainstSide.Home; }

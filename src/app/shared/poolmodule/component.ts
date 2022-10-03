@@ -55,8 +55,10 @@ export class PoolComponent {
         // this.globalEventsManager.showFooter.emit(false);
     }
 
-    public getCurrentViewPeriod(pool: Pool): ViewPeriod {
-        const date = new Date();
+    public getCurrentViewPeriod(pool: Pool, date?: Date): ViewPeriod {
+        if (date === undefined) {
+            date = new Date();
+        }
         if (date.getTime() > pool.getTransferPeriod().getEndDateTime().getTime()) {
             return pool.getTransferPeriod().getViewPeriod();
         }

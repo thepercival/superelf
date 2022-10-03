@@ -23,12 +23,13 @@
 
             <td class="text-break ps-0 pointer" [ngClass]="{ 'favitem': false}"
                 (click)="navigateToPoolUser(sportRankingItem.getPerformance().getPlace(), undefined)">
-                {{structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
+                <ins>{{structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}</ins>
+
             </td>
             <td *ngIf="currentGameRound" class="text-end ps-0 pointer"
                 (click)="navigateToPoolUser(sportRankingItem.getPerformance().getPlace(), currentGameRound)">
-                {{getScore(sportRankingItem.getPlaceLocation(),
-                currentGameRound )}}</td>
+                <ins>{{getScore(sportRankingItem.getPlaceLocation(),currentGameRound )}}</ins>
+            </td>
             <td class="text-end ps-0">{{sportRankingItem.getPerformance().getPoints()}}</td>
         </tr>
     </tbody>

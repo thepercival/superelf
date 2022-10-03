@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AgainstGame, FootballLine, GameState, ScoreConfigService } from 'ngx-sport';
 import { LeagueName } from './leagueName';
-import { FootballScore } from './score';
+import { FootballCard, FootballGoal, FootballResult, FootballScore, FootballSheet } from './score';
 
 @Injectable({
     providedIn: 'root'
@@ -29,25 +29,25 @@ export class SuperElfNameService {
 
     getScoreName(score: FootballScore): string {
         switch (score) {
-            case FootballScore.WinResult:
+            case FootballResult.Win:
                 return 'gewonnen';
-            case FootballScore.DrawResult:
+            case FootballResult.Draw:
                 return 'gelijk';
-            case FootballScore.Goal:
+            case FootballGoal.Normal:
                 return 'goal';
-            case FootballScore.Assist:
+            case FootballGoal.Assist:
                 return 'assist';
-            case FootballScore.PenaltyGoal:
+            case FootballGoal.Penalty:
                 return 'penalty';
-            case FootballScore.OwnGoal:
+            case FootballGoal.Own:
                 return 'eigen goal';
-            case FootballScore.CleanSheet:
+            case FootballSheet.Clean:
                 return 'geen tegengoals';
-            case FootballScore.SpottySheet:
+            case FootballSheet.Spotty:
                 return 'te veel tegengoals';
-            case FootballScore.YellowCard:
+            case FootballCard.Yellow:
                 return 'gele kaart';
-            case FootballScore.RedCard:
+            case FootballCard.Red:
                 return 'rode kaart';
         }
         return '?';
