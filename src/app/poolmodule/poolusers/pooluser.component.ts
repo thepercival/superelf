@@ -127,9 +127,10 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
         if (currentGameRound !== undefined) {
           const idx = this.gameRounds.indexOf(this.currentGameRound);
           if (idx >= 0) {
-            this.gameRounds = this.gameRounds.splice(idx).concat(this.gameRounds);
+            this.gameRounds = this.gameRounds.splice(idx).concat([undefined], this.gameRounds);
+          } else {
+            this.gameRounds.push(undefined);
           }
-          this.gameRounds.push(undefined);
         } else {
           this.gameRounds.unshift(undefined);
         }
