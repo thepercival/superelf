@@ -62,5 +62,6 @@ export class PouleTitleComponent implements OnInit {
     }
     return '' + performance.getPoints();
   }
+  
 }
 

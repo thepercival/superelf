@@ -44,14 +44,16 @@
                     <tr *ngIf="first">
                         <td class="border-bottom-0 pt-3 pb-0"></td>
                         <td class="border-bottom-0 text-end pt-3 pb-0">
-                            <span *ngIf="getCurrentPoolGame(currentGameRound)?.getState() !== Created"
+                            <a [routerLink]="['/pool/user', homeCompetitor.getPoolUser().getPool().getId(), homeCompetitor.getPoolUser().getId(), currentGameRound.getNumber()]" 
+                            *ngIf="getCurrentPoolGame(currentGameRound)?.getState() !== Created"
                                 class="badge bg-totals">
-                                {{getPoolGamePoints(currentGameRound, homeCompetitor)}}</span>
+                                {{getPoolGamePoints(currentGameRound, homeCompetitor)}}</a>
                         </td>
                         <td class="border-bottom-0 pt-3 pb-0">
-                            <span *ngIf="getCurrentPoolGame(currentGameRound)?.getState() !== Created"
+                            <a [routerLink]="['/pool/user', awayCompetitor.getPoolUser().getPool().getId(), awayCompetitor.getPoolUser().getId(), currentGameRound.getNumber()]" 
+                            *ngIf="getCurrentPoolGame(currentGameRound)?.getState() !== Created"
                                 class="badge bg-totals">
-                                {{getPoolGamePoints(currentGameRound, awayCompetitor)}}</span>
+                                {{getPoolGamePoints(currentGameRound, awayCompetitor)}}</a>
                         </td>
                         <td class="border-bottom-0 pt-3 pb-0"></td>
                     </tr>

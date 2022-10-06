@@ -1,22 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportRoundRankingCalculator, Competition, CompetitionSport, Competitor, CompetitorBase, GameState, Place, Poule, Round, SportRoundRankingItem, StartLocationMap, Structure, Team, TeamCompetitor, TogetherSportRoundRankingCalculator } from 'ngx-sport';
+import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Poule, Round, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 import { AuthService } from '../../lib/auth/auth.service';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
 import { DateFormatter } from '../../lib/dateFormatter';
-import { S11Formation } from '../../lib/formation';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GameRound } from '../../lib/gameRound';
 import { ImageRepository } from '../../lib/image/repository';
 import { LeagueName } from '../../lib/leagueName';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
-import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { AssemblePeriod } from '../../lib/period/assemble';
 import { TransferPeriod } from '../../lib/period/transfer';
-import { S11Player, StatisticsMap } from '../../lib/player';
+import { StatisticsMap } from '../../lib/player';
 import { Pool } from '../../lib/pool';
 import { PoolCompetitor } from '../../lib/pool/competitor';
 import { PoolRepository } from '../../lib/pool/repository';
@@ -388,5 +386,10 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
 
   navigateToChat(poolPoule: Poule): void {
     this.router.navigate(['/pool/chat', this.pool.getId(), this.leagueName, poolPoule.getId()]);
+  }
+
+  navigateToPoolUser(poolUser: PoolUser): void {
+    console.log(poolUser);
+    // this.router.navigate(['/pool/user', poolUser.getPool().getId(), poolUser.getId(), this.currentGameRound ? this.currentGameRound.getNumber() : 0]);
   }
 }
