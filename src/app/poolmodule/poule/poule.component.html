@@ -183,8 +183,7 @@
 
 <ng-template #lineupScore let-formationPlace="formationPlace" let-sourceGame="sourceGame">
 
-    <ng-container *ngIf="formationPlace.hasAppeared();else startingNotAppeared">
-
+    <ng-container *ngIf="formationPlace.hasAppeared(currentGameRound);else startingNotAppeared">
         <span class="badge bg-points">
             <a [routerLink]="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
                 {{formationPlace.getPoints(currentGameRound)}}
