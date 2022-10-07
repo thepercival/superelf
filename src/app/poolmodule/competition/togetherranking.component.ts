@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Poule, GameAmountConfig, GameState, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, Place, AgainstGpp, AgainstH2h, Single, AllInOneGame, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { GameRound } from '../../lib/gameRound';
 import { PoolCompetitor } from '../../lib/pool/competitor';
+import { PoolUser } from '../../lib/pool/user';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../shared/commonmodule/viewPortManager';
 
@@ -87,16 +88,6 @@ export class TogetherRankingComponent implements OnInit {
     return sportVariant;
   }
 
-  getGameRounds(): number[] {
-    // const gameRounds: number[] = [];
-    // const iterator = (new Array(this.gameAmountConfig.getAmount())).keys();
-    // for (const key of iterator) {
-    //   gameRounds.push(1 + key);
-    // }
-    // console.log('gameRounds', gameRounds);
-    return [6]; // gameRounds;
-  }
-
   getScore(placeLocation: PlaceLocation, gameRound: GameRound): number {
     const gameRoundMap = this.scoreMap.get(placeLocation.getRoundLocationId());
     if (gameRoundMap === undefined) {
@@ -120,31 +111,23 @@ export class TogetherRankingComponent implements OnInit {
     return uniqueRank <= 2 ? 'text-bg-success' : 'text-black';
   }
 
-  navigateToPoolUser(place: Place, gameRound: GameRound | undefined): void {
+  getPoolUser(place: Place): PoolUser | undefined {
     const startLocation = place.getStartLocation();
     if (startLocation === undefined) {
       return;
     }
     const competitor = <PoolCompetitor>this.startLocationMap.getCompetitor(startLocation);
-    if (competitor == undefined) {
-      return;
-    }
-    const poolUser = competitor.getPoolUser();
-
-    this.router.navigate(['/pool/user', poolUser.getPool().getId(), poolUser.getId(), gameRound ? gameRound.getNumber() : 0]);
+    return competitor?.getPoolUser();
   }
 
-  // getViewRange(viewport: number): VoetbalRange {
-  //   return { min: this.activeGameRound - (viewport - 1), max: this.activeGameRound };
-  // }
+  getRouterLink(place: Place, gameRound: GameRound | undefined): (string | number)[] {
+    const poolUser = this.getPoolUser(place);
+    if (poolUser == undefined) {
+      throw new Error('could not find pooluser');
+    }
 
-  // nrOfColumnsPerViewport: ViewPortColumns = { xs: 2, sm: 5, md: 10, lg: 15, xl: 30 };
-
-  // useSubScore() {
-  //   return this.poule.getRound().getNumber().getValidScoreConfigs().some(scoreConfig => {
-  //     return scoreConfig.useSubScore();
-  //   });
-  // }
+    return ['/pool/user', poolUser.getPool().getId(), poolUser.getId(), gameRound ? gameRound.getNumber() : 0];
+  }
 }
 
 

@@ -6,12 +6,8 @@
                 <fa-icon *ngIf="!CupOrSuperCup" [icon]="['fas', 'list-ol']"></fa-icon>
                 <app-superelf-icon *ngIf="CupOrSuperCup" [name]="'super-cup'"></app-superelf-icon>
 
-                <span class="ms-1">{{leagueName}}</span>
+                <span class="ms-1">{{nameService.getLeagueName(leagueName)}}</span>
             </h2>
-            <button (click)="navigateBack()" type="button" class="btn btn-outline-dark ms-1">
-                <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
-                <span class="ms-1 d-none d-md-inline"> terug</span>
-            </button>
         </div>
 
         <h2 *ngIf="processing" class="text-center">
