@@ -28,7 +28,7 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
 
   private startLocationMap!: StartLocationMap;
   private lineupSidesMap: Map<AgainstSide, AgainstGameLineupItem[]> = new Map();
-  private eventsSidesMap: Map<AgainstSide, (AgainstGameGoalEvent|AgainstGameCardEvent)[]> = new Map();
+  private eventsSidesMap: Map<AgainstSide, (AgainstGameGoalEvent | AgainstGameCardEvent)[]> = new Map();
 
   public processing = true;
   public processingLineups = true;
@@ -85,7 +85,7 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
 
                   const eventsRequests = [AgainstSide.Home, AgainstSide.Away].map((side: AgainstSide) => {
                     return this.gameRepository.getSourceObjectEvents(game, side).pipe(
-                      map((events: (AgainstGameGoalEvent|AgainstGameCardEvent)[]) => {
+                      map((events: (AgainstGameGoalEvent | AgainstGameCardEvent)[]) => {
                         this.eventsSidesMap.set(side, events);
                       })
                     );
@@ -134,18 +134,18 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
     return 'color' in event;
   }
 
-  getCode(eventItem: AgainstGameGoalEvent|AgainstGameCardEvent): string {
-    if( this.instanceOfGoalEvent(eventItem) ) {
-      if( eventItem.score === FootballGoal.Normal) {
+  getCode(eventItem: AgainstGameGoalEvent | AgainstGameCardEvent): string {
+    if (this.instanceOfGoalEvent(eventItem)) {
+      if (eventItem.score === FootballGoal.Normal) {
         return 'G';
       }
-      if( eventItem.score === FootballGoal.Penalty) {
+      if (eventItem.score === FootballGoal.Penalty) {
         return 'P';
       }
       return 'OG';
     }
 
-    if( eventItem.color === FootballCard.Yellow) {
+    if (eventItem.color === FootballCard.Yellow) {
       return 'YC';
     }
     return 'RC';

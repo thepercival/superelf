@@ -38,7 +38,7 @@
             </h2>
 
             <div *ngIf="!processingEvents" class="d-flex justify-content-center">
-                
+
 
                 <div class="me-3">
                     <ng-container [ngTemplateOutlet]="eventsSide"
@@ -83,9 +83,15 @@
 <ng-template #eventsSide let-eventItems="eventItems">
     <ul class="list-group list-group-flush">
         <li class="list-group-item" *ngFor="let eventItem of eventItems">
-            <span>{{eventItem.minute}}"</span>
-            <span class="px-1">{{getCode(eventItem)}}</span>
-            <span>{{eventItem.player.getPerson().getName()}}</span>
+            <div>
+                <span>{{eventItem.minute}}"</span>
+                <span class="px-1">{{getCode(eventItem)}}</span>
+                <span>{{eventItem.player.getPerson().getName()}}</span>
+            </div>
+            <div *ngIf="eventItem.assistPlayer">
+                <span class="px-3">A</span>
+                <span>{{eventItem.assistPlayer.getPerson().getName()}}</span>
+            </div>
         </li>
     </ul>
 </ng-template>
