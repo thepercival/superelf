@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportRoundRankingCalculator, Competition, CompetitionSport, Competitor, CompetitorBase, GameState, Place, Poule, Round, SportRoundRankingItem, StartLocationMap, Structure, Team, TeamCompetitor, TogetherSportRoundRankingCalculator } from 'ngx-sport';
+import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Player, Poule, Round, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 import { AuthService } from '../../lib/auth/auth.service';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
@@ -12,11 +12,10 @@ import { ImageRepository } from '../../lib/image/repository';
 import { LeagueName } from '../../lib/leagueName';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
-import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { AssemblePeriod } from '../../lib/period/assemble';
 import { TransferPeriod } from '../../lib/period/transfer';
-import { S11Player, StatisticsMap } from '../../lib/player';
+import { StatisticsMap } from '../../lib/player';
 import { Pool } from '../../lib/pool';
 import { PoolCompetitor } from '../../lib/pool/competitor';
 import { PoolRepository } from '../../lib/pool/repository';
@@ -42,6 +41,7 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
 
   public leagueName!: LeagueName;
   public sourceGames: AgainstGame[] = [];
+  // private sideMap: SideMap|undefined;
   public poolPoule: Poule | undefined;
   public poolStartLocationMap!: StartLocationMap;
   private startLocationMap!: StartLocationMap;
@@ -242,6 +242,7 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
     this.gameRepository.getSourceObjects(this.sourcePoule, gameRound).subscribe({
       next: (games: AgainstGame[]) => {
         this.sourceGames = games;
+        // this.sideMap = this.getSideMap(games);
 
         if (this.gotStatistics) {
           this.processingGameRound = false;
@@ -258,9 +259,57 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
         });
       }
     });
-
-
   }
+
+  // private getSideMap(games: AgainstGame[]): SideMap {
+  //   const sideMap: SideMap = new Map();
+
+  //   // 
+  //   [AgainstSide.Home, AgainstSide.Away].forEach((side: AgainstSide) => {
+
+  //     // const teams = this.getTeamsFromGames(games);
+
+  //     sideMap.set(side, this.getFormationPlacesMap(teams));
+  //   });
+  //   return sideMap;
+  // }
+
+  // private getFormationPlacesMap(formation: S11Formation, date: Date): FormationPlacesMap {
+  //   const formationPlacesMap: FormationPlacesMap = new Map();
+
+  //   formation.getPlaces().forEach((formationPlace: S11FormationPlace) => {
+  //     formationPlace.getPlayer()?.getPlayer(date)
+  //     formationPlacesMap.set(+team.getId(), this.getFormationPlaces(games));
+  //   });
+  //   return formationPlacesMap;
+  // }
+
+  //   const editPeriod = this.getCurrentEditPeriod(this.pool);
+  //   const formation = editPeriod ? competitor.getPoolUser().getFormation(editPeriod) : undefined;
+  //   // const team = this.getTeam(sourceGame.getSidePlaces(side));
+  //   if (formation === undefined/* || team === undefined*/) {
+  //     return [];
+  //   }
+  //   // @TODO CDK ORDER BY TEAMS
+  //   const teams = this.getTeams(sourceGame);
+  //   console.log(teams);
+  //   let formationPlaces: S11FormationPlace[] = [];
+  //   teams.forEach((team: Team | undefined) => {
+  //     if (team === undefined) {
+  //       return undefined;
+  //     }
+
+
+  //     formationPlaces = formationPlaces.concat(formation.getPlaces().filter((formationPlace: S11FormationPlace): boolean => {
+  //       const s11Player = formationPlace.getPlayer();
+  //       if (s11Player === undefined) {
+  //         return false;
+  //       }
+  //       return s11Player.getPlayer(team) !== undefined;
+  //     })
+  //     );
+  //   });
+
 
   getStatisticsRequests(editPeriod: AssemblePeriod | TransferPeriod): Observable<StatisticsMap>[] {
     const setStatistics: Observable<StatisticsMap>[] = [];
@@ -297,31 +346,32 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
     return sideCompetitor instanceof CompetitorBase;
   }
 
-  getFormationPlaces(sourceGame: AgainstGame, competitor: PoolCompetitor): S11FormationPlace[] {
+  getFormationPlacesLines(sourceGame: AgainstGame, team: Team): FormationPlacesLine[] {
+    const homeFormationPlaces = this.getFormationPlaces(sourceGame, AgainstSide.Home, team);
+    const awayFormationPlaces = this.getFormationPlaces(sourceGame, AgainstSide.Away, team);
+
+    const minNrOfItems = Math.max(...[homeFormationPlaces.length, awayFormationPlaces.length]);
+    const lines: FormationPlacesLine[] = [];
+    for (let i = 0; i < minNrOfItems; i++) {
+      lines.push({ home: homeFormationPlaces.shift(), away: awayFormationPlaces.shift() });
+    }
+    return lines;
+  }
+
+  getFormationPlaces(sourceGame: AgainstGame, side: AgainstSide, team: Team): (S11FormationPlace | undefined)[] {
     const editPeriod = this.getCurrentEditPeriod(this.pool);
-    const formation = editPeriod ? competitor.getPoolUser().getFormation(editPeriod) : undefined;
-    // const team = this.getTeam(sourceGame.getSidePlaces(side));
-    if (formation === undefined/* || team === undefined*/) {
+    const competitor = side === AgainstSide.Home ? this.homeCompetitor : this.awayCompetitor;
+    const formation = editPeriod && competitor ? competitor.getPoolUser().getFormation(editPeriod) : undefined;
+    if (formation === undefined) {
       return [];
     }
-    // @TODO CDK ORDER BY TEAMS
-    const teams = this.getTeams(sourceGame);
-
-    let formationPlaces: S11FormationPlace[] = [];
-    teams.forEach((team: Team | undefined) => {
-      if (team === undefined) {
-        return undefined;
+    return formation.getPlaces().filter((formationPlace: S11FormationPlace): boolean => {
+      const s11Player = formationPlace.getPlayer();
+      if (s11Player === undefined) {
+        return false;
       }
-      formationPlaces = formationPlaces.concat(formation.getPlaces().filter((formationPlace: S11FormationPlace): boolean => {
-        const s11Player = formationPlace.getPlayer();
-        if (s11Player === undefined) {
-          return false;
-        }
-        return s11Player.getPlayer(team) !== undefined;
-      })
-      );
+      return s11Player.getPlayer(team, sourceGame.getStartDateTime()) !== undefined;
     });
-    return formationPlaces;
   }
 
   // getLineClass(prefix: string): string {
@@ -344,14 +394,16 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
   //   return team ? formation?.getPlayer(team, sourceGame.getStartDateTime()) : undefined;
   // }
 
-  protected getTeams(sourceGame: AgainstGame): (Team | undefined)[] {
-    return sourceGame.getSidePlaces().map((sideGamePlace: AgainstGamePlace): Team | undefined => {
+
+
+  protected getTeams(sourceGame: AgainstGame): Team[] {
+    return sourceGame.getSidePlaces().map((sideGamePlace: AgainstGamePlace): Team => {
       const startLocation = sideGamePlace.getPlace().getStartLocation();
       if (startLocation === undefined) {
-        return undefined;
+        throw new Error('unknown team');
       }
       const competitor = <TeamCompetitor>this.startLocationMap.getCompetitor(startLocation);
-      return competitor?.getTeam();
+      return competitor.getTeam();
     });
   }
 
@@ -390,3 +442,11 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
     this.router.navigate(['/pool/chat', this.pool.getId(), this.leagueName, poolPoule.getId()]);
   }
 }
+
+interface FormationPlacesLine {
+  home: S11FormationPlace | undefined;
+  away: S11FormationPlace | undefined;
+}
+
+// type SideMap = Map<AgainstSide, FormationPlacesMap>;
+// type FormationPlacesMap = Map<number, S11FormationPlace[]>; 

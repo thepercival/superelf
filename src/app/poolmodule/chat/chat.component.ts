@@ -8,6 +8,7 @@ import { ChatMessageRepository } from '../../lib/chatMessage/repository';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { ImageRepository } from '../../lib/image/repository';
 import { LeagueName } from '../../lib/leagueName';
+import { SuperElfNameService } from '../../lib/nameservice';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
@@ -52,6 +53,7 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
     private structureRepository: StructureRepository,
     private poolUserRepository: PoolUserRepository,
     private chatMessageRepository: ChatMessageRepository,
+    public nameService: SuperElfNameService,
     private dateFormatter: DateFormatter,
     public imageRepository: ImageRepository,
     public cssService: CSSService,

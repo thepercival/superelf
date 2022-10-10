@@ -70,13 +70,12 @@
                 }
               ],
               "optimization": {
+                "scripts": true,
                 "styles": {
                   "minify": true,
                   "inlineCritical": true
                 },
-                "fonts": {
-                  "inline": true
-                }
+                "fonts": true
               },
               "outputHashing": "all",
               "serviceWorker": true

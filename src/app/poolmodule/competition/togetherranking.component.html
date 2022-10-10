@@ -25,12 +25,17 @@
                 {{structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
 
             </td>
-            <td *ngIf="currentGameRound" class="text-end ps-0 pointer"
-                (click)="navigateToPoolUser(sportRankingItem.getPerformance().getPlace(), currentGameRound)">
-                <ins>{{getScore(sportRankingItem.getPlaceLocation(),currentGameRound )}}</ins>
+            <td *ngIf="currentGameRound" class="text-end ps-0 pointer">
+                <a [routerLink]="getRouterLink(sportRankingItem.getPerformance().getPlace(), currentGameRound)"
+                    class="badge bg-points">
+                    {{getScore(sportRankingItem.getPlaceLocation(),currentGameRound )}}</a>
+
             </td>
-            <td class="text-end ps-0" (click)="navigateToPoolUser(sportRankingItem.getPerformance().getPlace(), undefined)">
-                <ins>{{sportRankingItem.getPerformance().getPoints()}}</ins></td>
+            <td class="text-end ps-0">
+                <a [routerLink]="getRouterLink(sportRankingItem.getPerformance().getPlace(), undefined)"
+                    class="badge bg-totals">
+                    {{sportRankingItem.getPerformance().getPoints()}}</a>
+            </td>
         </tr>
     </tbody>
 </table>

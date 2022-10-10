@@ -1,4 +1,4 @@
-import { FootballLine, Identifiable } from 'ngx-sport';
+import { FootballLine, GameState, Identifiable } from 'ngx-sport';
 import { S11Formation } from '../formation';
 import { GameRound } from '../gameRound';
 import { S11Player } from '../player';
@@ -38,6 +38,35 @@ export class S11FormationLine extends Identifiable {
         });
     }
 
+    public getStartingPlacesState(gameRound: GameRound): GameState {
+        const finishedPlaces = this.getStartingPlaces().filter((formationPlace: S11FormationPlace): boolean => {
+            return formationPlace.getPlayer()?.getGameStatistics(gameRound.getNumber()) !== undefined;
+        });
+
+        if (finishedPlaces.length === this.getStartingPlaces().length) {
+            return GameState.Finished;
+        }
+        if (finishedPlaces.length > 0) {
+            return GameState.InProgress;
+        }
+        return GameState.Created;
+    }
+
+    // public canSubstituteAppear(gameRound: GameRound): GameState {
+    //     const finishedPlaces = this.getStartingPlaces().filter((formationPlace: S11FormationPlace): boolean => {
+    //         return formationPlace.getPlayer()?.getGameStatistics(gameRound.getNumber()) !== undefined;
+    //     });
+
+    //     if (finishedPlaces.length === this.getStartingPlaces().length) {
+    //         return GameState.Finished;
+    //     }
+    //     if (finishedPlaces.length > 0) {
+    //         return GameState.InProgress;
+    //     }
+    //     return GameState.Created;
+    // }
+
+
     public getSubstitute(): S11FormationPlace {
         return this.getPlace(S11FormationLine.SUBSTITUTE_NUMBER);
     }
@@ -62,6 +91,7 @@ export class S11FormationLine extends Identifiable {
         if (gameRound === undefined) {
             return this.substituteAppearances.size > 0;
         }
+        // console.log(this.getNumber(), this.substituteAppearances.has(gameRound.getNumber()));
         return this.substituteAppearances.has(gameRound.getNumber());
     }
 
