@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AgainstGame, Player } from 'ngx-sport';
+import { AgainstGame, GameState } from 'ngx-sport';
 
 @Component({
   selector: 'app-game-scroller',
@@ -16,16 +16,23 @@ export class GameScrollerComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.games.slice().every((game: AgainstGame): boolean => {
+      if( game.getState() !== GameState.Finished ) {
+        return false;
+      }
+      this.games.shift()
+      this.games.push(game);
+      return true;
+    });
   }
 
   previous(): void {
-    //console.log('gamescroller->previous pre', this.games.slice());
+    console.log('gamescroller->previous pre', this.games.slice());
     const current = this.games.pop();
     if (current) {
       this.current = current;
       this.games.unshift(this.current);
-      //console.log('gamescroller->previous post', this.games.slice());
+      console.log('gamescroller->previous post', this.games.slice());
       this.update.emit(this.current);
     }
   }

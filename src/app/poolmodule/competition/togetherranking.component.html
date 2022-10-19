@@ -10,24 +10,34 @@
                 {{currentGameRound.getNumber()}}</th>
 
             <th class="ps-0 text-end" title="totaal">
-                <span class="d-none d-sm-inline">tot.</span>
+                <!-- <button class="btn btn-sm disabled">
+                    <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+                </button> -->
             </th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let sportRankingItem of sportRankingItems">
-            <td class="rankingnr text-end ps-0">
-                <span
-                    class="badge {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
-            </td>
+
+            <ng-container *ngIf="!worldcupQualify2(sportRankingItem);else worldcupQualify">
+                <td class="rankingnr text-end ps-0"><!-- badge text-black -->
+                    <span class="">{{sportRankingItem.getUniqueRank()}}</span>
+                </td>
+            </ng-container>
+            <ng-template #worldcupQualify>
+                <td class="rankingnr text-end ps-0 pointer" (click)="openModal(worldcupModal)">                
+                    <span class="badge text-bg-success text-decoration-underline">{{sportRankingItem.getUniqueRank()}}</span>
+                </td>
+            </ng-template>
 
             <td class="text-break ps-0" [ngClass]="{ 'favitem': false}">
-                {{structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}
-
+                <span>{{structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}</span>
+                <app-superelf-icon *ngIf="structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true) === 'storm'" 
+                class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon>
             </td>
             <td *ngIf="currentGameRound" class="text-end ps-0 pointer">
                 <a [routerLink]="getRouterLink(sportRankingItem.getPerformance().getPlace(), currentGameRound)"
-                    class="badge bg-points">
+                    class="badge {{getPointsBadgeClass(sportRankingItem)}}">
                     {{getScore(sportRankingItem.getPlaceLocation(),currentGameRound )}}</a>
 
             </td>
@@ -39,3 +49,19 @@
         </tr>
     </tbody>
 </table>
+
+<ng-template #worldcupModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <app-superelf-icon [name]="'world-cup'"></app-superelf-icon> wereldbeker
+      </h4>
+      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <p>De nummers 1 en 2 van elke pool plaatsen zich voor de wereldbeker-competitie voor het daaropvolgende seizoen</p>
+    </div>
+    <div class="modal-footer d-flex justify-content-reverse border-top-0">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.dismiss()">
+        sluiten</button>
+    </div>
+  </ng-template>

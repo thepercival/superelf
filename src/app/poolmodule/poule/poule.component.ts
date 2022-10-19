@@ -93,7 +93,8 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
           next: (structure: Structure) => {
 
             const round = structure.getSingleCategory().getRootRound();
-            const poule = this.getPouleById(round, +params.pouleId);
+            const pouleId = +params.pouleId;
+            const poule = this.leagueName === LeagueName.SuperCup ? round.getFirstPoule(): this.getPouleById(round, pouleId);
             this.poolPoule = poule;
 
             this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {

@@ -20,7 +20,8 @@ import {
   faPencilAlt,
   faUserSecret,
   faMessage,
-  faPaperPlane
+  faPaperPlane,
+  faFilter
 } from '@fortawesome/free-solid-svg-icons';
 
 import { CommonSharedModule } from '../shared/commonmodule/common.module';
@@ -51,7 +52,6 @@ import { S11PlayerChooseComponent } from './player/choose.component';
 import { WorldCupComponent } from './worldcup/worldcup.component';
 import { PoolUserComponent } from './poolusers/pooluser.component';
 import { ScheduleComponent } from './schedule/schedule.component';
-import { AgainstGameDetailsComponent } from './game/source/details.component';
 import { AgainstGameTitleComponent } from './game/source/title.component';
 import { SourceGameComponent } from './game/source.component';
 import { GameRoundScrollerComponent } from './gameRound/gameRoundScroller.component';
@@ -64,6 +64,7 @@ import { PoolCompetitionComponent } from './competition/competition.component';
 import { PoolCupComponent } from './cup/structure.component';
 import { PoolCupRoundComponent } from './cup/round.component';
 import { TogetherRankingComponent } from './competition/togetherranking.component';
+import { TrophiesComponent } from './trophies/trophies.component';
 
 @NgModule({
   imports: [
@@ -77,7 +78,6 @@ import { TogetherRankingComponent } from './competition/togetherranking.componen
   ],
   declarations: [
     AgainstGameTitleComponent,
-    AgainstGameDetailsComponent,
     FormationAssembleComponent,
     FormationChooseComponent,
     FormationLineAssembleComponent,
@@ -113,6 +113,7 @@ import { TogetherRankingComponent } from './competition/togetherranking.componen
     SourceGameComponent,
     TeamNameComponent,
     TogetherRankingComponent,
+    TrophiesComponent,
     WorldCupComponent
   ],
   providers: [
@@ -122,7 +123,7 @@ export class PoolModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
       faListOl, faChevronLeft, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
-      , faInfoCircle, faSearch, faPlusCircle, faPencilAlt, faUserSecret, faMessage, faPaperPlane
+      , faInfoCircle, faSearch, faPlusCircle, faPencilAlt, faUserSecret, faMessage, faPaperPlane, faFilter
     );
     /*library.addIcons(
       faProductHunt

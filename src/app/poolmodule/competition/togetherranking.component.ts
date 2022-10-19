@@ -1,6 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Poule, GameAmountConfig, GameState, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, Place, AgainstGpp, AgainstH2h, Single, AllInOneGame, StartLocationMap, StructureNameService } from 'ngx-sport';
+import { CompetitionConfig } from '../../lib/competitionConfig';
 import { GameRound } from '../../lib/gameRound';
 import { PoolCompetitor } from '../../lib/pool/competitor';
 import { PoolUser } from '../../lib/pool/user';
@@ -24,11 +26,14 @@ export class TogetherRankingComponent implements OnInit {
   public structureNameService!: StructureNameService;
   protected gameAmountConfig!: GameAmountConfig;
   protected scoreMap = new ScoreMap();
+  protected bestMap = new Map<number, SportRoundRankingItem>();
+  protected worstMap = new Map<number, SportRoundRankingItem>();
   public processing = true;
 
   constructor(
     private scoreConfigService: ScoreConfigService,
     private router: Router,
+    private modalService: NgbModal,
     private cssService: CSSService) {
   }
 
@@ -38,12 +43,18 @@ export class TogetherRankingComponent implements OnInit {
     this.togetherRankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport, [GameState.InProgress, GameState.Finished]);
     this.sportRankingItems = this.togetherRankingCalculator.getItemsForPoule(this.poule);
     this.gameAmountConfig = this.poule.getRound().getNumber().getValidGameAmountConfig(this.competitionSport);
-    //this.initGameRoundMap();    
+    this.initScoreMap();
     this.initTableData();
+    this.initBestAndWorstMap();
     // console.log(this.startLocationMap);
     this.processing = false;
   }
 
+  initScoreMap() {
+    this.poule.getPlaces().forEach((place: Place) => {
+      this.scoreMap.set(place.getRoundLocationId(), {});
+    });
+  }
 
   /**
    * door door games en plaats elke gameplace ergens in een map
@@ -51,11 +62,6 @@ export class TogetherRankingComponent implements OnInit {
    * je wilt per deelnemer door de gamerounds lopen en dan per gameRound wil je score weten
    */
   initTableData() {
-
-    this.poule.getPlaces().forEach((place: Place) => {
-      this.scoreMap.set(place.getRoundLocationId(), {});
-    });
-
     let gameRoundWithFinishedGame = 1;
 
     this.getTogetherGames().forEach((game: TogetherGame) => {
@@ -74,6 +80,56 @@ export class TogetherRankingComponent implements OnInit {
         gameRoundMap[gameRoundNr] = finalScore;
       });
     });
+  }
+
+  initBestAndWorstMap() {
+
+    const gameRound = this.currentGameRound;
+    if( gameRound === undefined) {
+      return;
+    }
+    this.bestMap = new Map<number, SportRoundRankingItem>();
+    this.worstMap = new Map<number, SportRoundRankingItem>();
+    let bestScore: number | undefined;
+    let worstScore: number | undefined;
+    this.sportRankingItems.forEach((sportRankingItem: SportRoundRankingItem) => {
+      const score = this.getScore(sportRankingItem.getPlaceLocation(),gameRound );
+      if( bestScore === undefined ) {
+        bestScore = score;
+      }
+      if( worstScore === undefined ) {
+        worstScore = score;
+      }      
+      if( score > bestScore ) { // best        
+        this.bestMap.clear();
+        this.bestMap.set(sportRankingItem.getUniqueRank(), sportRankingItem);
+      } else if( score === bestScore ) {
+        this.bestMap.set(sportRankingItem.getUniqueRank(), sportRankingItem);
+      }
+      if( score < worstScore ) { // worst
+        this.worstMap.clear();
+        this.worstMap.set(sportRankingItem.getUniqueRank(), sportRankingItem);
+      } else if( score === worstScore ) {
+        this.worstMap.set(sportRankingItem.getUniqueRank(), sportRankingItem);
+      }
+    });
+    if( this.bestMap.size > 3) { // best
+      this.bestMap.clear();
+    }
+    if( this.worstMap.size > 3) { // worst
+      this.worstMap.clear();
+    }
+  }
+
+
+  getPointsBadgeClass(sportRankingItem: SportRoundRankingItem): string {
+    if( this.bestMap.has(sportRankingItem.getUniqueRank())) {
+      return 'bg-success';  
+    } 
+    if( this.worstMap.has(sportRankingItem.getUniqueRank())) {
+      return 'bg-danger';  
+    }
+    return 'bg-points';
   }
 
   protected getTogetherGames(): TogetherGame[] {
@@ -101,14 +157,8 @@ export class TogetherRankingComponent implements OnInit {
   //   return this.getGameRounds(competitionSport)[0] + gameRound;;
   // }
 
-  getQualifyPlaceClass(rankingItem: SportRoundRankingItem): string {
-    const place = this.poule.getPlace(rankingItem.getUniqueRank());
-    // console.log('place', place, place ? this.cssService.getQualifyPlace(place) : '');
-    return this.getQualifyPlaceCSS(rankingItem.getUniqueRank());
-  }
-
-  getQualifyPlaceCSS(uniqueRank: number): string {
-    return uniqueRank <= 2 ? 'text-bg-success' : 'text-black';
+  worldcupQualify2(rankingItem: SportRoundRankingItem): boolean {
+    return rankingItem.getUniqueRank() <= CompetitionConfig.NrToQualifyForWorldCup;
   }
 
   getPoolUser(place: Place): PoolUser | undefined {
@@ -128,8 +178,16 @@ export class TogetherRankingComponent implements OnInit {
 
     return ['/pool/user', poolUser.getPool().getId(), poolUser.getId(), gameRound ? gameRound.getNumber() : 0];
   }
-}
 
+  openModal(modalContent: TemplateRef<any>) {
+    const activeModal = this.modalService.open(modalContent);
+    activeModal.result.then(() => {
+    }, (reason) => {
+    });
+  }
+
+
+}
 
 interface GameRoundMap {
   [key: number]: number;

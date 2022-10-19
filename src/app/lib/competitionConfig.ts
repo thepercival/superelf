@@ -8,6 +8,7 @@ export class CompetitionConfig extends Identifiable {
 
     protected scorePointsMap: Map<FootballScore, number>;
     protected lineScorePointsMap: LineScorePointsMap;
+    public static readonly NrToQualifyForWorldCup = 2;
 
     constructor(
         protected sourceCompetition: Competition,

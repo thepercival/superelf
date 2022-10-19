@@ -28,3 +28,5 @@ export interface FootballLineScore {
     line: FootballLine;
     score: FootballScore;
 }
+
+export type FootballEvent = FootballGoal | FootballCard;

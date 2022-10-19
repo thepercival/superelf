@@ -16,7 +16,7 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { AgainstGameCardEvent, AgainstGameEvent, AgainstGameGoalEvent, AgainstGameLineupItem } from '../../lib/ngx-sport/game/football';
-import { FootballCard, FootballGoal } from '../../lib/score';
+import { FootballCard, FootballEvent, FootballGoal } from '../../lib/score';
 
 @Component({
   selector: 'app-game-source',
@@ -134,21 +134,11 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
     return 'color' in event;
   }
 
-  getCode(eventItem: AgainstGameGoalEvent | AgainstGameCardEvent): string {
+  getFootballEvent(eventItem: AgainstGameGoalEvent | AgainstGameCardEvent): FootballEvent {
     if (this.instanceOfGoalEvent(eventItem)) {
-      if (eventItem.score === FootballGoal.Normal) {
-        return 'G';
-      }
-      if (eventItem.score === FootballGoal.Penalty) {
-        return 'P';
-      }
-      return 'OG';
+      return eventItem.score;
     }
-
-    if (eventItem.color === FootballCard.Yellow) {
-      return 'YC';
-    }
-    return 'RC';
+    return eventItem.color;
   }
 
   get HomeSide(): AgainstSide { return AgainstSide.Home; }

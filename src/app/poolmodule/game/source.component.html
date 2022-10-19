@@ -67,12 +67,12 @@
                 <span class="ps-1">{{lineupItem.player.getPerson().getName()}}</span>
             </div>
             <div *ngIf="lineupItem.substitute">
-                <span class="px-2">{{lineupItem.substitute.minute}}"</span>
+                <span class="px-2">{{lineupItem.substitute.minute}}'</span>
                 <app-lineicon [line]="lineupItem.substitute.player.getLine()"></app-lineicon>
                 <span class="ps-1">{{lineupItem.substitute.player.getPerson().getName()}}</span>
             </div>
             <div *ngIf="lineupItem.substitute && lineupItem.substitute.substitute">
-                <span class="ps-4 pe-2">{{lineupItem.substitute.substitute.minute}}"</span>
+                <span class="ps-4 pe-2">{{lineupItem.substitute.substitute.minute}}'</span>
                 <app-lineicon [line]="lineupItem.substitute.substitute.player.getLine()"></app-lineicon>
                 <span class="ps-1">{{lineupItem.substitute.substitute.player.getPerson().getName()}}</span>
             </div>
@@ -82,16 +82,20 @@
 
 <ng-template #eventsSide let-eventItems="eventItems">
     <ul class="list-group list-group-flush">
-        <li class="list-group-item" *ngFor="let eventItem of eventItems">
-            <div>
-                <span>{{eventItem.minute}}"</span>
-                <span class="px-1">{{getCode(eventItem)}}</span>
-                <span>{{eventItem.player.getPerson().getName()}}</span>
-            </div>
-            <div *ngIf="eventItem.assistPlayer">
-                <span class="px-3">A</span>
-                <span>{{eventItem.assistPlayer.getPerson().getName()}}</span>
-            </div>
-        </li>
+        <ng-container *ngIf="eventItems.length > 0;else noEventItems">
+            <li class="list-group-item" *ngFor="let eventItem of eventItems">
+                <div>
+                    <app-superelf-icon [gameEvent]="getFootballEvent(eventItem)"></app-superelf-icon>
+                    <span class="px-1">{{eventItem.minute}}'</span>
+                    <span>{{eventItem.player.getPerson().getName()}}</span>
+                </div>
+                <div *ngIf="eventItem.assistPlayer">
+                    <small class="px-3">a: {{eventItem.assistPlayer.getPerson().getName()}}</small>
+                </div>
+            </li>
+        </ng-container>
+        <ng-template #noEventItems>
+            <div class="noEventItems"></div>
+        </ng-template>        
     </ul>
 </ng-template>

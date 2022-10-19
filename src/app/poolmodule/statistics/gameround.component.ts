@@ -6,6 +6,7 @@ import { ImageRepository } from '../../lib/image/repository';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
 import { PointsCalculator } from '../../lib/points/calculator';
+import { FootballCard, FootballGoal } from '../../lib/score';
 import { Statistics } from '../../lib/statistics';
 
 import { CSSService } from '../../shared/commonmodule/cssservice';
@@ -47,6 +48,11 @@ export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsCo
     this.sheetActive = this.line === FootballLine.GoalKeeper || this.line === FootballLine.Defense;
     this.processing = false;
   }
+
+  get YellowCard(): FootballCard { return FootballCard.Yellow; }
+  get RedCard(): FootballCard { return FootballCard.Red; }
+  get Goal(): FootballGoal { return FootballGoal.Normal; }
+  get OwnGoal(): FootballGoal { return FootballGoal.Own; }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.statistics.currentValue !== changes.statistics.previousValue

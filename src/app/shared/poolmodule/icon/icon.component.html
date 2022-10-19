@@ -1,1 +1,2 @@
-<fa-icon [icon]="[prefix, iconName]"></fa-icon>
+<fa-icon *ngIf="!rotate" class="{{color}}" [icon]="[prefix, iconName]"></fa-icon>
+<fa-icon *ngIf="rotate" class="{{color}}" [icon]="[prefix, iconName]" [rotate]="90"></fa-icon>

@@ -28,7 +28,7 @@
       <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="editPlace.emit(place)">
         kies een {{place.isSubstitute() ? 'wissel' : 'speler'}}
       </button>
-      <span *ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">res</span>
+      <span *ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
     </td>
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
