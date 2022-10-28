@@ -30,3 +30,11 @@ export interface FootballLineScore {
 }
 
 export type FootballEvent = FootballGoal | FootballCard;
+
+export enum BadgeEnum {
+    Result = 0,
+    Goal,
+    Assist,
+    Sheet,
+    Card,
+}

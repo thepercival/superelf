@@ -21,7 +21,7 @@ export class PouleTitleComponent implements OnInit {
     const competitionSport = this.poule.getCompetition().getSingleSport();
     const rankingCalculator = new AgainstSportRoundRankingCalculator(competitionSport, [GameState.Finished]);
     this.sportRankingItems = rankingCalculator.getItemsForPoule(this.poule);
-
+    
     this.initPouleCompetitors(this.poule, this.poolCompetitors);
   }
 
@@ -36,20 +36,18 @@ export class PouleTitleComponent implements OnInit {
     }
   }
 
-  getSportRankingItem(side: AgainstSide): SportRoundRankingItem | undefined {
-    if (side === AgainstSide.Away) {
-      return this.sportRankingItems[1];
-    }
-    return this.sportRankingItems[0];
+  getSportRankingItem(poolCompetitor: PoolCompetitor): SportRoundRankingItem | undefined {
+    const placeNr = poolCompetitor.getStartLocation().getPlaceNr();
+    return this.sportRankingItems.find((sportRankingItem: SportRoundRankingItem) => sportRankingItem.getPlaceLocation().getPlaceNr() === placeNr );
   }
 
-  getRankingScore(): string {
+  getRankingScore(homeCompetitor: PoolCompetitor, awayeCompetitor: PoolCompetitor): string {
     if (this.poule.getGamesState() === GameState.Created) {
       return ' - ';
     }
-    return this.getSideRankingScore(this.getSportRankingItem(AgainstSide.Home))
+    return this.getSideRankingScore(this.getSportRankingItem(homeCompetitor))
       + ' - '
-      + this.getSideRankingScore(this.getSportRankingItem(AgainstSide.Away));
+      + this.getSideRankingScore(this.getSportRankingItem(awayeCompetitor));
   }
 
   getSideRankingScore(sportRankingItem: SportRoundRankingItem | undefined): string {
