@@ -6,7 +6,7 @@
         <ngb-alert *ngIf="!processing && !game" type="danger">de wedstrijd kan niet gevonden worden</ngb-alert>
         <div *ngIf="!processing && game">
             <h2>
-                <app-againstgame-title [againstGame]="game"></app-againstgame-title>
+                <app-againstgame-title [againstGame]="game" [showFinishedDate]="false"></app-againstgame-title>
             </h2>
 
             <h4 class="text-center">opstellingen</h4>

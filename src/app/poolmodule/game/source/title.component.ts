@@ -11,6 +11,7 @@ import { SuperElfNameService } from '../../../lib/nameservice';
 export class AgainstGameTitleComponent implements OnInit {
   @Input() againstGame!: AgainstGame;
   @Input() showDate: boolean = true;
+  @Input() showFinishedDate: boolean = true;
   private startLocationMap!: StartLocationMap;
 
   constructor(

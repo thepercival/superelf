@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { Round, Competitor, StructureEditor, QualifyTarget, PlaceRanges, Place, StructureNameService, StartLocation, SingleQualifyRule, MultipleQualifyRule, AgainstGame, Poule } from 'ngx-sport';
+import { Round, Competitor, StructureEditor, QualifyTarget, PlaceRanges, Place, StructureNameService, StartLocation, SingleQualifyRule, MultipleQualifyRule, AgainstGame, Poule, GameState, StartLocationMap, AgainstSide } from 'ngx-sport';
+import { AgainstPoule } from '../../lib/againstPoule';
 import { PoolCompetitor } from '../../lib/pool/competitor';
 import { PoolUser } from '../../lib/pool/user';
 import { CSSService } from '../../shared/commonmodule/cssservice';
@@ -23,6 +24,10 @@ export class PoolCupRoundComponent implements OnInit {
 
   }
 
+  get Finished(): GameState { return GameState.Finished };
+  get Home(): AgainstSide { return AgainstSide.Home };
+  get Away(): AgainstSide { return AgainstSide.Away };
+  
   ngOnInit() {
     this.hasCompetitors = this.allPlacesHaveCompetitors();
   }
@@ -39,10 +44,10 @@ export class PoolCupRoundComponent implements OnInit {
     });
   }
 
-  isCurrentUser(place: Place): boolean {
+  isCurrentUser(poule: Poule, side: AgainstSide): boolean {
     this.structureNameService.getStartLocationMap()
 
-    const startLocation = place.getStartLocation();
+    const startLocation = this.getSidePlace(poule, side).getStartLocation();
     if (startLocation === undefined) {
       return false;
     }
@@ -60,31 +65,36 @@ export class PoolCupRoundComponent implements OnInit {
   }
 
 
-  getCompetitorName(place: Place): string {
-    const startLocation = place.getStartLocation();
-    if (startLocation === undefined) {
+  getCompetitorName(poule: Poule, side: AgainstSide): string {
+    const againstPoule = this.getAgainstPoule(poule, side);
+    if (againstPoule === undefined) {
       return '';
-    }
-    const competitor = this.getCompetitor(startLocation);
+    }    
+    const competitor = againstPoule.getCompetitor(side);
     if (competitor === undefined) {
       return '';
     }
-    return competitor.getName();
+    return competitor.getName(); 
   }
 
-  getCompetitor(startLocation: StartLocation): Competitor | undefined {
-    return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
-  }
+  // getCompetitor(startLocation: StartLocation): Competitor | undefined {
+  //   return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
+  // }
 
   get AbsoluteMinPlacesPerPoule(): number {
     return PlaceRanges.MinNrOfPlacesPerPoule;
-  }
+  }  
 
   setPopoverPlace(place: Place) {
     this.popoverPlace = place;
   }
 
-  getPreviousPouleName(place: Place): string {
+  getSidePlace(poule: Poule, side: AgainstSide): Place {
+    return side === AgainstSide.Home ? poule.getPlace(1) : poule.getPlace(2);
+  }
+
+  getPreviousPouleName(poule: Poule, side: AgainstSide): string {
+    const place = this.getSidePlace(poule, side);
     const previousPlace = this.getPreviousPlace(place);
     return previousPlace ? this.structureNameService.getPouleName(previousPlace.getPoule(), false) : '?'
   }
@@ -110,6 +120,44 @@ export class PoolCupRoundComponent implements OnInit {
 
   emitNavigateToPoule(poule: Poule): void {
     this.navigateToPoule.emit(poule);
+  }
+
+  // getCompetitors(poule: Poule): PoolCompetitor[] {
+  //   return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
+  // }
+
+  getCompetitor(startLocation: StartLocation): Competitor | undefined {
+    return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
+  }
+
+  getScore(poule: Poule, side: AgainstSide): string {
+    if (poule.getGamesState() === GameState.Created) {
+      return '';
+    }
+    const againstPoule = this.getAgainstPoule(poule, side);
+    if (againstPoule === undefined) {
+      return '';
+    }    
+    return againstPoule.getScore(side);
+  }
+
+  hasQualified(poule: Poule, side: AgainstSide): boolean {
+    if ( poule.getPlaces().length == 1 ) {
+      return true;
+    }
+    const againstPoule = this.getAgainstPoule(poule, side);
+    if (againstPoule === undefined) {
+      return false;
+    }    
+    return againstPoule.hasQualified(side);
+  }
+
+  getAgainstPoule(poule: Poule, side: AgainstSide): AgainstPoule|undefined {
+    const startLocationMap = this.structureNameService.getStartLocationMap();
+    if (startLocationMap === undefined) {
+      return undefined;
+    }
+    return new AgainstPoule(poule, startLocationMap);
   }
 
 }

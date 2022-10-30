@@ -1,5 +1,5 @@
 <ng-container *ngIf="homeCompetitor && awayCompetitor">
   <span>{{homeCompetitor.getName()}}</span>
-  <span class="px-2">{{getRankingScore(homeCompetitor, awayCompetitor)}}</span>
+  <span class="px-2">{{getScore(homeCompetitor, awayCompetitor)}}</span>
   <span>{{awayCompetitor.getName()}}</span>
 </ng-container>

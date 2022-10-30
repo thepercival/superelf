@@ -68,14 +68,15 @@
                             <a
                                 [routerLink]="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
                                 <ng-container *ngIf="sourceGame.getState() === Finished;else notFinished">
-                                    {{nameService.getAgainstScore(sourceGame)}}</ng-container>
+                                    {{nameService.getAgainstScore(sourceGame)}}
+                                </ng-container>
                                 <ng-template #notFinished>
 
-                                    <ng-container *ngIf="isToday(sourceGame.getStartDateTime());else aDayBeforeToday">
-                                        {{nameService.getAgainstScore(sourceGame)}}
-                                    </ng-container>
-                                    <ng-template #aDayBeforeToday>
+                                    <ng-container *ngIf="isToday(sourceGame.getStartDateTime());else afterToday">
                                         {{dateFormatter.toString(sourceGame.getStartDateTime(),dateFormatter.time())}}
+                                    </ng-container>
+                                    <ng-template #afterToday>
+                                        {{dateFormatter.toString(sourceGame.getStartDateTime(),dateFormatter.date())}}
                                     </ng-template>
 
                                 </ng-template>

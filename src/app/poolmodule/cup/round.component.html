@@ -7,30 +7,25 @@
     <div class="card-body px-1">
       <div class="d-flex flex-wrap gap-2 justify-content-around">
 
-        <div *ngFor="let poule of round.getPoules();" class="btn-group mb-3" role="group">
+        <div *ngFor="let poule of round.getPoules();" class="btn-group mb-3" role="group" (click)="emitNavigateToPoule(poule)">
 
           <ng-container *ngIf="hasCompetitors;else hasNoCompetitors">
 
-            <button type="button" class="btn btn-outline-primary ps-1">{{structureNameService.getPouleName(poule,
-              false)}}</button>
-            <button type="button" class="btn btn-outline-primary ps-1 text-start">
-              <div [ngClass]="{'favitem': isCurrentUser(poule.getPlace(1)) }">
-                <span>{{getCompetitorName(poule.getPlace(1))}}</span>
-              </div>
-              <div *ngIf="poule.getPlaces().length == 1" class="ms-1 bg-success">
-                bye
-              </div>
-              <div *ngIf="poule.getPlaces().length == 2" [ngClass]="{'favitem': isCurrentUser(poule.getPlace(2)) }"
-                (click)="emitNavigateToPoule(poule)">
-                <span>{{getCompetitorName(poule.getPlace(2))}}</span>
-              </div>
+            <button type="button" class="btn btn-outline-primary ps-1">
+              {{structureNameService.getPouleName(poule,false)}}</button>
+            <button type="button" class="btn btn-outline-primary px-1 text-start">
+              <ng-container [ngTemplateOutlet]="place" [ngTemplateOutletContext]="{poule, side: Home}"></ng-container>
+              <div *ngIf="poule.getPlaces().length == 1">bye</div>
+              <ng-container *ngIf="poule.getPlaces().length == 2"
+              [ngTemplateOutlet]="place" [ngTemplateOutletContext]="{poule, side: Away}"></ng-container>
             </button>
 
           </ng-container>
+
           <ng-template #hasNoCompetitors>
 
-            <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule.getPlace(1))}}</button>
-            <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule.getPlace(2))}}</button>
+            <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Home)}}</button>
+            <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Away)}}</button>
 
           </ng-template>
         </div>
@@ -47,3 +42,11 @@
 
 
 </div>
+
+<ng-template #place let-poule="poule" let-side="side">
+  <div class="d-flex flex-wrap justify-content-between" 
+  [ngClass]="{'favitem': isCurrentUser(poule, side), 'bg-success': hasQualified(poule, side) }">
+    <span>{{getCompetitorName(poule, side)}}</span>
+    <span *ngIf="poule.getGamesState() !== Finished" class="ms-1">{{getScore(poule, side)}}</span>
+  </div>       
+  </ng-template>

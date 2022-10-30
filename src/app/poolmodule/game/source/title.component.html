@@ -7,7 +7,7 @@
         </span>
     </div>
 
-    <div class="px-2">{{nameService.getAgainstScore(againstGame)}}</div>
+    <div class="px-2" title="{{dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.date())}} {{dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.time())}}">{{nameService.getAgainstScore(againstGame)}}</div>
 
     <div>
         <span *ngFor="let sideCompetitor of getCompetitors(AwaySide)">
@@ -16,7 +16,7 @@
         </span>
     </div>
 
-    <div *ngIf="showDate" class="ps-3 "
+    <div *ngIf="showDate && showFinishedDate" class="ps-3 "
         [ngClass]="{'text-decoration-line-through': againstGame.getState() === Finished}">
         {{dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.date())}}
         <span *ngIf="againstGame.getState() !== Finished">{{dateFormatter.toString(againstGame.getStartDateTime(),
