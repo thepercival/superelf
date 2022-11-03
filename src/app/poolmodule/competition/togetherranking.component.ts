@@ -93,7 +93,7 @@ export class TogetherRankingComponent implements OnInit {
     let bestScore: number | undefined;
     let worstScore: number | undefined;
     this.sportRankingItems.forEach((sportRankingItem: SportRoundRankingItem) => {
-      const score = this.getScore(sportRankingItem.getPlaceLocation(),gameRound );
+      const score = this.getScore(sportRankingItem.getPlaceLocation(),gameRound );      
       if( bestScore === undefined ) {
         bestScore = score;
       }
@@ -103,12 +103,14 @@ export class TogetherRankingComponent implements OnInit {
       if( score > bestScore ) { // best        
         this.bestMap.clear();
         this.bestMap.set(sportRankingItem.getUniqueRank(), sportRankingItem);
+        bestScore = score;
       } else if( score === bestScore ) {
         this.bestMap.set(sportRankingItem.getUniqueRank(), sportRankingItem);
       }
       if( score < worstScore ) { // worst
         this.worstMap.clear();
         this.worstMap.set(sportRankingItem.getUniqueRank(), sportRankingItem);
+        worstScore = score;
       } else if( score === worstScore ) {
         this.worstMap.set(sportRankingItem.getUniqueRank(), sportRankingItem);
       }
@@ -119,6 +121,7 @@ export class TogetherRankingComponent implements OnInit {
     if( this.worstMap.size > 3) { // worst
       this.worstMap.clear();
     }
+    console.log(this.bestMap);
   }
 
 
