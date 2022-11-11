@@ -160,4 +160,7 @@ export class PoolCupRoundComponent implements OnInit {
     return new AgainstPoule(poule, startLocationMap);
   }
 
+  showScore(poule: Poule): boolean {
+    return poule.getGamesState() === GameState.InProgress || poule.getGamesState() === GameState.Finished;
+  }
 }

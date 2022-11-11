@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Poule, GameAmountConfig, GameState, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, Place, AgainstGpp, AgainstH2h, Single, AllInOneGame, StartLocationMap, StructureNameService } from 'ngx-sport';
@@ -44,10 +44,19 @@ export class TogetherRankingComponent implements OnInit {
     this.sportRankingItems = this.togetherRankingCalculator.getItemsForPoule(this.poule);
     this.gameAmountConfig = this.poule.getRound().getNumber().getValidGameAmountConfig(this.competitionSport);
     this.initScoreMap();
-    this.initTableData();
-    this.initBestAndWorstMap();
-    // console.log(this.startLocationMap);
+    this.initTableData();    
+    if( this.currentGameRound ) {
+      this.initBestAndWorstMap(this.currentGameRound);
+    }
     this.processing = false;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentGameRound !== undefined && changes.currentGameRound.firstChange !== true
+      && changes.currentGameRound.currentValue !== changes.currentGameRound.previousValue
+       ) {
+      this.initBestAndWorstMap(changes.currentGameRound.currentValue);
+    }
   }
 
   initScoreMap() {
@@ -82,12 +91,8 @@ export class TogetherRankingComponent implements OnInit {
     });
   }
 
-  initBestAndWorstMap() {
+  initBestAndWorstMap(gameRound: GameRound) {
 
-    const gameRound = this.currentGameRound;
-    if( gameRound === undefined) {
-      return;
-    }
     this.bestMap = new Map<number, SportRoundRankingItem>();
     this.worstMap = new Map<number, SportRoundRankingItem>();
     let bestScore: number | undefined;

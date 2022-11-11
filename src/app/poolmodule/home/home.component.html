@@ -5,19 +5,73 @@
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
 
-    <div *ngIf="!processing && pool && poolUser" class="d-flex justify-content-center">
+    <!-- competities: start -->
+    <div *ngIf="!processing && pool && poolUser" class="d-flex flex-wrap justify-content-center mt-3">
 
-      <!-- programma => start-->
+      <div *ngIf="afterAssemblePeriod() && currentGameRoundNumbers?.firstCreatedOrInProgress"
+        class="d-flex flex-wrap no-wrap gap-3 justify-content-center" (click)="linkToAssemble()">                  
+          
+        <!-- competitie -->
+        <div *ngIf="getCompetitionCompetitors().length > 0" class="card card-competition pointer px-0"
+          [routerLink]="['/pool/competition', pool.getId()]">
+          <div class="card-body text-center p-1 pt-2">
+            <h1 class="card-title">
+              <app-superelf-icon [name]="'plate'"></app-superelf-icon>
+            </h1>
+            <h5>competitie</h5>
+          </div>
+        </div>
+        <div *ngIf="getCompetitionCompetitors().length == 0" class="card card-competition pointer px-0"
+          (click)="openModal(contentpoolUsers)">
+          <div class="card-body text-center p-1 pt-2">
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'users']"></fa-icon>
+            </h5>
+            <div>deel</div>
+            <div>nemers</div>
+          </div>
+        </div>
+        <!-- cup -->
+        <div *ngIf="getCupCompetitors().length > 0" class="card card-competition pointer px-0"
+          [routerLink]="['/pool/cup', pool.getId()]">
+          <div class="card-body text-center p-1 pt-2">
+            <h1 class="card-title">
+              <app-superelf-icon [leagueName]="Cup"></app-superelf-icon>
+            </h1>
+            <h5>beker</h5>
+          </div>
+        </div>
+        <!-- supercup -->
+        <ng-container [ngTemplateOutlet]="superCupCard" [ngTemplateOutletContext]="{competition:pool.getCompetition(SuperCup)}">
+        </ng-container>         
+        <ng-template #superCupCard let-supercup="competition">                
+          <div *ngIf="supercup && isFinished(supercup)" class="card card-competition pointer px-0" 
+              [routerLink]="['/pool/poule', pool.getId(), SuperCup, 0]">
+            <div class="card-body text-center p-1 pt-2">
+              <h1 class="card-title">
+                <app-superelf-icon [leagueName]="SuperCup"></app-superelf-icon>
+              </h1>
+              <h5>{{superElfNameService.getLeagueName(superElfNameService.convertToLeagueName(supercup))}}</h5>
+            </div>
+          </div>
+        </ng-template> 
+      </div>
+    </div>
+    <!-- competities: end -->
+    
+    <br />
+
+    <!-- programma => start-->
+    <div *ngIf="!processing && pool && poolUser" class="d-flex justify-content-center">
 
       <ng-container [ngTemplateOutlet]="scheduleContainer"
                                 [ngTemplateOutletContext]="{scheduleGameRoundNumber:currentGameRoundNumbers?.firstCreatedOrInProgress}">
                             </ng-container>
 
-
       <ng-template #scheduleContainer let-scheduleGameRoundNumber="scheduleGameRoundNumber">
         
-        <div *ngIf="afterAssemblePeriod() && scheduleGameRoundNumber" class="card mt-3 mx-2 border-0 border-bottom" (click)="linkToAssemble()">
-          <div class="card-body pt-0">
+        <div *ngIf="afterAssemblePeriod() && scheduleGameRoundNumber" class="card mt-0 mx-2" (click)="linkToAssemble()">
+          <div class="card-body bg-secondary">
             
             <div class="card-text d-flex flex-nowrap gap-3 justify-content-between">
               <h5 class="card-title text-center text-nowrap">
@@ -25,10 +79,10 @@
                 <span class="ms-1 align-middle">programma</span>
               </h5>
 
-              <div *ngIf="true" class="card border-0 card-sub px-0">
-                <div class="card-body text-center p-1 pt-0">
+              <div *ngIf="true" class="px-0">
+                <div class="text-center p-1 pt-0">
                   <div>ronde</div>
-                  <h5 class="card-title">
+                  <h5 class="card-title mb-0">
                     {{scheduleGameRoundNumber}}
                   </h5>
                 </div>
@@ -45,87 +99,21 @@
                   <div class="card card-schedule pointer px-0 {{getScheduleBorderClass(competition, scheduleGameRoundNumber)}}"
                     (click)="navigateToSchedule(competition, scheduleGameRoundNumber)">
                     <div class="card-body text-center p-1 pt-2">
-                      <h5 class="card-title">
+                      <h2 class="card-title">
                         <app-superelf-icon [leagueName]="superElfNameService.convertToLeagueName(competition)"></app-superelf-icon>
-                      </h5>
+                      </h2>
                       <div>{{superElfNameService.getLeagueName(superElfNameService.convertToLeagueName(competition))}}</div>
                     </div>
                   </div>
                 </ng-template>                  
               </ng-container>
-            </div>
-            
+            </div>            
           </div>
-
         </div>
-        <!-- programma => eind -->
-
-      </ng-template>
-
-      
+      </ng-template>      
     </div>
-    <br />
-
-    <div *ngIf="!processing && pool && poolUser" class="d-flex flex-wrap justify-content-center">
-
-      <!-- competities -->
-      <div *ngIf="afterAssemblePeriod() && currentGameRoundNumbers?.firstCreatedOrInProgress"
-        class="card mx-2 border-0 border-bottom" (click)="linkToAssemble()">
-        <div class="card-body pt-0">
-
-          <div class="card-text d-flex flex-wrap gap-3 justify-content-center mt-0">
-            <!-- competitie -->
-            <div *ngIf="getCompetitionCompetitors().length > 0" class="card card-sub pointer px-0"
-              [routerLink]="['/pool/competition', pool.getId()]">
-              <div class="card-body text-center p-1 pt-2">
-                <h5 class="card-title">
-                  <app-superelf-icon [name]="'plate'"></app-superelf-icon>
-                </h5>
-                <div>comp.</div>
-                <div>stand</div>
-              </div>
-            </div>
-            <div *ngIf="getCompetitionCompetitors().length == 0" class="card card-sub pointer px-0"
-              (click)="openModal(contentpoolUsers)">
-              <div class="card-body text-center p-1 pt-2">
-                <h5 class="card-title">
-                  <fa-icon [icon]="['fas', 'users']"></fa-icon>
-                </h5>
-                <div>deel</div>
-                <div>nemers</div>
-              </div>
-            </div>
-            <!-- cup -->
-            <div *ngIf="getCupCompetitors().length > 0" class="card card-sub pointer px-0"
-              [routerLink]="['/pool/cup', pool.getId()]">
-              <div class="card-body text-center p-1 pt-2">
-                <h5 class="card-title">
-                  <app-superelf-icon [leagueName]="Cup"></app-superelf-icon>
-                </h5>
-                <div>beker</div>
-                <div>struct.</div>
-              </div>
-            </div>
-            <!-- supercup -->
-            <ng-container [ngTemplateOutlet]="superCupCard" [ngTemplateOutletContext]="{competition:pool.getCompetition(SuperCup)}">
-            </ng-container>         
-            <ng-template #superCupCard let-supercup="competition">                
-              <div *ngIf="supercup && isFinished(supercup)" class="card card-sub pointer px-0" 
-                  [routerLink]="['/pool/poule', pool.getId(), SuperCup, 0]">
-                <div class="card-body text-center p-1 pt-2">
-                  <h5 class="card-title">
-                    <app-superelf-icon [leagueName]="SuperCup"></app-superelf-icon>
-                  </h5>
-                  <div>{{superElfNameService.getLeagueName(superElfNameService.convertToLeagueName(supercup))}}</div>
-                </div>
-              </div>
-            </ng-template> 
-          </div>
-
-        </div>
-      </div>
-
-    </div>
+    <!-- programma => eind -->
+    
     <br />
 
     <!-- trofeenkast & spelregels -->

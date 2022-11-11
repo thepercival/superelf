@@ -442,6 +442,13 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
   navigateToChat(poolPoule: Poule): void {
     this.router.navigate(['/pool/chat', this.pool.getId(), this.leagueName, poolPoule.getId()]);
   }
+
+  navigateToStructure() {
+    if( this.pool === undefined) {
+      return;
+    }
+    this.router.navigate(['/pool/' + this.leagueName.toLowerCase(), this.pool.getId()]);
+  }
 }
 
 interface FormationPlacesLine {

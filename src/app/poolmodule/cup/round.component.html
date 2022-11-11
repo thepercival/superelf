@@ -47,6 +47,6 @@
   <div class="d-flex flex-wrap justify-content-between" 
   [ngClass]="{'favitem': isCurrentUser(poule, side), 'bg-success': hasQualified(poule, side) }">
     <span>{{getCompetitorName(poule, side)}}</span>
-    <span *ngIf="poule.getGamesState() !== Finished" class="ms-1">{{getScore(poule, side)}}</span>
+    <span *ngIf="showScore(poule)" class="ms-1">{{getScore(poule, side)}}</span>
   </div>       
   </ng-template>
