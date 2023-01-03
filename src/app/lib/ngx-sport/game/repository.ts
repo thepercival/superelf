@@ -21,7 +21,7 @@ export class GameRepository extends APIRepository {
     }
 
     getUrl(sourceCompetition: Competition): string {
-        return this.getApiUrl() + 'competitions/' + sourceCompetition.getId();
+        return this.getApiUrl() + 'public/competitions/' + sourceCompetition.getId();
     }
 
     getSourceObjects(poule: Poule, gameRound: GameRound): Observable<AgainstGame[]> {

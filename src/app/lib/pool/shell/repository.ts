@@ -44,11 +44,8 @@ export class PoolShellRepository extends APIRepository {
         if (filter === undefined) {
             return httpParams;
         }
-        if (filter.startDate !== undefined) {
-            httpParams = httpParams.set('startDate', filter.startDate.toISOString());
-        }
-        if (filter.endDate !== undefined) {
-            httpParams = httpParams.set('endDate', filter.endDate.toISOString());
+        if (filter.seasonId !== undefined) {
+            httpParams = httpParams.set('seasonId', filter.seasonId);
         }
         if (filter.name !== undefined) {
             httpParams = httpParams.set('name', filter.name);
@@ -65,11 +62,11 @@ export interface PoolShell {
     name: string;
     seasonName: string;
     roles: number;
+    nrOfUsers?: number;
 }
 
 export interface PoolShellFilter {
-    startDate?: Date;
-    endDate?: Date;
+    seasonId?: string|number;
     name?: string;
     roles?: number;
 }

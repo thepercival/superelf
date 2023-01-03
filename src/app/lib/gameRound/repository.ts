@@ -21,7 +21,7 @@ export class GameRoundRepository extends APIRepository {
     }
 
     getUrl(competitionConfig: CompetitionConfig, viewPeriod: ViewPeriod): string {
-        return this.getApiUrl() + 'competitionconfigs/' + competitionConfig.getSourceCompetition().getId() + '/viewperiods/' + viewPeriod.getId();
+        return this.getApiUrl() + 'public/competitionconfigs/' + competitionConfig.getSourceCompetition().getId() + '/viewperiods/' + viewPeriod.getId();
     }
 
     getCurrentNumbers(competitionConfig: CompetitionConfig, viewPeriod: ViewPeriod): Observable<CurrentGameRoundNumbers> {

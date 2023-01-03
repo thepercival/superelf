@@ -1,0 +1,10 @@
+.seasonlist {
+    width: auto;
+}
+
+app-home-shell {
+    display:table-row; 
+    box-sizing:inherit;
+}
+
+tr:first-child>td { border-top:0; }

@@ -27,11 +27,13 @@ import { LayoutSharedModule } from './shared/layoutmodule/layout.module';
 import { GlobalEventsManager } from './shared/commonmodule/eventmanager';
 import { CommonSharedModule } from './shared/commonmodule/common.module';
 import { StartSessionService } from './shared/commonmodule/startSessionService';
+import { PoolListComponent } from './poollist/poollist.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    PoolListComponent
   ],
   imports: [
     BrowserModule,

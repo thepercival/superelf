@@ -18,7 +18,7 @@ export class StructureRepository extends APIRepository {
     }
 
     getUrl(competition: Competition): string {
-        return this.getApiUrl() + 'competitions/' + competition.getId() + '/structure';
+        return this.getApiUrl() + 'public/competitions/' + competition.getId() + '/structure';
     }
 
     getObject(competition: Competition): Observable<Structure> {

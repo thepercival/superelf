@@ -6,7 +6,7 @@
     </h2>
 
     <!-- competities: start -->
-    <div *ngIf="!processing && pool && poolUser" class="d-flex flex-wrap justify-content-center mt-3">
+    <div *ngIf="!processing && pool" class="d-flex flex-wrap justify-content-center mt-3">
 
       <div *ngIf="afterAssemblePeriod() && currentGameRoundNumbers?.firstCreatedOrInProgress"
         class="d-flex flex-wrap no-wrap gap-3 justify-content-center" (click)="linkToAssemble()">                  
@@ -62,7 +62,7 @@
     <br />
 
     <!-- programma => start-->
-    <div *ngIf="!processing && pool && poolUser" class="d-flex justify-content-center">
+    <div *ngIf="!processing && pool" class="d-flex justify-content-center">
 
       <ng-container [ngTemplateOutlet]="scheduleContainer"
                                 [ngTemplateOutletContext]="{scheduleGameRoundNumber:currentGameRoundNumbers?.firstCreatedOrInProgress}">
@@ -117,7 +117,7 @@
     <br />
 
     <!-- trofeenkast & spelregels -->
-    <div *ngIf="pool" class="card mt-3 mx-2 border-0 border-bottom" (click)="linkToAssemble()">
+    <div *ngIf="pool && poolUser" class="card mt-3 mx-2 border-0 border-bottom" (click)="linkToAssemble()">
       <div class="card-body pt-0">
 
         <div class="card-text d-flex gap-3 justify-content-center mt-0">
@@ -194,11 +194,11 @@
     je doet NIET mee</ngb-alert>
 
   <!-- option admin block -->
-  <div *ngIf="!processing && pool && isAdmin() && (pool.getCreateAndJoinPeriod().isIn() || pool.isInEditPeriod())">
+  <div *ngIf="!processing && pool && poolUser && poolUser.getAdmin() && (pool.getCreateAndJoinPeriod().isIn() || pool.isInEditPeriod())">
     <hr />
     <h4 class="text-center mt-3 mb-0">beheer</h4>
     <div class="d-flex flex-wrap justify-content-center">
-      <div *ngIf="pool.getCreateAndJoinPeriod().isIn() && isAdmin()" class="card border-secondary pointer mt-3 mx-2"
+      <div *ngIf="pool.getCreateAndJoinPeriod().isIn()" class="card border-secondary pointer mt-3 mx-2"
         [routerLink]="['/pool/invite', pool.getId()]">
         <div class="card-body">
           <h5 class="card-title">
@@ -208,7 +208,7 @@
           </p>
         </div>
       </div>
-      <div *ngIf="pool.isInEditPeriod() && isAdmin()" class="card border-secondary pointer mt-3 mx-2"
+      <div *ngIf="pool.isInEditPeriod() && poolUser && poolUser.getAdmin()" class="card border-secondary pointer mt-3 mx-2"
         [routerLink]="['/pool/users', pool.getId()]">
         <div class="card-body">
           <h5 class="card-title">

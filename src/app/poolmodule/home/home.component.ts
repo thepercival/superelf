@@ -21,7 +21,7 @@ import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRoun
 import { AgainstGame, Competition, GameState, Poule, Round, Structure, StructureCell, TogetherGame, TogetherGamePlace } from 'ngx-sport';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { SuperElfNameService } from '../../lib/nameservice';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 
 @Component({
     selector: 'app-pool-public',
@@ -35,7 +35,9 @@ export class HomeComponent extends PoolComponent implements OnInit {
     public leagueNames: LeagueName[] = [LeagueName.Competition, LeagueName.Cup, LeagueName.SuperCup];
     public poolUsers: PoolUser[] = [];
     public currentGameRoundNumbers: CurrentGameRoundNumbers | undefined;
-    public structureMap = new Map<number, Structure>();    
+    public structureMap = new Map<number, Structure>();
+    private processingGameRoundNumbers = true;
+    private processingPoolUsers = true;
 
     constructor(
         route: ActivatedRoute,
@@ -45,6 +47,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
         public cssService: CSSService,
         public superElfNameService: SuperElfNameService,
         private dateFormatter: DateFormatter,
+        private authService: AuthService,
         private poolUserRepository: PoolUserRepository,
         protected scoutedPlayerRepository: ScoutedPlayerRepository,
         protected gameRoundRepository: GameRoundRepository,
@@ -78,35 +81,60 @@ export class HomeComponent extends PoolComponent implements OnInit {
             });
         }
 
-        this.poolUserRepository.getObjectFromSession(pool)
+        if (this.afterAssemblePeriod()) {
+            this.gameRoundRepository.getCurrentNumbers(competitionConfig, this.currentViewPeriod).subscribe({
+                next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
+                    this.currentGameRoundNumbers = currentGameRoundNumbers;
+                    this.setStructureMap(this.getCompetitions());
+                    if( !this.processingPoolUsers ) {
+                        this.processing = false;
+                    } else {
+                        this.processingGameRoundNumbers = false;
+                    }
+                },
+                error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
+            });
+        } else {
+            this.processingGameRoundNumbers = false;
+        }
+
+        
+        this.initPoolUsers(pool);
+    }
+
+    initPoolUsers(pool: Pool) {
+        
+        if (pool.getCreateAndJoinPeriod().isIn() || pool.getAssemblePeriod().isIn()) {
+            this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
+                this.poolUsers = poolUsers;
+                if( !this.processingGameRoundNumbers ) {
+                    this.processing = false;
+                } else {
+                    this.processingPoolUsers = false;
+                }
+            });
+        } else {
+            if( !this.processingGameRoundNumbers ) {
+                this.processing = false;
+            } else {
+                this.processingPoolUsers = false;
+            }
+        }
+
+        if( this.authService.isLoggedIn() ) {
+            this.poolUserRepository.getObjectFromSession(pool)
             .subscribe({
                 next: (poolUser: PoolUser | undefined) => {
                     this.poolUser = poolUser;
                     // console.log('ssss', this.poolUser);
-                    if (pool.getCreateAndJoinPeriod().isIn() || pool.getAssemblePeriod().isIn()) {
-                        this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
-                            this.poolUsers = poolUsers;                            
-                        });
-                    }
-                    if (this.afterAssemblePeriod()) {
-                        this.gameRoundRepository.getCurrentNumbers(competitionConfig, this.currentViewPeriod).subscribe({
-                            next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
-                                this.currentGameRoundNumbers = currentGameRoundNumbers;
-                                this.setStructureMap(this.getCompetitions());
-                            },
-                            error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
-                            complete: () => this.processing = false
-                        });
-                    } else {
-                        this.processing = false;
-                    }
-
+                    
                 },
                 error: (e: string) => {
                     this.setAlert('danger', e); this.processing = false;
                 }
             });
-
+        }
+        
     }
 
     getCompetitions(): Competition[] {
@@ -132,13 +160,6 @@ export class HomeComponent extends PoolComponent implements OnInit {
             });            
         });
         
-    }
-
-   
-       
-
-    isAdmin(): boolean {
-        return this.poolUser ? this.poolUser.getAdmin() : false;
     }
 
     getNrOfPoolUsersHaveAssembled(): number {
