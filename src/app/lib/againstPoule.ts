@@ -37,7 +37,7 @@ export class AgainstPoule {
         if (sportRankingItem === undefined) {
           return '';
         }
-        const performance = sportRankingItem.getPerformance();
+        const performance = sportRankingItem.getPerformance();     
         if (performance === undefined) {
           return '';
         }
@@ -62,9 +62,9 @@ export class AgainstPoule {
         if( poolCompetitor === undefined) {
             return undefined;
         }
-        const placeNr = poolCompetitor.getStartLocation().getPlaceNr();
-        return this.sportRankingItems.find((sportRankingItem: SportRoundRankingItem) => sportRankingItem.getPlaceLocation().getPlaceNr() === placeNr );
-    } 
-    
-
+        return this.sportRankingItems.find((sportRankingItem: SportRoundRankingItem): boolean => {
+            const startLocation = sportRankingItem.getPerformance().getPlace().getStartLocation();
+            return startLocation !== undefined && poolCompetitor.getStartLocation().equals(startLocation);
+        });
+    }
 }

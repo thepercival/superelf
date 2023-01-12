@@ -135,7 +135,7 @@ export class PoolCupRoundComponent implements OnInit {
     const againstPoule = this.getAgainstPoule(poule, side);
     if (againstPoule === undefined) {
       return '';
-    }    
+    }
     return againstPoule.getScore(side);
   }
 
