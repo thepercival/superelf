@@ -53,7 +53,11 @@ export class FormationLineViewComponent implements OnInit {
     if (!s11Player) {
       return undefined;
     }
-    const player = this.oneTeamSimultaneous.getCurrentPlayer(s11Player);
+    let date;
+    if( this.gameRound ) {
+      date = s11Player.getGameStatistics(this.gameRound.getNumber())?.getGameStartDate();
+    }
+    const player = this.oneTeamSimultaneous.getPlayer(s11Player, date ?? new Date());
     if (!player) {
       return undefined;
     }

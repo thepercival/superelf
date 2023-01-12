@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgainstGame, Competition, Player, StartLocationMap, Structure } from 'ngx-sport';
+import * as _ from 'lodash';
+import { AgainstGame, AgainstGamePlace, Competition, Player, StartLocationMap, Structure } from 'ngx-sport';
 import { concatMap, map, Observable, of } from 'rxjs';
 import { GameRound } from '../../lib/gameRound';
 import { GamePicker } from '../../lib/gameRound/gamePicker';
@@ -112,9 +113,11 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
     if (currentGameRound !== undefined) {
       const idx = this.sliderGameRounds.indexOf(currentGameRound);
       if (idx >= 0) {
-        this.sliderGameRounds = this.sliderGameRounds.splice(idx).concat(this.sliderGameRounds);
+        const secondPart = this.sliderGameRounds.splice(idx); 
+        secondPart.push(undefined);
+        this.sliderGameRounds = secondPart.concat(this.sliderGameRounds);
       }
-      this.sliderGameRounds.push(undefined);
+      
     } else {
       this.sliderGameRounds.unshift(undefined);
     }
@@ -157,7 +160,10 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
         this.gameRepository.getSourceObjects(sourcePoule, currentGameRound).subscribe({
           next: (againstGames: AgainstGame[]) => {
             this.currentGame = (new GamePicker(this.pool.getSourceCompetition(), currentGameRound)).getGame(this.s11Player);
-            //console.log('this.currentGame', this.currentGame);
+            // const out = this.currentGame?.getAgainstPlaces().map((gp: AgainstGamePlace) => {
+            //   return '' + gp.getPlace().getPlaceNr();
+            // }).join('&');
+            // console.log(out);
           },
           complete: () => {
             if (disableProcessing) {

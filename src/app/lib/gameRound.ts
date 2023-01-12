@@ -1,8 +1,9 @@
-import { AgainstGame } from 'ngx-sport';
+import { AgainstGame, Period } from 'ngx-sport';
 import { ViewPeriod } from './period/view';
 
 export class GameRound {
     protected againstGames: AgainstGame[] | undefined;
+    protected period: Period|undefined;
 
     constructor(protected viewPeriod: ViewPeriod, protected number: number) {
         viewPeriod.getGameRounds().push(this);
@@ -29,5 +30,11 @@ export class GameRound {
 
     public setAgainstGames(againstGames: AgainstGame[]): void {
         this.againstGames = againstGames;
+        const dates = this.againstGames.map((againstGame: AgainstGame): number => againstGame.getStartDateTime().getTime() );
+        this.period = new Period(new Date(Math.min(...dates)), new Date(Math.max(...dates)));
+    }
+
+    public getPeriod(): Period|undefined {
+        return this.period;
     }
 }

@@ -126,11 +126,10 @@ export class HomeComponent extends PoolComponent implements OnInit {
             .subscribe({
                 next: (poolUser: PoolUser | undefined) => {
                     this.poolUser = poolUser;
-                    // console.log('ssss', this.poolUser);
-                    
+                    // console.log('ssss', this.poolUser);                    
                 },
                 error: (e: string) => {
-                    this.setAlert('danger', e); this.processing = false;
+                    // this.setAlert('danger', e); this.processing = false;
                 }
             });
         }
@@ -261,11 +260,11 @@ export class HomeComponent extends PoolComponent implements OnInit {
             this.router.navigate(['/pool/poule', this.pool.getId(), leagueName, 0]);
             return;
         }
-        if (this.poolUser === undefined) {
-            return;
-        }
         const currentRound = this.getCurrentRound(competition, gameRoundNumber);
-        const currentPoule = currentRound ? this.getCurrentPoule(currentRound, leagueName, this.poolUser): undefined;
+        let currentPoule = undefined;
+        if( currentRound !== undefined && this.poolUser !== undefined ) {
+            currentPoule = this.getCurrentPoule(currentRound, leagueName, this.poolUser);
+        }
         if (currentPoule !== undefined) {
             this.router.navigate(['/pool/poule', this.pool.getId(), leagueName, currentPoule.getId()]);
         } else {

@@ -119,13 +119,11 @@ export class PoolCupRoundComponent implements OnInit {
   }
 
   emitNavigateToPoule(poule: Poule): void {
-    this.navigateToPoule.emit(poule);
+    if(this.hasCompetitors) {
+      this.navigateToPoule.emit(poule);
+    }
   }
-
-  // getCompetitors(poule: Poule): PoolCompetitor[] {
-  //   return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
-  // }
-
+  
   getCompetitor(startLocation: StartLocation): Competitor | undefined {
     return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
   }

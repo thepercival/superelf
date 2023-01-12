@@ -26,13 +26,13 @@ export class PoolUserRepository extends APIRepository {
         return 'users';
     }
 
-    getUrl(pool: Pool): string {
-        return super.getApiUrl() + 'pools/' + pool.getId() + '/' + this.getUrlpostfix();
+    getUrl(pool: Pool, publicX?: boolean): string {
+        return super.getApiUrl() + (publicX ? 'public/' : '') + 'pools/' + pool.getId() + '/' + this.getUrlpostfix();
     }
 
     getObject(pool: Pool, poolUserId: number): Observable<PoolUser> {
         const user = this.authService.getUser();
-        return this.http.get<JsonPoolUser>(this.getUrl(pool) + '/' + poolUserId, this.getOptions()).pipe(
+        return this.http.get<JsonPoolUser>(this.getUrl(pool, true) + '/' + poolUserId, this.getOptions()).pipe(
             map((jsonPoolUser: JsonPoolUser) => this.mapper.toObject(jsonPoolUser, pool)),
             catchError((err) => this.handleError(err))
         );

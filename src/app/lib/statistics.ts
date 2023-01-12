@@ -3,8 +3,10 @@ import { Sheet } from './sheet';
 import { JsonStatistics } from './statistics/json';
 
 export class Statistics {
-    public constructor(
-        protected json: JsonStatistics) {
+    protected gameStartDate: Date;
+
+    public constructor(protected json: JsonStatistics) {
+        this.gameStartDate = new Date(json.gameStart);
     }
 
     public getResult(): AgainstResult {
@@ -81,5 +83,9 @@ export class Statistics {
 
     public getPlayerLine(): FootballLine {
         return this.json.playerLine;
+    }
+
+    public getGameStartDate(): Date {
+        return this.gameStartDate;
     }
 }

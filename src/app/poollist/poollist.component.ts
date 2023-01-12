@@ -62,7 +62,7 @@ export class PoolListComponent implements OnInit {
       return;
   }
     this.searching = true;
-    console.log(this.selectedSeason);
+    // console.log(this.selectedSeason);
 
     const filter = { seasonId: this.selectedSeason.getId() };
     this.poolShellRepos.getObjects(filter)

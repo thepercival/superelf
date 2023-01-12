@@ -27,12 +27,12 @@ export class GameScrollerComponent implements OnInit {
   }
 
   previous(): void {
-    console.log('gamescroller->previous pre', this.games.slice());
+    //console.log('gamescroller->previous pre', this.games.slice());
     const current = this.games.pop();
     if (current) {
       this.current = current;
       this.games.unshift(this.current);
-      console.log('gamescroller->previous post', this.games.slice());
+      //console.log('gamescroller->previous post', this.games.slice());
       this.update.emit(this.current);
     }
   }

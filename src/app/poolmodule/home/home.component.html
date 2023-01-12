@@ -9,10 +9,10 @@
     <div *ngIf="!processing && pool" class="d-flex flex-wrap justify-content-center mt-3">
 
       <div *ngIf="afterAssemblePeriod() && currentGameRoundNumbers?.firstCreatedOrInProgress"
-        class="d-flex flex-wrap no-wrap gap-3 justify-content-center" (click)="linkToAssemble()">                  
+        class="d-flex flex-wrap no-wrap gap-3 justify-content-center">                  
           
         <!-- competitie -->
-        <div *ngIf="getCompetitionCompetitors().length > 0" class="card card-competition pointer px-0"
+        <div *ngIf="pool.getCompetition(Competition)" class="card card-competition pointer px-0"
           [routerLink]="['/pool/competition', pool.getId()]">
           <div class="card-body text-center p-1 pt-2">
             <h1 class="card-title">
@@ -21,18 +21,8 @@
             <h5>competitie</h5>
           </div>
         </div>
-        <div *ngIf="getCompetitionCompetitors().length == 0" class="card card-competition pointer px-0"
-          (click)="openModal(contentpoolUsers)">
-          <div class="card-body text-center p-1 pt-2">
-            <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'users']"></fa-icon>
-            </h5>
-            <div>deel</div>
-            <div>nemers</div>
-          </div>
-        </div>
         <!-- cup -->
-        <div *ngIf="getCupCompetitors().length > 0" class="card card-competition pointer px-0"
+        <div *ngIf="pool.getCompetition(Cup)" class="card card-competition pointer px-0"
           [routerLink]="['/pool/cup', pool.getId()]">
           <div class="card-body text-center p-1 pt-2">
             <h1 class="card-title">
@@ -55,6 +45,19 @@
             </div>
           </div>
         </ng-template> 
+      </div>
+
+      <div *ngIf="!afterAssemblePeriod()" class="d-flex flex-wrap no-wrap gap-3 justify-content-center" (click)="linkToAssemble()">
+        <div *ngIf="getCompetitionCompetitors().length == 0" class="card card-competition pointer px-0"
+          (click)="openModal(contentpoolUsers)">
+          <div class="card-body text-center p-1 pt-2">
+            <h5 class="card-title">
+              <fa-icon [icon]="['fas', 'users']"></fa-icon>
+            </h5>
+            <div>deel</div>
+            <div>nemers</div>
+          </div>
+        </div>
       </div>
     </div>
     <!-- competities: end -->

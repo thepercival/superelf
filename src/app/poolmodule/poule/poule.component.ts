@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Player, Poule, Round, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
+import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Player, Poule, Round, StartLocationMap, Structure, StructureCell, Team, TeamCompetitor } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 import { AuthService } from '../../lib/auth/auth.service';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
@@ -94,7 +94,7 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
 
             const round = structure.getSingleCategory().getRootRound();
             const pouleId = +params.pouleId;
-            const poule = this.leagueName === LeagueName.SuperCup ? round.getFirstPoule(): this.getPouleById(round, pouleId);
+            const poule = this.leagueName === LeagueName.SuperCup ? round.getFirstPoule(): this.getPouleFromPouleId(round, pouleId);
             this.poolPoule = poule;
 
             this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
@@ -147,15 +147,26 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
   get HomeSide(): AgainstSide { return AgainstSide.Home; }
   get AwaySide(): AgainstSide { return AgainstSide.Away; }
 
-  private getPouleById(round: Round, pouleId: number): Poule {
-    if (pouleId === 0) {
-      return round.getFirstPoule();
+  private getPouleFromPouleId(round: Round, pouleId: number): Poule {
+    const foundRound = this.getRoundWithPouleId(round, pouleId);
+    if( foundRound === undefined) {
+      throw new Error('poule not found for pouleId ' + pouleId);
     }
-    const poule = round.getPoules().find((poule: Poule): boolean => poule.getId() === pouleId);
-    if (poule !== undefined) {
+    const poule = foundRound.getPoules().find((poule: Poule): boolean => poule.getId() === pouleId);
+    if( poule !== undefined ) {
       return poule;
     }
     throw new Error('poule not found for pouleId ' + pouleId);
+  }
+
+  private getRoundWithPouleId(round: Round, pouleId: number): Round|undefined {
+    const poule = round.getPoules().find((poule: Poule): boolean => poule.getId() === pouleId);
+    if( poule !== undefined ) {
+      return round;
+    }
+    return round.getChildren().find((childRound: Round): boolean => {
+      return this.getRoundWithPouleId(childRound, pouleId) !== undefined;
+    });
   }
 
   private initPouleCompetitors(poolPoule: Poule, poolCompetitors: PoolCompetitor[]): void {

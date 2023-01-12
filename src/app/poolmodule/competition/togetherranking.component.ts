@@ -126,7 +126,7 @@ export class TogetherRankingComponent implements OnInit {
     if( this.worstMap.size > 3) { // worst
       this.worstMap.clear();
     }
-    console.log(this.bestMap);
+    // console.log(this.bestMap);
   }
 
 

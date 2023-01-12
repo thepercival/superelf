@@ -37,7 +37,8 @@
 
 
   <app-superelf-cup-round *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed();" class="mb-2"
-    [round]="qualifyGroup.getChildRound()" [poolUser]="poolUser" [structureNameService]="structureNameService">
+    [round]="qualifyGroup.getChildRound()" [poolUser]="poolUser" [structureNameService]="structureNameService"
+    (navigateToPoule)="emitNavigateToPoule($event)">
   </app-superelf-cup-round>
 
 

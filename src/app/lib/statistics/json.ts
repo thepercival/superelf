@@ -14,5 +14,6 @@ export interface JsonStatistics {
     sheet: Sheet,
     nrOfYellowCards: number,
     directRedCard: boolean,
-    playerLine: FootballLine
+    playerLine: FootballLine,
+    gameStart: string;
 }
