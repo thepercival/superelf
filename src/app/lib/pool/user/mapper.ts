@@ -37,11 +37,15 @@ export class PoolUserMapper {
             const formation = this.formationMapper.toObject(json.assembleFormation, poolUser, pool.getAssemblePeriod().getViewPeriod());
             poolUser.setAssembleFormation(formation);
         }
+        if (json.replacements) {
+            console.log('CDK');
+            json.replacements.forEach(jsonTransfer => this.editActionMapper.toReplacement(jsonTransfer, poolUser, association));
+        }
         if (json.transfers) {
             json.transfers.forEach(jsonTransfer => this.editActionMapper.toTransfer(jsonTransfer, poolUser, association));
         }
         if (json.substitutions) {
-            json.substitutions.forEach(jsonSub => this.editActionMapper.toSubstitution(jsonSub, poolUser, association));
+            json.substitutions.forEach(jsonSub => this.editActionMapper.toSubstitution(jsonSub, poolUser));
         }
         if (json.transferFormation) {
             const formation = this.formationMapper.toObject(json.transferFormation, poolUser, pool.getTransferPeriod().getViewPeriod());

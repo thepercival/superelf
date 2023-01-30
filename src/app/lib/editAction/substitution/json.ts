@@ -1,6 +1,4 @@
-import { JsonEditAction } from '../json';
+import {  JsonTransferAction } from '../json';
 
-
-
-export interface JsonSubstitution extends JsonEditAction {
+export interface JsonSubstitution extends JsonTransferAction{
 }

@@ -6,6 +6,9 @@ import { Identifiable } from 'ngx-sport';
 import { AssemblePeriod } from '../period/assemble';
 import { TransferPeriod } from '../period/transfer';
 import { LeagueName } from '../leagueName';
+import { Replacement } from '../editAction/replacement';
+import { Substitution } from '../editAction/substitution';
+import { Transfer } from '../editAction/transfer';
 
 export class PoolUser extends Identifiable {
     private admin: boolean = false;
@@ -14,6 +17,9 @@ export class PoolUser extends Identifiable {
     protected nrOfTransferedWithTeam: number = 0;
     protected assembleFormation: S11Formation | undefined;
     protected transferFormation: S11Formation | undefined;
+    protected replacements: Replacement[] = [];
+    protected transfers: Transfer[] = [];
+    protected substitutions: Substitution[] = [];
 
     constructor(protected pool: Pool, protected user: User) {
         super();
@@ -58,20 +64,24 @@ export class PoolUser extends Identifiable {
         this.nrOfAssembled = nrOfAssembled;
     }
 
-    // getNrOfTransferedWithTeam(): number {
-    //     return this.nrOfTransferedWithTeam;
-    // }
-
-    // setNrOfTransferedWithTeam(nrOfTransfered: number) {
-    //     this.nrOfTransferedWithTeam = nrOfTransfered;
-    // }
-
     getAssembleFormation(): S11Formation | undefined {
         return this.assembleFormation;
     }
 
     setAssembleFormation(formation: S11Formation | undefined) {
         return this.assembleFormation = formation;
+    }
+
+    getReplacements(): Replacement[] {
+        return this.replacements;
+    }
+
+    getTransfers(): Transfer[] {
+        return this.transfers;
+    }
+
+    getSubstitutions(): Substitution[] {
+        return this.substitutions;
     }
 
     getTransferFormation(): S11Formation | undefined {

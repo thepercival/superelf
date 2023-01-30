@@ -21,7 +21,8 @@ import {
   faUserSecret,
   faMessage,
   faPaperPlane,
-  faFilter
+  faFilter,
+  faRightLeft
 } from '@fortawesome/free-solid-svg-icons';
 
 import { CommonSharedModule } from '../shared/commonmodule/common.module';
@@ -65,6 +66,13 @@ import { PoolCupComponent } from './cup/structure.component';
 import { PoolCupRoundComponent } from './cup/round.component';
 import { TogetherRankingComponent } from './competition/togetherranking.component';
 import { TrophiesComponent } from './trophies/trophies.component';
+import { FormationReplaceComponent } from './formation/replace.component';
+import { FormationTransferComponent } from './formation/transfer.component';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormationLineReplacementsComponent } from './formation/line/replacements.component';
+import { FormationLineTransfersComponent } from './formation/line/transfers.component';
+import { FormationPlaceReplaceComponent } from './formation/place/replace.component';
+import { FormationPlaceTransferComponent } from './formation/place/transfer.component';
 
 @NgModule({
   imports: [
@@ -75,14 +83,21 @@ import { TrophiesComponent } from './trophies/trophies.component';
     PoolSharedModule,
     CommonSharedModule,
     ClipboardModule,
+    NgbPaginationModule
   ],
   declarations: [
     AgainstGameTitleComponent,
     FormationAssembleComponent,
     FormationChooseComponent,
     FormationLineAssembleComponent,
+    FormationLineReplacementsComponent,
+    FormationLineTransfersComponent,
     FormationLineViewComponent,
     FormationPlaceEditComponent,
+    FormationPlaceReplaceComponent,
+    FormationPlaceTransferComponent,
+    FormationReplaceComponent,
+    FormationTransferComponent,
     GameRoundScrollerComponent,
     GameScrollerComponent,
     HomeComponent,
@@ -123,7 +138,8 @@ export class PoolModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
       faListOl, faChevronLeft, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
-      , faInfoCircle, faSearch, faPlusCircle, faPencilAlt, faUserSecret, faMessage, faPaperPlane, faFilter
+      , faInfoCircle, faSearch, faPlusCircle, faPencilAlt, faUserSecret, faMessage, faPaperPlane, faFilter,
+      faRightLeft
     );
     /*library.addIcons(
       faProductHunt

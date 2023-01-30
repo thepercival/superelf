@@ -8,7 +8,8 @@
     <!-- competities: start -->
     <div *ngIf="!processing && pool" class="d-flex flex-wrap justify-content-center mt-3">
 
-      <div *ngIf="afterAssemblePeriod() && currentGameRoundNumbers?.firstCreatedOrInProgress"
+      <div *ngIf="afterAssemblePeriod() && 
+      (currentGameRoundNumbers?.firstCreatedOrInProgress || currentGameRoundNumbers?.lastFinishedOrInPorgress)"
         class="d-flex flex-wrap no-wrap gap-3 justify-content-center">                  
           
         <!-- competitie -->
@@ -120,10 +121,20 @@
     <br />
 
     <!-- trofeenkast & spelregels -->
-    <div *ngIf="pool && poolUser" class="card mt-3 mx-2 border-0 border-bottom" (click)="linkToAssemble()">
+    <div *ngIf="pool && poolUser" class="card mt-3 mx-2 border-0 border-bottom">
       <div class="card-body pt-0">
 
         <div class="card-text d-flex gap-3 justify-content-center mt-0">
+
+          <div *ngIf="poolUser && formationChecker" class="card card-sub pointer px-0"
+            (click)="linkToTransferPeriodAction(poolUser, formationChecker)">
+            <div class="card-body text-center p-1 pt-2">
+              <h5 class="card-title">
+                <fa-icon [icon]="['fas', 'right-to-bracket']"></fa-icon>
+              </h5>
+              <div>transfers</div>              
+            </div>
+          </div>               
 
           <div class="card card-sub pointer px-0"
             [routerLink]="['/pool/trophies', pool.getId()]">

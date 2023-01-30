@@ -31,7 +31,14 @@ export class CompetitionConfigRepository extends APIRepository {
     }
 
     getUrl(pool?: Pool): string {
-        return this.url + (pool ? ('/' + pool.getId()) : '');
+        if( pool === undefined ) {
+            return this.url;    
+        }
+        return this.url + '/' + pool.getId();
+    }
+
+    getPublicUrl(): string {
+        return super.getApiUrl() + 'public/' + this.getUrlpostfix();
     }
 
     getActiveObjects(): Observable<CompetitionConfig[]> {
@@ -45,7 +52,7 @@ export class CompetitionConfigRepository extends APIRepository {
     }
 
     getAvailableFormations(competitionConfig: CompetitionConfig): Observable<Formation[]> {
-        const url = this.getUrl() + '/' + competitionConfig.getId() + '/availableformations';
+        const url = this.getPublicUrl() + '/' + competitionConfig.getId() + '/availableformations';
         return this.http.get<JsonFormation[]>(url, { headers: super.getHeaders() }).pipe(
             map((jsonFormations: JsonFormation[]) => {
                 return jsonFormations.map((jsonFormation) => this.formationMapper.toObject(jsonFormation));

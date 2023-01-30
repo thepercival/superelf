@@ -1,10 +1,13 @@
 import { Location } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { concatMap } from 'rxjs/operators';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FootballLine, Team, Person, TeamCompetitor } from 'ngx-sport';
+import { FootballLine, Team, Person, Player, Formation } from 'ngx-sport';
+import { CompetitionConfigRepository } from '../../../lib/competitionConfig/repository';
+import { FootballFormationChecker } from '../../../lib/formation/footballChecker';
 import { S11FormationPlace } from '../../../lib/formation/place';
 import { FormationRepository } from '../../../lib/formation/repository';
 import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
@@ -20,11 +23,11 @@ import { PoolComponent } from '../../../shared/poolmodule/component';
 import { ChoosePlayersFilter } from '../../player/choose.component';
 
 @Component({
-  selector: 'app-pool-scouted-player-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+  selector: 'app-pool-place-transfer',
+  templateUrl: './transfer.component.html',
+  styleUrls: ['./transfer.component.scss']
 })
-export class FormationPlaceEditComponent extends PoolComponent implements OnInit {
+export class FormationPlaceTransferComponent extends PoolComponent implements OnInit {
   poolUser!: PoolUser;
   scoutingList: ScoutingList = { scoutedPlayers: []/*, mappedPersons: new PersonMap()*/ };
   public form: UntypedFormGroup;
@@ -33,8 +36,9 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
   public place!: S11FormationPlace;
   public alreadyChosenPersons: Person[] = [];
   public alreadyChosenTeams: Team[] = [];
-  public selectableLine: FootballLine | undefined;
-  public selectableTeams: Team[] = [];
+  public selectableTeam: Team | undefined;
+  public selectableLines!: FootballLine[];
+  public formationChecker: FootballFormationChecker|undefined;
 
   constructor(
     route: ActivatedRoute,
@@ -44,6 +48,7 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
     protected poolUserRepository: PoolUserRepository,
     private location: Location,
     private formationRepository: FormationRepository,
+    protected competitionConfigRepository: CompetitionConfigRepository,
     public myNavigation: MyNavigation,
     private modalService: NgbModal,
     fb: UntypedFormBuilder
@@ -60,11 +65,15 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
 
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
-      this.setPool(pool);
-      this.route.queryParams.subscribe(params => {
-        this.initPlayerChooseFilter(params);
-      });
-      this.poolUserRepository.getObjectFromSession(pool).subscribe({
+      this.setPool(pool);      
+
+      this.competitionConfigRepository.getAvailableFormations(pool.getCompetitionConfig()).pipe(
+        concatMap((formations: Formation[]) => {
+          this.formationChecker = new FootballFormationChecker(formations);
+          return this.poolUserRepository.getObjectFromSession(pool);
+        })
+      )
+      .subscribe({
         next: (poolUser: PoolUser) => {
           this.poolUser = poolUser;
           this.route.params.subscribe(params => {
@@ -72,21 +81,12 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
               this.initPlace(+params.placeId);;
             }
           });
-
-          this.selectableTeams = this.pool.getSourceCompetition().getTeamCompetitors().map((teamCompetitor: TeamCompetitor) => teamCompetitor.getTeam())
-
-          // const s11Formation = poolUser.getAssembleFormation();
-          // if (!s11Formation) {
-          //   this.form.controls.formation.setValue(undefined);
-          //   return;
-          // }
-          // this.assembleLines = this.getAssembleLines(formation);
         },
-        error: (e: string) => {
+        error: (e) => {
           this.setAlert('danger', e); this.processing = false;
         },
         complete: () => this.processing = false
-      });
+      });     
     });
   }
 
@@ -95,43 +95,38 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
     this.initPlayerChoose();
   }
 
-  initPlayerChooseFilter(params: Params) {
-    this.form.controls.showAll.setValue(params.showAll === 'true');
-    if (params.line !== undefined) {
-      this.choosePlayersFilter.line = +params.line;
-    }
-    if (params.teamId !== undefined) {
-      this.choosePlayersFilter.team = this.getTeamById(+params.teamId);
-    }
-  }
-
   initPlayerChoose() {
     this.alreadyChosenPersons = [];
-    this.alreadyChosenTeams = this.getChoosenTeams();
-    this.selectableLine = this.place.getFormationLine().getNumber();
+    this.selectableTeam = this.getTeamDescendingStart(this.place.getPlayer());
+    if( this.selectableTeam ) {
+      this.choosePlayersFilter.team = this.selectableTeam;
+    } else {
+      this.setAlert('danger', 'kan geen team voor speler vinden');
+    }
+    const formationLine = this.place.getFormationLine();
+    const formationChecker = this.formationChecker;
+    if( formationChecker ) {
+      const addableLines = formationChecker.addableLines(formationLine.getFormation().convertToBase(), formationLine.getNumber());      
+      this.selectableLines = addableLines;
+      // this.route.queryParams.subscribe(params => {
+      //   if (params.line !== undefined) {
+          this.choosePlayersFilter.line = this.place.getLine();
+      //   }
+      // ?});
+    }
+    
   }
 
-  getChoosenTeams(): Team[] {
-    const teams: Team[] = [];
-    this.poolUser.getAssembleFormation()?.getPlayers().forEach((player: S11Player) => {
-      const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player);
-      if (currentPlayer === undefined) {
-        return;
-      }
-      teams.push(currentPlayer.getTeam());
-    });
+  getTeamDescendingStart(s11Player: S11Player|undefined): Team|undefined {
+    // console.log(s11Player);
+    return this.getPlayerDescendingStart(s11Player)?.getTeam();
+  }
 
-    // const person: Person | undefined = selectedS11Player?.getPerson();
-    // const currentPlayer = person ? this.oneTeamSimultaneous.getCurrentPlayer(person) : undefined;
-    // const team: Team | undefined = currentPlayer ? currentPlayer.getTeam() : undefined;
-    // if (team === undefined) {
-    //   return teams;
-    // }
-    // const index = teams.indexOf(team);
-    // if (index > -1) {
-    //   teams.splice(index, 1);
-    // }
-    return teams;
+  getPlayerDescendingStart(s11Player: S11Player|undefined): Player|undefined {
+    if( s11Player === undefined) {
+      return undefined;
+    }
+    return s11Player.getPlayersDescendingStart().shift();
   }
 
   getPlaceById(placeId: number): S11FormationPlace {
@@ -186,11 +181,17 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
 
 
 
-  editPlace(s11Player: S11Player) {
-    this.processing = true;
-    this.formationRepository.editPlace(this.place, s11Player.getPerson()).subscribe({
+  replace(s11Player: S11Player, formationChecker: FootballFormationChecker) {
+    this.processing = true;    
+    this.formationRepository.replace(this.place, s11Player.getPerson()).subscribe({
       next: () => {
-        this.router.navigate(['/pool/formation/assemble/', this.pool.getId()]);
+        if( !formationChecker.allPlacesWithoutTeamReplaced(this.poolUser) ) {
+          this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
+        } else if( this.poolUser.getTransfers().length < 2) {
+          this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);
+        } else {
+          this.router.navigate(['/pool/formation/substitutions', this.pool.getId()]);
+        }
       },
       error: (e: string) => {
         this.setAlert('danger', e);

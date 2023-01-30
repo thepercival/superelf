@@ -18,7 +18,6 @@ import { FormationPlaceEditComponent } from './formation/place/edit.component';
 import { FormationAssembleComponent } from './formation/assemble.component';
 import { WorldCupComponent } from './worldcup/worldcup.component';
 import { PoolUserComponent } from './poolusers/pooluser.component';
-import { ScheduleComponent } from './schedule/schedule.component';
 import { PoolChatComponent } from './chat/chat.component';
 import { PoolTogetherGameComponent } from './game/pool/togethergame.component';
 import { PoolCompetitionComponent } from './competition/competition.component';
@@ -26,6 +25,10 @@ import { PoolCupComponent } from './cup/structure.component';
 import { PoolPouleComponent } from './poule/poule.component';
 import { SourceGameComponent } from './game/source.component';
 import { TrophiesComponent } from './trophies/trophies.component';
+import { FormationReplaceComponent } from './formation/replace.component';
+import { FormationPlaceReplaceComponent } from './formation/place/replace.component';
+import { FormationTransferComponent } from './formation/transfer.component';
+import { FormationPlaceTransferComponent } from './formation/place/transfer.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent, canActivate: [AuthUserGuardService] },
@@ -38,6 +41,10 @@ const routes: Routes = [
   { path: 'formation/assemble/:id', component: FormationAssembleComponent, canActivate: [AuthUserGuardService] },
   { path: 'formation/choose/:id', component: FormationChooseComponent, canActivate: [AuthUserGuardService] },
   { path: 'formation/place/edit/:id/:placeId', component: FormationPlaceEditComponent, canActivate: [AuthUserGuardService] },
+  { path: 'formation/replacements/:id', component: FormationReplaceComponent, canActivate: [AuthUserGuardService] },
+  { path: 'formation/transfers/:id', component: FormationTransferComponent, canActivate: [AuthUserGuardService] },
+  { path: 'formation/place/replace/:id/:placeId', component: FormationPlaceReplaceComponent, canActivate: [AuthUserGuardService] },  
+  { path: 'formation/place/transfer/:id/:placeId', component: FormationPlaceTransferComponent, canActivate: [AuthUserGuardService] },    
   { path: 'invite/:id', component: InviteComponent, canActivate: [AuthUserGuardService] },
   { path: 'join/:id/:key', component: JoinComponent },
   { path: 'player/:id/:playerId/:gameRound', component: S11PlayerComponent },

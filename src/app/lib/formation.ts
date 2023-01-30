@@ -68,13 +68,16 @@ export class S11Formation extends Identifiable {
     }
 
     public getEqualFormation(formations: Formation[]): Formation | undefined {
+        const formationBase = this.convertToBase();
         return formations.find((formation: Formation): boolean => {
-            return formation.getLines().every((formationLine: FormationLine): boolean => {
-                const s11Line = this.getLine(formationLine.getNumber())
-                return formationLine.getNumber() === s11Line.getNumber()
-                    && formationLine.getNrOfPersons() === s11Line.getStartingPlaces().length;
-            });
+            return formationBase.equals(formation);
         });
+    }
+
+    public convertToBase(): Formation {
+        return new Formation( this.getLines().map((s11Line: S11FormationLine): FormationLine => {
+            return new FormationLine(s11Line.getNumber(), s11Line.getStartingPlaces().length );
+        } ) );
     }
 
     getPoints(gameRound: GameRound | undefined): number {

@@ -22,10 +22,10 @@
       <option [ngValue]="undefined" selected>
         alle clubs
       </option>
-      <option *ngFor="let team of searchTeams" [ngValue]="team">{{team.getName()}}</option>
+      <option *ngFor="let team of selectableTeams" [ngValue]="team">{{team.getName()}}</option>
     </select>
     <select class="form-control ms-1" formControlName="searchLine" (change)="updateFilter()">
-      <option *ngFor="let line of searchLines" [ngValue]="line">{{nameService.getFormationLineName(line)}}</option>
+      <option *ngFor="let line of selectableLines" [ngValue]="line">{{nameService.getFormationLineName(line)}}</option>
     </select>
   </div>
 </form>

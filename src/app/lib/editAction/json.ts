@@ -1,8 +1,9 @@
-import { JsonPerson } from 'ngx-sport';
+import { FootballLine, JsonPerson } from 'ngx-sport';
 
 
-export interface JsonEditAction {
+export interface JsonTransferAction {
     id: number;
-    personOut: JsonPerson;
     personIn: JsonPerson;
+    lineNumber: FootballLine;
+    placeNumber: number;
 }

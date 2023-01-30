@@ -81,21 +81,21 @@ input,
 .nav-tabs {
   .nav-link {
     @extend .sandstone;
-    background-color: $gray-200;
-    border-color: $gray-300;
+    background-color: $green-200;
+    border-color: $green-300;
   }
 
   .nav-link,
   .nav-link:hover,
   .nav-link:focus {
-    color: $gray-600;
+    color: $green-600;
   }
 
   .nav-link.disabled,
   .nav-link.disabled:hover,
   .nav-link.disabled:focus {
-    background-color: $gray-200;
-    border-color: $gray-300;
+    background-color: $green-200;
+    border-color: $green-300;
     color: $nav-link-disabled-color;
   }
 }
@@ -104,28 +104,28 @@ input,
   .nav-link {
     @extend .sandstone;
     border: 1px solid transparent;
-    color: $gray-600;
+    color: $green-600;
   }
 
   .nav-link.active,
   .nav-link:hover,
   .nav-link:focus {
-    background-color: $gray-200;
-    border-color: $gray-300;
+    background-color: $green-200;
+    border-color: $green-300;
   }
 
   .nav-link.disabled,
   .nav-link.disabled:hover {
     background-color: transparent;
     border-color: transparent;
-    color: $gray-300;
+    color: $green-300;
   }
 }
 
 
 .breadcrumb {
   @extend .sandstone;
-  border: 1px solid $gray-300;
+  border: 1px solid $green-300;
 }
 
 .pagination {

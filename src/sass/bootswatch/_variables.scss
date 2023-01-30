@@ -2,43 +2,43 @@
 // Bootswatch
 
 $white: #fff !default;
-$gray-100: #d1e7dd !default;
-$gray-200: #a3cfbb !default;
-$gray-300: #75b798 !default;
-$gray-400: #479f76 !default;
-$gray-500: #198754 !default;
-$gray-600: #146c43 !default;
-$gray-700: #0f5132 !default;
-$gray-800: #0a3622 !default;
-$gray-900: #051b11 !default;
+$green-100: #d1e7dd !default;
+$green-200: #a3cfbb !default;
+$green-300: #75b798 !default;
+$green-400: #479f76 !default;
+$green-500: #198754 !default;
+$green-600: #146c43 !default;
+$green-700: #0f5132 !default;
+$green-800: #0a3622 !default;
+$green-900: #051b11 !default;
 $black: #000 !default;
 
-$blue: $gray-600  !default;
+$blue: $green-600  !default;
 $indigo: #6610f2 !default;
 $purple: #6f42c1 !default;
 $pink: #e83e8c !default;
 $red: #d9534f !default;
 $orange: #f47c3c !default;
 $yellow: #ffc107 !default;
-$green: $gray-300  !default;
-$teal: $gray-300  !default;
+$green: $green-300  !default;
+$teal: $green-300  !default;
 $cyan: #29abe0 !default;
 $purple: #673AB7 !default;
 
-$primary: $gray-800  !default;
-$secondary: $gray-200  !default;
+$primary: $green-800  !default;
+$secondary: $green-200  !default;
 $success: $green  !default;
 $info: $cyan  !default;
 $warning: $orange  !default;
 $danger: $red  !default;
-$light: $gray-200  !default;
+$light: $green-200  !default;
 $dark: $primary  !default;
 
 $min-contrast-ratio: 2 !default;
 
 // Body
 
-$body-color: $gray-800  !default;
+$body-color: $green-800  !default;
 
 // Links
 
@@ -52,21 +52,21 @@ $headings-font-weight: 400 !default;
 
 // Dropdowns
 
-$dropdown-link-color: $gray-600  !default;
+$dropdown-link-color: $green-600  !default;
 $dropdown-link-hover-color: $dropdown-link-color  !default;
-$dropdown-link-hover-bg: $gray-200  !default;
+$dropdown-link-hover-bg: $green-200  !default;
 $dropdown-link-active-color: $dropdown-link-color  !default;
 $dropdown-link-active-bg: $dropdown-link-hover-bg  !default;
 
 // Navs
 
 $nav-link-padding-x: .9rem !default;
-$nav-link-disabled-color: $gray-300  !default;
-$nav-tabs-border-color: $gray-300  !default;
-$nav-tabs-link-hover-border-color: $gray-300  !default;
+$nav-link-disabled-color: $green-300  !default;
+$nav-tabs-border-color: $green-300  !default;
+$nav-tabs-link-hover-border-color: $green-300  !default;
 $nav-tabs-link-active-bg: $white  !default;
-$nav-pills-link-active-color: $gray-600  !default;
-$nav-pills-link-active-bg: $gray-200  !default;
+$nav-pills-link-active-color: $green-600  !default;
+$nav-pills-link-active-bg: $green-200  !default;
 
 // Navbar
 
@@ -76,49 +76,49 @@ $navbar-light-active-color: $black  !default;
 
 // Pagination
 
-$pagination-color: $gray-600  !default;
-$pagination-bg: $gray-200  !default;
-$pagination-border-color: $gray-300  !default;
+$pagination-color: $green-600  !default;
+$pagination-bg: $green-200  !default;
+$pagination-border-color: $green-300  !default;
 $pagination-hover-color: $pagination-color  !default;
 $pagination-active-color: $pagination-color  !default;
-$pagination-active-bg: $gray-300  !default;
-$pagination-active-border-color: $gray-300  !default;
-$pagination-disabled-color: $gray-300  !default;
-$pagination-disabled-bg: $gray-200  !default;
+$pagination-active-bg: $green-300  !default;
+$pagination-active-border-color: $green-300  !default;
+$pagination-disabled-color: $green-300  !default;
+$pagination-disabled-bg: $green-200  !default;
 $pagination-disabled-border-color: $pagination-border-color  !default;
 
 // Cards
 
-$card-border-color: rgba($gray-300, .75) !default;
-$card-cap-bg: rgba($gray-200, .25) !default;
+$card-border-color: rgba($green-300, .75) !default;
+$card-cap-bg: rgba($green-200, .25) !default;
 
 // Popovers
 
-$popover-header-bg: $gray-200  !default;
+$popover-header-bg: $green-200  !default;
 
 // Modals
 
-$modal-content-border-color: $gray-300  !default;
+$modal-content-border-color: $green-300  !default;
 $modal-header-border-color: $modal-content-border-color  !default;
 
 // Progress bars
 
-$progress-bg: $gray-300  !default;
+$progress-bg: $green-300  !default;
 $progress-border-radius: 10px !default;
 $progress-bar-color: $primary  !default;
 
 // List group
 
-$list-group-border-color: $gray-300  !default;
-$list-group-hover-bg: $gray-200  !default;
+$list-group-border-color: $green-300  !default;
+$list-group-hover-bg: $green-200  !default;
 $list-group-active-color: $body-color  !default;
-$list-group-active-bg: $gray-200  !default;
-$list-group-active-border-color: $gray-300  !default;
-$list-group-disabled-color: $gray-500  !default;
+$list-group-active-bg: $green-200  !default;
+$list-group-active-border-color: $green-300  !default;
+$list-group-disabled-color: $green-500  !default;
 $list-group-disabled-bg: $white  !default;
 $list-group-action-color: $list-group-active-color  !default;
 $list-group-action-active-color: $list-group-active-color  !default;
-$list-group-action-active-bg: $gray-300  !default;
+$list-group-action-active-bg: $green-300  !default;
 
 // Breadcrumbs
 

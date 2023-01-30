@@ -27,7 +27,7 @@ export class S11Player extends Identifiable {
     constructor(
         protected viewPeriod: ViewPeriod,
         protected person: Person,
-        protected players: Player[],
+        protected readonly players: Player[],
         protected totals: JsonTotals,
         protected totalPoints: number) {
         super();
@@ -54,7 +54,7 @@ export class S11Player extends Identifiable {
     // }
 
     public getLine(): FootballLine {
-        const player = this.getPlayers()[0];
+        const player = this.getPlayers().shift();
         if (player === undefined) {
             throw new Error('s11player should always have a line');
         }
@@ -101,11 +101,17 @@ export class S11Player extends Identifiable {
             filters.push((player: Player) => player.getLine() === line);
         }
         if (filters.length === 0) {
-            return this.players;
+            return this.players.slice();
         }
         return this.players.filter((player: Player): boolean => {
             return filters.every(filter => filter(player));
         });
+    }
+
+    public getPlayersDescendingStart(team?: Team, period?: Period, line?: number): Player[] {
+        return this.getPlayers(team, period, line).sort((plA: Player, plB: Player): number =>  {
+        return plB.getStartDateTime().getTime() - plA.getStartDateTime().getTime();
+      });
     }
 
     public getPlayer(team: Team, date?: Date): Player | undefined {

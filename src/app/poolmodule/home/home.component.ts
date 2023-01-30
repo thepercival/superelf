@@ -18,10 +18,11 @@ import { PoolCompetitor } from '../../lib/pool/competitor';
 import { LeagueName } from '../../lib/leagueName';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
-import { AgainstGame, Competition, GameState, Poule, Round, Structure, StructureCell, TogetherGame, TogetherGamePlace } from 'ngx-sport';
+import { AgainstGame, Competition, Formation, Poule, Round, Structure, TogetherGame, TogetherGamePlace } from 'ngx-sport';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { SuperElfNameService } from '../../lib/nameservice';
-import { forkJoin, Observable, of } from 'rxjs';
+import { FootballFormationChecker } from '../../lib/formation/footballChecker';
+import { CompetitionConfigRepository } from '../../lib/competitionConfig/repository';
 
 @Component({
     selector: 'app-pool-public',
@@ -36,6 +37,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
     public poolUsers: PoolUser[] = [];
     public currentGameRoundNumbers: CurrentGameRoundNumbers | undefined;
     public structureMap = new Map<number, Structure>();
+    public formationChecker: FootballFormationChecker|undefined;
     private processingGameRoundNumbers = true;
     private processingPoolUsers = true;
 
@@ -52,6 +54,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
         protected scoutedPlayerRepository: ScoutedPlayerRepository,
         protected gameRoundRepository: GameRoundRepository,
         protected structureRepository: StructureRepository,
+        protected competitionConfigRepository: CompetitionConfigRepository,
         protected modalService: NgbModal
     ) {
         super(route, router, poolRepository, globalEventsManager);
@@ -84,6 +87,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
         if (this.afterAssemblePeriod()) {
             this.gameRoundRepository.getCurrentNumbers(competitionConfig, this.currentViewPeriod).subscribe({
                 next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
+                    console.log(currentGameRoundNumbers);
                     this.currentGameRoundNumbers = currentGameRoundNumbers;
                     this.setStructureMap(this.getCompetitions());
                     if( !this.processingPoolUsers ) {
@@ -126,15 +130,20 @@ export class HomeComponent extends PoolComponent implements OnInit {
             .subscribe({
                 next: (poolUser: PoolUser | undefined) => {
                     this.poolUser = poolUser;
-                    // console.log('ssss', this.poolUser);                    
+                    if (this.inTransferMode()) {
+                        this.competitionConfigRepository.getAvailableFormations(pool.getCompetitionConfig())
+                            .subscribe((formations: Formation[]) => {
+                                this.formationChecker = new FootballFormationChecker(formations);
+                            });
+                    }
                 },
                 error: (e: string) => {
-                    // this.setAlert('danger', e); this.processing = false;
+                    this.setAlert('danger', e); this.processing = false;
                 }
             });
         }
-        
     }
+        
 
     getCompetitions(): Competition[] {
         const competitions: Competition[] = [];
@@ -315,6 +324,18 @@ export class HomeComponent extends PoolComponent implements OnInit {
         }
     }
 
+    linkToTransferPeriodAction(poolUser: PoolUser, formationChecker: FootballFormationChecker) {
+        if( !formationChecker.allPlacesWithoutTeamReplaced(poolUser) ) {
+            this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
+          } else if( poolUser.getTransfers().length < 2) {
+            this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);
+          } else {
+            this.router.navigate(['/pool/formation/substitutions', this.pool.getId()]);
+          }
+    }
+    
+    
+
     showAssemble(): boolean {
         const now = new Date();
         return this.pool.getAssemblePeriod().isIn();
@@ -343,4 +364,9 @@ export class HomeComponent extends PoolComponent implements OnInit {
     afterAssemblePeriod(): boolean {
         return this.pool.getAssemblePeriod().getEndDateTime().getTime() < (new Date()).getTime();
     }
+
+    inTransferMode(): boolean {
+        return this.pool.getTransferPeriod().isIn();
+    }
+
 }

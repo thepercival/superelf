@@ -6,25 +6,22 @@
     <ngb-alert *ngIf="alert" [type]="alert.type">
       {{ alert.message }}</ngb-alert>
 
-    <div *ngIf="!processing && pool">
+    <div *ngIf="!processing && pool && place">
 
       <div class="d-flex justify-content-between my-3">
         <h2 class="me-2 text-truncate">
-          <fa-icon [icon]="['fas', 'users']"></fa-icon> speler selecteren
-        </h2>
-        <div class="my-3" [formGroup]="form">
-          <label class="form-check-label pe-2" for="showAll">toon alles</label>
-          <input type="checkbox" class="form-check-input" (change)="updateShowAll()" id="showAll"
-            formControlName="showAll">
-        </div>
+          <fa-icon [icon]="['fas', 'right-left']"></fa-icon> 
+          <app-lineicon [line]="place.getLine()" class="ms-1 mt-0"></app-lineicon>
+          <span class="ms-1">{{place.getPlayer()?.getPerson()?.getName()}}</span> vervangen
+        </h2>        
       </div>
 
-      <div *ngIf="selectableTeams.length < 1" class="d-flex justify-content-center">
+      <div *ngIf="selectableTeam && formationChecker" class="d-flex justify-content-center">
         <app-pool-player-choose class="w-100" [competition]="pool.getSourceCompetition()"
           [viewPeriod]="pool.getCreateAndJoinPeriod()" [alreadyChosenPersons]="alreadyChosenPersons"
-          [alreadyChosenTeams]="alreadyChosenTeams" [selectableLines]="[selectableLine]" 
-          [filter]="choosePlayersFilter" [selectableTeams]="selectableTeams"
-          [showAll]="form.controls.showAll.value" (selectS11Player)="editPlace($event)"
+          [selectableTeams]="[selectableTeam]"
+          [alreadyChosenTeams]="alreadyChosenTeams" [selectableLines]="selectableLines" [filter]="choosePlayersFilter"
+          [showAll]="form.controls.showAll.value" (selectS11Player)="replace($event, formationChecker)"
           (linkToS11Player)="linkToPlayer($event)" (filterUpdate)="updateState($event)">
         </app-pool-player-choose>
       </div>

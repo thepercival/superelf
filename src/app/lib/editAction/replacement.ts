@@ -5,10 +5,10 @@ import { S11FormationPlace } from '../formation/place';
 
 import { PoolUser } from '../pool/user';
 
-export class Transfer extends EditAction {
+export class Replacement extends EditAction {
     constructor(poolUser: PoolUser, place: S11FormationPlace, protected personIn: Person) {
         super(poolUser, place);
-        poolUser.getTransfers().push(this);
+        poolUser.getReplacements().push(this);
     }
 
     public getPersonIn(): Person {

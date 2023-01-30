@@ -1,32 +1,18 @@
-import { Person } from 'ngx-sport';
+import { Identifiable } from 'ngx-sport';
+import { S11FormationPlace } from './formation/place';
 import { PoolUser } from './pool/user';
 
-export class EditAction {
-    protected id: number = 0;
+export class EditAction extends Identifiable{
 
-    constructor(
-        protected poolUser: PoolUser,
-        protected personOut: Person,
-        protected personIn: Person) {
-    }
-
-    getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
+    constructor(protected poolUser: PoolUser, protected formationPlace: S11FormationPlace) {
+        super();
     }
 
     getPoolUser(): PoolUser {
         return this.poolUser;
     }
 
-    getPersonOut(): Person {
-        return this.personOut;
-    }
-
-    getPersonIn(): Person {
-        return this.personIn;
+    getFormationPlace(): S11FormationPlace {
+        return this.formationPlace;
     }
 }

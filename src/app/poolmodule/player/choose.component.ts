@@ -21,18 +21,16 @@ export class S11PlayerChooseComponent implements OnInit {
   @Input() viewPeriod!: ViewPeriod;
   @Input() alreadyChosenPersons: Person[] | undefined;
   @Input() alreadyChosenTeams: Team[] | undefined;
-  @Input() selectableLine: FootballLine | undefined;
+  @Input() selectableTeams!: Team[];
+  @Input() selectableLines!: (FootballLine|undefined)[];
   @Input() filter: ChoosePlayersFilter;
   @Input() showAll: boolean = false;
 
   @Output() selectS11Player = new EventEmitter<S11Player>();
   @Output() linkToS11Player = new EventEmitter<S11Player>();
-  @Output() filterUpdate = new EventEmitter<ChoosePlayersFilter>();
-
+  @Output() filterUpdate = new EventEmitter<ChoosePlayersFilter>();  
   form: UntypedFormGroup;
   choosePersonItems: ChoosePersonItem[] = [];
-  searchTeams: Team[] = [];
-  searchLines: (FootballLine | undefined)[] = [];
   nameService = new NameService();
   public alert: IAlert | undefined;
   public processing = true;
@@ -58,19 +56,24 @@ export class S11PlayerChooseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.searchTeams = this.competition.getTeamCompetitors().map((teamCompetitor: TeamCompetitor) => teamCompetitor.getTeam());
+    // initTeams
     this.form.controls.searchTeam.setValue(this.filter.team);
-
-    this.searchLines.push(undefined);
-    for (const [propertyKey, propertyValue] of Object.entries(FootballLine)) {
-      if ((typeof propertyValue === 'string')) {
-        continue;
-      }
-      this.searchLines.push(propertyValue);
+    if (this.selectableTeams.length <= 1) {
+      this.form.controls.searchTeam.disable();
     }
 
+    // initFormationLines
+    if( this.selectableLines === undefined) {
+      this.selectableLines = [undefined];
+      for (const [propertyKey, propertyValue] of Object.entries(FootballLine)) {
+        if ((typeof propertyValue === 'string')) {
+          continue;
+        }
+        this.selectableLines.push(propertyValue);
+      }
+    }
     this.form.controls.searchLine.setValue(this.filter.line);
-    if (this.selectableLine) {
+    if (this.selectableLines.length <= 1) {
       this.form.controls.searchLine.disable();
     }
 
@@ -129,7 +132,11 @@ export class S11PlayerChooseComponent implements OnInit {
     // console.log('pac' + player.getPerson().getName(), this.personAlreadyChosen(player.getPerson()));
     // console.log('tac' + player.getPerson().getName(), this.teamAlreadyChosen(player.getTeam()));
     return !this.personAlreadyChosen(player.getPerson()) && !this.teamAlreadyChosen(player.getTeam())
-      && (this.selectableLine === undefined || this.selectableLine === player.getLine());
+      && (this.selectableLines.length === 0 || this.inSelectableLines(player.getLine()));
+  }
+
+  inSelectableLines(footballLine: FootballLine): boolean {
+    return this.selectableLines.find((lineIt: FootballLine|undefined): boolean => lineIt === footballLine) !== undefined;
   }
 
   personAlreadyChosen(person: Person): boolean {
@@ -170,4 +177,9 @@ interface ChoosePersonItem {
 export interface ChoosePlayersFilter {
   line: FootballLine | undefined;
   team: Team | undefined;
+}
+
+export interface ChoosePlayersReadonly {
+  line: boolean;
+  team: boolean;
 }
