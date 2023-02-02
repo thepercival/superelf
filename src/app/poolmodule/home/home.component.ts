@@ -325,7 +325,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
     }
 
     linkToTransferPeriodAction(poolUser: PoolUser, formationChecker: FootballFormationChecker) {
-        if( !formationChecker.allPlacesWithoutTeamReplaced(poolUser) ) {
+        if( !formationChecker.areAllPlacesWithoutTeamReplaced(poolUser) ) {
             this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
           } else if( poolUser.getTransfers().length < 2) {
             this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);

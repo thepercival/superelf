@@ -1,5 +1,5 @@
 
-import { Formation, FormationLine, Identifiable, Person, Team } from 'ngx-sport';
+import { FootballLine, Formation, FormationLine, Identifiable, Person, Team } from 'ngx-sport';
 import { S11FormationLine } from './formation/line';
 import { S11FormationPlace } from './formation/place';
 import { GameRound } from './gameRound';
@@ -8,7 +8,7 @@ import { S11Player } from './player';
 import { PoolUser } from './pool/user';
 import { ScorePoints } from './score/points';
 
-export class S11Formation extends Identifiable {
+export class                           S11Formation extends Identifiable {
     static readonly FootbalNrOfPersons: number = 11;
     private lines: S11FormationLine[] = [];
 
@@ -36,6 +36,10 @@ export class S11Formation extends Identifiable {
         return this.viewPeriod;
     }
 
+    public getPlace(lineNumber: FootballLine, placeNumber: number): S11FormationPlace {
+        return this.getLine(lineNumber).getPlace(placeNumber);
+    }
+
     public getPlaces(): S11FormationPlace[] {
         let places: S11FormationPlace[] = [];
         this.lines.forEach(line => {
@@ -52,12 +56,12 @@ export class S11Formation extends Identifiable {
         return players;
     }
 
-    public getPlayer(team: Team, date?: Date): S11Player | undefined {
-        const checkDate = date ? date : new Date();
-        return this.getPlayers().find((s11Player: S11Player) => {
-            return s11Player.getPlayer(team, checkDate);
-        });
-    }
+    // public getPlayer(team: Team, date?: Date): S11Player | undefined {
+    //     const checkDate = date ? date : new Date();
+    //     return this.getPlayers().find((s11Player: S11Player): boolean => {
+    //         return s11Player.getPlayer(team, checkDate) !== undefined;
+    //     });
+    // }
 
     public getPersons(): Person[] {
         return this.getPlayers().map((player: S11Player) => player.getPerson());

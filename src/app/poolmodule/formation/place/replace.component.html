@@ -21,7 +21,7 @@
           [viewPeriod]="pool.getCreateAndJoinPeriod()" [alreadyChosenPersons]="alreadyChosenPersons"
           [selectableTeams]="[selectableTeam]"
           [alreadyChosenTeams]="alreadyChosenTeams" [selectableLines]="selectableLines" [filter]="choosePlayersFilter"
-          [showAll]="form.controls.showAll.value" (selectS11Player)="replace($event, formationChecker)"
+          [showAll]="form.controls.showAll.value" (selectPlayer)="replace($event, formationChecker)"
           (linkToS11Player)="linkToPlayer($event)" (filterUpdate)="updateState($event)">
         </app-pool-player-choose>
       </div>

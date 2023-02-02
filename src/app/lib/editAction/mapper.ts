@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Association, PersonMapper } from 'ngx-sport';
+import { Association, PersonMapper, PlayerMapper } from 'ngx-sport';
 import { S11Formation } from '../formation';
 import { S11FormationPlace } from '../formation/place';
 import { JsonTransferPeriod } from '../period/transfer/json';
@@ -18,41 +18,50 @@ import { JsonTransfer } from './transfer/json';
 })
 export class EditActionMapper {
     constructor(
-        protected personMapper: PersonMapper) { }
+        protected personMapper: PersonMapper,
+        protected playerMapper: PlayerMapper,
+        ) { }
 
     toReplacement(json: JsonReplacement, poolUser: PoolUser, association: Association): Replacement {
         const assembleFormation = poolUser.getAssembleFormation();
         if( assembleFormation === undefined ) {
             throw new Error('assembleFormation not found');
         }
-        const formationPlace = this.getPlace(assembleFormation, json);
-        const personIn = this.personMapper.toObject(json.personIn, association);
-        return new Replacement(poolUser, formationPlace, personIn);
+        const jsonPersonIn = json.playerIn.person;
+        if( jsonPersonIn === undefined) {
+            throw new Error('person can not be empty');
+        }
+        const personIn = this.personMapper.toObject(jsonPersonIn, association);
+        const playerIn = this.playerMapper.toObject(json.playerIn, association, personIn);
+        return new Replacement(poolUser, json.lineNumberOut, json.placeNumberOut, playerIn);
     }
 
-    toTransfer(json: JsonReplacement, poolUser: PoolUser, association: Association): Transfer {
+    toTransfer(json: JsonTransfer, poolUser: PoolUser, association: Association): Transfer {
         const assembleFormation = poolUser.getAssembleFormation();
         if( assembleFormation === undefined ) {
             throw new Error('assembleFormation not found');
         }
-        const formationPlace = this.getPlace(assembleFormation, json);
-        const personIn = this.personMapper.toObject(json.personIn, association);
-        return new Transfer(poolUser, formationPlace, personIn);
+        const jsonPersonIn = json.playerIn.person;
+        if( jsonPersonIn === undefined) {
+            throw new Error('person can not be empty');
+        }
+        const personIn = this.personMapper.toObject(jsonPersonIn, association);
+        const playerIn = this.playerMapper.toObject(json.playerIn, association, personIn);
+        return new Transfer(poolUser, json.lineNumberOut, json.placeNumberOut, personIn);
     }
 
-    toSubstitution(json: JsonReplacement, poolUser: PoolUser): Substitution {
+    toSubstitution(json: JsonSubstitution, poolUser: PoolUser): Substitution {
         const assembleFormation = poolUser.getAssembleFormation();
         if( assembleFormation === undefined ) {
             throw new Error('assembleFormation not found');
         }
-        const formationPlace = this.getPlace(assembleFormation, json);
-        return new Substitution(poolUser, formationPlace);
+        return new Substitution(poolUser, json.lineNumberOut, json.placeNumberOut);
     }
 
-    private getPlace(formation: S11Formation, json: JsonTransferAction): S11FormationPlace {
-        const line = formation.getLine(json.lineNumber);
-        return line.getPlace(json.placeNumber);
-    }
+    // private getPlace(formation: S11Formation, json: JsonTransferAction): S11FormationPlace {
+    //     const line = formation.getLine(json.lineNumber);
+    //     return line.getPlace(json.placeNumber);
+    // }
 
     // toJson(poolUser: PoolUser): JsonPoolUser {
     //     return {

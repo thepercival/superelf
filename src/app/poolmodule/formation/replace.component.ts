@@ -89,7 +89,3 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
     }*/);
   }
 }
-
-enum TransfersPhase {
-  AddStoppedPlayers, ChooseTransfers, Substitute
-}

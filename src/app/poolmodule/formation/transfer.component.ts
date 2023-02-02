@@ -16,6 +16,9 @@ import { S11Player } from '../../lib/player';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { S11Formation } from '../../lib/formation';
+import { FootballFormationChecker } from '../../lib/formation/footballChecker';
+import { S11FormationCalculator } from '../../lib/formation/calculator';
 
 @Component({
   selector: 'app-pool-transfer',
@@ -29,6 +32,7 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
   selectedPlace: S11FormationPlace | undefined;
   selectedSearchLine: FootballLine | undefined;
   selectedTeamMap: TeamMap = new TeamMap();
+  public calcFormation: S11Formation|undefined;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
 
   constructor(
@@ -52,7 +56,11 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
         next: (pool: Pool) => {
           this.setPool(pool);
           this.poolUserRepository.getObjectFromSession(pool).subscribe({
-            next: (poolUser: PoolUser) => this.poolUser = poolUser,
+            next: ((poolUser: PoolUser) => {
+              this.poolUser = poolUser;
+              const calculator = new S11FormationCalculator();
+              this.calcFormation = calculator.getCurrentFormation(poolUser);
+            }),
             error: (e: string) => {
               this.setAlert('danger', e); this.processing = false;
             },
@@ -63,10 +71,6 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
           this.setAlert('danger', e); this.processing = false;
         }
       });
-  }
-
-  getFormationName(): string {
-    return this.poolUser?.getAssembleFormation()?.getName() ?? 'kies formatie';
   }
 
   transfer(place: S11FormationPlace) {
@@ -88,8 +92,4 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
       state: { s11Player, "pool": this.pool, currentGameRound: undefined }
     }*/);
   }
-}
-
-enum TransfersPhase {
-  AddStoppedPlayers, ChooseTransfers, Substitute
 }

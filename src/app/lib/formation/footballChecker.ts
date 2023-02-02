@@ -51,11 +51,7 @@ export class FootballFormationChecker {
         });
     }
 
-    public allPlacesWithoutTeamReplaced(poolUser: PoolUser): boolean {
-        return true;
-    }
-
-    private areAllPlacesWithoutTeamReplaced(poolUser: PoolUser): boolean {
+    public areAllPlacesWithoutTeamReplaced(poolUser: PoolUser): boolean {        
         const replacements = poolUser.getReplacements().slice();
 
         const transferPeriodStart = poolUser.getPool().getTransferPeriod().getStartDateTime();

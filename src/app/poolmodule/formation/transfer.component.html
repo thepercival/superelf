@@ -6,14 +6,14 @@
       <h2 class="me-2 text-truncate">
         <fa-icon [icon]="['fas', 'users']"></fa-icon> mijn team
       </h2>
-      <div *ngIf="!processing && pool">
+      <div *ngIf="!processing && pool && calcFormation">
         <button *ngIf="pool.getAssemblePeriod().isIn()" class="btn btn-secondary mx-2"
           [routerLink]="['/pool/scouting/list', pool.getId()]">
           <fa-icon [icon]="['fas', 'user-secret']"></fa-icon> <span class="ms-1 d-none d-sm-inline">
             scoutingslijst</span>
         </button>
-        <button class="btn btn-secondary" [routerLink]="['/pool/formation/choose', pool.getId()]">
-          {{getFormationName()}}
+        <button class="btn btn-secondary" disabled>
+          {{calcFormation.getName()}}
         </button>
       </div>
     </div>
@@ -34,10 +34,10 @@
 
     <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-    <div *ngIf="!processing && pool && poolUser">
+    <div *ngIf="!processing && pool && poolUser && calcFormation">
       <div *ngIf="!selectedPlace">
         <!-- lines-->
-        <app-pool-formationline-transfers *ngFor="let line of poolUser.getAssembleFormation()?.getLines()" [line]="line"
+        <app-pool-formationline-transfers *ngFor="let line of calcFormation.getLines()" [line]="line"
           (transfer)="transfer($event)" (linkToPlayer)="linkToPlayer($event)">
         </app-pool-formationline-transfers>
       </div>

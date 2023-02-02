@@ -1,6 +1,6 @@
-import { JsonPerson } from 'ngx-sport';
+import { JsonPlayer } from 'ngx-sport';
 import {  JsonTransferAction } from '../json';
 
 export interface JsonTransfer extends JsonTransferAction{
-    personIn: JsonPerson;
+    playerIn: JsonPlayer;
 }

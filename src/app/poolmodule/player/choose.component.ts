@@ -27,6 +27,7 @@ export class S11PlayerChooseComponent implements OnInit {
   @Input() showAll: boolean = false;
 
   @Output() selectS11Player = new EventEmitter<S11Player>();
+  @Output() selectPlayer = new EventEmitter<Player>();
   @Output() linkToS11Player = new EventEmitter<S11Player>();
   @Output() filterUpdate = new EventEmitter<ChoosePlayersFilter>();  
   form: UntypedFormGroup;
@@ -112,8 +113,9 @@ export class S11PlayerChooseComponent implements OnInit {
       });
   }
 
-  select(player: S11Player) {
-    this.selectS11Player.emit(player);
+  select(s11Player: S11Player, player: Player) {
+    this.selectS11Player.emit(s11Player);
+    this.selectPlayer.emit(player);
   }
 
   setChoosePersonItems(players: S11Player[]) {

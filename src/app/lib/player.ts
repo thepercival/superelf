@@ -110,8 +110,8 @@ export class S11Player extends Identifiable {
 
     public getPlayersDescendingStart(team?: Team, period?: Period, line?: number): Player[] {
         return this.getPlayers(team, period, line).sort((plA: Player, plB: Player): number =>  {
-        return plB.getStartDateTime().getTime() - plA.getStartDateTime().getTime();
-      });
+            return plB.getStartDateTime().getTime() - plA.getStartDateTime().getTime();
+        });
     }
 
     public getPlayer(team: Team, date?: Date): Player | undefined {

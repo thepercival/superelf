@@ -5,7 +5,7 @@ import { concatMap } from 'rxjs/operators';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FootballLine, Team, Person, Player, Formation } from 'ngx-sport';
+import { FootballLine, Team, Person, Player, Formation, PlayerMapper } from 'ngx-sport';
 import { CompetitionConfigRepository } from '../../../lib/competitionConfig/repository';
 import { FootballFormationChecker } from '../../../lib/formation/footballChecker';
 import { S11FormationPlace } from '../../../lib/formation/place';
@@ -21,6 +21,7 @@ import { GlobalEventsManager } from '../../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../../shared/poolmodule/component';
 import { ChoosePlayersFilter } from '../../player/choose.component';
+import { JsonReplacement } from '../../../lib/editAction/replacement/json';
 
 @Component({
   selector: 'app-pool-place-replace',
@@ -49,6 +50,7 @@ export class FormationPlaceReplaceComponent extends PoolComponent implements OnI
     private location: Location,
     private formationRepository: FormationRepository,
     protected competitionConfigRepository: CompetitionConfigRepository,
+    private playerMapper: PlayerMapper,
     public myNavigation: MyNavigation,
     private modalService: NgbModal,
     fb: UntypedFormBuilder
@@ -181,11 +183,17 @@ export class FormationPlaceReplaceComponent extends PoolComponent implements OnI
 
 
 
-  replace(s11Player: S11Player, formationChecker: FootballFormationChecker) {
+  replace(player: Player, formationChecker: FootballFormationChecker) {
     this.processing = true;    
-    this.formationRepository.replace(this.place, s11Player.getPerson()).subscribe({
+    const jsonReplacement: JsonReplacement = {
+      id: 0,
+      lineNumberOut: this.place.getLine(),
+      placeNumberOut: this.place.getNumber(),
+      playerIn: this.playerMapper.toJson(player)
+    }
+    this.formationRepository.replace(jsonReplacement, this.poolUser).subscribe({
       next: () => {
-        if( !formationChecker.allPlacesWithoutTeamReplaced(this.poolUser) ) {
+        if( !formationChecker.areAllPlacesWithoutTeamReplaced(this.poolUser) ) {
           this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
         } else if( this.poolUser.getTransfers().length < 2) {
           this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
-import { Competition, Formation, FormationMapper, Person, PersonMapper } from 'ngx-sport';
+import { Competition, Formation, FormationMapper, Person, PersonMapper, Player, PlayerMapper } from 'ngx-sport';
 import { PoolUser } from '../pool/user';
 import { S11FormationMapper } from './mapper';
 import { S11Formation } from '../formation';
@@ -13,10 +13,11 @@ import { S11FormationPlace } from './place';
 import { JsonS11Player } from '../player/json';
 import { S11PlayerMapper } from '../player/mapper';
 import { S11Player } from '../player';
-import { FormationPlaceEditComponent } from '../../poolmodule/formation/place/edit.component';
 import { JsonReplacement } from '../editAction/replacement/json';
 import { EditActionMapper } from '../editAction/mapper';
 import { Replacement } from '../editAction/replacement';
+import { Transfer } from '../editAction/transfer';
+import { JsonTransfer } from '../editAction/transfer/json';
 
 @Injectable({
     providedIn: 'root'
@@ -25,6 +26,7 @@ export class FormationRepository extends APIRepository {
     constructor(
         private mapper: S11FormationMapper,
         private personMapper: PersonMapper,
+        private playerMapper: PlayerMapper,
         private sportsFormationMapper: FormationMapper,
         private s11PlayerMapper: S11PlayerMapper,
         private transferActionMapper: EditActionMapper,
@@ -41,8 +43,8 @@ export class FormationRepository extends APIRepository {
         return baseUrl;
     }
 
-    getTransferPeriodActionUrl(poolUser: PoolUser, place: S11FormationPlace, action: string): string {
-        return super.getApiUrl() + 'poolusers/' + poolUser.getId() + '/' + action + '/' + place.getId();
+    getTransferPeriodActionUrl(poolUser: PoolUser, action: string): string {
+        return super.getApiUrl() + 'poolusers/' + poolUser.getId() + '/' + action;
     }
 
 
@@ -87,17 +89,28 @@ export class FormationRepository extends APIRepository {
     }
 
 
-    replace(place: S11FormationPlace, person: Person | undefined): Observable<Replacement> {
-        const formation = place.getFormationLine().getFormation();
-        const poolUser = formation.getPoolUser();
-        const url = this.getTransferPeriodActionUrl(poolUser, place, 'replace');
+    replace(jsonReplacement: JsonReplacement, poolUser: PoolUser): Observable<Replacement> {
+        const url = this.getTransferPeriodActionUrl(poolUser, 'replace');
         const pool = poolUser.getPool();
         const competition: Competition = pool.getCompetitionConfig().getSourceCompetition();
-        const jsonPerson = person ? this.personMapper.toJson(person) : undefined;
+        // const jsonPlayer = this.playerMapper.toJson(player);
         
-        return this.http.post<JsonReplacement>(url, jsonPerson, { headers: super.getHeaders() }).pipe(
+        return this.http.post<JsonReplacement>(url, jsonReplacement, { headers: super.getHeaders() }).pipe(
             map((jsonReplacement: JsonReplacement): Replacement => {
                 return this.transferActionMapper.toReplacement(jsonReplacement, poolUser, competition.getAssociation());
+            }),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    transfer(jsonTransfer: JsonTransfer, poolUser: PoolUser): Observable<Transfer> {
+        const url = this.getTransferPeriodActionUrl(poolUser, 'transfer');
+        const pool = poolUser.getPool();
+        const competition: Competition = pool.getCompetitionConfig().getSourceCompetition();
+        
+        return this.http.post<JsonTransfer>(url, jsonTransfer, { headers: super.getHeaders() }).pipe(
+            map((jsonReplacement: JsonTransfer): Transfer => {
+                return this.transferActionMapper.toTransfer(jsonReplacement, poolUser, competition.getAssociation());
             }),
             catchError((err) => this.handleError(err))
         );

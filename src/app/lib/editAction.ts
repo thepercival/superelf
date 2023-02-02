@@ -1,10 +1,12 @@
-import { Identifiable } from 'ngx-sport';
-import { S11FormationPlace } from './formation/place';
+import { FootballLine, Identifiable } from 'ngx-sport';
 import { PoolUser } from './pool/user';
 
 export class EditAction extends Identifiable{
 
-    constructor(protected poolUser: PoolUser, protected formationPlace: S11FormationPlace) {
+    constructor(
+        protected poolUser: PoolUser, 
+        protected lineNumberOut: FootballLine,
+        protected placeNumberOut: number) {
         super();
     }
 
@@ -12,7 +14,11 @@ export class EditAction extends Identifiable{
         return this.poolUser;
     }
 
-    getFormationPlace(): S11FormationPlace {
-        return this.formationPlace;
+    getLineNumberOut(): FootballLine {
+        return this.lineNumberOut;
+    }
+
+    getPlaceNumberOut(): FootballLine {
+        return this.placeNumberOut;
     }
 }
