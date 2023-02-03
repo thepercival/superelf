@@ -60,30 +60,11 @@ export class FootballFormationChecker {
         if( assembleFormation === undefined ) {
             throw new Error('kies eerst een startformatie');
         }
-        const placesWithoutTeam = this.getPlacesWithoutTeam(assembleFormation,transferPeriodStart);
+        const placesWithoutTeam = assembleFormation.getPlacesWithoutTeam(transferPeriodStart);
 
         if( replacements.length > placesWithoutTeam.length ) {
             throw new Error('te veel vervangingen voor de formatieplekken');
         }
         return placesWithoutTeam.length === replacements.length;
-    }
-
-    private  getPlacesWithoutTeam(formation: S11Formation, dateTime: Date): S11FormationPlace[]
-    {
-        return formation.getPlaces().filter( (place: S11FormationPlace): boolean => {
-                return this.getTeam(place, dateTime ) === undefined;
-            }
-        );
-    }
-
-    private getTeam(place: S11FormationPlace, dateTime: Date): Team|undefined
-    {
-        const oneTeamSim = new OneTeamSimultaneous();
-        const s11Player = place.getPlayer();
-        if( s11Player === undefined ) {
-            return undefined;
-        }
-        const player = oneTeamSim.getPlayer(s11Player, dateTime );
-        return player?.getTeam();
     }
 }

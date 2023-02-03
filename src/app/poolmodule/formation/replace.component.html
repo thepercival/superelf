@@ -6,21 +6,22 @@
       <h2 class="me-2 text-truncate">
         <fa-icon [icon]="['fas', 'users']"></fa-icon> mijn team
       </h2>
-      <div *ngIf="!processing && pool">
-        <button *ngIf="pool.getAssemblePeriod().isIn()" class="btn btn-secondary mx-2"
-          [routerLink]="['/pool/scouting/list', pool.getId()]">
-          <fa-icon [icon]="['fas', 'user-secret']"></fa-icon> <span class="ms-1 d-none d-sm-inline">
-            scoutingslijst</span>
-        </button>
-        <button class="btn btn-secondary" [routerLink]="['/pool/formation/choose', pool.getId()]">
-          {{getFormationName()}}
+      <div *ngIf="!processing && pool && calcFormation">
+        <button class="btn btn-secondary" disabled>
+          {{calcFormation.getName()}}
         </button>
       </div>
     </div>
 
     
     <div *ngIf="!processing && pool" class="d-flex justify-content-center  mt-3 mb-1">
-      <h1 class=""><span class="badge bg-info">gestopte spelers vervangen</span></h1>
+      <h1 class="">
+        <span class="badge bg-info">gestopte spelers vervangen</span>
+        <button *ngIf="poolUser.getReplacements().length > 0" class="btn btn-secondary ms-1"
+          (click)="removeReplacements(poolUser)">
+            <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+          </button>
+      </h1>
       
       <!-- <button class="btn ms-1 gray-200">
         <span class="me-1">transfers</span>        
@@ -34,11 +35,12 @@
 
     <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-    <div *ngIf="!processing && pool && poolUser">
+    <div *ngIf="!processing && pool && poolUser && calcFormation">
       <div *ngIf="!selectedPlace">
         <!-- lines-->
-        <app-pool-formationline-replacements *ngFor="let line of poolUser.getAssembleFormation()?.getLines()" [line]="line"
-          (replace)="replace($event)" (linkToPlayer)="linkToPlayer($event)">
+        <app-pool-formationline-replacements *ngFor="let line of calcFormation.getLines()" [line]="line"
+          [replacements]="poolUser.getReplacements()"
+          (replace)="linkToReplace($event)" (linkToPlayer)="linkToPlayer($event)">
         </app-pool-formationline-replacements>
       </div>
     </div>

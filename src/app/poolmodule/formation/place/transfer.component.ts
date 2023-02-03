@@ -79,8 +79,8 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
         next: (poolUser: PoolUser) => {
           this.poolUser = poolUser;
           this.route.params.subscribe(params => {
-            if (params.placeId !== undefined) {
-              this.initPlace(+params.placeId);;
+            if (params.lineNr !== undefined && params.placeNr !== undefined) {
+              this.initPlace(+params.lineNr,+params.placeNr);
             }
           });
         },
@@ -92,8 +92,8 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
     });
   }
 
-  private initPlace(placeId: number) {
-    this.place = this.getPlaceById(placeId);
+  private initPlace(lineNumber: number, placeNumber: number) {
+    this.place = this.getPlace(lineNumber, placeNumber);
     this.initPlayerChoose();
   }
 
@@ -131,12 +131,10 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
     return s11Player.getPlayersDescendingStart().shift();
   }
 
-  getPlaceById(placeId: number): S11FormationPlace {
+  getPlace(lineNumber: number, placeNumber: number): S11FormationPlace {
     const formation = this.poolUser.getAssembleFormation();
 
-    const place = formation?.getPlaces().find((place: S11FormationPlace): boolean => {
-      return place.getId() === placeId;
-    });
+    const place = formation?.getPlace(lineNumber, placeNumber);
     if (place === undefined) {
       throw Error('de opstellings-plaats kan niet gevonden worden');
     }
@@ -189,7 +187,8 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
       id: 0,
       lineNumberOut: this.place.getLine(),
       placeNumberOut: this.place.getNumber(),
-      playerIn: this.playerMapper.toJson(player)
+      playerIn: this.playerMapper.toJson(player),
+      createdDate: (new Date()).toISOString()
     }  
     this.formationRepository.transfer(jsonTransfer, this.poolUser).subscribe({
       next: () => {

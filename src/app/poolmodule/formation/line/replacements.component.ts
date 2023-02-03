@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Person, Team } from 'ngx-sport';
+import { Replacement } from '../../../lib/editAction/replacement';
 import { S11FormationLine } from '../../../lib/formation/line';
 import { S11FormationPlace } from '../../../lib/formation/place';
 import { FormationRepository } from '../../../lib/formation/repository';
@@ -21,6 +22,7 @@ export class FormationLineReplacementsComponent implements OnInit {
   @Input() line!: S11FormationLine;
   @Input() selectedPlace: S11FormationPlace | undefined;
   @Input() viewGameRound: GameRound | undefined;
+  @Input() replacements: Replacement[] = [];
   @Input() processing: boolean = true;
   @Output() replace = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
@@ -103,5 +105,12 @@ export class FormationLineReplacementsComponent implements OnInit {
 
   getSubstituteClass(isSubstitute: boolean): string {
     return isSubstitute ? 'table-no-bottom-border' : '';
+  }
+
+  isReplacement(place: S11FormationPlace): boolean {
+    // return this.replacements.some((replacement: Replacement): boolean => {
+    //   return replacement.getLineNumberOut() === place.getLine() && replacement.getPlaceNumberOut() === place.getNumber();
+    // });
+    return false;
   }
 }

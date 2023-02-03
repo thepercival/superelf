@@ -44,7 +44,7 @@ const routes: Routes = [
   { path: 'formation/replacements/:id', component: FormationReplaceComponent, canActivate: [AuthUserGuardService] },
   { path: 'formation/transfers/:id', component: FormationTransferComponent, canActivate: [AuthUserGuardService] },
   { path: 'formation/place/replace/:id/:placeId', component: FormationPlaceReplaceComponent, canActivate: [AuthUserGuardService] },  
-  { path: 'formation/place/transfer/:id/:placeId', component: FormationPlaceTransferComponent, canActivate: [AuthUserGuardService] },    
+  { path: 'formation/place/transfer/:id/:lineNr/:placeNr', component: FormationPlaceTransferComponent, canActivate: [AuthUserGuardService] },    
   { path: 'invite/:id', component: InviteComponent, canActivate: [AuthUserGuardService] },
   { path: 'join/:id/:key', component: JoinComponent },
   { path: 'player/:id/:playerId/:gameRound', component: S11PlayerComponent },

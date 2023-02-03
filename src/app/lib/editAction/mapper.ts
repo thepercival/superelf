@@ -33,7 +33,9 @@ export class EditActionMapper {
         }
         const personIn = this.personMapper.toObject(jsonPersonIn, association);
         const playerIn = this.playerMapper.toObject(json.playerIn, association, personIn);
-        return new Replacement(poolUser, json.lineNumberOut, json.placeNumberOut, playerIn);
+        const replacement = new Replacement(poolUser, json.lineNumberOut, json.placeNumberOut, playerIn, new Date(json.createdDate));
+        replacement.setId(json.id);
+        return replacement;
     }
 
     toTransfer(json: JsonTransfer, poolUser: PoolUser, association: Association): Transfer {
@@ -47,7 +49,9 @@ export class EditActionMapper {
         }
         const personIn = this.personMapper.toObject(jsonPersonIn, association);
         const playerIn = this.playerMapper.toObject(json.playerIn, association, personIn);
-        return new Transfer(poolUser, json.lineNumberOut, json.placeNumberOut, personIn);
+        const transfer = new Transfer(poolUser, json.lineNumberOut, json.placeNumberOut, playerIn, new Date(json.createdDate));
+        transfer.setId(json.id);
+        return transfer;
     }
 
     toSubstitution(json: JsonSubstitution, poolUser: PoolUser): Substitution {
@@ -55,7 +59,9 @@ export class EditActionMapper {
         if( assembleFormation === undefined ) {
             throw new Error('assembleFormation not found');
         }
-        return new Substitution(poolUser, json.lineNumberOut, json.placeNumberOut);
+        const substitution = new Substitution(poolUser, json.lineNumberOut, json.placeNumberOut, new Date(json.createdDate));
+        substitution.setId(json.id);
+        return substitution;
     }
 
     // private getPlace(formation: S11Formation, json: JsonTransferAction): S11FormationPlace {
@@ -63,14 +69,15 @@ export class EditActionMapper {
     //     return line.getPlace(json.placeNumber);
     // }
 
-    // toJson(poolUser: PoolUser): JsonPoolUser {
-    //     return {
-    //         id: poolUser.getId(),
-    //         user: this.userMapper.toJson(poolUser.getUser()),
-    //         admin: poolUser.getAdmin(),
-    //         competitors: poolUser.getCompetitors().map(competitor => this.poolCompetitorMapper.toJson(competitor)),
-    //     };
-    // }
+    toJsonTransfer(transfer: Transfer): JsonTransfer {
+        return {
+            id: transfer.getId(),
+            lineNumberOut: transfer.getLineNumberOut(),
+            placeNumberOut: transfer.getPlaceNumberOut(),
+            playerIn: this.playerMapper.toJson(transfer.getPlayerIn()),
+            createdDate: transfer.getCreatedDate().toISOString()
+        };
+    }
 }
 
 

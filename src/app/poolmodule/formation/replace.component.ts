@@ -16,6 +16,10 @@ import { S11Player } from '../../lib/player';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { S11Formation } from '../../lib/formation';
+import { S11FormationCalculator } from '../../lib/formation/calculator';
+import { Replacement } from '../../lib/editAction/replacement';
+import { forkJoin, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-pool-replace',
@@ -29,6 +33,7 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
   selectedPlace: S11FormationPlace | undefined;
   selectedSearchLine: FootballLine | undefined;
   selectedTeamMap: TeamMap = new TeamMap();
+  public calcFormation: S11Formation|undefined;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
 
   constructor(
@@ -52,7 +57,11 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
         next: (pool: Pool) => {
           this.setPool(pool);
           this.poolUserRepository.getObjectFromSession(pool).subscribe({
-            next: (poolUser: PoolUser) => this.poolUser = poolUser,
+            next: (poolUser: PoolUser) => {
+              this.poolUser = poolUser;
+              const calculator = new S11FormationCalculator();
+              this.calcFormation = calculator.getCurrentFormation(poolUser);
+            },
             error: (e: string) => {
               this.setAlert('danger', e); this.processing = false;
             },
@@ -65,11 +74,11 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
       });
   }
 
-  getFormationName(): string {
-    return this.poolUser?.getAssembleFormation()?.getName() ?? 'kies formatie';
-  }
+  // getFormationName(): string {
+  //   return this.poolUser?.getAssembleFormation()?.getName() ?? 'kies formatie';
+  // }
 
-  replace(place: S11FormationPlace) {
+  linkToReplace(place: S11FormationPlace) {
     const navigationExtras: NavigationExtras = {
       queryParams: {
         line: place.getFormationLine().getNumber(),
@@ -87,5 +96,24 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
     this.router.navigate(['/pool/player/', this.pool.getId(), s11Player.getId(), 0]/*, {
       state: { s11Player, "pool": this.pool, currentGameRound: undefined }
     }*/);
+  }
+
+  removeReplacements(poolUser: PoolUser) {
+    this.processing = true;   
+    const removeReplacementRequests: Observable<void>[] = poolUser.getReplacements().map((replacement: Replacement): Observable<void> => {
+      return this.formationRepository.removeReplacement(replacement, poolUser);
+    });
+
+
+    forkJoin(removeReplacementRequests).subscribe({
+      next: () => {
+        const calculator = new S11FormationCalculator();
+        this.calcFormation = calculator.getCurrentFormation(poolUser);
+        this.processing = false;   
+      },
+      error: (e) => {
+        console.log(e);
+      }
+    });
   }
 }

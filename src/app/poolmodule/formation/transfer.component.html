@@ -7,11 +7,6 @@
         <fa-icon [icon]="['fas', 'users']"></fa-icon> mijn team
       </h2>
       <div *ngIf="!processing && pool && calcFormation">
-        <button *ngIf="pool.getAssemblePeriod().isIn()" class="btn btn-secondary mx-2"
-          [routerLink]="['/pool/scouting/list', pool.getId()]">
-          <fa-icon [icon]="['fas', 'user-secret']"></fa-icon> <span class="ms-1 d-none d-sm-inline">
-            scoutingslijst</span>
-        </button>
         <button class="btn btn-secondary" disabled>
           {{calcFormation.getName()}}
         </button>
@@ -19,12 +14,26 @@
     </div>
 
     
-    <div *ngIf="!processing && pool" class="d-flex justify-content-center  mt-3 mb-1">
-      <h1 class=""><span class="badge bg-info">transfers</span></h1>
+    <div *ngIf="!processing && poolUser" class="d-flex justify-content-center  mt-3 mb-1">
+      <h1 class="">
+        <button *ngIf="hasPlayersWithoutCurrentTeam(poolUser)" class="btn btn-secondary me-1"
+        (click)="linkToReplace(poolUser, contentRemove)">
+          <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+          <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+        </button>
+        <span class="badge bg-info">transfers</span>
+        <button *ngIf="poolUser.getTransfers().length > 0" class="btn btn-secondary ms-1"
+        (click)="linkToReplace(poolUser,contentRemove)">
+          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+        </button>
+        <button *ngIf="poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()" class="btn btn-secondary ms-1"
+          (click)="toggleTransferEditMode()">
+            <fa-icon *ngIf="transferEditMode === SingleEditMode" [icon]="['fas', 'users']"></fa-icon>
+            <fa-icon *ngIf="transferEditMode === DoubleEditMode" [icon]="['fas', 'user-circle']"></fa-icon>
+          </button>
+      </h1>
       
-      <!-- <button class="btn ms-1 gray-200">
-        <span class="me-1">transfers</span>        
-      </button>
+      <!-- 
       <button class="btn ms-1 gray-200">
         <span>wissels</span> -->
       <!-- </button> -->
@@ -38,9 +47,25 @@
       <div *ngIf="!selectedPlace">
         <!-- lines-->
         <app-pool-formationline-transfers *ngFor="let line of calcFormation.getLines()" [line]="line"
-          (transfer)="transfer($event)" (linkToPlayer)="linkToPlayer($event)">
+          (transfer)="linkToTransfer($event)" (linkToPlayer)="linkToPlayer($event)">
         </app-pool-formationline-transfers>
       </div>
     </div>
   </div>
 </div>
+
+  <ng-template #contentRemove let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <span>transfers verwijderen</span>>
+      </h4>
+      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <p>Je transfers worden ongedaan gemaakt wanneer je naar "gestopte spelers vervangen" gaat</p>
+    </div>
+    <div class="modal-footer d-flex justify-content-reverse border-top-0">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close()">
+        ga naar "gestopte spelers vervangen"</button>
+    </div>
+  </ng-template>

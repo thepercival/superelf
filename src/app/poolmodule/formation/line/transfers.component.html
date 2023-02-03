@@ -34,7 +34,7 @@
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
     </td>
     <td class="text-end" (click)="$event.stopPropagation()" class="{{getSubstituteClass(place.isSubstitute())}}">
-      <button *ngIf="!currentTeam" type="button" class="btn btn-sm" (click)="transfer.emit(place)">
+      <button *ngIf="currentTeam && isNoTransfer(place)" type="button" class="btn btn-sm" (click)="transfer.emit(place)">
         <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
       </button>      
     </td>

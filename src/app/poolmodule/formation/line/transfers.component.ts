@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Person, Team } from 'ngx-sport';
+import { Transfer } from '../../../lib/editAction/transfer';
 import { S11FormationLine } from '../../../lib/formation/line';
 import { S11FormationPlace } from '../../../lib/formation/place';
 import { FormationRepository } from '../../../lib/formation/repository';
@@ -22,6 +23,7 @@ export class FormationLineTransfersComponent implements OnInit {
   @Input() selectedPlace: S11FormationPlace | undefined;
   @Input() viewGameRound: GameRound | undefined;
   @Input() processing: boolean = true;
+  @Input() transfers: Transfer[] = [];
   @Output() transfer = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
 
@@ -103,5 +105,11 @@ export class FormationLineTransfersComponent implements OnInit {
 
   getSubstituteClass(isSubstitute: boolean): string {
     return isSubstitute ? 'table-no-bottom-border' : '';
+  }
+
+  isNoTransfer(place: S11FormationPlace): boolean {
+    return this.transfers.every((transfer: Transfer): boolean => {
+      return transfer.getLineNumberOut() !== place.getLine() || transfer.getPlaceNumberOut() !== place.getNumber();
+    });
   }
 }

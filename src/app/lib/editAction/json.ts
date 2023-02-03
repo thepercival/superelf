@@ -1,8 +1,7 @@
-import { FootballLine } from 'ngx-sport';
+import { FootballLine, JsonIdentifiable } from 'ngx-sport';
 
-
-export interface JsonTransferAction {
-    id: number;
+export interface JsonTransferAction extends JsonIdentifiable {
     lineNumberOut: FootballLine;
     placeNumberOut: number;
+    createdDate: string;
 }

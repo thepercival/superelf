@@ -3,6 +3,7 @@ import { FootballLine, Formation, FormationLine, Identifiable, Person, Team } fr
 import { S11FormationLine } from './formation/line';
 import { S11FormationPlace } from './formation/place';
 import { GameRound } from './gameRound';
+import { OneTeamSimultaneous } from './oneTeamSimultaneousService';
 import { ViewPeriod } from './period/view';
 import { S11Player } from './player';
 import { PoolUser } from './pool/user';
@@ -46,6 +47,14 @@ export class                           S11Formation extends Identifiable {
             places = places.concat(line.getPlaces());
         });
         return places;
+    }
+
+    public getPlacesWithoutTeam(dateTime: Date): S11FormationPlace[]
+    {
+        return this.getPlaces().filter( (place: S11FormationPlace): boolean => {
+                return place.getTeam(dateTime ) === undefined;
+            }
+        );
     }
 
     public getPlayers(): S11Player[] {

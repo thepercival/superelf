@@ -6,7 +6,8 @@ export class EditAction extends Identifiable{
     constructor(
         protected poolUser: PoolUser, 
         protected lineNumberOut: FootballLine,
-        protected placeNumberOut: number) {
+        protected placeNumberOut: number,
+        protected createdDate: Date) {
         super();
     }
 
@@ -20,5 +21,9 @@ export class EditAction extends Identifiable{
 
     getPlaceNumberOut(): FootballLine {
         return this.placeNumberOut;
+    }
+
+    public getCreatedDate(): Date {
+        return this.createdDate;
     }
 }

@@ -1,6 +1,7 @@
-import { FootballLine, Identifiable } from 'ngx-sport';
+import { FootballLine, Identifiable, Team } from 'ngx-sport';
 import { S11Formation } from '../formation';
 import { GameRound } from '../gameRound';
+import { OneTeamSimultaneous } from '../oneTeamSimultaneousService';
 import { S11Player } from '../player';
 import { PointsCalculator } from '../points/calculator';
 import { JsonTotals } from '../totals/json';
@@ -50,6 +51,16 @@ export class S11FormationPlace extends Identifiable {
 
     public setPlayer(player: S11Player | undefined): void {
         this.player = player;
+    }
+
+    public getTeam(dateTime: Date): Team|undefined
+    {
+        const s11Player = this.getPlayer();
+        if( s11Player === undefined ) {
+            return undefined;
+        }
+        const player = (new OneTeamSimultaneous()).getPlayer(s11Player, dateTime );
+        return player?.getTeam();
     }
 
     public isSubstitute(): boolean {

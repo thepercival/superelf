@@ -189,7 +189,8 @@ export class FormationPlaceReplaceComponent extends PoolComponent implements OnI
       id: 0,
       lineNumberOut: this.place.getLine(),
       placeNumberOut: this.place.getNumber(),
-      playerIn: this.playerMapper.toJson(player)
+      playerIn: this.playerMapper.toJson(player),
+      createdDate: (new Date()).toISOString()
     }
     this.formationRepository.replace(jsonReplacement, this.poolUser).subscribe({
       next: () => {

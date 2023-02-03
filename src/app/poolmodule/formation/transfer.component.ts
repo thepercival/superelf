@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
@@ -19,6 +19,11 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { S11Formation } from '../../lib/formation';
 import { FootballFormationChecker } from '../../lib/formation/footballChecker';
 import { S11FormationCalculator } from '../../lib/formation/calculator';
+import { EditActionMapper } from '../../lib/editAction/mapper';
+import { JsonTransfer } from '../../lib/editAction/transfer/json';
+import { Transfer } from '../../lib/editAction/transfer';
+import { forkJoin, Observable } from 'rxjs';
+import { TransferPeriod } from '../../lib/period/transfer';
 
 @Component({
   selector: 'app-pool-transfer',
@@ -32,14 +37,17 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
   selectedPlace: S11FormationPlace | undefined;
   selectedSearchLine: FootballLine | undefined;
   selectedTeamMap: TeamMap = new TeamMap();
+  public transferPeriod!: TransferPeriod;
   public calcFormation: S11Formation|undefined;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
+  public transferEditMode = TransferEditMode.Single;
 
   constructor(
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
     globalEventsManager: GlobalEventsManager,
+    protected transferPeriodActionMapper: EditActionMapper,
     protected playerRepository: PlayerRepository,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
     protected poolUserRepository: PoolUserRepository,
@@ -55,6 +63,7 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
       .subscribe({
         next: (pool: Pool) => {
           this.setPool(pool);
+          this.transferPeriod = this.pool.getCompetitionConfig().getTransferPeriod();
           this.poolUserRepository.getObjectFromSession(pool).subscribe({
             next: ((poolUser: PoolUser) => {
               this.poolUser = poolUser;
@@ -73,14 +82,30 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
       });
   }
 
-  transfer(place: S11FormationPlace) {
+  toggleTransferEditMode(): void {
+    this.transferEditMode = this.transferEditMode === TransferEditMode.Single ? TransferEditMode.Double : TransferEditMode.Single;
+  }
+  
+  get SingleEditMode(): TransferEditMode { return TransferEditMode.Single; }
+  get DoubleEditMode(): TransferEditMode { return TransferEditMode.Double; }
+
+  hasPlayersWithoutCurrentTeam(poolUser: PoolUser): boolean {
+    const assembleFormation = poolUser.getAssembleFormation();
+    if( assembleFormation === undefined) {
+      throw new Error('assemblePeriod cannot be empty');
+    }
+    const transferPeriodStart = this.pool.getCompetitionConfig().getTransferPeriod().getStartDateTime();
+    return assembleFormation.getPlacesWithoutTeam(transferPeriodStart).length > 0;
+  }
+
+  linkToTransfer(place: S11FormationPlace) {
     const navigationExtras: NavigationExtras = {
       queryParams: {
         line: place.getFormationLine().getNumber(),
         teamId: this.getTeamId(place)
       }
     };
-    this.router.navigate(['/pool/formation/place/transfer/', this.pool.getId(), place.getId()], navigationExtras);
+    this.router.navigate(['/pool/formation/place/transfer/', this.pool.getId(), place.getLine(), place.getNumber()], navigationExtras);
   }
 
   getTeamId(place: S11FormationPlace): number | undefined {
@@ -92,4 +117,42 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
       state: { s11Player, "pool": this.pool, currentGameRound: undefined }
     }*/);
   }
+
+  linkToReplace(poolUser: PoolUser, modalContent: TemplateRef<any>): void {
+    // als al transfers dan vragen om transfers te verwijderen.
+    if( poolUser.getTransfers().length === 0 ) {
+      this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);        
+    } else {
+      this.openRemoveModal(modalContent);
+    }    
+  }
+
+  openRemoveModal(modalContent: TemplateRef<any>) {    
+
+    const modalRef = this.modalService.open(modalContent);
+    modalRef.result.then((poolUser: PoolUser) => {
+      this.removeTransfers(poolUser);
+    });
+  }
+
+  removeTransfers(poolUser: PoolUser) {
+    this.processing = true;   
+    const removeTransferRequests: Observable<void>[] = poolUser.getTransfers().map((transfer: Transfer): Observable<void> => {
+      return this.formationRepository.removeTransfer(transfer, poolUser);
+    });
+
+
+    forkJoin(removeTransferRequests).subscribe({
+      next: () => {
+      },
+      error: (e) => {
+        console.log(e);
+      }
+    });
+  }
+}
+
+export enum TransferEditMode {
+  Single = 1,
+  Double
 }

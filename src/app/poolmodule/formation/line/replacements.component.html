@@ -36,7 +36,10 @@
     <td class="text-end" (click)="$event.stopPropagation()" class="{{getSubstituteClass(place.isSubstitute())}}">
       <button *ngIf="!currentTeam" type="button" class="btn btn-sm" (click)="replace.emit(place)">
         <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
-      </button>      
+      </button>
+      <button *ngIf="currentTeam && isReplacement(place)" type="button" class="btn btn-sm" disabled>
+        <fa-icon [icon]="['fas', 'check-circle']"></fa-icon>
+      </button>
     </td>
   </tr>
 </ng-template>

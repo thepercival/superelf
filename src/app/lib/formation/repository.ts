@@ -43,8 +43,8 @@ export class FormationRepository extends APIRepository {
         return baseUrl;
     }
 
-    getTransferPeriodActionUrl(poolUser: PoolUser, action: string): string {
-        return super.getApiUrl() + 'poolusers/' + poolUser.getId() + '/' + action;
+    getTransferPeriodActionUrl(poolUser: PoolUser, action: string, id?: string|number): string {
+        return super.getApiUrl() + 'poolusers/' + poolUser.getId() + '/' + action + (id ? '/' + id : '');
     }
 
 
@@ -116,6 +116,34 @@ export class FormationRepository extends APIRepository {
         );
     }
 
+    removeReplacement(replacement: Replacement, poolUser: PoolUser): Observable<void> {
+        const url = this.getTransferPeriodActionUrl(poolUser, 'replace', replacement.getId());
+        return this.http.delete<void>(url, { headers: super.getHeaders() }).pipe(
+            map(() => {
+                const replacements = poolUser.getReplacements();
+                const idx = replacements.indexOf(replacement);
+                if (idx >= 0) {
+                    replacements.splice(idx);                     
+                }
+            }),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    removeTransfer(transfer: Transfer, poolUser: PoolUser): Observable<void> {
+        const url = this.getTransferPeriodActionUrl(poolUser, 'transfer', transfer.getId());
+        return this.http.delete<void>(url, { headers: super.getHeaders() }).pipe(
+            map(() => {
+                const transfers = poolUser.getTransfers();
+                const idx = transfers.indexOf(transfer);
+                if (idx >= 0) {
+                    transfers.splice(idx);                     
+                }
+            }),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
     /*removeObject(poolUser: PoolUser, assembleFormation: S11Formation): Observable<void> {
         const url = this.getUrl(poolUser, assembleFormation);
         return this.http.delete(url, this.getOptions()).pipe(
@@ -173,12 +201,5 @@ export class FormationRepository extends APIRepository {
         );
     }
 
-    removeSubstitute(player: S11Player, line: FormationLine): Observable<void> {
-        const formation = line.getFormation();
-        const url = this.getUrl(formation.getPoolUser(), formation) + '/lines/' + line.getNumber() + '/substitute/' + player.getId();
-        return this.http.delete<void>(url, { headers: super.getHeaders() }).pipe(
-            map(() => line.setSubstitute(undefined)),
-            catchError((err) => this.handleError(err))
-        );
-    }*/
+    */
 }
