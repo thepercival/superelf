@@ -50,21 +50,4 @@ export class FootballFormationChecker {
             return availableFormation.equals(formation);
         });
     }
-
-    public areAllPlacesWithoutTeamReplaced(poolUser: PoolUser): boolean {        
-        const replacements = poolUser.getReplacements().slice();
-
-        const transferPeriodStart = poolUser.getPool().getTransferPeriod().getStartDateTime();
-
-        const assembleFormation = poolUser.getAssembleFormation();
-        if( assembleFormation === undefined ) {
-            throw new Error('kies eerst een startformatie');
-        }
-        const placesWithoutTeam = assembleFormation.getPlacesWithoutTeam(transferPeriodStart);
-
-        if( replacements.length > placesWithoutTeam.length ) {
-            throw new Error('te veel vervangingen voor de formatieplekken');
-        }
-        return placesWithoutTeam.length === replacements.length;
-    }
 }

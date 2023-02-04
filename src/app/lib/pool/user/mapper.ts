@@ -38,7 +38,6 @@ export class PoolUserMapper {
             poolUser.setAssembleFormation(formation);
         }
         if (json.replacements) {
-            console.log('CDK');
             json.replacements.forEach(jsonTransfer => this.editActionMapper.toReplacement(jsonTransfer, poolUser, association));
         }
         if (json.transfers) {

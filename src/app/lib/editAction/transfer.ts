@@ -9,6 +9,7 @@ export class Transfer extends EditAction {
         lineNumberOut: FootballLine, 
         placeNumberOut: number, 
         protected playerIn: Player,
+        protected playerOut: Player,
         createdDateTime: Date) {
         super(poolUser, lineNumberOut, placeNumberOut, createdDateTime);
         poolUser.getTransfers().push(this);
@@ -20,5 +21,13 @@ export class Transfer extends EditAction {
 
     public getPersonIn(): Person {
         return this.getPlayerIn().getPerson();
+    }
+
+    public getPlayerOut(): Player {
+        return this.playerOut;
+    }
+
+    public getPersonOut(): Person {
+        return this.getPlayerOut().getPerson();
     }
 }

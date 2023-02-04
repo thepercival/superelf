@@ -31,9 +31,15 @@ export class EditActionMapper {
         if( jsonPersonIn === undefined) {
             throw new Error('person can not be empty');
         }
+        const jsonPersonOut = json.playerOut.person;
+        if( jsonPersonOut === undefined) {
+            throw new Error('person can not be empty');
+        }
         const personIn = this.personMapper.toObject(jsonPersonIn, association);
         const playerIn = this.playerMapper.toObject(json.playerIn, association, personIn);
-        const replacement = new Replacement(poolUser, json.lineNumberOut, json.placeNumberOut, playerIn, new Date(json.createdDate));
+        const personOut = this.personMapper.toObject(jsonPersonOut, association);
+        const playerOut = this.playerMapper.toObject(json.playerOut, association, personOut);
+        const replacement = new Replacement(poolUser, json.lineNumberOut, json.placeNumberOut, playerIn, playerOut, new Date(json.createdDate));
         replacement.setId(json.id);
         return replacement;
     }
@@ -47,9 +53,15 @@ export class EditActionMapper {
         if( jsonPersonIn === undefined) {
             throw new Error('person can not be empty');
         }
+        const jsonPersonOut = json.playerOut.person;
+        if( jsonPersonOut === undefined) {
+            throw new Error('person can not be empty');
+        }
         const personIn = this.personMapper.toObject(jsonPersonIn, association);
         const playerIn = this.playerMapper.toObject(json.playerIn, association, personIn);
-        const transfer = new Transfer(poolUser, json.lineNumberOut, json.placeNumberOut, playerIn, new Date(json.createdDate));
+        const personOut = this.personMapper.toObject(jsonPersonOut, association);
+        const playerOut = this.playerMapper.toObject(json.playerOut, association, personOut);
+        const transfer = new Transfer(poolUser, json.lineNumberOut, json.placeNumberOut, playerIn, playerOut, new Date(json.createdDate));
         transfer.setId(json.id);
         return transfer;
     }
@@ -75,6 +87,7 @@ export class EditActionMapper {
             lineNumberOut: transfer.getLineNumberOut(),
             placeNumberOut: transfer.getPlaceNumberOut(),
             playerIn: this.playerMapper.toJson(transfer.getPlayerIn()),
+            playerOut: this.playerMapper.toJson(transfer.getPlayerOut()),
             createdDate: transfer.getCreatedDate().toISOString()
         };
     }

@@ -22,6 +22,8 @@ import { MyNavigation } from '../../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../../shared/poolmodule/component';
 import { ChoosePlayersFilter } from '../../player/choose.component';
 import { JsonTransfer } from '../../../lib/editAction/transfer/json';
+import { S11Formation } from '../../../lib/formation';
+import { S11FormationCalculator } from '../../../lib/formation/calculator';
 
 @Component({
   selector: 'app-pool-place-transfer',
@@ -40,6 +42,7 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
   public selectableTeam: Team | undefined;
   public selectableLines!: FootballLine[];
   public formationChecker: FootballFormationChecker|undefined;
+  public calcFormation: S11Formation|undefined;
 
   constructor(
     route: ActivatedRoute,
@@ -78,6 +81,8 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
       .subscribe({
         next: (poolUser: PoolUser) => {
           this.poolUser = poolUser;
+          const calculator = new S11FormationCalculator();
+          this.calcFormation = calculator.getCurrentFormation(poolUser);
           this.route.params.subscribe(params => {
             if (params.lineNr !== undefined && params.placeNr !== undefined) {
               this.initPlace(+params.lineNr,+params.placeNr);
@@ -108,6 +113,7 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
     const formationLine = this.place.getFormationLine();
     const formationChecker = this.formationChecker;
     if( formationChecker ) {
+      console.log(formationLine.getFormation().convertToBase());
       const addableLines = formationChecker.addableLines(formationLine.getFormation().convertToBase(), formationLine.getNumber());      
       this.selectableLines = addableLines;
       // this.route.queryParams.subscribe(params => {
@@ -132,9 +138,7 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
   }
 
   getPlace(lineNumber: number, placeNumber: number): S11FormationPlace {
-    const formation = this.poolUser.getAssembleFormation();
-
-    const place = formation?.getPlace(lineNumber, placeNumber);
+    const place = this.calcFormation?.getPlace(lineNumber, placeNumber);
     if (place === undefined) {
       throw Error('de opstellings-plaats kan niet gevonden worden');
     }
@@ -181,18 +185,27 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
 
 
 
-  transfer(player: Player, formationChecker: FootballFormationChecker) {
+  transfer(player: Player, placeOut: S11FormationPlace) {
+    const s11Player = placeOut.getPlayer();
+    if( s11Player === undefined) {
+      throw new Error('player out can not be empty');
+    }
+    const playerOut = s11Player.getPlayersDescendingStart().shift();
+    if( playerOut === undefined) {
+      throw new Error('player out can not be empty');
+    }
     this.processing = true; 
     const jsonTransfer: JsonTransfer = {
       id: 0,
       lineNumberOut: this.place.getLine(),
       placeNumberOut: this.place.getNumber(),
       playerIn: this.playerMapper.toJson(player),
+      playerOut: this.playerMapper.toJson(player),
       createdDate: (new Date()).toISOString()
     }  
     this.formationRepository.transfer(jsonTransfer, this.poolUser).subscribe({
       next: () => {
-        if( !formationChecker.areAllPlacesWithoutTeamReplaced(this.poolUser) ) {
+        if( !(new S11FormationCalculator()).areAllPlacesWithoutTeamReplaced(this.poolUser) ) {
           this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
         } else if( this.poolUser.getTransfers().length < 2) {
           this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);

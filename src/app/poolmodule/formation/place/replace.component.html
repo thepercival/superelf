@@ -16,12 +16,12 @@
         </h2>        
       </div>
 
-      <div *ngIf="selectableTeam && formationChecker" class="d-flex justify-content-center">
+      <div *ngIf="selectableTeam" class="d-flex justify-content-center">
         <app-pool-player-choose class="w-100" [competition]="pool.getSourceCompetition()"
           [viewPeriod]="pool.getCreateAndJoinPeriod()" [alreadyChosenPersons]="alreadyChosenPersons"
           [selectableTeams]="[selectableTeam]"
           [alreadyChosenTeams]="alreadyChosenTeams" [selectableLines]="selectableLines" [filter]="choosePlayersFilter"
-          [showAll]="form.controls.showAll.value" (selectPlayer)="replace($event, formationChecker)"
+          [showAll]="form.controls.showAll.value" (selectPlayer)="replace($event, place)"
           (linkToS11Player)="linkToPlayer($event)" (filterUpdate)="updateState($event)">
         </app-pool-player-choose>
       </div>

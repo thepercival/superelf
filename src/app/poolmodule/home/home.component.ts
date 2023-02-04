@@ -21,8 +21,8 @@ import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRoun
 import { AgainstGame, Competition, Formation, Poule, Round, Structure, TogetherGame, TogetherGamePlace } from 'ngx-sport';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { SuperElfNameService } from '../../lib/nameservice';
-import { FootballFormationChecker } from '../../lib/formation/footballChecker';
 import { CompetitionConfigRepository } from '../../lib/competitionConfig/repository';
+import { S11FormationCalculator } from '../../lib/formation/calculator';
 
 @Component({
     selector: 'app-pool-public',
@@ -37,7 +37,6 @@ export class HomeComponent extends PoolComponent implements OnInit {
     public poolUsers: PoolUser[] = [];
     public currentGameRoundNumbers: CurrentGameRoundNumbers | undefined;
     public structureMap = new Map<number, Structure>();
-    public formationChecker: FootballFormationChecker|undefined;
     private processingGameRoundNumbers = true;
     private processingPoolUsers = true;
 
@@ -130,12 +129,12 @@ export class HomeComponent extends PoolComponent implements OnInit {
             .subscribe({
                 next: (poolUser: PoolUser | undefined) => {
                     this.poolUser = poolUser;
-                    if (this.inTransferMode()) {
-                        this.competitionConfigRepository.getAvailableFormations(pool.getCompetitionConfig())
-                            .subscribe((formations: Formation[]) => {
-                                this.formationChecker = new FootballFormationChecker(formations);
-                            });
-                    }
+                    // if (this.inTransferMode()) {
+                    //     this.competitionConfigRepository.getAvailableFormations(pool.getCompetitionConfig())
+                    //         .subscribe((formations: Formation[]) => {
+                    //             this.formationChecker = new FootballFormationChecker(formations);
+                    //         });
+                    // }
                 },
                 error: (e: string) => {
                     this.setAlert('danger', e); this.processing = false;
@@ -324,8 +323,8 @@ export class HomeComponent extends PoolComponent implements OnInit {
         }
     }
 
-    linkToTransferPeriodAction(poolUser: PoolUser, formationChecker: FootballFormationChecker) {
-        if( !formationChecker.areAllPlacesWithoutTeamReplaced(poolUser) ) {
+    linkToTransferPeriodAction(poolUser: PoolUser) {
+        if( !(new S11FormationCalculator()).areAllPlacesWithoutTeamReplaced(poolUser) ) {
             this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
           } else if( poolUser.getTransfers().length < 2) {
             this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);

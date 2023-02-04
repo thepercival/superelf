@@ -25,7 +25,7 @@
   <tr *ngIf="!processing" (click)="maybeLinkToPlayer(place)" [ngClass]="{'pointer': s11Player}">
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
       <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
-      <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="transfer.emit(place)">
+      <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="substitute.emit(place)">
         kies een {{place.isSubstitute() ? 'wissel' : 'speler'}}
       </button>
       <span *ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
@@ -34,10 +34,10 @@
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
     </td>
     <td class="text-end" (click)="$event.stopPropagation()" class="{{getSubstituteClass(place.isSubstitute())}}">
-      <button *ngIf="!getTransfer(place)" type="button" class="btn btn-outline-primary btn-sm" (click)="transfer.emit(place)">
-        <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
+      <button *ngIf="!hasLineSubstitution(place.getLine()) && !place.isSubstitute()" type="button" class="btn btn-outline-primary btn-sm" (click)="substitute.emit(place)">
+        <fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon>
       </button>      
-      <button *ngIf="getTransfer(place)" type="button" class="btn btn-outline-primary btn-sm" (click)="removeTransfer(getTransfer(place))">
+      <button *ngIf="hasLineSubstitution(place.getLine()) && place.isSubstitute()" type="button" class="btn btn-outline-primary btn-sm" (click)="removeSubstitution(getSubstitution(place.getLine()))">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
       </button>
     </td>    

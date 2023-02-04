@@ -22,7 +22,8 @@ import {
   faMessage,
   faPaperPlane,
   faFilter,
-  faRightLeft
+  faRightLeft,
+  faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons';
 
 import { CommonSharedModule } from '../shared/commonmodule/common.module';
@@ -73,6 +74,8 @@ import { FormationLineReplacementsComponent } from './formation/line/replacement
 import { FormationLineTransfersComponent } from './formation/line/transfers.component';
 import { FormationPlaceReplaceComponent } from './formation/place/replace.component';
 import { FormationPlaceTransferComponent } from './formation/place/transfer.component';
+import { FormationSubstituteComponent } from './formation/substitute.component';
+import { FormationLineSubstitutionsComponent } from './formation/line/substitutions.component';
 
 @NgModule({
   imports: [
@@ -92,11 +95,13 @@ import { FormationPlaceTransferComponent } from './formation/place/transfer.comp
     FormationLineAssembleComponent,
     FormationLineReplacementsComponent,
     FormationLineTransfersComponent,
+    FormationLineSubstitutionsComponent,
     FormationLineViewComponent,
     FormationPlaceEditComponent,
     FormationPlaceReplaceComponent,
     FormationPlaceTransferComponent,
     FormationReplaceComponent,
+    FormationSubstituteComponent,
     FormationTransferComponent,
     GameRoundScrollerComponent,
     GameScrollerComponent,
@@ -139,7 +144,7 @@ export class PoolModule {
     library.addIcons(
       faListOl, faChevronLeft, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
       , faInfoCircle, faSearch, faPlusCircle, faPencilAlt, faUserSecret, faMessage, faPaperPlane, faFilter,
-      faRightLeft
+      faRightLeft, faSignOutAlt
     );
     /*library.addIcons(
       faProductHunt

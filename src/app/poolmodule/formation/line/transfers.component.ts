@@ -26,6 +26,7 @@ export class FormationLineTransfersComponent implements OnInit {
   @Input() transfers: Transfer[] = [];
   @Output() transfer = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
+  @Output() remove = new EventEmitter<Transfer[]>();
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
 
@@ -107,9 +108,37 @@ export class FormationLineTransfersComponent implements OnInit {
     return isSubstitute ? 'table-no-bottom-border' : '';
   }
 
-  isNoTransfer(place: S11FormationPlace): boolean {
-    return this.transfers.every((transfer: Transfer): boolean => {
-      return transfer.getLineNumberOut() !== place.getLine() || transfer.getPlaceNumberOut() !== place.getNumber();
+  // isTransfer(place: S11FormationPlace): boolean {
+  //   const s11Player = place.getPlayer();
+  //   if( s11Player === undefined) {
+  //     return false;
+  //   }
+  //   const pool = place.getFormationLine().getFormation().getPoolUser().getPool();
+  //   const transferPeriodStart = pool.getCompetitionConfig().getTransferPeriod().getStartDateTime();
+  //   const player = (new OneTeamSimultaneous()).getPlayer(s11Player, transferPeriodStart);
+  //   if( player === undefined) {
+  //     return false;
+  //   }
+  //   console.log(this.transfers, player);
+  //   return this.transfers.some((transfer: Transfer): boolean => {
+  //     return transfer.getPlayerIn() === player;
+  //   });
+
+  getTransfer(place: S11FormationPlace): Transfer|undefined {
+    return this.transfers.find((transfer: Transfer): boolean => {
+      const player = place.getPlayer()?.getPlayersDescendingStart().shift();
+      return player !== undefined && player === transfer.getPlayerIn();
     });
+  }
+
+  removeTransfer(transfer: Transfer|undefined): void {
+    if( transfer === undefined) {
+      return;
+    }
+    if( transfer.getPoolUser().hasDoubleTransfer() ) {
+      this.remove.emit(transfer.getPoolUser().getTransfers())
+    } else {
+      this.remove.emit([transfer])
+    }
   }
 }

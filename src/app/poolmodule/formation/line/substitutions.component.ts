@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Person, Team } from 'ngx-sport';
-import { Replacement } from '../../../lib/editAction/replacement';
+import { FootballLine, Person, Team } from 'ngx-sport';
+import { Substitution } from '../../../lib/editAction/substitution';
 import { S11FormationLine } from '../../../lib/formation/line';
 import { S11FormationPlace } from '../../../lib/formation/place';
 import { FormationRepository } from '../../../lib/formation/repository';
@@ -14,19 +14,19 @@ import { S11Player } from '../../../lib/player';
 import { CSSService } from '../../../shared/commonmodule/cssservice';
 
 @Component({
-  selector: 'app-pool-formationline-replacements',
-  templateUrl: './replacements.component.html',
-  styleUrls: ['./replacements.component.scss']
+  selector: 'app-pool-formationline-substitutions',
+  templateUrl: './substitutions.component.html',
+  styleUrls: ['./substitutions.component.scss']
 })
-export class FormationLineReplacementsComponent implements OnInit {
+export class FormationLineSubstitutionsComponent implements OnInit {
   @Input() line!: S11FormationLine;
   @Input() selectedPlace: S11FormationPlace | undefined;
   @Input() viewGameRound: GameRound | undefined;
-  @Input() replacements: Replacement[] = [];
   @Input() processing: boolean = true;
-  @Output() replace = new EventEmitter<S11FormationPlace>();
-  @Output() remove = new EventEmitter<Replacement>();
+  @Input() substitutions: Substitution[] = [];
+  @Output() substitute = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
+  @Output() remove = new EventEmitter<Substitution[]>();
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
 
@@ -108,10 +108,23 @@ export class FormationLineReplacementsComponent implements OnInit {
     return isSubstitute ? 'table-no-bottom-border' : '';
   }
 
-  getReplacement(place: S11FormationPlace): Replacement|undefined {
-    return this.replacements.find((replacement: Replacement): boolean => {
-      const player = place.getPlayer()?.getPlayersDescendingStart().shift();
-      return player !== undefined && player === replacement.getPlayerIn();
+  getSubstitution(line: FootballLine): Substitution|undefined {
+    return this.substitutions.find((substitution: Substitution): boolean => {
+      return line === substitution.getLineNumberOut();
     });
+  }
+
+  hasLineSubstitution(footballLine: FootballLine): boolean {
+    return this.substitutions.some((substitution: Substitution): boolean => {
+      return footballLine === substitution.getLineNumberOut();
+    });
+  }
+
+  removeSubstitution(substitution: Substitution|undefined): void {
+    console.log('removeSubstitution', substitution);
+    if( substitution === undefined) {
+      return;
+    }
+    this.remove.emit([substitution])
   }
 }

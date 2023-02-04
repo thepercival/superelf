@@ -22,6 +22,7 @@ import { MyNavigation } from '../../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../../shared/poolmodule/component';
 import { ChoosePlayersFilter } from '../../player/choose.component';
 import { JsonReplacement } from '../../../lib/editAction/replacement/json';
+import { S11FormationCalculator } from '../../../lib/formation/calculator';
 
 @Component({
   selector: 'app-pool-place-replace',
@@ -183,18 +184,27 @@ export class FormationPlaceReplaceComponent extends PoolComponent implements OnI
 
 
 
-  replace(player: Player, formationChecker: FootballFormationChecker) {
+  replace(playerIn: Player, placeOut: S11FormationPlace) {
+    const s11Player = placeOut.getPlayer();
+    if( s11Player === undefined) {
+      throw new Error('player out can not be empty');
+    }
+    const playerOut = s11Player.getPlayersDescendingStart().shift();
+    if( playerOut === undefined) {
+      throw new Error('player out can not be empty');
+    }
     this.processing = true;    
     const jsonReplacement: JsonReplacement = {
       id: 0,
       lineNumberOut: this.place.getLine(),
       placeNumberOut: this.place.getNumber(),
-      playerIn: this.playerMapper.toJson(player),
+      playerIn: this.playerMapper.toJson(playerIn),
+      playerOut: this.playerMapper.toJson(playerOut),
       createdDate: (new Date()).toISOString()
     }
     this.formationRepository.replace(jsonReplacement, this.poolUser).subscribe({
       next: () => {
-        if( !formationChecker.areAllPlacesWithoutTeamReplaced(this.poolUser) ) {
+        if( !(new S11FormationCalculator()).areAllPlacesWithoutTeamReplaced(this.poolUser) ) {
           this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
         } else if( this.poolUser.getTransfers().length < 2) {
           this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);

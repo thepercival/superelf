@@ -16,45 +16,36 @@
     <!-- start header --> 
     <div *ngIf="!processing && poolUser" class="d-flex justify-content-between mt-3 mb-1">
       <!-- left -->      
-        <button *ngIf="hasPlayersWithoutCurrentTeam(poolUser)" class="btn btn-outline-primary btn-sm"
-          (click)="linkToReplacements(poolUser, contentRemove)">
+        <button class="btn btn-outline-primary btn-sm"
+          (click)="linkToTransfers(poolUser, contentRemove)">
           <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
           <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
         </button>                
       
-      <!-- center/right -->
+      <!-- center -->
       <div class="d-flex">
         <h2 class="mb-0">
-          <span class="badge bg-info py-2">transfer</span>
+          <span class="badge bg-info py-2">wisselen</span>
         </h2>
-        <button *ngIf="poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()" class="btn btn-secondary ms-1"
-          (click)="toggleTransferEditMode()">
-            <fa-icon *ngIf="transferEditMode === SingleEditMode" [icon]="['fas', 'users']"></fa-icon>
-            <fa-icon *ngIf="transferEditMode === DoubleEditMode" [icon]="['fas', 'user-circle']"></fa-icon>
-          </button>
       </div>
 
       <!-- right -->    
-      <button class="btn btn-outline-primary ms-1"
-        (click)="linkToSubstitutions()">
-        <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
-        <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+      <button class="btn btn-outline-primary ms-1" [routerLink]="['/pool', pool.getId()]">
+        <fa-icon [icon]="['fas', 'circle-check']"></fa-icon>
       </button>
       
-    </div> <!-- end header --> 
-
-    
+    </div> <!-- end header -->
 
     <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
     <div *ngIf="!processing && pool && poolUser && calcFormation">
       <div *ngIf="!selectedPlace">
         <!-- lines-->
-        <app-pool-formationline-transfers *ngFor="let line of calcFormation.getLines()" [line]="line"
-          [transfers]="poolUser.getTransfers()"
-          (transfer)="linkToTransfer($event)" (linkToPlayer)="linkToPlayer($event)"
+        <app-pool-formationline-substitutions *ngFor="let line of calcFormation.getLines()" [line]="line"
+          [substitutions]="poolUser.getSubstitutions()"
+          (substitute)="substitute($event)" (linkToPlayer)="linkToPlayer($event)"
           (remove)="remove($event, false)">
-        </app-pool-formationline-transfers>
+        </app-pool-formationline-substitutions>
       </div>
     </div>
   </div>
@@ -63,15 +54,15 @@
   <ng-template #contentRemove let-modal>
     <div class="modal-header">
       <h4 class="modal-title">
-        <span>transfers verwijderen</span>
+        <span>wissels ongedaan maken</span>
       </h4>
       <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-      <p>Je transfers worden ongedaan gemaakt wanneer je naar "gestopte spelers vervangen" gaat</p>
+      <p>Je wissels worden ongedaan gemaakt wanneer je naar "transfer" gaat</p>
     </div>
     <div class="modal-footer d-flex justify-content-reverse border-top-0">
       <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close(poolUser)">
-        ga naar "gestopte spelers vervangen"</button>
+        ga naar "transfer"</button>
     </div>
   </ng-template>

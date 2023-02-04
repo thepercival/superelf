@@ -80,6 +80,15 @@ export class PoolUser extends Identifiable {
         return this.transfers;
     }
 
+    hasDoubleTransfer(): boolean {
+        return this.transfers.some((transfer: Transfer): boolean => {
+            return this.transfers.some((nextTransfer: Transfer): boolean => {
+                return transfer !== nextTransfer 
+                && transfer.getCreatedDate().getTime() === nextTransfer.getCreatedDate().getTime()
+            });
+        });
+    }
+
     getSubstitutions(): Substitution[] {
         return this.substitutions;
     }

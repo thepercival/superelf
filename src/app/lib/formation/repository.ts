@@ -18,6 +18,8 @@ import { EditActionMapper } from '../editAction/mapper';
 import { Replacement } from '../editAction/replacement';
 import { Transfer } from '../editAction/transfer';
 import { JsonTransfer } from '../editAction/transfer/json';
+import { Substitution } from '../editAction/substitution';
+import { JsonSubstitution } from '../editAction/substitution/json';
 
 @Injectable({
     providedIn: 'root'
@@ -116,6 +118,16 @@ export class FormationRepository extends APIRepository {
         );
     }
 
+    substitute(jsonSubstitution: JsonSubstitution, poolUser: PoolUser): Observable<Substitution> {
+        const url = this.getTransferPeriodActionUrl(poolUser, 'substitute');        
+        return this.http.post<JsonSubstitution>(url, jsonSubstitution, { headers: super.getHeaders() }).pipe(
+            map((jsonSubstitution: JsonSubstitution): Substitution => {
+                return this.transferActionMapper.toSubstitution(jsonSubstitution, poolUser);
+            }),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
     removeReplacement(replacement: Replacement, poolUser: PoolUser): Observable<void> {
         const url = this.getTransferPeriodActionUrl(poolUser, 'replace', replacement.getId());
         return this.http.delete<void>(url, { headers: super.getHeaders() }).pipe(
@@ -144,14 +156,21 @@ export class FormationRepository extends APIRepository {
         );
     }
 
-    /*removeObject(poolUser: PoolUser, assembleFormation: S11Formation): Observable<void> {
-        const url = this.getUrl(poolUser, assembleFormation);
-        return this.http.delete(url, this.getOptions()).pipe(
+    removeSubstitution(substitution: Substitution, poolUser: PoolUser): Observable<void> {
+        const url = this.getTransferPeriodActionUrl(poolUser, 'substitute', substitution.getId());
+        return this.http.delete<void>(url, { headers: super.getHeaders() }).pipe(
+            map(() => {
+                const substitutions = poolUser.getSubstitutions();
+                const idx = substitutions.indexOf(substitution);
+                if (idx >= 0) {
+                    substitutions.splice(idx);                     
+                }
+            }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    addPerson(person: Person, line: FormationLine, asSubstitute: boolean): Observable<S11Player> {
+    /*addPerson(person: Person, line: FormationLine, asSubstitute: boolean): Observable<S11Player> {
         if (asSubstitute) {
             return this.editSubstitute(person, line);
         }
