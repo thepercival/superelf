@@ -76,6 +76,7 @@ import { FormationPlaceReplaceComponent } from './formation/place/replace.compon
 import { FormationPlaceTransferComponent } from './formation/place/transfer.component';
 import { FormationSubstituteComponent } from './formation/substitute.component';
 import { FormationLineSubstitutionsComponent } from './formation/line/substitutions.component';
+import { FormationActionOverviewComponent } from './formation/actionoverview.component';
 
 @NgModule({
   imports: [
@@ -90,6 +91,7 @@ import { FormationLineSubstitutionsComponent } from './formation/line/substituti
   ],
   declarations: [
     AgainstGameTitleComponent,
+    FormationActionOverviewComponent,
     FormationAssembleComponent,
     FormationChooseComponent,
     FormationLineAssembleComponent,

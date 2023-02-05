@@ -5,7 +5,6 @@ import { forkJoin, Observable } from 'rxjs';
 import { AuthService } from '../../lib/auth/auth.service';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
 import { DateFormatter } from '../../lib/dateFormatter';
-import { S11Formation } from '../../lib/formation';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GameRound } from '../../lib/gameRound';
 import { ImageRepository } from '../../lib/image/repository';
@@ -241,7 +240,7 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
 
     this.processingGameRound = true;
 
-    const editPeriod = this.getCurrentEditPeriod(this.pool);
+    const editPeriod = this.getMostRecentEndedEditPeriod(this.pool);
 
     if (gameRound === undefined || editPeriod === undefined) {
       console.error('gameRound or editPeriod is undefined');
@@ -255,17 +254,20 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
       next: (games: AgainstGame[]) => {
         this.sourceGames = games;
         // this.sideMap = this.getSideMap(games);
-
+        
         if (this.gotStatistics) {
           this.processingGameRound = false;
+          console.log('this.processingGameRound => false');
           return;
         }
         forkJoin(this.getStatisticsRequests(editPeriod)).subscribe({
           next: () => {
+            console.log('this.processingGameRound => false');
             this.processingGameRound = false;
             this.gotStatistics = true;
           },
           error: (e) => {
+            console.log('this.processingGameRound => false');
             this.processingGameRound = false;
           }
         });
@@ -273,59 +275,9 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
     });
   }
 
-  // private getSideMap(games: AgainstGame[]): SideMap {
-  //   const sideMap: SideMap = new Map();
-
-  //   // 
-  //   [AgainstSide.Home, AgainstSide.Away].forEach((side: AgainstSide) => {
-
-  //     // const teams = this.getTeamsFromGames(games);
-
-  //     sideMap.set(side, this.getFormationPlacesMap(teams));
-  //   });
-  //   return sideMap;
-  // }
-
-  // private getFormationPlacesMap(formation: S11Formation, date: Date): FormationPlacesMap {
-  //   const formationPlacesMap: FormationPlacesMap = new Map();
-
-  //   formation.getPlaces().forEach((formationPlace: S11FormationPlace) => {
-  //     formationPlace.getPlayer()?.getPlayer(date)
-  //     formationPlacesMap.set(+team.getId(), this.getFormationPlaces(games));
-  //   });
-  //   return formationPlacesMap;
-  // }
-
-  //   const editPeriod = this.getCurrentEditPeriod(this.pool);
-  //   const formation = editPeriod ? competitor.getPoolUser().getFormation(editPeriod) : undefined;
-  //   // const team = this.getTeam(sourceGame.getSidePlaces(side));
-  //   if (formation === undefined/* || team === undefined*/) {
-  //     return [];
-  //   }
-  //   // @TODO CDK ORDER BY TEAMS
-  //   const teams = this.getTeams(sourceGame);
-  //   console.log(teams);
-  //   let formationPlaces: S11FormationPlace[] = [];
-  //   teams.forEach((team: Team | undefined) => {
-  //     if (team === undefined) {
-  //       return undefined;
-  //     }
-
-
-  //     formationPlaces = formationPlaces.concat(formation.getPlaces().filter((formationPlace: S11FormationPlace): boolean => {
-  //       const s11Player = formationPlace.getPlayer();
-  //       if (s11Player === undefined) {
-  //         return false;
-  //       }
-  //       return s11Player.getPlayer(team) !== undefined;
-  //     })
-  //     );
-  //   });
-
-
   getStatisticsRequests(editPeriod: AssemblePeriod | TransferPeriod): Observable<StatisticsMap>[] {
     const setStatistics: Observable<StatisticsMap>[] = [];
-
+    console.log('sds');
     const homeFormation = this.homeCompetitor?.getPoolUser().getFormation(editPeriod)
     if (homeFormation) {
       this.statisticsRepository.getFormationRequests(homeFormation).forEach((request: Observable<StatisticsMap>) => {
@@ -371,7 +323,7 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
   }
 
   getFormationPlaces(sourceGame: AgainstGame, side: AgainstSide, team: Team): (S11FormationPlace | undefined)[] {
-    const editPeriod = this.getCurrentEditPeriod(this.pool);
+    const editPeriod = this.getMostRecentEndedEditPeriod(this.pool);
     const competitor = side === AgainstSide.Home ? this.homeCompetitor : this.awayCompetitor;
     const formation = editPeriod && competitor ? competitor.getPoolUser().getFormation(editPeriod) : undefined;
     if (formation === undefined) {
@@ -385,28 +337,6 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
       return s11Player.getPlayer(team, sourceGame.getStartDateTime()) !== undefined;
     });
   }
-
-  // getLineClass(prefix: string): string {
-  //   return this.cssService.getLine(this.line.getNumber(), prefix + '-');
-  // }
-
-
-
-  // getPlace(sourceGame: AgainstGame, side: AgainstSide, poolUser: PoolUser): S11Player | undefined {
-  //   const editPeriod = this.getCurrentEditPeriod(poolUser.getPool());
-  //   const formation = editPeriod ? poolUser.getFormation(editPeriod) : undefined;
-  //   const team = this.getTeam(sourceGame.getSidePlaces(side));
-  //   return team ? formation?.getPlayer(team, sourceGame.getStartDateTime()) : undefined;
-  // }
-
-  // getPlayer(sourceGame: AgainstGame, side: AgainstSide, poolUser: PoolUser): S11Player | undefined {
-  //   const editPeriod = this.getCurrentEditPeriod(poolUser.getPool());
-  //   const formation = editPeriod ? poolUser.getFormation(editPeriod) : undefined;
-  //   const team = this.getTeam(sourceGame.getSidePlaces(side));
-  //   return team ? formation?.getPlayer(team, sourceGame.getStartDateTime()) : undefined;
-  // }
-
-
 
   protected getTeams(sourceGame: AgainstGame): Team[] {
     return sourceGame.getSidePlaces().map((sideGamePlace: AgainstGamePlace): Team => {

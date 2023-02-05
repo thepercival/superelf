@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { PoolUser } from '../../lib/pool/user';
 import { GlobalEventsManager } from '../commonmodule/eventmanager';
-import { Competition, Structure } from 'ngx-sport';
 import { AssemblePeriod } from '../../lib/period/assemble';
 import { TransferPeriod } from '../../lib/period/transfer';
 import { ViewPeriod } from '../../lib/period/view';
@@ -68,12 +67,23 @@ export class PoolComponent {
         return pool.getCreateAndJoinPeriod();
     }
 
-    protected getCurrentEditPeriod(pool: Pool): AssemblePeriod | TransferPeriod | undefined {
+    // protected getMostRecentStartedEditPeriod(pool: Pool): AssemblePeriod | TransferPeriod | undefined {
+    //     const date = new Date();
+    //     if (date.getTime() > pool.getTransferPeriod().getStartDateTime().getTime()) {
+    //         return pool.getTransferPeriod();
+    //     }
+    //     if (date.getTime() > pool.getAssemblePeriod().getStartDateTime().getTime()) {
+    //         return pool.getAssemblePeriod();
+    //     }
+    //     return undefined;
+    // }
+
+    protected getMostRecentEndedEditPeriod(pool: Pool): AssemblePeriod | TransferPeriod | undefined {
         const date = new Date();
-        if (date.getTime() > pool.getTransferPeriod().getStartDateTime().getTime()) {
+        if (date.getTime() > pool.getTransferPeriod().getEndDateTime().getTime()) {
             return pool.getTransferPeriod();
         }
-        if (date.getTime() > pool.getAssemblePeriod().getStartDateTime().getTime()) {
+        if (date.getTime() > pool.getAssemblePeriod().getEndDateTime().getTime()) {
             return pool.getAssemblePeriod();
         }
         return undefined;

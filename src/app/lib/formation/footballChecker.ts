@@ -1,8 +1,4 @@
-import { FootballLine, Formation, FormationLine, Team } from "ngx-sport";
-import { S11Formation } from "../formation";
-import { OneTeamSimultaneous } from "../oneTeamSimultaneousService";
-import { PoolUser } from "../pool/user";
-import { S11FormationPlace } from "./place";
+import { FootballLine, Formation, FormationLine } from "ngx-sport";
 
 export class FootballFormationChecker {
     

@@ -70,7 +70,6 @@ export class FormationSubstituteComponent extends PoolComponent implements OnIni
                 this.setAlert('danger', 'er zijn nog spelers zonder team');
               } else {
                 this.calcFormation = calculator.getCurrentFormation(poolUser);
-                console.log(this.calcFormation);
               }
             }),
             error: (e: string) => {

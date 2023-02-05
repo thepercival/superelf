@@ -90,8 +90,18 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
     return poolUser.getSubstitutions().length > 0
   }
 
-  toggleTransferEditMode(): void {
-    this.transferEditMode = this.transferEditMode === TransferEditMode.Single ? TransferEditMode.Double : TransferEditMode.Single;
+  toggleTransferEditMode(modalContent: TemplateRef<any>): void {
+    if( this.transferEditMode === TransferEditMode.Single) {
+      this.transferEditMode = TransferEditMode.Double;
+      this.openInfoModal(modalContent);
+      return;
+    }
+    // this.transferEditMode = this.transferEditMode === TransferEditMode.Single ? TransferEditMode.Double : TransferEditMode.Single;
+    this.transferEditMode = TransferEditMode.Single;
+  }
+
+  openInfoModal(modalContent: TemplateRef<any>) {
+    this.modalService.open(modalContent);    
   }
   
   get SingleEditMode(): TransferEditMode { return TransferEditMode.Single; }

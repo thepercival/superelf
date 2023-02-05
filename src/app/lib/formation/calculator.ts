@@ -1,4 +1,4 @@
-import { FootballLine, Player } from "ngx-sport";
+import { FootballLine, Player, Team } from "ngx-sport";
 import { Replacement } from "../editAction/replacement";
 import { Substitution } from "../editAction/substitution";
 import { Transfer } from "../editAction/transfer";
@@ -41,7 +41,6 @@ export class S11FormationCalculator {
 
     private processReplacement(currentFormation: S11Formation, replacement: Replacement): S11Formation {
         
-        const viewPeriod = currentFormation.getPoolUser().getPool().getCompetitionConfig().getTransferPeriod().getViewPeriod();
         if( replacement.getLineNumberOut() === replacement.getPlayerIn().getLine() ) {
             return this.updatePlace(currentFormation, replacement);
         }
@@ -55,8 +54,7 @@ export class S11FormationCalculator {
     }
 
     private processTransfer(currentFormation: S11Formation, transfer: Transfer): S11Formation {
-        
-        const viewPeriod = currentFormation.getPoolUser().getPool().getCompetitionConfig().getTransferPeriod().getViewPeriod();
+        // const viewPeriod = currentFormation.getPoolUser().getPool().getCompetitionConfig().getTransferPeriod().getViewPeriod();
         if( transfer.getLineNumberOut() === transfer.getPlayerIn().getLine() ) {
             return this.updatePlace(currentFormation, transfer);
         }
@@ -85,13 +83,6 @@ export class S11FormationCalculator {
         }
         currentFormation = this.addPlace(currentFormation, playerSubstitute, false ); // add place        
         return this.addPlace(currentFormation, player, true ); // add substitution
-    }
-
-    getPlayerDescendingStart(s11Player: S11Player|undefined): Player|undefined {
-        if( s11Player === undefined) {
-          return undefined;
-        }
-        return s11Player.getPlayersDescendingStart().shift();
     }
 
     private updatePlace(currentFormation: S11Formation, editAction: Replacement|Transfer): S11Formation {
@@ -240,6 +231,40 @@ export class S11FormationCalculator {
             throw new Error('te veel vervangingen voor de formatieplekken');
         }
         return placesWithoutTeam.length === replacements.length;
+    }
+
+    public getFormationTeams(formation: S11Formation): Team[] {
+        return this.getFormationPlayers(formation).map((player: Player): Team => {
+            return player.getTeam();
+        });
+    }
+
+    public getFormationPlayers(formation: S11Formation): Player[] {
+        const players = formation.getPlayers().map((s11Player: S11Player): Player|undefined => {
+            return this.getPlayerDescendingStart(s11Player);
+        });
+        
+        return <Player[]>players.filter((player: Player|undefined): boolean => {
+            return player !== undefined;
+        });
+    }
+
+    getPlayerWithTeam(formation: S11Formation, team: Team): Player|undefined {
+        return this.getFormationPlayers(formation).find((player: Player): boolean => {
+            return player.getTeam() === team;
+        });
+    }
+
+    getTeamDescendingStart(s11Player: S11Player|undefined): Team|undefined {
+        // console.log(s11Player);
+        return this.getPlayerDescendingStart(s11Player)?.getTeam();
+    }
+
+    getPlayerDescendingStart(s11Player: S11Player|undefined): Player|undefined {
+        if( s11Player === undefined) {
+            return undefined;
+        }
+        return s11Player.getPlayersDescendingStart().shift();
     }
 
     private toConsole(header: string, currentFormation: S11Formation): void {

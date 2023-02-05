@@ -5,7 +5,7 @@ import { concatMap } from 'rxjs/operators';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FootballLine, Team, Person, Player, Formation, PlayerMapper } from 'ngx-sport';
+import { FootballLine, Team, Person, Player, Formation, PlayerMapper, TeamCompetitor } from 'ngx-sport';
 import { CompetitionConfigRepository } from '../../../lib/competitionConfig/repository';
 import { FootballFormationChecker } from '../../../lib/formation/footballChecker';
 import { S11FormationPlace } from '../../../lib/formation/place';
@@ -38,8 +38,8 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
   public choosePlayersFilter: ChoosePlayersFilter;
   public place!: S11FormationPlace;
   public alreadyChosenPersons: Person[] = [];
-  public alreadyChosenTeams: Team[] = [];
-  public selectableTeam: Team | undefined;
+  public alreadyChosenTeams: Team[]|undefined;
+  public selectableTeams: Team[]|undefined;
   public selectableLines!: FootballLine[];
   public formationChecker: FootballFormationChecker|undefined;
   public calcFormation: S11Formation|undefined;
@@ -104,12 +104,26 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
 
   initPlayerChoose() {
     this.alreadyChosenPersons = [];
-    this.selectableTeam = this.getTeamDescendingStart(this.place.getPlayer());
-    if( this.selectableTeam ) {
-      this.choosePlayersFilter.team = this.selectableTeam;
-    } else {
-      this.setAlert('danger', 'kan geen team voor speler vinden');
+    const placeTeam = this.getTeamDescendingStart(this.place.getPlayer());
+
+    const calculator = new S11FormationCalculator();
+    const calcFormation = calculator.getCurrentFormation(this.poolUser);
+    if( calcFormation === undefined ) {
+      throw new Error();
     }
+    const teams = calculator.getFormationTeams(calcFormation);
+    const alreadyChosenTeams = teams.filter((team: Team): boolean => {
+        return placeTeam !== team;
+    });
+
+    const teamCompetitors = this.pool.getSourceCompetition().getTeamCompetitors();
+    this.selectableTeams = teamCompetitors.map((teamCompetitor: TeamCompetitor): Team => {
+      return teamCompetitor.getTeam();
+    }).filter((team: Team): boolean => {
+        return alreadyChosenTeams.indexOf(team) < 0;
+    });      
+    this.alreadyChosenTeams = alreadyChosenTeams;
+    
     const formationLine = this.place.getFormationLine();
     const formationChecker = this.formationChecker;
     if( formationChecker ) {
@@ -121,8 +135,7 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
           this.choosePlayersFilter.line = this.place.getLine();
       //   }
       // ?});
-    }
-    
+    }    
   }
 
   getTeamDescendingStart(s11Player: S11Player|undefined): Team|undefined {
@@ -152,39 +165,6 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
     });
   }
 
-
-  // getAssembleLines(formation?: S11Formation): AssembleLine[] {
-  //   const assembleLines: AssembleLine[] = [];
-  //   if (!formation) {
-  //     return assembleLines;
-  //   }
-  //   formation.getLines().forEach((formationLine: S11FormationLine) => {
-  //     const players = formationLine.getPlayers().slice();
-  //     const places: AssembleLinePlace[] = [];
-  //     for (let i = 1; i <= formationLine.getNrOfPersons(); i++) {
-  //       const player = players.shift();
-  //       places.push({
-  //         lineNumber: formationLine.getNumber(),
-  //         number: 1,
-  //         player,
-  //         substitute: false
-  //       });
-  //     }
-  //     const substitute: AssembleLinePlace = {
-  //       lineNumber: formationLine.getNumber(),
-  //       number: 1,
-  //       player: formationLine.getSubstitute(),
-  //       substitute: true
-  //     };
-  //     assembleLines.push({
-  //       number: formationLine.getNumber(), places, substitute
-  //     });
-  //   });
-  //   return assembleLines;
-  // }
-
-
-
   transfer(player: Player, placeOut: S11FormationPlace) {
     const s11Player = placeOut.getPlayer();
     if( s11Player === undefined) {
@@ -202,12 +182,13 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
       playerIn: this.playerMapper.toJson(player),
       playerOut: this.playerMapper.toJson(player),
       createdDate: (new Date()).toISOString()
-    }  
+    }
+
+    const transferPeriod = this.poolUser.getPool().getCompetitionConfig().getTransferPeriod();
+    
     this.formationRepository.transfer(jsonTransfer, this.poolUser).subscribe({
       next: () => {
-        if( !(new S11FormationCalculator()).areAllPlacesWithoutTeamReplaced(this.poolUser) ) {
-          this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
-        } else if( this.poolUser.getTransfers().length < 2) {
+        if( this.poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()) {
           this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);
         } else {
           this.router.navigate(['/pool/formation/substitutions', this.pool.getId()]);

@@ -30,6 +30,7 @@ import { FormationPlaceReplaceComponent } from './formation/place/replace.compon
 import { FormationTransferComponent } from './formation/transfer.component';
 import { FormationPlaceTransferComponent } from './formation/place/transfer.component';
 import { FormationSubstituteComponent } from './formation/substitute.component';
+import { FormationActionOverviewComponent } from './formation/actionoverview.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent, canActivate: [AuthUserGuardService] },
@@ -45,6 +46,7 @@ const routes: Routes = [
   { path: 'formation/replacements/:id', component: FormationReplaceComponent, canActivate: [AuthUserGuardService] },
   { path: 'formation/transfers/:id', component: FormationTransferComponent, canActivate: [AuthUserGuardService] },
   { path: 'formation/substitutions/:id', component: FormationSubstituteComponent, canActivate: [AuthUserGuardService] },
+  { path: 'formation/actions/:id', component: FormationActionOverviewComponent, canActivate: [AuthUserGuardService] },
   { path: 'formation/place/replace/:id/:placeId', component: FormationPlaceReplaceComponent, canActivate: [AuthUserGuardService] },  
   { path: 'formation/place/transfer/:id/:lineNr/:placeNr', component: FormationPlaceTransferComponent, canActivate: [AuthUserGuardService] },    
   { path: 'invite/:id', component: InviteComponent, canActivate: [AuthUserGuardService] },

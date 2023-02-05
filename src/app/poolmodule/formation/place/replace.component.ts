@@ -152,38 +152,6 @@ export class FormationPlaceReplaceComponent extends PoolComponent implements OnI
   }
 
 
-  // getAssembleLines(formation?: S11Formation): AssembleLine[] {
-  //   const assembleLines: AssembleLine[] = [];
-  //   if (!formation) {
-  //     return assembleLines;
-  //   }
-  //   formation.getLines().forEach((formationLine: S11FormationLine) => {
-  //     const players = formationLine.getPlayers().slice();
-  //     const places: AssembleLinePlace[] = [];
-  //     for (let i = 1; i <= formationLine.getNrOfPersons(); i++) {
-  //       const player = players.shift();
-  //       places.push({
-  //         lineNumber: formationLine.getNumber(),
-  //         number: 1,
-  //         player,
-  //         substitute: false
-  //       });
-  //     }
-  //     const substitute: AssembleLinePlace = {
-  //       lineNumber: formationLine.getNumber(),
-  //       number: 1,
-  //       player: formationLine.getSubstitute(),
-  //       substitute: true
-  //     };
-  //     assembleLines.push({
-  //       number: formationLine.getNumber(), places, substitute
-  //     });
-  //   });
-  //   return assembleLines;
-  // }
-
-
-
   replace(playerIn: Player, placeOut: S11FormationPlace) {
     const s11Player = placeOut.getPlayer();
     if( s11Player === undefined) {
@@ -202,11 +170,13 @@ export class FormationPlaceReplaceComponent extends PoolComponent implements OnI
       playerOut: this.playerMapper.toJson(playerOut),
       createdDate: (new Date()).toISOString()
     }
+    const transferPeriod = this.poolUser.getPool().getCompetitionConfig().getTransferPeriod();
+    
     this.formationRepository.replace(jsonReplacement, this.poolUser).subscribe({
       next: () => {
         if( !(new S11FormationCalculator()).areAllPlacesWithoutTeamReplaced(this.poolUser) ) {
           this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
-        } else if( this.poolUser.getTransfers().length < 2) {
+        } else if( this.poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()) {
           this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);
         } else {
           this.router.navigate(['/pool/formation/substitutions', this.pool.getId()]);

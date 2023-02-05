@@ -27,11 +27,15 @@
         <h2 class="mb-0">
           <span class="badge bg-info py-2">transfer</span>
         </h2>
-        <button *ngIf="poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()" class="btn btn-secondary ms-1"
-          (click)="toggleTransferEditMode()">
-            <fa-icon *ngIf="transferEditMode === SingleEditMode" [icon]="['fas', 'users']"></fa-icon>
-            <fa-icon *ngIf="transferEditMode === DoubleEditMode" [icon]="['fas', 'user-circle']"></fa-icon>
+        <button *ngIf="transferEditMode === SingleEditMode 
+        && poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()" class="btn btn-secondary ms-1"
+          (click)="toggleTransferEditMode(contentInfo)">
+          <fa-icon [icon]="['fas', 'users']"></fa-icon>
           </button>
+        <button *ngIf="transferEditMode === DoubleEditMode && (poolUser.getTransfers().length + 1) < transferPeriod.getMaxNrOfTransfers()" class="btn btn-secondary ms-1"
+        (click)="toggleTransferEditMode(contentInfo)">
+        <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
+        </button>
       </div>
 
       <!-- right -->    
@@ -73,5 +77,18 @@
     <div class="modal-footer d-flex justify-content-reverse border-top-0">
       <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close(poolUser)">
         ga naar "gestopte spelers vervangen"</button>
+    </div>
+  </ng-template>
+
+  
+  <ng-template #contentInfo let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <span>dubbele wissel</span>
+      </h4>
+      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <p>De dubbele wissel kun je vanaf woensdag of donderdag doen, onze excuses</p>
     </div>
   </ng-template>

@@ -86,6 +86,7 @@ export class S11PlayerChooseComponent implements OnInit {
     this.alreadyChosenTeams?.forEach((team: Team) => {
       this.alreadyChosenTeamsMap.set(+team.getId(), team);
     });
+    console.log(this.showAll)
     this.searchPersons();
   }
 

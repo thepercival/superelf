@@ -324,9 +324,10 @@ export class HomeComponent extends PoolComponent implements OnInit {
     }
 
     linkToTransferPeriodAction(poolUser: PoolUser) {
+        const transferPeriod = poolUser.getPool().getCompetitionConfig().getTransferPeriod();
         if( !(new S11FormationCalculator()).areAllPlacesWithoutTeamReplaced(poolUser) ) {
             this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
-          } else if( poolUser.getTransfers().length < 2) {
+          } else if( poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()) {
             this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);
           } else {
             this.router.navigate(['/pool/formation/substitutions', this.pool.getId()]);

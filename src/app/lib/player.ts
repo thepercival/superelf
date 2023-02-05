@@ -125,6 +125,10 @@ export class S11Player extends Identifiable {
         });
     }
 
+    public getMostRecentPlayer(): Player|undefined {
+        return this.getPlayersDescendingStart().shift();
+    }
+
     hasAppeared(): boolean {
         return this.getTotals().nrOfTimesStarted > 0 || this.getTotals().nrOfTimesSubstitute > 0;
     }

@@ -63,8 +63,9 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
           this.setAlert('info', 'vanaf de start tot ' + this.nrOfDaysToRemoveAfterAssemblePeriod + ' dagen erna zijn deelnemers te vewijderen');
         }
         const competitionConfig = this.pool.getCompetitionConfig();
-        const currentViewPeriod = competitionConfig.getViewPeriodByDate(new Date());
+        const currentViewPeriod = this.getCurrentViewPeriod(pool);
         if (currentViewPeriod === undefined) {
+          this.setAlert('info', 'geen bekijk-periode gevonden');
           return;
         }
         const user = this.authService.getUser();

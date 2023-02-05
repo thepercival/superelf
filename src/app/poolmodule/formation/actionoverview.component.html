@@ -1,0 +1,108 @@
+<div class="row justify-content-center g-0">
+  <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+
+    <div class="d-flex justify-content-between mt-3 mb-1">
+
+      <h1 class="me-2 text-truncate">
+        <fa-icon [icon]="['fas', 'users']"></fa-icon> acties transferperiode
+      </h1>
+      <div *ngIf="!processing && pool">
+        <button class="btn btn-outline-info ms-1" [routerLink]="['/pool/formation/substitutions', pool.getId()]">
+          <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
+        </button>
+      </div>
+    </div>
+
+    <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+
+    <!-- replacements-->
+    <div *ngIf="!processing && replacements && replacements.length > 0" class="mt-5">
+      <h2>
+        vervangingen
+      </h2>
+      <table class="table">
+        <tbody>
+          <tr *ngFor="let replacement of replacements">
+            <td>
+              <app-team-name [team]="replacement.getPlayerIn().getTeam()" [fullName]="false"></app-team-name>
+            </td>
+            <td>
+              <app-lineicon [line]="replacement.getPlayerOut().getLine()"></app-lineicon>
+              <span>{{replacement.getPlayerOut().getPerson().getName()}}</span>
+            </td>
+            <td>
+              voor
+            </td>
+            <td>
+              <app-lineicon [line]="replacement.getPlayerIn().getLine()"></app-lineicon>
+              <span>{{replacement.getPlayerIn().getPerson().getName()}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- transfers-->
+    <div *ngIf="!processing && transfers && transfers.length > 0" class="mt-5">
+      <h2>
+        transfers
+      </h2>
+      <table class="table">
+        <tbody>
+          <tr *ngFor="let transfer of transfers">
+            <td class="text-nowrap">
+              <app-team-name [team]="transfer.getPlayerOut().getTeam()" [fullName]="false"></app-team-name>
+            </td>
+            <td>
+              <app-lineicon [line]="transfer.getPlayerOut().getLine()"></app-lineicon>
+              <span>{{transfer.getPlayerOut().getPerson().getName()}}</span>
+            </td>
+            <td>
+              voor
+            </td>
+            <td class="text-nowrap">
+              <app-team-name [team]="transfer.getPlayerIn().getTeam()" [fullName]="false"></app-team-name>
+            </td>
+            <td>
+              <app-lineicon [line]="transfer.getPlayerIn().getLine()"></app-lineicon>
+              <span>{{transfer.getPlayerIn().getPerson().getName()}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- wissels-->
+    <div *ngIf="!processing && substitutions && substitutions.length > 0" class="mt-5">
+      <h2>
+        wissels
+      </h2>
+      <table class="table">
+        <tbody>
+          
+          <tr *ngFor="let substitution of substitutions">
+            <td>
+              <app-lineicon [line]="substitution.getLineNumberOut()"></app-lineicon>
+            </td>
+            <td class="text-nowrap">
+              <app-team-name [team]="getPlayerOut(substitution).getTeam()" [fullName]="false"></app-team-name>
+            </td>
+            <td>
+              <span>{{getPlayerOut(substitution).getPerson().getName()}}</span>
+            </td>
+            <td>
+              voor
+            </td>
+            <td class="text-nowrap">
+              <app-team-name [team]="getPlayerIn(substitution).getTeam()" [fullName]="false"></app-team-name>
+            </td>
+            <td>
+              <span>{{getPlayerIn(substitution).getPerson().getName()}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

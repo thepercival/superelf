@@ -198,7 +198,7 @@ export class PoolTogetherGameComponent extends PoolComponent implements OnInit {
   }
 
   getFormationPlaces(sourceGame: AgainstGame, side: AgainstSide, poolUser: PoolUser): S11FormationPlace[] {
-    const editPeriod = this.getCurrentEditPeriod(poolUser.getPool());
+    const editPeriod = this.getMostRecentEndedEditPeriod(poolUser.getPool());
     const formation = editPeriod ? poolUser.getFormation(editPeriod) : undefined;
     const team = this.getTeam(sourceGame.getSidePlaces(side));
     if (formation === undefined || team === undefined) {
@@ -208,20 +208,7 @@ export class PoolTogetherGameComponent extends PoolComponent implements OnInit {
       return formationPlace.getPlayer()?.getPlayer(team) !== undefined;
     });
   }
-  
-  /*getPlace(sourceGame: AgainstGame, side: AgainstSide, poolUser: PoolUser): S11Player | undefined {
-    const editPeriod = this.getCurrentEditPeriod(poolUser.getPool());
-    const formation = editPeriod ? poolUser.getFormation(editPeriod) : undefined;
-    const team = this.getTeam(sourceGame.getSidePlaces(side));
-    return team ? formation?.getPlayer(team, sourceGame.getStartDateTime()) : undefined;
-  }
 
-  getPlayer(sourceGame: AgainstGame, side: AgainstSide, poolUser: PoolUser): S11Player | undefined {
-    const editPeriod = this.getCurrentEditPeriod(poolUser.getPool());
-    const formation = editPeriod ? poolUser.getFormation(editPeriod) : undefined;
-    const team = this.getTeam(sourceGame.getSidePlaces(side));
-    return team ? formation?.getPlayer(team, sourceGame.getStartDateTime()) : undefined;
-  }*/
 
   protected getTeam(sideGamePlaces: AgainstGamePlace[]): Team | undefined {
     const teams = sideGamePlaces.map((againstGamePlace: AgainstGamePlace): Team | undefined => {
