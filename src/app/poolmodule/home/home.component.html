@@ -126,7 +126,7 @@
 
         <div class="card-text d-flex gap-3 justify-content-center mt-0">
 
-          <div *ngIf="poolUser" class="card card-sub pointer px-0"
+          <div *ngIf="poolUser && inTransferMode()" class="card card-sub pointer px-0"
             (click)="linkToTransferPeriodAction(poolUser)">
             <div class="card-body text-center p-1 pt-2">
               <h5 class="card-title">
