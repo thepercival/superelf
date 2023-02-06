@@ -68,7 +68,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
           this.setPool(pool);
 
           const competitionConfig = this.pool.getCompetitionConfig();
-          const currentViewPeriod = competitionConfig.getViewPeriodByDate(new Date());
+          const currentViewPeriod = this.getCurrentViewPeriod(pool);
           if (currentViewPeriod === undefined) {
             return;
           }
@@ -148,6 +148,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   // }
 
   updateGameRound(gameRound: GameRound | undefined): void {
+    console.log(gameRound);
     if (gameRound === undefined) {
       this.currentGameRound = gameRound;
       return;
@@ -159,7 +160,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     this.processingStatistics = true;
 
     const setStatistics: Observable<StatisticsMap>[] = this.statisticsRepository.getFormationRequests(formation);
-
+    
     if (setStatistics.length === 0) {
       this.processingStatistics = false;
       this.currentGameRound = gameRound;
