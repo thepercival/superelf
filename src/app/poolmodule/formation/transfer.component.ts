@@ -39,6 +39,7 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
   public calcFormation: S11Formation|undefined;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public transferEditMode = TransferEditMode.Single;
+  public goalKeeperPlace: S11FormationPlace|undefined;
 
   constructor(
     route: ActivatedRoute,

@@ -84,11 +84,21 @@
   <ng-template #contentInfo let-modal>
     <div class="modal-header">
       <h4 class="modal-title">
-        <span>dubbele wissel</span>
+        <span>dubbele transfer</span>
       </h4>
       <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-      <p>Een dubbele wissel met keeper kun je vanaf woensdag of donderdag doen, onze excuses</p>
+      <p>Wil je een dubbele transfer met keeper doen?</p>
+      <p>
+        <a href="mailto:info@superelf-eredivisie.nl" rel="noopener">
+          <fa-icon [icon]="[ 'fas', 'envelope'] "></fa-icon> info@superelf-eredivisie.nl
+        </a>
+      </p>
+      <p>
+        bijvoorbeeld : <br/>
+        eruit : Bijlow  (FEY - K) en Xavi Simons (PSV - M)<br/>
+        erin  : Benitez (PSV - K) en Kokcu (FEY - M)
+      </p>
     </div>
   </ng-template>
