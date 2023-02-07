@@ -94,12 +94,12 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
 
   toggleTransferEditMode(modalContent: TemplateRef<any>): void {
     if( this.transferEditMode === TransferEditMode.Single) {
-      this.transferEditMode = TransferEditMode.Double;
+      // this.transferEditMode = TransferEditMode.Double;
       this.openInfoModal(modalContent);
       return;
     }
     // this.transferEditMode = this.transferEditMode === TransferEditMode.Single ? TransferEditMode.Double : TransferEditMode.Single;
-    this.transferEditMode = TransferEditMode.Single;
+    // this.transferEditMode = TransferEditMode.Single;
   }
 
   openInfoModal(modalContent: TemplateRef<any>) {

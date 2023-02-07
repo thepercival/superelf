@@ -36,7 +36,10 @@
     <td class="text-end" (click)="$event.stopPropagation()" class="{{getSubstituteClass(place.isSubstitute())}}">
       <button *ngIf="hasTransferLeft && !getTransfer(place)" type="button" class="btn btn-outline-primary btn-sm" (click)="transfer.emit(place)">
         <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
-      </button>     
+      </button>      
+      <button *ngIf="getTransfer(place)" type="button" class="btn btn-outline-primary btn-sm" disabled>
+        <fa-icon [icon]="['fas', 'circle-check']"></fa-icon>
+      </button>
     </td>    
   </tr>
 </ng-template>
