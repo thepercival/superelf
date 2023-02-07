@@ -180,7 +180,7 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
       lineNumberOut: this.place.getLine(),
       placeNumberOut: this.place.getNumber(),
       playerIn: this.playerMapper.toJson(player),
-      playerOut: this.playerMapper.toJson(player),
+      playerOut: this.playerMapper.toJson(playerOut),
       createdDate: (new Date()).toISOString()
     }
 
