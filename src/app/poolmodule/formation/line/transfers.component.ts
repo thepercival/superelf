@@ -24,11 +24,14 @@ export class FormationLineTransfersComponent implements OnInit {
   @Input() viewGameRound: GameRound | undefined;
   @Input() processing: boolean = true;
   @Input() transfers: Transfer[] = [];
+  @Input() maxNrOfTransfers!: number;
+  @Input() canRemoveTransfer: boolean = false;
   @Output() transfer = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
   @Output() remove = new EventEmitter<Transfer[]>();
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
+  public hasTransferLeft: boolean = false;
 
   constructor(
     public imageRepository: ImageRepository,
@@ -41,6 +44,7 @@ export class FormationLineTransfersComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.hasTransferLeft = this.transfers.length < this.maxNrOfTransfers;
     this.processing = false;
   }
 
@@ -125,12 +129,13 @@ export class FormationLineTransfersComponent implements OnInit {
   //   });
 
   getTransfer(place: S11FormationPlace): Transfer|undefined {
+    
     return this.transfers.find((transfer: Transfer): boolean => {
       const player = place.getPlayer()?.getPlayersDescendingStart().shift();
       return player !== undefined && player === transfer.getPlayerIn();
     });
   }
-
+  
   removeTransfer(transfer: Transfer|undefined): void {
     if( transfer === undefined) {
       return;

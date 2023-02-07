@@ -36,6 +36,9 @@
         (click)="toggleTransferEditMode(contentInfo)">
         <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
         </button>
+        <button *ngIf="poolUser.getTransfers().length" type="button" class="btn btn-outline-primary ms-1" (click)="remove(poolUser.getTransfers(), false)">
+          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+        </button>
       </div>
 
       <!-- right -->    
@@ -55,7 +58,8 @@
       <div *ngIf="!selectedPlace">
         <!-- lines-->
         <app-pool-formationline-transfers *ngFor="let line of calcFormation.getLines()" [line]="line"
-          [transfers]="poolUser.getTransfers()"
+          [transfers]="poolUser.getTransfers()" [maxNrOfTransfers]="transferPeriod.getMaxNrOfTransfers()"
+          [canRemoveTransfer]="canRemoveTransfer(calcFormation,line)"
           (transfer)="linkToTransfer($event)" (linkToPlayer)="linkToPlayer($event)"
           (remove)="remove($event, false)">
         </app-pool-formationline-transfers>

@@ -22,6 +22,7 @@ import { EditActionMapper } from '../../lib/editAction/mapper';
 import { Transfer } from '../../lib/editAction/transfer';
 import { forkJoin, Observable } from 'rxjs';
 import { TransferPeriod } from '../../lib/period/transfer';
+import { S11FormationLine } from '../../lib/formation/line';
 
 @Component({
   selector: 'app-pool-transfer',
@@ -66,7 +67,7 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
           this.poolUserRepository.getObjectFromSession(pool).subscribe({
             next: ((poolUser: PoolUser) => {
               this.poolUser = poolUser;
-              const calculator = new S11FormationCalculator();                
+              const calculator = new S11FormationCalculator();
               if( this.hasNoNextEditAction(poolUser) ) {
                 this.setAlert('danger', 'je hebt al wissels gedaan');
               } else if( !calculator.areAllPlacesWithoutTeamReplaced(poolUser) ) {
@@ -148,6 +149,10 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
     } else {
       this.openRemoveModal(modalContent);
     }    
+  }
+
+  canRemoveTransfer(calcFormation: S11Formation, line: S11FormationLine): boolean {
+    return false;
   }
 
   openRemoveModal(modalContent: TemplateRef<any>) {

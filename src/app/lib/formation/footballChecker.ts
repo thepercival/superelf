@@ -1,9 +1,14 @@
 import { FootballLine, Formation, FormationLine } from "ngx-sport";
+import { S11Formation } from "../formation";
 
 export class FootballFormationChecker {
     
     constructor(protected availableFormations: Formation[]) {
         
+    }
+
+    isLineRemovable(formation: S11Formation, lineToRemove: FootballLine): boolean {
+        return this.isAvailable(this.removePersonFromLine(formation.convertToBase(), lineToRemove));
     }
 
     addableLines(formation: Formation, lineToRemove: FootballLine): FootballLine[] {

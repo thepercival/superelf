@@ -34,12 +34,9 @@
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
     </td>
     <td class="text-end" (click)="$event.stopPropagation()" class="{{getSubstituteClass(place.isSubstitute())}}">
-      <button *ngIf="!getTransfer(place)" type="button" class="btn btn-outline-primary btn-sm" (click)="transfer.emit(place)">
+      <button *ngIf="hasTransferLeft && !getTransfer(place)" type="button" class="btn btn-outline-primary btn-sm" (click)="transfer.emit(place)">
         <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
-      </button>      
-      <button *ngIf="getTransfer(place)" type="button" class="btn btn-outline-primary btn-sm" (click)="removeTransfer(getTransfer(place))">
-        <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-      </button>
+      </button>     
     </td>    
   </tr>
 </ng-template>
