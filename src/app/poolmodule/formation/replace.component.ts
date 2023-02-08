@@ -90,7 +90,16 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
         teamId: this.getTeamId(place)
       }
     };
-    this.router.navigate(['/pool/formation/place/replace/', this.pool.getId(), place.getId()], navigationExtras);
+    const placeId = this.getAssemblePlaceId(place);
+    this.router.navigate(['/pool/formation/place/replace/', this.pool.getId(), placeId], navigationExtras);
+  }
+
+  getAssemblePlaceId(place: S11FormationPlace): string|number {
+    const assembleFormation = this.poolUser.getAssembleFormation();
+    if( assembleFormation === undefined) {
+      throw new Error('assemble should be set');
+    }
+    return assembleFormation.getPlace(place.getLine(), place.getNumber()).getId();
   }
 
   getTeamId(place: S11FormationPlace): number | undefined {
