@@ -78,6 +78,10 @@ export class Pool extends Identifiable {
         return this.getCompetitionConfig().getTransferPeriod();
     }
 
+    public getTransferViewPeriod(): ViewPeriod {
+        return this.getCompetitionConfig().getTransferPeriod().getViewPeriod();
+    }
+
     // getScores(formationLineDef?: number): PoolScore[] {
     //     if (formationLineDef === undefined) {
     //         return this.scores;

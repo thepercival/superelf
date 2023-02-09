@@ -112,6 +112,9 @@ export class FormationSubstituteComponent extends PoolComponent implements OnIni
   }
 
   linkToPlayer(s11Player: S11Player): void {
+    if( s11Player.getId() === 0) {
+      return;
+    }
     this.router.navigate(['/pool/player/', this.pool.getId(), s11Player.getId(), 0]/*, {
       state: { s11Player, "pool": this.pool, currentGameRound: undefined }
     }*/);

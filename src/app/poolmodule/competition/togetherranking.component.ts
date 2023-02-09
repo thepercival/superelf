@@ -45,7 +45,7 @@ export class TogetherRankingComponent implements OnInit {
     this.gameAmountConfig = this.poule.getRound().getNumber().getValidGameAmountConfig(this.competitionSport);
     this.initScoreMap();
     this.initTableData();    
-    if( this.currentGameRound ) {
+    if( this.currentGameRound !== undefined ) {
       this.initBestAndWorstMap(this.currentGameRound);
     }
     this.processing = false;
@@ -55,7 +55,9 @@ export class TogetherRankingComponent implements OnInit {
     if (changes.currentGameRound !== undefined && changes.currentGameRound.firstChange !== true
       && changes.currentGameRound.currentValue !== changes.currentGameRound.previousValue
        ) {
-      this.initBestAndWorstMap(changes.currentGameRound.currentValue);
+        if( changes.currentGameRound.currentValue !== undefined) {
+          this.initBestAndWorstMap(changes.currentGameRound.currentValue);
+        }
     }
   }
 

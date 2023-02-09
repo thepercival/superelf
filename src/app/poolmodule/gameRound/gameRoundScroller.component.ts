@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { Player } from 'ngx-sport';
 import { GameRound } from '../../lib/gameRound';
-import { ImageRepository } from '../../lib/image/repository';
+import { ViewPeriod } from '../../lib/period/view';
 
 @Component({
   selector: 'app-gameround-scroller',
@@ -9,9 +8,14 @@ import { ImageRepository } from '../../lib/image/repository';
   styleUrls: ['./gameRoundScroller.component.scss']
 })
 export class GameRoundScrollerComponent implements OnInit, OnChanges {
+
+  @Input() assembleViewPeriod: ViewPeriod | undefined;
+  @Input() transferViewPeriod: ViewPeriod | undefined;
   @Input() gameRounds: (GameRound | undefined)[] = [];
   @Input() current: GameRound | undefined;
   @Output() update = new EventEmitter<GameRound | undefined>();
+  @Output() linkToAssembleViewPeriod = new EventEmitter<ViewPeriod>();
+  @Output() linkToTransferViewPeriod = new EventEmitter<ViewPeriod>();  
 
   constructor() {
   }
@@ -34,20 +38,20 @@ export class GameRoundScrollerComponent implements OnInit, OnChanges {
 
 
   previous(): void {
-    //console.log('scroller->previous pre', this.gameRounds.slice());
+    // console.log('scroller->previous pre', this.gameRounds.slice());
     this.current = this.gameRounds.pop();
     this.gameRounds.unshift(this.current);
-    //console.log('scroller->previous post', this.gameRounds.slice());
+    // console.log('scroller->previous post', this.gameRounds.slice());
     this.update.emit(this.current);
   }
 
   next(): void {
-    //console.log('scroller->next pre', this.gameRounds.slice());
+    // console.log('scroller->next pre', this.gameRounds.slice());
     this.gameRounds.push(this.gameRounds.shift());
     const gameRound = this.gameRounds.shift();
     this.current = gameRound;
     this.gameRounds.unshift(gameRound);
-    //console.log('scroller->next post', this.gameRounds.slice());
+    // console.log('scroller->next post', this.gameRounds.slice());
     this.update.emit(this.current);
   }
 
@@ -56,5 +60,15 @@ export class GameRoundScrollerComponent implements OnInit, OnChanges {
       return 'alle speelronden';
     }
     return 'speelronde ' + this.current.getNumber();
+  }
+
+  
+  inAssembleViewPeriod(): boolean {
+    return this.assembleViewPeriod?.isIn() ?? false;
+  }
+  
+  
+  inTransferViewPeriod(): boolean {
+    return this.transferViewPeriod?.isIn() ?? false;
   }
 }

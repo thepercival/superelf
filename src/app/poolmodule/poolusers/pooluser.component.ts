@@ -23,7 +23,6 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
 import { ViewPeriod } from '../../lib/period/view';
 import { StatisticsRepository } from '../../lib/statistics/repository';
-import { S11FormationLine } from '../../lib/formation/line';
 
 @Component({
   selector: 'app-pool-user',
@@ -202,5 +201,17 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       return 0;
     }
     return formation.getPoints(this.currentGameRound);
+  }
+
+  inAfterTransfer(): boolean {
+    return this.pool.getTransferPeriod().getEndDateTime().getTime() < (new Date()).getTime();
+  }
+
+  showAssemblePeriod(viewPeriod: ViewPeriod): void {
+
+  }
+
+  showTransferPeriod(viewPeriod: ViewPeriod): void {
+    
   }
 }

@@ -18,7 +18,7 @@ import { PoolCompetitor } from '../../lib/pool/competitor';
 import { LeagueName } from '../../lib/leagueName';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
-import { AgainstGame, Competition, Formation, Poule, Round, Structure, TogetherGame, TogetherGamePlace } from 'ngx-sport';
+import { AgainstGame, Competition, Formation, Period, Poule, Round, Structure, TogetherGame, TogetherGamePlace } from 'ngx-sport';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { CompetitionConfigRepository } from '../../lib/competitionConfig/repository';
@@ -83,7 +83,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
             });
         }
 
-        if (this.afterAssemblePeriod()) {
+        if (this.afterAssemblePeriod()) {            
             this.gameRoundRepository.getCurrentNumbers(competitionConfig, this.currentViewPeriod).subscribe({
                 next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
                     console.log(currentGameRoundNumbers);

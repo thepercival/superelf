@@ -3,12 +3,17 @@
 
     <div class="d-flex justify-content-between mt-3 mb-1">
 
-      <h1 class="me-2 text-truncate">
-        <fa-icon [icon]="['fas', 'users']"></fa-icon> acties transferperiode
+      <h1 *ngIf="!processing && poolUser" class="me-2 text-truncate">
+        <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> {{poolUser.getName()}}
+        <small>transferacties</small>
       </h1>
+    
       <div *ngIf="!processing && pool">
-        <button class="btn btn-outline-info ms-1" [routerLink]="['/pool/formation/substitutions', pool.getId()]">
+        <button *ngIf="inTransfer()" class="btn btn-outline-info ms-1" [routerLink]="['/pool/formation/substitutions', pool.getId()]">
           <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
+        </button>
+        <button *ngIf="inAfterTransfer()" class="btn btn-outline-info ms-1" [routerLink]="['/pool/user', pool.getId(), poolUser.getId(), 0]">
+          <fa-icon [icon]="['fas', 'users']"></fa-icon>
         </button>
       </div>
     </div>
@@ -31,7 +36,7 @@
               <span>{{replacement.getPlayerOut().getPerson().getName()}}</span>
             </td>
             <td>
-              voor
+              <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
             </td>
             <td>
               <app-lineicon [line]="replacement.getPlayerIn().getLine()"></app-lineicon>
@@ -58,7 +63,7 @@
               <span>{{transfer.getPlayerOut().getPerson().getName()}}</span>
             </td>
             <td>
-              voor
+              <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
             </td>
             <td class="text-nowrap">
               <app-team-name [team]="transfer.getPlayerIn().getTeam()" [fullName]="false"></app-team-name>
@@ -91,7 +96,7 @@
               <span>{{getPlayerOut(substitution).getPerson().getName()}}</span>
             </td>
             <td>
-              voor
+              <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
             </td>
             <td class="text-nowrap">
               <app-team-name [team]="getPlayerIn(substitution).getTeam()" [fullName]="false"></app-team-name>

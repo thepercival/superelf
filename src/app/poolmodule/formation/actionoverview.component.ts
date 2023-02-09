@@ -87,4 +87,12 @@ export class FormationActionOverviewComponent extends PoolComponent implements O
     }
     return player;
   }
+
+  inTransfer(): boolean {
+    return this.pool.getTransferPeriod().isIn();
+  }
+
+  inAfterTransfer(): boolean {
+    return this.pool.getTransferPeriod().getEndDateTime().getTime() < (new Date()).getTime();
+  }
 }

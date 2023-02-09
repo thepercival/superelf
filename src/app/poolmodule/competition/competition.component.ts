@@ -35,7 +35,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   public competitionSport!: CompetitionSport;
   public startLocationMap!: StartLocationMap;
   public currentGameRound: GameRound | undefined;
-  public gameRounds: GameRound[] = [];
+  public gameRounds: (GameRound | undefined)[] = [];
   public nrOfUnreadMessages = 0;
 
   constructor(
@@ -69,12 +69,12 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
           return;
         }
         const user = this.authService.getUser();
-        this.gameRounds = this.pool.getAssembleViewPeriod().getGameRounds();
+        this.gameRounds = currentViewPeriod.getGameRounds();
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => {
             this.poolUsers = poolUsers;
             this.poolUser = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
-            const competition = this.pool.getCompetition(this.leagueName);
+            const competition = this.pool.getCompetition(this.leagueName);            
             if (competition === undefined) {
               this.processing = false;
               throw Error('competitionSport not found');
@@ -121,14 +121,41 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
           currentGameRound = viewPeriod.getGameRound(currentGameRoundNumbers.lastFinishedOrInPorgress);
         }
         this.currentGameRound = currentGameRound;
-        if (this.currentGameRound !== undefined) {
-          while (this.currentGameRound !== this.gameRounds[0]) {
-            const gameRound = this.gameRounds.shift();
-            if (gameRound !== undefined) {
-              this.gameRounds.push(gameRound);
-            }
+        // if (this.currentGameRound !== undefined) {
+        //   while (this.currentGameRound !== this.gameRounds[0]) {
+        //     const gameRound = this.gameRounds.shift();
+        //     if (gameRound !== undefined) {
+        //       this.gameRounds.push(gameRound);              
+        //     }
+        //   }
+        // }
+        
+        // let currentGameRound;
+        // if (object instanceof GameRound) {
+        //   currentGameRound = object;
+        // } else if (object !== undefined && object.hasOwnProperty('firstNotFinished')) {
+        //   const firstNotFinished = object.lastFinishedOrInPorgress;
+        //   if (typeof firstNotFinished === 'number') {
+        //     currentGameRound = this.viewPeriod.getGameRound(firstNotFinished);
+        //   }
+        // }
+        // this.currentGameRound = currentGameRound;
+
+        const gameRounds: (GameRound | undefined)[] = viewPeriod.getGameRounds().slice();
+        this.gameRounds = gameRounds;
+        if (currentGameRound !== undefined) {
+          const idx = this.gameRounds.indexOf(this.currentGameRound);
+          if (idx >= 0) {
+            this.gameRounds = this.gameRounds.splice(idx).concat([undefined], this.gameRounds);
+          } else {
+            this.gameRounds.push(undefined);
           }
+        } else {
+          this.gameRounds.unshift(undefined);
         }
+        console.log(this.gameRounds);
+
+        
         this.updateGameRound(currentGameRound);
       },
       error: (e: string) => { this.setAlert('danger', e); this.processing = false; },

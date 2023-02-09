@@ -11,6 +11,9 @@
           <fa-icon [icon]="['fas', 'user-secret']"></fa-icon> <span class="ms-1 d-none d-sm-inline">
             scoutingslijst</span>
         </button> -->
+        <button *ngIf="inAfterTransfer()" class="btn btn-outline-info me-1" [routerLink]="['/pool/formation/actions', pool.getId()]">
+          <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
+        </button>
         <button class="btn btn-secondary" disabled>
           {{getFormationName()}}
         </button>
@@ -23,9 +26,12 @@
     </h2>
     <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
+    <!-- [assembleViewPeriod]="pool.getAssembleViewPeriod()" [transferViewPeriod]="pool.getTransferViewPeriod()"
+          (linkToAssembleViewPeriod)="showAssemblePeriod($event)" (linkToTransferViewPeriod)="showTransferPeriod($event)"-->
     <div *ngIf="!processing && !processingStatistics && pool && poolUser">
       <div class="d-flex justify-content-between mt-3 mb-1 ms-3 me-4">
         <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
+          
           (update)="updateGameRound($event)">
         </app-gameround-scroller>
         <div>
