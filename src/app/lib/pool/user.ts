@@ -14,7 +14,7 @@ export class PoolUser extends Identifiable {
     private admin: boolean = false;
     protected competitors: PoolCompetitor[] = [];
     protected nrOfAssembled: number = 0;
-    protected nrOfTransferedWithTeam: number = 0;
+    protected nrOfTransfers: number = 0;
     protected assembleFormation: S11Formation | undefined;
     protected transferFormation: S11Formation | undefined;
     protected replacements: Replacement[] = [];
@@ -57,11 +57,19 @@ export class PoolUser extends Identifiable {
     }
 
     getNrOfAssembled(): number {
-        return this.nrOfAssembled;;
+        return this.nrOfAssembled;
     }
 
     setNrOfAssembled(nrOfAssembled: number) {
         this.nrOfAssembled = nrOfAssembled;
+    }
+
+    getNrOfTransfers(): number {
+        return this.nrOfTransfers;
+    }
+
+    setNrOfTransfers(nrOfTransfers: number) {
+        this.nrOfTransfers = nrOfTransfers;
     }
 
     getAssembleFormation(): S11Formation | undefined {

@@ -29,9 +29,9 @@ export class PoolUserMapper {
         if (json.nrOfAssembled) {
             poolUser.setNrOfAssembled(json.nrOfAssembled);
         }
-        // if (json.nrOfTransfersWithTeam) {
-        //     poolUser.setNrOfTransferedWithTeam(json.nrOfTransfersWithTeam);
-        // }
+        if (json.nrOfTransfers) {
+            poolUser.setNrOfTransfers(json.nrOfTransfers);
+        }
         const association = pool.getSourceCompetition().getAssociation();
         if (json.assembleFormation) {
             const formation = this.formationMapper.toObject(json.assembleFormation, poolUser, pool.getAssemblePeriod().getViewPeriod());

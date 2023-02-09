@@ -11,7 +11,7 @@ export interface JsonPoolUser {
     admin: boolean;
     competitors: JsonPoolCompetitor[];
     nrOfAssembled?: number;
-    nrOfTransfersWithTeam?: number;
+    nrOfTransfers?: number;
     replacements?: JsonReplacement[];
     transfers?: JsonTransfer[];
     substitutions?: JsonSubstitution[];
