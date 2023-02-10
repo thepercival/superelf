@@ -3,13 +3,13 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 import { Competition, FootballLine, NameService, Person, PersonMap, Player, Team, TeamMap } from 'ngx-sport';
 import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
-import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
 import { ViewPeriod } from '../../lib/period/view';
 import { IAlert } from '../../shared/commonmodule/alert';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
 import { S11PlayerRepository } from '../../lib/player/repository';
 import { ImageRepository } from '../../lib/image/repository';
+import { ViewPeriodType } from '../../lib/period/view/json';
 
 @Component({
   selector: 'app-pool-player-choose',
@@ -25,6 +25,7 @@ export class S11PlayerChooseComponent implements OnInit {
   @Input() selectableLines!: (FootballLine|undefined)[];
   @Input() filter: ChoosePlayersFilter;
   @Input() showAll: boolean = false;
+  @Input() viewPeriodType!: ViewPeriodType;
 
   @Output() selectS11Player = new EventEmitter<S11Player>();
   @Output() selectPlayer = new EventEmitter<Player>();
@@ -158,8 +159,16 @@ export class S11PlayerChooseComponent implements OnInit {
     this.alert = { 'type': type, 'message': message };
   }
 
-  linkToPlayer(s11Player: S11Player): void {
-    this.linkToS11Player.emit(s11Player);
+  get TransferViewPeriod(): ViewPeriodType { return ViewPeriodType.Transfer; }
+
+  linkToPlayer(choosePersonItem: ChoosePersonItem): void {
+    if( this.viewPeriodType === ViewPeriodType.Transfer ) {
+      if( this.isChoosable(choosePersonItem.player) ) {
+        this.select(choosePersonItem.s11Player,choosePersonItem.player)
+      }
+    } else {
+      this.linkToS11Player.emit(choosePersonItem.s11Player);
+    }
   }
 
   updateFilter() {

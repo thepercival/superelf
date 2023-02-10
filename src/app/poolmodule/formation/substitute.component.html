@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between mt-3 mb-1">
 
       <h2 class="me-2 text-truncate">
-        <fa-icon [icon]="['fas', 'users']"></fa-icon> mijn team
+        <span>3. wisselen</span>
       </h2>
       <div *ngIf="!processing && pool && calcFormation">
         <button class="btn btn-secondary" disabled>
@@ -23,11 +23,7 @@
         </button>                
       
       <!-- center -->
-      <div class="d-flex">
-        <h2 class="mb-0">
-          <span class="badge bg-info py-2">wisselen</span>
-        </h2>
-      </div>
+      <div></div>
 
       <!-- right -->    
       <button class="btn btn-outline-info ms-1" [routerLink]="['/pool/formation/actions', pool.getId()]">

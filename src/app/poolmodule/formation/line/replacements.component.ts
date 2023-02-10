@@ -108,6 +108,15 @@ export class FormationLineReplacementsComponent implements OnInit {
     return isSubstitute ? 'table-no-bottom-border' : '';
   }
 
+  replaceAction(place: S11FormationPlace, currentTeam: Team|undefined): void {
+    if( !currentTeam ) {
+      this.replace.emit(place);
+    }
+    else if ( this.getReplacement(place) ) {
+      this.remove.emit(this.getReplacement(place));
+    }
+  }
+
   getReplacement(place: S11FormationPlace): Replacement|undefined {
     return this.replacements.find((replacement: Replacement): boolean => {
       const player = place.getPlayer()?.getPlayersDescendingStart().shift();

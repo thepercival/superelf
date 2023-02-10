@@ -5,3 +5,7 @@ export interface JsonViewPeriod extends JsonPeriod {
     id: number;
     gameRounds: JsonGameRound[];
 }
+
+export enum ViewPeriodType {
+    CreateAndJoin = 1, Assemble, Transfer
+  }

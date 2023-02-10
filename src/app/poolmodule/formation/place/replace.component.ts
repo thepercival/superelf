@@ -23,6 +23,7 @@ import { PoolComponent } from '../../../shared/poolmodule/component';
 import { ChoosePlayersFilter } from '../../player/choose.component';
 import { JsonReplacement } from '../../../lib/editAction/replacement/json';
 import { S11FormationCalculator } from '../../../lib/formation/calculator';
+import { ViewPeriodType } from '../../../lib/period/view/json';
 
 @Component({
   selector: 'app-pool-place-replace',
@@ -190,7 +191,8 @@ export class FormationPlaceReplaceComponent extends PoolComponent implements OnI
     });
   }
 
-
+  get TransferViewPeriod(): ViewPeriodType { return ViewPeriodType.Transfer; }
+  
   updateShowAll() {
     this.updateState(this.choosePlayersFilter);
   }

@@ -24,6 +24,7 @@ import { ChoosePlayersFilter } from '../../player/choose.component';
 import { JsonTransfer } from '../../../lib/editAction/transfer/json';
 import { S11Formation } from '../../../lib/formation';
 import { S11FormationCalculator } from '../../../lib/formation/calculator';
+import { ViewPeriodType } from '../../../lib/period/view/json';
 
 @Component({
   selector: 'app-pool-place-transfer',
@@ -165,6 +166,8 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
     });
   }
 
+  get TransferViewPeriod(): ViewPeriodType { return ViewPeriodType.Transfer; }
+  
   transfer(player: Player, placeOut: S11FormationPlace) {
     const s11Player = placeOut.getPlayer();
     if( s11Player === undefined) {

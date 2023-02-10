@@ -21,7 +21,8 @@
 
       <div *ngIf="selectableTeams.length < 1" class="d-flex justify-content-center">
         <app-pool-player-choose class="w-100" [competition]="pool.getSourceCompetition()"
-          [viewPeriod]="pool.getCreateAndJoinPeriod()" [alreadyChosenPersons]="alreadyChosenPersons"
+          [viewPeriod]="pool.getCreateAndJoinPeriod()" [viewPeriodType]="AssembleViewPeriod"
+          [alreadyChosenPersons]="alreadyChosenPersons"
           [alreadyChosenTeams]="alreadyChosenTeams" [selectableLines]="[selectableLine]" 
           [filter]="choosePlayersFilter" [selectableTeams]="selectableTeams"
           [showAll]="form.controls.showAll.value" (selectS11Player)="editPlace($event)"

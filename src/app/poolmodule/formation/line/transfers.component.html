@@ -22,7 +22,7 @@
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </td>
   </tr>
-  <tr *ngIf="!processing" (click)="maybeLinkToPlayer(place)" [ngClass]="{'pointer': s11Player}">
+  <tr *ngIf="!processing" (click)="transferAction(place)" [ngClass]="{'pointer': hasTransferLeft && !getTransfer(place)}">
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
       <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
       <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="transfer.emit(place)">
@@ -33,11 +33,11 @@
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
     </td>
-    <td class="text-end" (click)="$event.stopPropagation()" class="{{getSubstituteClass(place.isSubstitute())}}">
-      <button *ngIf="hasTransferLeft && !getTransfer(place)" type="button" class="btn btn-outline-primary btn-sm" (click)="transfer.emit(place)">
+    <td class="text-end" class="{{getSubstituteClass(place.isSubstitute())}}">
+      <button *ngIf="hasTransferLeft && !getTransfer(place)" type="button" class="btn btn-primary btn-sm">
         <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
       </button>      
-      <button *ngIf="getTransfer(place)" type="button" class="btn btn-outline-primary btn-sm" disabled>
+      <button *ngIf="getTransfer(place)" type="button" class="btn btn-outline-primary btn-sm">
         <fa-icon [icon]="['fas', 'circle-check']"></fa-icon>
       </button>
     </td>    

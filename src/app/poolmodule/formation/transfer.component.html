@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between mt-3 mb-1">
 
       <h2 class="me-2 text-truncate">
-        <fa-icon [icon]="['fas', 'users']"></fa-icon> mijn team
+        2. transfer
       </h2>
       <div *ngIf="!processing && pool && calcFormation">
         <button class="btn btn-secondary" disabled>
@@ -23,12 +23,9 @@
         </button>                
       
       <!-- center/right -->
-      <div class="d-flex">
-        <h2 class="mb-0">
-          <span class="badge bg-info py-2">transfer</span>
-        </h2>
+      <div class="d-flex">        
         <button *ngIf="transferEditMode === SingleEditMode 
-        && poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()" class="btn btn-secondary ms-1"
+        && poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()" class="btn btn-outline-primary ms-1"
           (click)="toggleTransferEditMode(contentInfo)">
           <fa-icon [icon]="['fas', 'users']"></fa-icon>
           </button>
@@ -36,7 +33,7 @@
         (click)="toggleTransferEditMode(contentInfo)">
         <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
         </button>
-        <button *ngIf="poolUser.getTransfers().length" type="button" class="btn btn-outline-primary ms-1" (click)="remove(poolUser.getTransfers(), false)">
+        <button *ngIf="poolUser.getTransfers().length" type="button" class="btn btn-primary ms-1" (click)="remove(poolUser.getTransfers(), false)">
           <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
         </button>
       </div>
@@ -93,7 +90,7 @@
       <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-      <p>Wil je een dubbele transfer met keeper doen?</p>
+      <p>Wil je een dubbele transfer <span class="fw-bold">met keeper</span> doen?</p>
       <p>
         <a href="mailto:info@superelf-eredivisie.nl" rel="noopener">
           <fa-icon [icon]="[ 'fas', 'envelope'] "></fa-icon> info@superelf-eredivisie.nl

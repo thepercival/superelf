@@ -128,6 +128,12 @@ export class FormationLineTransfersComponent implements OnInit {
   //     return transfer.getPlayerIn() === player;
   //   });
 
+  transferAction(place: S11FormationPlace): void {
+    if( this.hasTransferLeft && !this.getTransfer(place)) {
+      this.transfer.emit(place);
+    } 
+  }
+
   getTransfer(place: S11FormationPlace): Transfer|undefined {
     
     return this.transfers.find((transfer: Transfer): boolean => {

@@ -17,6 +17,7 @@ import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addrem
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { ChoosePlayersFilter } from '../player/choose.component';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { ViewPeriodType } from '../../lib/period/view/json';
 
 @Component({
   selector: 'app-pool-scouted-player-add',
@@ -92,7 +93,7 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
     return this.scoutingList.scoutedPlayers.map((scoutedPlayer: ScoutedPlayer) => scoutedPlayer.getPerson());
   }
 
-
+  get AssembleViewPeriod(): ViewPeriodType { return ViewPeriodType.Assemble; }
 
   openAddModal(s11Player: S11Player) {
     const modalRef = this.modalService.open(S11PlayerAddRemoveModalComponent);

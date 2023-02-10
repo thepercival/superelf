@@ -8,6 +8,7 @@ import { FootballLine, Team, Person, TeamCompetitor } from 'ngx-sport';
 import { S11FormationPlace } from '../../../lib/formation/place';
 import { FormationRepository } from '../../../lib/formation/repository';
 import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
+import { ViewPeriodType } from '../../../lib/period/view/json';
 import { S11Player } from '../../../lib/player';
 import { Pool } from '../../../lib/pool';
 import { PoolRepository } from '../../../lib/pool/repository';
@@ -89,6 +90,8 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
       });
     });
   }
+
+  get AssembleViewPeriod(): ViewPeriodType { return ViewPeriodType.Assemble; }
 
   private initPlace(placeId: number) {
     this.place = this.getPlaceById(placeId);

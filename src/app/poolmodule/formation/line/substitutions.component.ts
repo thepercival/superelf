@@ -120,6 +120,14 @@ export class FormationLineSubstitutionsComponent implements OnInit {
     });
   }
 
+  substituteAction(place: S11FormationPlace): void {
+    if( !this.hasLineSubstitution(place.getLine()) && !place.isSubstitute() ) {
+      this.substitute.emit(place);
+    } else if ( this.hasLineSubstitution(place.getLine()) && place.isSubstitute() ) {
+      this.removeSubstitution(this.getSubstitution(place.getLine()));
+    }
+  }
+
   removeSubstitution(substitution: Substitution|undefined): void {
     console.log('removeSubstitution', substitution);
     if( substitution === undefined) {
