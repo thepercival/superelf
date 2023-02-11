@@ -28,20 +28,22 @@
 
     <!-- [assembleViewPeriod]="pool.getAssembleViewPeriod()" [transferViewPeriod]="pool.getTransferViewPeriod()"
           (linkToAssembleViewPeriod)="showAssemblePeriod($event)" (linkToTransferViewPeriod)="showTransferPeriod($event)"-->
-    <div *ngIf="!processing && !processingStatistics && pool && poolUser">
+    <div *ngIf="!processing && !processingStatistics && pool && poolUser && formation">
       <div class="d-flex justify-content-between mt-3 mb-1 ms-3 me-4">
         <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
           
-          (update)="updateGameRound($event)">
+          (update)="updateGameRound(formation, $event)">
         </app-gameround-scroller>
         <div>
-          <span class="badge bg-totals">{{getTotalPoints()}}</span>
+          <span *ngIf="totalPointsAssemble" class="badge bg-totals">{{totalPointsAssemble}}</span>
+          <span *ngIf="totalPointsAssemble && totalPointsTransfer"> + </span>
+          <span *ngIf="totalPointsAssemble && totalPointsTransfer" class="badge bg-totals">{{totalPointsTransfer}}</span>
         </div>
       </div>
 
       <div>
         <!-- lines-->
-        <app-pool-formationline-view *ngFor="let line of poolUser.getAssembleFormation()?.getLines()" [line]="line"
+        <app-pool-formationline-view *ngFor="let line of formation?.getLines()" [line]="line"
           (linkToPlayer)="linkToPlayer($event)" [gameRound]="currentGameRound">
         </app-pool-formationline-view>
       </div>

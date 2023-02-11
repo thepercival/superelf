@@ -9,6 +9,7 @@ import { LeagueName } from '../leagueName';
 import { Replacement } from '../editAction/replacement';
 import { Substitution } from '../editAction/substitution';
 import { Transfer } from '../editAction/transfer';
+import { ViewPeriod } from '../period/view';
 
 export class PoolUser extends Identifiable {
     private admin: boolean = false;
@@ -117,4 +118,17 @@ export class PoolUser extends Identifiable {
         }
         return undefined;
     }
+
+    // getFormation(viewPeriod: ViewPeriod): S11Formation {
+    //     let formation;
+    //     if( this.pool.getAssembleViewPeriod() === viewPeriod ) {
+    //         formation = this.assembleFormation;
+    //     } else if( this.pool.getTransferViewPeriod() === viewPeriod ) {
+    //         formation = this.transferFormation;
+    //     }
+    //     if( formation === undefined) {
+    //         throw new Error('formation not found from viewPeriod');
+    //     }
+    //     return formation;
+    // }
 }

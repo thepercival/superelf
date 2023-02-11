@@ -62,13 +62,13 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
         if (pool.getAssemblePeriod().isIn()) {
           this.setAlert('info', 'vanaf de start tot ' + this.nrOfDaysToRemoveAfterAssemblePeriod + ' dagen erna zijn deelnemers te vewijderen');
         }
-        const competitionConfig = this.pool.getCompetitionConfig();
+        const competitionConfig = this.pool.getCompetitionConfig();        
         const currentViewPeriod = this.getCurrentViewPeriod(pool);
         if (currentViewPeriod === undefined) {
           return;
         }
         const user = this.authService.getUser();
-        this.gameRounds = this.pool.getAssembleViewPeriod().getGameRounds();
+        this.gameRounds = currentViewPeriod.getGameRounds();
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => {
             this.poolUsers = poolUsers;
@@ -118,6 +118,7 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
         }
         this.currentGameRound = currentGameRound;
         if (this.currentGameRound !== undefined) {
+          // console.log('CDK', this.currentGameRound, this.gameRounds[0]);
           while (this.currentGameRound !== this.gameRounds[0]) {
             const gameRound = this.gameRounds.shift();
             if (gameRound !== undefined) {

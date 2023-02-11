@@ -23,6 +23,7 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
 import { ViewPeriod } from '../../lib/period/view';
 import { StatisticsRepository } from '../../lib/statistics/repository';
+import { S11Formation } from '../../lib/formation';
 
 @Component({
   selector: 'app-pool-user',
@@ -32,14 +33,13 @@ import { StatisticsRepository } from '../../lib/statistics/repository';
 export class PoolUserComponent extends PoolComponent implements OnInit {
   poolUser!: PoolUser;
   nameService = new NameService();
-  teamPersonMap = new PersonMap();
-  selectedPlace: S11FormationPlace | undefined;
-  selectedSearchLine: FootballLine | undefined;
-  selectedTeamMap: TeamMap = new TeamMap();
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public currentGameRound: GameRound | undefined;
   public gameRounds: (GameRound | undefined)[] = [];
   public viewPeriod!: ViewPeriod;
+  public formation: S11Formation|undefined;
+  public totalPointsAssemble: number|undefined;
+  public totalPointsTransfer: number|undefined;
   public processingStatistics: boolean = false;
 
   constructor(
@@ -78,7 +78,15 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
             this.poolUserRepository.getObject(pool, +params['poolUserId']).subscribe({
               next: (poolUser: PoolUser) => {
                 this.poolUser = poolUser;
-                this.initGameRounds(+params.gameRound);
+                this.initTotalPoints();
+                const editPeriod = this.getMostRecentEndedEditPeriod(pool);
+                if (editPeriod !== undefined) {
+                  let formation = poolUser.getFormation(editPeriod);
+                  this.formation = formation;
+                  if( formation !== undefined) {
+                    this.initGameRounds(formation, +params.gameRound);
+                  }
+                }
               },
               error: (e: string) => {
                 this.setAlert('danger', e); this.processing = false;
@@ -105,7 +113,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     return this.gameRoundRepository.getCurrentNumbers(this.pool.getCompetitionConfig(), this.viewPeriod);
   }
 
-  private initGameRounds(gameRoundParam: number): void {
+  private initGameRounds(formation: S11Formation, gameRoundParam: number): void {
 
     this.getCurrentGameRound(gameRoundParam).subscribe({
       next: (object: GameRound | undefined | CurrentGameRoundNumbers) => {
@@ -133,7 +141,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
           this.gameRounds.unshift(undefined);
         }
 
-        this.updateGameRound(currentGameRound);
+        this.updateGameRound(formation, currentGameRound);
       },
       error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
       complete: () => this.processing = false
@@ -145,14 +153,9 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   //   return gameRounds !== undefined ? gameRounds : [];
   // }
 
-  updateGameRound(gameRound: GameRound | undefined): void {
-    console.log(gameRound);
+  updateGameRound(formation: S11Formation, gameRound: GameRound | undefined): void {
     if (gameRound === undefined) {
       this.currentGameRound = gameRound;
-      return;
-    }
-    const formation = this.poolUser.getAssembleFormation();
-    if (formation === undefined) {
       return;
     }
     this.processingStatistics = true;
@@ -181,7 +184,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   }
 
   getFormationName(): string {
-    return this.poolUser?.getAssembleFormation()?.getName() ?? 'kies formatie';
+    return this.formation?.getName() ?? 'kies formatie';
   }
 
   getTeamId(place: S11FormationPlace): number | undefined {
@@ -195,12 +198,15 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     }*/);
   }
 
-  getTotalPoints(): number {
-    const formation = this.poolUser.getAssembleFormation();
-    if (formation === undefined) {
-      return 0;
+  initTotalPoints(): void {
+    const assembleFormation = this.poolUser.getAssembleFormation();
+    if (assembleFormation !== undefined) {
+      this.totalPointsAssemble = assembleFormation.getPoints(this.currentGameRound);
     }
-    return formation.getPoints(this.currentGameRound);
+    const transferFormation = this.poolUser.getTransferFormation();
+    if (transferFormation !== undefined) {
+      this.totalPointsTransfer = transferFormation.getPoints(this.currentGameRound);
+    }
   }
 
   inAfterTransfer(): boolean {

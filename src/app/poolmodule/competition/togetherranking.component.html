@@ -38,7 +38,6 @@
                 <a [routerLink]="getRouterLink(sportRankingItem.getPerformance().getPlace(), currentGameRound)"
                     class="badge {{getPointsBadgeClass(sportRankingItem)}}">
                     {{getScore(sportRankingItem.getPlaceLocation(),currentGameRound )}}</a>
-
             </td>
             <td class="text-end ps-0">
                 <a [routerLink]="getRouterLink(sportRankingItem.getPerformance().getPlace(), undefined)"
