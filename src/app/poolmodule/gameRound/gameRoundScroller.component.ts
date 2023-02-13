@@ -11,11 +11,11 @@ export class GameRoundScrollerComponent implements OnInit, OnChanges {
 
   @Input() assembleViewPeriod: ViewPeriod | undefined;
   @Input() transferViewPeriod: ViewPeriod | undefined;
+  @Input() currentViewPeriod!: ViewPeriod;
   @Input() gameRounds: (GameRound | undefined)[] = [];
   @Input() current: GameRound | undefined;
   @Output() update = new EventEmitter<GameRound | undefined>();
-  @Output() linkToAssembleViewPeriod = new EventEmitter<ViewPeriod>();
-  @Output() linkToTransferViewPeriod = new EventEmitter<ViewPeriod>();  
+  @Output() updateViewPeriod = new EventEmitter<ViewPeriod>();
 
   constructor() {
   }
@@ -25,7 +25,8 @@ export class GameRoundScrollerComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     // console.log('cdk', changes.current, this.gameRounds.slice());
-    if (changes.current.firstChange && changes.current.currentValue && this.gameRounds) {
+    
+    if (changes.current && changes.current.firstChange && changes.current.currentValue && this.gameRounds) {
       while (this.current !== this.gameRounds[0]) {
         const gameRound = this.gameRounds.shift();
         if (gameRound !== undefined) {

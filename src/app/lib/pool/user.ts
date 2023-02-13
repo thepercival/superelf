@@ -110,25 +110,25 @@ export class PoolUser extends Identifiable {
         return this.transferFormation = formation;
     }
 
-    getFormation(editPeriod: AssemblePeriod | TransferPeriod): S11Formation | undefined {
-        if (editPeriod instanceof AssemblePeriod) {
+    getFormation(editOrViewPeriod: AssemblePeriod | TransferPeriod): S11Formation | undefined {
+        if (editOrViewPeriod instanceof AssemblePeriod) {
             return this.assembleFormation;
-        } else if (editPeriod instanceof TransferPeriod) {
+        } else if (editOrViewPeriod instanceof TransferPeriod) {
             return this.transferFormation;
-        }
+        } 
         return undefined;
     }
 
-    // getFormation(viewPeriod: ViewPeriod): S11Formation {
-    //     let formation;
-    //     if( this.pool.getAssembleViewPeriod() === viewPeriod ) {
-    //         formation = this.assembleFormation;
-    //     } else if( this.pool.getTransferViewPeriod() === viewPeriod ) {
-    //         formation = this.transferFormation;
-    //     }
-    //     if( formation === undefined) {
-    //         throw new Error('formation not found from viewPeriod');
-    //     }
-    //     return formation;
-    // }
+    getFormationFromViewPeriod(viewPeriod: ViewPeriod): S11Formation {
+        let formation;
+        if( this.pool.getAssembleViewPeriod() === viewPeriod ) {
+            formation = this.assembleFormation;
+        } else if( this.pool.getTransferViewPeriod() === viewPeriod ) {
+            formation = this.transferFormation;
+        }
+        if( formation === undefined) {
+            throw new Error('formation not found from viewPeriod');
+        }
+        return formation;
+    }
 }

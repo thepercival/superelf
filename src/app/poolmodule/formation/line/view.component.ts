@@ -13,7 +13,7 @@ import { S11Player } from '../../../lib/player';
 import { CSSService } from '../../../shared/commonmodule/cssservice';
 
 @Component({
-  selector: 'app-pool-formationline-view',
+  selector: '[app-pool-formationline-view]',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss']
 })

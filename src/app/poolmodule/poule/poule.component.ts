@@ -14,6 +14,7 @@ import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { AssemblePeriod } from '../../lib/period/assemble';
 import { TransferPeriod } from '../../lib/period/transfer';
+import { ViewPeriod } from '../../lib/period/view';
 import { StatisticsMap } from '../../lib/player';
 import { Pool } from '../../lib/pool';
 import { PoolCompetitor } from '../../lib/pool/competitor';
@@ -123,7 +124,7 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
                 const competitors = sourcePoule.getCompetition().getTeamCompetitors();
                 this.startLocationMap = new StartLocationMap(competitors);
 
-                const currentViewPeriod = this.getCurrentViewPeriod(this.pool);
+                const currentViewPeriod = this.getViewPeriodByRoundNumbers(gameRoundNumbers);
                 this.gameRounds = currentViewPeriod.mapGameRoundNumbers(gameRoundNumbers);
                 const gameRound = currentViewPeriod.getGameRound(currentGameRoundNumber);
 
@@ -277,7 +278,6 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
 
   getStatisticsRequests(editPeriod: AssemblePeriod | TransferPeriod): Observable<StatisticsMap>[] {
     const setStatistics: Observable<StatisticsMap>[] = [];
-    console.log('sds');
     const homeFormation = this.homeCompetitor?.getPoolUser().getFormation(editPeriod)
     if (homeFormation) {
       this.statisticsRepository.getFormationRequests(homeFormation).forEach((request: Observable<StatisticsMap>) => {
@@ -389,6 +389,18 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
       return;
     }
     this.router.navigate(['/pool/' + this.leagueName.toLowerCase(), this.pool.getId()]);
+  }
+
+  private getViewPeriodByRoundNumbers(gameRoundNumbers: number[]): ViewPeriod {
+    let hasSome = gameRoundNumbers.some(gameRoundNumber => this.pool.getAssembleViewPeriod().getGameRound(gameRoundNumber) );
+    if( hasSome ) {
+      return this.pool.getAssembleViewPeriod();
+    }
+    hasSome = gameRoundNumbers.some(gameRoundNumber => this.pool.getTransferViewPeriod().getGameRound(gameRoundNumber) );
+    if( hasSome ) {
+      return this.pool.getTransferViewPeriod();
+    }
+    throw new Error('gameroundnumber should be in a viewperiod');
   }
 }
 

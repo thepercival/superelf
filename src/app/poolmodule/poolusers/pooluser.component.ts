@@ -34,10 +34,10 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   poolUser!: PoolUser;
   nameService = new NameService();
   public oneTeamSimultaneous = new OneTeamSimultaneous();
-  public currentGameRound: GameRound | undefined;
-  public gameRounds: (GameRound | undefined)[] = [];
   public viewPeriod!: ViewPeriod;
   public formation: S11Formation|undefined;
+  public gameRounds: (GameRound | undefined)[] = [];
+  public currentGameRound: GameRound | undefined;
   public totalPointsAssemble: number|undefined;
   public totalPointsTransfer: number|undefined;
   public processingStatistics: boolean = false;
@@ -81,11 +81,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
                 this.initTotalPoints();
                 const editPeriod = this.getMostRecentEndedEditPeriod(pool);
                 if (editPeriod !== undefined) {
-                  let formation = poolUser.getFormation(editPeriod);
-                  this.formation = formation;
-                  if( formation !== undefined) {
-                    this.initGameRounds(formation, +params.gameRound);
-                  }
+                  this.updateViewPeriod(poolUser, editPeriod.getViewPeriod(), +params.gameRound);
                 }
               },
               error: (e: string) => {
@@ -101,10 +97,18 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       });
   }
 
-  private getCurrentGameRound(gameRoundParam: number): Observable<GameRound | undefined | CurrentGameRoundNumbers> {
+  public updateViewPeriod(poolUser: PoolUser, viewPeriod: ViewPeriod, gameRoundNr: number|undefined): void {
+    this.viewPeriod = viewPeriod;
+    this.formation = poolUser.getFormationFromViewPeriod(viewPeriod);
+    
+
+    this.initGameRounds(this.formation, gameRoundNr);
+  }
+
+  private getCurrentGameRound(gameRoundParam: number|undefined): Observable<GameRound | undefined | CurrentGameRoundNumbers> {
 
     let currentGameRound = undefined;
-    if (gameRoundParam > 0) {
+    if (gameRoundParam !== undefined && gameRoundParam > 0) {
       currentGameRound = this.viewPeriod.getGameRound(gameRoundParam);
     }
     if (currentGameRound !== undefined || gameRoundParam === 0) {
@@ -113,17 +117,24 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     return this.gameRoundRepository.getCurrentNumbers(this.pool.getCompetitionConfig(), this.viewPeriod);
   }
 
-  private initGameRounds(formation: S11Formation, gameRoundParam: number): void {
+  private initGameRounds(formation: S11Formation, gameRoundParam: number|undefined): void {
 
     this.getCurrentGameRound(gameRoundParam).subscribe({
       next: (object: GameRound | undefined | CurrentGameRoundNumbers) => {
-        let currentGameRound;
+        let currentGameRound;        
         if (object instanceof GameRound) {
           currentGameRound = object;
-        } else if (object !== undefined && object.hasOwnProperty('firstNotFinished')) {
-          const firstNotFinished = object.lastFinishedOrInPorgress;
-          if (typeof firstNotFinished === 'number') {
-            currentGameRound = this.viewPeriod.getGameRound(firstNotFinished);
+        } else if (object !== undefined) {
+          if (object.hasOwnProperty('firstCreatedOrInProgress')) {
+            const firstCreatedOrInProgress = object.firstCreatedOrInProgress;
+            if (typeof firstCreatedOrInProgress === 'number') {
+              currentGameRound = this.viewPeriod.getGameRound(firstCreatedOrInProgress);
+            }
+          } else if (object.hasOwnProperty('lastFinishedOrInPorgress')) {
+            const lastFinishedOrInPorgress = object.lastFinishedOrInPorgress;
+            if (typeof lastFinishedOrInPorgress === 'number') {
+              currentGameRound = this.viewPeriod.getGameRound(lastFinishedOrInPorgress);
+            }
           }
         }
         this.currentGameRound = currentGameRound;
@@ -211,13 +222,5 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
 
   inAfterTransfer(): boolean {
     return this.pool.getTransferPeriod().getEndDateTime().getTime() < (new Date()).getTime();
-  }
-
-  showAssemblePeriod(viewPeriod: ViewPeriod): void {
-
-  }
-
-  showTransferPeriod(viewPeriod: ViewPeriod): void {
-    
   }
 }
