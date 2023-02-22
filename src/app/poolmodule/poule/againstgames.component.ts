@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Player, Poule, Round, StartLocationMap, Structure, StructureCell, Team, TeamCompetitor } from 'ngx-sport';
+import { AgainstGame, AgainstGamePlace, AgainstGpp, AgainstH2h, AgainstSide, AllInOneGame, Competition, Competitor, CompetitorBase, GameMode, GameState, Player, Poule, Round, Single, StartLocationMap, Structure, StructureCell, Team, TeamCompetitor, TogetherGame, TogetherGamePlace } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
 import { AuthService } from '../../lib/auth/auth.service';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
@@ -26,13 +26,14 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 @Component({
-  selector: 'app-pool-poule',
-  templateUrl: './poule.component.html',
-  styleUrls: ['./poule.component.scss']
+  selector: 'app-pool-againstgames',
+  templateUrl: './againstgames.component.html',
+  styleUrls: ['./againstgames.component.scss']
 })
-export class PoolPouleComponent extends PoolComponent implements OnInit {
+export class PoolPouleAgainstGamesComponent extends PoolComponent implements OnInit {
   public gameRounds: (GameRound | undefined)[] = [];
   public currentGameRound: GameRound | undefined;
 
@@ -93,9 +94,10 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
           next: (structure: Structure) => {
 
             const round = structure.getSingleCategory().getRootRound();
-            const pouleId = +params.pouleId;
-            const poule = this.leagueName === LeagueName.SuperCup ? round.getFirstPoule(): this.getPouleFromPouleId(round, pouleId);
+            const firstPoule = this.leagueName === LeagueName.SuperCup || this.leagueName === LeagueName.Competition;
+            const poule: Poule = firstPoule ? round.getFirstPoule() : this.getPouleFromPouleId(round, +params.pouleId);
             this.poolPoule = poule;
+            console.log(this.poolPoule);
 
             this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
               this.poolUser = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
@@ -111,10 +113,13 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
                 });
               }
             });
-
-            const gameRoundNumbers: number[] = poule.getAgainstGames().map((game: AgainstGame) => game.getGameRoundNumber());
-            const currentGameRoundNumber = this.getCurrentSourceGameRoundNumber(poule);
-
+            const sportVariant = poolCompetition.getSingleSport().getVariant();
+            const currentGameRoundNumber = this.getCurrentSourceGameRoundNumber(poule, sportVariant);
+            const currentViewPeriod = this.getViewPeriodByRoundNumber(currentGameRoundNumber);
+            console.log(currentGameRoundNumber);
+            const gameRoundNumbers: number[] = this.getGameRoundNumbers(poule, sportVariant);
+            console.log(gameRoundNumbers);
+            
             // source
             this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
               next: (structure: Structure) => {
@@ -124,8 +129,9 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
                 const competitors = sourcePoule.getCompetition().getTeamCompetitors();
                 this.startLocationMap = new StartLocationMap(competitors);
 
-                const currentViewPeriod = this.getViewPeriodByRoundNumbers(gameRoundNumbers);
-                this.gameRounds = currentViewPeriod.mapGameRoundNumbers(gameRoundNumbers);
+                
+                // this.gameRounds = currentViewPeriod.mapGameRoundNumbers(gameRoundNumbers);
+                this.gameRounds = currentViewPeriod.getGameRounds();
                 const gameRound = currentViewPeriod.getGameRound(currentGameRoundNumber);
 
                 this.processing = false;
@@ -146,6 +152,17 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
   get Finished(): GameState { return GameState.Finished; }
   get HomeSide(): AgainstSide { return AgainstSide.Home; }
   get AwaySide(): AgainstSide { return AgainstSide.Away; }
+
+  // get AgainstGame(): NavBarItem { 
+  //   if( this.leagueName === LeagueName.Cup ) {
+  //     return NavBarItem.Competitions 
+  //   }
+  //   else if( this.leagueName === LeagueName.SuperCup ) {
+  //     return NavBarItem.Competitions 
+  //   }
+  // }
+
+  get Competitions(): NavBarItem { return NavBarItem.Competitions }
 
   private getPouleFromPouleId(round: Round, pouleId: number): Poule {
     const foundRound = this.getRoundWithPouleId(round, pouleId);
@@ -180,22 +197,49 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
     }
   }
 
-  getCurrentSourceGameRoundNumber(poule: Poule): number {
-    const firstInPogress = poule.getAgainstGames().find((game: AgainstGame) => game.getState() === GameState.InProgress);
-    if (firstInPogress !== undefined) {
-      return firstInPogress.getGameRoundNumber();
-    }
+  getCurrentSourceGameRoundNumber(poule: Poule, sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame): number {
+    if( sportVariant instanceof AgainstH2h || sportVariant instanceof AgainstGpp ) {
+      const firstInPogress = poule.getAgainstGames().find((game: AgainstGame) => game.getState() === GameState.InProgress);
+      if (firstInPogress !== undefined) {
+        return firstInPogress.getGameRoundNumber();
+      }
 
-    const lastFinished = poule.getAgainstGames().slice().reverse().find((game: AgainstGame) => game.getState() === GameState.Finished);
-    if (lastFinished !== undefined) {
-      return lastFinished.getGameRoundNumber();
+      const lastFinished = poule.getAgainstGames().slice().reverse().find((game: AgainstGame) => game.getState() === GameState.Finished);
+      if (lastFinished !== undefined) {
+        return lastFinished.getGameRoundNumber();
+      }
+      const firstCreated = poule.getAgainstGames().find((game: AgainstGame) => game.getState() === GameState.Created);
+      if (firstCreated !== undefined) {
+        return firstCreated.getGameRoundNumber();
+      }
+    } else {
+      const firstInPogress = poule.getTogetherGames().find((game: TogetherGame) => game.getState() === GameState.InProgress);
+      if (firstInPogress !== undefined) {
+        return firstInPogress.getTogetherPlaces()[0].getGameRoundNumber();
+      }
+
+      const lastFinished = poule.getTogetherGames().slice().reverse().find((game: TogetherGame) => game.getState() === GameState.Finished);
+      if (lastFinished !== undefined) {
+        return lastFinished.getTogetherPlaces()[0].getGameRoundNumber();
+      }
+      const firstCreated = poule.getTogetherGames().find((game: TogetherGame) => game.getState() === GameState.Created);
+        if( firstCreated !== undefined) {
+          return firstCreated.getTogetherPlaces()[0].getGameRoundNumber();
+        }
     }
-    const firstCreated = poule.getAgainstGames().find((game: AgainstGame) => game.getState() === GameState.Created);
-    if (firstCreated !== undefined) {
-      return firstCreated.getGameRoundNumber();
-    }
+    
     throw new Error('should be a gameroundnumber');
   }
+
+  getGameRoundNumbers(poule: Poule, sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame): number[] {
+    if( sportVariant instanceof AgainstH2h || sportVariant instanceof AgainstGpp ) {
+      return poule.getAgainstGames().map((game: AgainstGame) => game.getGameRoundNumber());
+    } else {
+      return poule.getTogetherGames().map((game: TogetherGame): number => {
+        return game.getTogetherPlaces()[0].getGameRoundNumber();
+      });
+    }
+  }        
 
   getCurrentPoolGame(currentGameRound: GameRound): AgainstGame | undefined {
     return this.poolPoule?.getAgainstGames().find((game: AgainstGame): boolean => game.getGameRoundNumber() === currentGameRound.getNumber());
@@ -391,13 +435,11 @@ export class PoolPouleComponent extends PoolComponent implements OnInit {
     this.router.navigate(['/pool/' + this.leagueName.toLowerCase(), this.pool.getId()]);
   }
 
-  private getViewPeriodByRoundNumbers(gameRoundNumbers: number[]): ViewPeriod {
-    let hasSome = gameRoundNumbers.some(gameRoundNumber => this.pool.getAssembleViewPeriod().getGameRound(gameRoundNumber) );
-    if( hasSome ) {
+  private getViewPeriodByRoundNumber(gameRoundNumber: number): ViewPeriod {    
+    if( this.pool.getAssembleViewPeriod().hasGameRound(gameRoundNumber) ) {
       return this.pool.getAssembleViewPeriod();
     }
-    hasSome = gameRoundNumbers.some(gameRoundNumber => this.pool.getTransferViewPeriod().getGameRound(gameRoundNumber) );
-    if( hasSome ) {
+    if( this.pool.getTransferViewPeriod().hasGameRound(gameRoundNumber) ) {
       return this.pool.getTransferViewPeriod();
     }
     throw new Error('gameroundnumber should be in a viewperiod');

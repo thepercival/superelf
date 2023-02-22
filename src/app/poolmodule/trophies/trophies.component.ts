@@ -20,6 +20,7 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 @Component({
   selector: 'app-pool-trophies',
@@ -112,7 +113,7 @@ export class TrophiesComponent extends PoolComponent implements OnInit {
       // });
     });
   }
-
+  get Trophies(): NavBarItem { return NavBarItem.Trophies }
 
   navigateBack() {
     this.myNavigation.back();

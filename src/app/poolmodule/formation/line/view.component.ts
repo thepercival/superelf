@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Person, Team } from 'ngx-sport';
+import { FootballLine, Person, Team } from 'ngx-sport';
 import { S11FormationLine } from '../../../lib/formation/line';
 import { S11FormationPlace } from '../../../lib/formation/place';
 import { FormationRepository } from '../../../lib/formation/repository';
@@ -20,8 +20,9 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 export class FormationLineViewComponent implements OnInit {
   @Input() line!: S11FormationLine;
   @Input() selectedPlace: S11FormationPlace | undefined;
-  @Input() gameRound: GameRound | undefined;
+  @Input() gameRound!: GameRound;
   @Input() processing: boolean = true;
+  @Input() totalPoints: number|undefined
   @Output() linkToPlayer = new EventEmitter<S11Player>();
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
@@ -40,6 +41,8 @@ export class FormationLineViewComponent implements OnInit {
     this.processing = false;
   }
 
+  get GoalKeeper(): FootballLine { return FootballLine.GoalKeeper; }
+  
   completed() {
     return this.line.getPlaces().every((place: S11FormationPlace) => place.getPlayer());
   }
@@ -82,10 +85,6 @@ export class FormationLineViewComponent implements OnInit {
 
   getLineClass(prefix: string): string {
     return this.cssService.getLine(this.line.getNumber(), prefix + '-');
-  }
-
-  getPointsTotalsClass() {
-    return this.gameRound === undefined ? 'bg-totals' : 'bg-points';
   }
 
   maybeLinkToPlayer(place: S11FormationPlace): void {

@@ -93,7 +93,7 @@
               <app-team-name [team]="getPlayerOut(substitution).getTeam()" [fullName]="false"></app-team-name>
             </td>
             <td>
-              <span>{{getPlayerOut(substitution).getPerson().getName()}}</span>
+              <span class="text-break">{{getPlayerIn(substitution).getPerson().getName()}}</span>
             </td>
             <td>
               <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
@@ -102,7 +102,7 @@
               <app-team-name [team]="getPlayerIn(substitution).getTeam()" [fullName]="false"></app-team-name>
             </td>
             <td>
-              <span>{{getPlayerIn(substitution).getPerson().getName()}}</span>
+              <span class="text-break">{{getPlayerOut(substitution).getPerson().getName()}}</span>
             </td>
           </tr>
         </tbody>

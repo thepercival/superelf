@@ -18,6 +18,7 @@ import { CompetitionConfig } from '../../lib/competitionConfig';
 import { ViewPeriod } from '../../lib/period/view';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
 import { AuthService } from '../../lib/auth/auth.service';
+import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 
 @Component({
@@ -112,6 +113,9 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
       }
     });
   }
+
+  get Competitions(): NavBarItem { return NavBarItem.Competitions }
+  get PouleRankingTogetherSport(): CompetitionsNavBarItem { return CompetitionsNavBarItem.PouleRankingTogetherSport }
 
   initCurrentGameRound(competitionConfig: CompetitionConfig, viewPeriod: ViewPeriod): void {
     this.gameRoundRepository.getCurrentNumbers(competitionConfig, viewPeriod).subscribe({

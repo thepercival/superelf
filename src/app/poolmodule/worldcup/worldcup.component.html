@@ -16,3 +16,13 @@
         het daaropvolgende seizoen</ngb-alert>
     </div>
   </div>
+
+<div class="competitionsNavBarHeight"></div>
+<ng-template #competitionsNavBar>
+  <app-competitions-navbar *ngIf="originPool" [pool]="originPool" [current]="WorldCupStructure">
+  </app-competitions-navbar>
+</ng-template>
+
+
+<app-pool-navbar *ngIf="originPool" [current]="Competitions" [pool]="originPool" [upperNavBar]="competitionsNavBar">
+</app-pool-navbar>

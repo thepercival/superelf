@@ -7,9 +7,9 @@
 
     <div *ngIf="!processing && pool && poule">
       <div class="d-flex justify-content-between mt-2">
-        <h2 class="ms-3">
-          <app-superelf-icon [name]="'plate'"></app-superelf-icon> competitie
-        </h2>
+        <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
+          (update)="updateGameRound($event)">
+        </app-gameround-scroller>
         <button *ngIf="poule" (click)="navigateToChat(poule)" type="button"
           class="btn btn-outline-dark me-3 position-relative">
           <fa-icon [icon]="['fas', 'message']"></fa-icon>
@@ -22,15 +22,6 @@
         </button>
       </div>
 
-      <div class="d-flex justify-content-between mt-3 mb-1 ms-3 me-4">
-        <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
-          (update)="updateGameRound($event)">
-        </app-gameround-scroller>
-        <div>
-          <!-- <span class="badge bg-totals">{{getTotalPoints()}}</span> -->
-        </div>
-      </div>
-
       <app-together-ranking [poule]="poule" [competitionSport]="competitionSport" [startLocationMap]="startLocationMap"
         [header]="true" [currentGameRound]="currentGameRound">
       </app-together-ranking>
@@ -39,3 +30,12 @@
 
   </div>
 </div>
+
+<div class="competitionsNavBarHeight"></div>
+<ng-template #competitionsNavBar>
+  <app-competitions-navbar *ngIf="pool" [pool]="pool" [current]="PouleRankingTogetherSport">
+  </app-competitions-navbar>
+</ng-template>
+
+<app-pool-navbar [current]="Competitions" *ngIf="pool" [pool]="pool" [poolUser]="poolUser" [upperNavBar]="competitionsNavBar">
+</app-pool-navbar>

@@ -1,11 +1,3 @@
-.card{
-    width:212px;
-}
-
-.card-body {
-    padding: 1rem;
-}
-
-.card-sub{
-    max-width:79px;
-}
+.competitionsNavBarHeight {
+    height: 80px;
+  }

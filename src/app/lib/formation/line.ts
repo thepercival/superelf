@@ -119,10 +119,18 @@ export class S11FormationLine extends Identifiable {
         return players;
     }
 
-    getPoints(gameRound: GameRound | undefined): number {
+    getPoints(gameRound: GameRound): number {
         let points = 0;
         for (let place of this.getPlaces()) {
             points += place.getPoints(gameRound);
+        }
+        return points;
+    }
+
+    getTotalPoints(): number {
+        let points = 0;
+        for (let place of this.getPlaces()) {
+            points += place.getTotalPoints();
         }
         return points;
     }

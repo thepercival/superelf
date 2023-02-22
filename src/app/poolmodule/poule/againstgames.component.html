@@ -182,6 +182,9 @@
     </div>
 </div>
 
+<app-pool-navbar [current]="Competitions" *ngIf="pool" [pool]="pool" [poolUser]="poolUser">
+</app-pool-navbar>
+
 <ng-template #lineupScore let-formationPlace="formationPlace" let-sourceGame="sourceGame">
 
     <ng-container *ngIf="formationPlace.hasAppeared(currentGameRound);else startingNotAppeared">

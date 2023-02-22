@@ -41,6 +41,7 @@ export class HomeComponent implements OnInit {
     protected globalEventsManager: GlobalEventsManager
   ) {
     this.globalEventsManager.navHeaderInfo.emit(undefined);
+    globalEventsManager.showFooter.emit(true);
   }
 
   ngOnInit() {

@@ -12,6 +12,7 @@ export class SuperElfIconComponent {
     @Input() name: CustomIconName | undefined;
     @Input() leagueName: LeagueName | undefined;
     @Input() gameEvent: FootballEvent | undefined;
+    @Input() large: boolean = false;
 
     get color(): string { 
         if( this.gameEvent === undefined ) {
@@ -58,6 +59,8 @@ export class SuperElfIconComponent {
                 return 'cup';
             case LeagueName.SuperCup:
                 return 'super-cup';
+            case LeagueName.WorldCup:
+                return 'world-cup';
         }
     }
 

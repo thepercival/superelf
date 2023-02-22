@@ -1,34 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Place, Poule, SportRoundRankingItem, StartLocationMap, Structure, StructureNameService, Team, TeamCompetitor, TogetherSportRoundRankingCalculator } from 'ngx-sport';
+import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Place, Poule, SportRoundRankingItem, StartLocationMap, Structure, StructureNameService, Team, TeamCompetitor, TogetherGame, TogetherSportRoundRankingCalculator } from 'ngx-sport';
 import { Observable } from 'rxjs';
-import { AuthService } from '../../../lib/auth/auth.service';
-import { ChatMessageRepository } from '../../../lib/chatMessage/repository';
-import { S11FormationPlace } from '../../../lib/formation/place';
-import { GameRound } from '../../../lib/gameRound';
-import { ImageRepository } from '../../../lib/image/repository';
-import { LeagueName } from '../../../lib/leagueName';
-import { GameRepository } from '../../../lib/ngx-sport/game/repository';
-import { PlayerRepository } from '../../../lib/ngx-sport/player/repository';
-import { StructureRepository } from '../../../lib/ngx-sport/structure/repository';
-import { S11Player } from '../../../lib/player';
-import { Pool } from '../../../lib/pool';
-import { PoolCompetitor } from '../../../lib/pool/competitor';
-import { PoolRepository } from '../../../lib/pool/repository';
-import { PoolUser } from '../../../lib/pool/user';
-import { PoolUserRepository } from '../../../lib/pool/user/repository';
-import { CSSService } from '../../../shared/commonmodule/cssservice';
-import { GlobalEventsManager } from '../../../shared/commonmodule/eventmanager';
-import { MyNavigation } from '../../../shared/commonmodule/navigation';
-import { PoolComponent } from '../../../shared/poolmodule/component';
+import { AuthService } from '../../lib/auth/auth.service';
+import { ChatMessageRepository } from '../../lib/chatMessage/repository';
+import { S11FormationPlace } from '../../lib/formation/place';
+import { GameRound } from '../../lib/gameRound';
+import { ImageRepository } from '../../lib/image/repository';
+import { LeagueName } from '../../lib/leagueName';
+import { GameRepository } from '../../lib/ngx-sport/game/repository';
+import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
+import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
+import { Pool } from '../../lib/pool';
+import { PoolCompetitor } from '../../lib/pool/competitor';
+import { PoolRepository } from '../../lib/pool/repository';
+import { PoolUser } from '../../lib/pool/user';
+import { PoolUserRepository } from '../../lib/pool/user/repository';
+import { CSSService } from '../../shared/commonmodule/cssservice';
+import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { MyNavigation } from '../../shared/commonmodule/navigation';
+import { PoolComponent } from '../../shared/poolmodule/component';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 
 @Component({
-  selector: 'app-pool-togethergame',
-  templateUrl: './togethergame.component.html',
-  styleUrls: ['./togethergame.component.scss']
+  selector: 'app-pool-allinonegame-schedule',
+  templateUrl: './allinonegame.component.html',
+  styleUrls: ['./allinonegame.component.scss']
 })
-export class PoolTogetherGameComponent extends PoolComponent implements OnInit {
+export class PoolAllInOneGameScheduleComponent extends PoolComponent implements OnInit {
   public gameRounds: GameRound[] = [];
   public currentGameRound: GameRound | undefined;
   public sourceGameRoundGames: AgainstGame[] = [];
@@ -91,6 +91,22 @@ export class PoolTogetherGameComponent extends PoolComponent implements OnInit {
             const togetherRankingCalculator = new TogetherSportRoundRankingCalculator(competitionSport, [GameState.InProgress, GameState.Finished]);
             this.sportRankingItems = togetherRankingCalculator.getItemsForPoule(poule);
 
+            this.gameRounds = this.getCurrentViewPeriod(pool).getGameRounds();
+
+            this.route.params.subscribe(params => {
+
+              this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
+                next: (structure: Structure) => {
+                  this.sourceStructure = structure;
+
+                  const gameRoundNumber = this.getCurrentSourceGameRoundNumber(poule);
+                  const gameRoundFromUrl = this.getGameRoundByNumber(gameRoundNumber);
+                  this.updateGameRound(gameRoundFromUrl, undefined);
+                }
+              });
+
+            });
+
             if (this.poolUser && this.poule) {
               this.chatMessageRepository.getNrOfUnreadObjects(this.poule, pool).subscribe({
                 next: (nrOfUnreadMessages: number) => {
@@ -102,22 +118,28 @@ export class PoolTogetherGameComponent extends PoolComponent implements OnInit {
           error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
         });
       });
-
-      this.gameRounds = this.getCurrentViewPeriod(pool).getGameRounds();
-
-      this.route.params.subscribe(params => {
-
-        this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
-          next: (structure: Structure) => {
-            this.sourceStructure = structure;
-
-            const gameRoundFromUrl = this.getGameRoundByNumber(+params['gameRound']);
-            this.updateGameRound(gameRoundFromUrl, +params['gameId']);
-          }
-        });
-
-      });
     });
+  }
+
+  get Schedule(): NavBarItem { return NavBarItem.Schedule }
+  
+  getCurrentSourceGameRoundNumber(poule: Poule): number {
+    
+    const firstInPogress = poule.getTogetherGames().find((game: TogetherGame) => game.getState() === GameState.InProgress);
+    if (firstInPogress !== undefined) {
+      return firstInPogress.getTogetherPlaces()[0].getGameRoundNumber();
+    }
+
+    const lastFinished = poule.getTogetherGames().slice().reverse().find((game: TogetherGame) => game.getState() === GameState.Finished);
+    if (lastFinished !== undefined) {
+      return lastFinished.getTogetherPlaces()[0].getGameRoundNumber();
+    }
+    const firstCreated = poule.getTogetherGames().find((game: TogetherGame) => game.getState() === GameState.Created);
+      if( firstCreated !== undefined) {
+        return firstCreated.getTogetherPlaces()[0].getGameRoundNumber();
+      }
+    
+    throw new Error('should be a gameroundnumber');
   }
 
   get HomeSide(): AgainstSide { return AgainstSide.Home; }

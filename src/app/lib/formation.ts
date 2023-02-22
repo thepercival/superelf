@@ -91,10 +91,18 @@ export class                           S11Formation extends Identifiable {
         } ) );
     }
 
-    getPoints(gameRound: GameRound | undefined): number {
+    getPoints(gameRound: GameRound): number {
         let points = 0;
         for (let line of this.getLines()) {
             points += line.getPoints(gameRound);
+        }
+        return points;
+    }
+
+    getTotalPoints(): number {
+        let points = 0;
+        for (let line of this.getLines()) {
+            points += line.getTotalPoints();
         }
         return points;
     }

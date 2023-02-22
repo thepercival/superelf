@@ -19,6 +19,8 @@ import { PoolCompetitor } from '../../lib/pool/competitor';
 import { LeagueName } from '../../lib/leagueName';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IAlert } from '../../shared/commonmodule/alert';
+import { concatMap } from 'rxjs';
+import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 @Component({
     selector: 'app-pool-worldcup',
@@ -29,15 +31,16 @@ export class WorldCupComponent implements OnInit {
     public alert: IAlert | undefined;
     public processing = true;
     translate: TranslateService;
+    public originPool: Pool|undefined;
     // scoutedPlayers: ScoutedPlayer[] = [];
     // scoutingEnabled: boolean = false;
     // poolUsers: PoolUser[] = [];
 
     constructor(
-        route: ActivatedRoute,
-        router: Router,
-        poolRepository: PoolRepository,
-        globalEventsManager: GlobalEventsManager,
+        protected route: ActivatedRoute,
+        protected router: Router,
+        protected poolRepository: PoolRepository,
+        protected globalEventsManager: GlobalEventsManager,
         public cssService: CSSService,
         private dateFormatter: DateFormatter,
         private poolUserRepository: PoolUserRepository,
@@ -49,18 +52,21 @@ export class WorldCupComponent implements OnInit {
     }
 
     ngOnInit() {
-
-        // super.parentNgOnInit().subscribe({
-        //     next: (pool: Pool) => {
-        //         this.setPool(pool);
-        //         this.postNgOnInit(pool);
-        //     },
-        //     error: (e) => {
-        //         this.setAlert('danger', e); this.processing = false;
-        //     }
-        // });
         this.processing = false;
+        this.route.params.pipe(
+            concatMap(params => {
+                return this.poolRepository.getObject(+params.originPoolId);
+            }),
+        ).subscribe({
+            next: (pool: Pool) => {
+                this.originPool = pool;
+            }
+        });
+        
     }
+
+    get Competitions(): NavBarItem { return NavBarItem.Competitions }
+    get WorldCupStructure(): CompetitionsNavBarItem { return CompetitionsNavBarItem.WorldCupStructure }
 
     postNgOnInit(pool: Pool) {
         // this.scoutingEnabled = pool.getCreateAndJoinPeriod().isIn() || pool.getAssemblePeriod().isIn();

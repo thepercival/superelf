@@ -1,9 +1,5 @@
 <nav class="navbar navbar-dark bg-primary py-1 ps-1 text-light">
   <div>
-    <button *ngIf="user" (click)="navigation.back()" class="btn text-light border-end" role="button" aria-label="terug "
-      tabindex="-1">
-      <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
-    </button>
     <a class="navbar-brand text-light" tabindex="-1" [routerLink]="['/']">
       {{nameInfo ? 'S11' : 'SuperElf'}}
     </a>

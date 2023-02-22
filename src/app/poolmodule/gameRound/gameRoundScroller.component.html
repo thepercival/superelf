@@ -13,9 +13,8 @@
         <button type="button" class="btn btn-outline-primary" (click)="next()">
             <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
         </button>
-        <button *ngIf="transferViewPeriod !== currentViewPeriod" type="button" class="btn btn-outline-primary ms-2" (click)="updateViewPeriod.emit(transferViewPeriod)">
-            <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
-            <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+        <button *ngIf="transferViewPeriod !== currentViewPeriod" type="button" class="btn btn-outline-primary ms-2 text-nowrap" (click)="updateViewPeriod.emit(transferViewPeriod)">
+            <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon><fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
         </button>
     </div>
 </div>

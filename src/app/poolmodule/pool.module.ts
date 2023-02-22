@@ -27,7 +27,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { CommonSharedModule } from '../shared/commonmodule/common.module';
-import { HomeComponent } from './home/home.component';
 import { PreNewComponent } from './prenew/prenew.component';
 import { RoutingModule } from './pool-routing.module';
 import { PoolSharedModule } from '../shared/poolmodule/pool.module';
@@ -53,15 +52,11 @@ import { FormationAssembleComponent } from './formation/assemble.component';
 import { S11PlayerChooseComponent } from './player/choose.component';
 import { WorldCupComponent } from './worldcup/worldcup.component';
 import { PoolUserComponent } from './poolusers/pooluser.component';
-import { ScheduleComponent } from './schedule/schedule.component';
 import { AgainstGameTitleComponent } from './game/source/title.component';
 import { SourceGameComponent } from './game/source.component';
 import { GameRoundScrollerComponent } from './gameRound/gameRoundScroller.component';
 import { GameScrollerComponent } from './game/source/gameScroller.component';
-import { PoolPouleComponent } from './poule/poule.component';
-import { PoolTogetherGameComponent } from './game/pool/togethergame.component';
 import { PoolChatComponent } from './chat/chat.component';
-import { PouleTitleComponent } from './poule/title.component';
 import { PoolCompetitionComponent } from './competition/competition.component';
 import { PoolCupComponent } from './cup/structure.component';
 import { PoolCupRoundComponent } from './cup/round.component';
@@ -77,6 +72,9 @@ import { FormationPlaceTransferComponent } from './formation/place/transfer.comp
 import { FormationSubstituteComponent } from './formation/substitute.component';
 import { FormationLineSubstitutionsComponent } from './formation/line/substitutions.component';
 import { FormationActionOverviewComponent } from './formation/actionoverview.component';
+import { PoolPouleAgainstGamesComponent } from './poule/againstgames.component';
+import { PouleTitleComponent } from './poule/title.component';
+import { PoolAllInOneGameScheduleComponent } from './schedule/allinonegame.component';
 
 @NgModule({
   imports: [
@@ -107,17 +105,16 @@ import { FormationActionOverviewComponent } from './formation/actionoverview.com
     FormationTransferComponent,
     GameRoundScrollerComponent,
     GameScrollerComponent,
-    HomeComponent,
     InviteComponent,
     JoinComponent,
     NewComponent,
     PlayerBasicsComponent,
+    PoolAllInOneGameScheduleComponent,
     PoolChatComponent,
     PoolCompetitionComponent,
     PoolCupComponent,
     PoolCupRoundComponent,
-    PoolPouleComponent,
-    PoolTogetherGameComponent,
+    PoolPouleAgainstGamesComponent,
     PoolUserComponent,
     PoolUserRemoveModalComponent,
     PoolUsersComponent,
@@ -128,8 +125,7 @@ import { FormationActionOverviewComponent } from './formation/actionoverview.com
     S11PlayerChooseComponent,
     S11PlayerAddRemoveModalComponent,
     S11PlayerGameRoundStatisticsComponent,
-    S11PlayerViewPeriodStatisticsComponent,
-    ScheduleComponent,
+    S11PlayerViewPeriodStatisticsComponent,    
     ScoutedPlayerListComponent,
     ScoutedPlayerAddComponent,
     SourceGameComponent,

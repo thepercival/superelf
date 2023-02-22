@@ -6,4 +6,5 @@ import { NavHeaderInfo } from '../layoutmodule/nav/nav.component';
 })
 export class GlobalEventsManager {
     public navHeaderInfo: EventEmitter<NavHeaderInfo> = new EventEmitter();
+    public showFooter: EventEmitter<boolean> = new EventEmitter();
 }

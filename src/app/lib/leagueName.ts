@@ -1,5 +1,6 @@
 export enum LeagueName {
     Competition = 'Competition',
     Cup = 'Cup',
-    SuperCup = 'SuperCup'
+    SuperCup = 'SuperCup',
+    WorldCup = "WorldCup"
 }

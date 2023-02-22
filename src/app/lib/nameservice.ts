@@ -61,6 +61,8 @@ export class SuperElfNameService {
                 return 'beker';
             case LeagueName.SuperCup:
                 return 'super cup';
+            case LeagueName.WorldCup:
+                return 'wereld beker';
         }
         return '?';
     }

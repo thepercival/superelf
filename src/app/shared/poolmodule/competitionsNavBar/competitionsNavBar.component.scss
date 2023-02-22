@@ -1,0 +1,26 @@
+.btn {
+    border: 0;
+}
+
+.navbar-parent {
+    display: flex;
+    min-width: 0;
+}
+  
+.navbar-item {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+a > span {
+  font-size: 90%;
+}
+
+fa-icon {
+  font-size: 1.3rem;
+}
+
+a.pt-cus {
+  padding-top: 12px;
+}

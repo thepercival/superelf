@@ -3,12 +3,13 @@
         <ngb-alert *ngIf="!processing && !currentSourceGame" type="danger">de wedstrijd kan niet gevonden worden
         </ngb-alert>
 
-        <div class="d-flex justify-content-between mt-2">
-            <h2 class="ms-3">
-                <fa-icon class="align-middle" [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
-            </h2>
-            <button *ngIf="poule" (click)="navigateToChat(poule)" type="button"
-                class="btn btn-outline-dark me-3 position-relative">
+        <div *ngIf="!processing && gameRounds" class="d-flex mt-2 ms-1">
+            
+            <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
+                (update)="updateGameRound($event)">
+            </app-gameround-scroller>
+            
+            <button *ngIf="poule" (click)="navigateToChat(poule)" type="button" class="btn btn-outline-dark ms-3 position-relative">
                 <fa-icon [icon]="['fas', 'message']"></fa-icon>
                 <span class="ms-1"> chat</span>
                 <span *ngIf="nrOfUnreadMessages > 0"
@@ -22,19 +23,13 @@
         <h2 *ngIf="processing" class="text-center">
             <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
-        <div *ngIf="!processing && gameRounds">
-            <div class="d-flex justify-content-center my-2">
-                <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
-                    (update)="updateGameRound($event)">
-                </app-gameround-scroller>
-            </div>
+        <div *ngIf="!processing">
 
             <h2 *ngIf="processingGames" class="text-center">
                 <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
             </h2>
 
-            <div *ngIf="!processingGames && sourceGameRoundGames.length > 0 && currentSourceGame"
-                class="d-flex justify-content-center my-3">
+            <div *ngIf="!processingGames && sourceGameRoundGames.length > 0 && currentSourceGame" class="d-flex my-3 ms-1">
                 <app-game-scroller [games]="sourceGameRoundGames" [current]="currentSourceGame"
                     (update)="updateSourceGame($event)" (navigate)="navigateToSourceGame($event)">
                 </app-game-scroller>
@@ -63,7 +58,7 @@
             </table>
 
             <ng-template #contentForamtionPlaces let-formationPlaces="formationPlaces">
-                <div *ngFor="let formationPlace of formationPlaces">
+                <div *ngFor="let formationPlace of formationPlaces" class="d-flex justify-content-between">
                     <ng-container *ngIf="formationPlace.getPlayer()" [ngTemplateOutlet]="contentPlayer"
                         [ngTemplateOutletContext]="{s11Player:formationPlace.getPlayer()}">
                     </ng-container>
@@ -72,10 +67,15 @@
             </ng-template>
 
             <ng-template #contentPlayer let-s11Player="s11Player">
-                <app-lineicon [line]="s11Player.getLine()"></app-lineicon>
-                <span class="ps-1">{{s11Player.getPerson().getName()}}</span>
+                <div>
+                    <app-lineicon [line]="s11Player.getLine()"></app-lineicon>
+                    <span class="ps-1 text-break">{{s11Player.getPerson().getName()}}</span>
+                </div>
             </ng-template>
 
         </div>
     </div>
 </div>
+
+<app-pool-navbar [current]="Schedule" *ngIf="pool" [pool]="pool" [poolUser]="poolUser">
+</app-pool-navbar>

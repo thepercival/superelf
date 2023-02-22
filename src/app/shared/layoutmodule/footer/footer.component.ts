@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GlobalEventsManager } from '../../commonmodule/eventmanager';
 
 @Component({
   selector: 'app-footer',
@@ -8,11 +9,17 @@ import { Component, OnInit } from '@angular/core';
 export class FooterComponent implements OnInit {
 
 
-  constructor() {
+  showFooter: boolean = false;
+
+  constructor(private globalEventsManager: GlobalEventsManager) {
 
   }
 
   ngOnInit() {
+    this.globalEventsManager.showFooter.subscribe((show: boolean) => {
+      console.log('set showFooter', show );
+      this.showFooter = show;
+    });
   }
 
 }

@@ -15,6 +15,8 @@ import { RouterModule } from '@angular/router';
 import { RankingRulesComponent } from './rankingrules/rankingrules.component';
 import { facCard, facCleanSheet, facCrown, facCup, facPenalty, facPlate, facSpottySheet, facStructure, facSuperCup, facTrophy, facWorldCup } from './icons';
 import { SuperElfIconComponent } from './icon/icon.component';
+import { PoolNavBarComponent } from './poolNavBar/poolNavBar.component';
+import { PoolCompetitionsNavBarComponent } from './competitionsNavBar/competitionsNavBar.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { SuperElfIconComponent } from './icon/icon.component';
     EndRankingComponent,
     PouleRankingComponent,
     RankingRulesComponent,
-    SuperElfIconComponent
+    SuperElfIconComponent,
+    PoolNavBarComponent,
+    PoolCompetitionsNavBarComponent
   ],
   imports: [
     CommonModule,
@@ -42,7 +46,9 @@ import { SuperElfIconComponent } from './icon/icon.component';
     RankingRulesComponent,
     NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
     NgbNavModule,
-    SuperElfIconComponent
+    SuperElfIconComponent,
+    PoolNavBarComponent,
+    PoolCompetitionsNavBarComponent
   ]
 })
 export class PoolSharedModule {

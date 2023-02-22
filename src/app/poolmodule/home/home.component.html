@@ -146,17 +146,7 @@
               <div>kast</div>
             </div>
           </div>               
-
-          <div class="card card-sub pointer px-0" [routerLink]="['/pool/rules', pool.getId()]">
-            <div class="card-body text-center p-1 pt-2">
-              <h5 class="card-title">
-                <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
-              </h5>
-              <div>spel</div>
-              <div>regels</div>
-            </div>
-          </div>
-
+          
         </div>
 
       </div>
@@ -257,6 +247,9 @@
     </div>
   </div>
 </div>
+
+<!-- <app-pool-navbar [current]="PouleRankingTogetherSport" *ngIf="pool" [pool]="pool" [poolUser]="poolUser">
+</app-pool-navbar> -->
 
 <!-- poolUsers modal -->
 <ng-template #contentpoolUsers let-modal>

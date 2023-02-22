@@ -20,6 +20,10 @@ export class ViewPeriod extends Period {
         return this.gameRounds;
     }
 
+    hasGameRound(number: number): boolean {
+        return this.gameRounds.find(gameRound => gameRound.getNumber() === number) !== undefined;
+    }
+
     getGameRound(number: number): GameRound {
         const gameRound = this.gameRounds.find(gameRound => gameRound.getNumber() === number);
         if (gameRound === undefined) {

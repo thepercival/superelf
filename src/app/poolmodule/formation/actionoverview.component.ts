@@ -42,19 +42,21 @@ export class FormationActionOverviewComponent extends PoolComponent implements O
       .subscribe({
         next: (pool: Pool) => {
           this.setPool(pool);
-          this.poolUserRepository.getObjectFromSession(pool).subscribe({
-            next: ((poolUser: PoolUser) => {
-              this.poolUser = poolUser;
-              this.replacements = poolUser.getReplacements();
-              this.transfers = poolUser.getTransfers();
-              this.substitutions = poolUser.getSubstitutions();
-              const calculator = new S11FormationCalculator();                
-              this.calcFormation = calculator.getCurrentFormation(poolUser);
-            }),
-            error: (e: string) => {
-              this.setAlert('danger', e); this.processing = false;
-            },
-            complete: () => this.processing = false
+          this.route.params.subscribe(params => {
+            this.poolUserRepository.getObject(pool, +params.poolUserId).subscribe({
+              next: ((poolUser: PoolUser) => {
+                this.poolUser = poolUser;
+                this.replacements = poolUser.getReplacements();
+                this.transfers = poolUser.getTransfers();
+                this.substitutions = poolUser.getSubstitutions();
+                const calculator = new S11FormationCalculator();                
+                this.calcFormation = calculator.getCurrentFormation(poolUser);
+              }),
+              error: (e: string) => {
+                this.setAlert('danger', e); this.processing = false;
+              },
+              complete: () => this.processing = false
+            });
           });
         },
         error: (e) => {

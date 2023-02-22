@@ -38,8 +38,8 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   public formation: S11Formation|undefined;
   public gameRounds: (GameRound | undefined)[] = [];
   public currentGameRound: GameRound | undefined;
-  public totalPointsAssemble: number|undefined;
-  public totalPointsTransfer: number|undefined;
+  public totalPoints: number = 0;
+  
   public processingStatistics: boolean = false;
 
   constructor(
@@ -78,7 +78,6 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
             this.poolUserRepository.getObject(pool, +params['poolUserId']).subscribe({
               next: (poolUser: PoolUser) => {
                 this.poolUser = poolUser;
-                this.initTotalPoints();
                 const editPeriod = this.getMostRecentEndedEditPeriod(pool);
                 if (editPeriod !== undefined) {
                   this.updateViewPeriod(poolUser, editPeriod.getViewPeriod(), +params.gameRound);
@@ -97,22 +96,20 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       });
   }
 
+  get GoalKeeper(): FootballLine { return FootballLine.GoalKeeper; }
+
   public updateViewPeriod(poolUser: PoolUser, viewPeriod: ViewPeriod, gameRoundNr: number|undefined): void {
     this.viewPeriod = viewPeriod;
     this.formation = poolUser.getFormationFromViewPeriod(viewPeriod);
-    
+    this.totalPoints = this.formation.getTotalPoints();
 
     this.initGameRounds(this.formation, gameRoundNr);
   }
 
   private getCurrentGameRound(gameRoundParam: number|undefined): Observable<GameRound | undefined | CurrentGameRoundNumbers> {
 
-    let currentGameRound = undefined;
     if (gameRoundParam !== undefined && gameRoundParam > 0) {
-      currentGameRound = this.viewPeriod.getGameRound(gameRoundParam);
-    }
-    if (currentGameRound !== undefined || gameRoundParam === 0) {
-      return of(currentGameRound);
+      return of(this.viewPeriod.getGameRound(gameRoundParam));
     }
     return this.gameRoundRepository.getCurrentNumbers(this.pool.getCompetitionConfig(), this.viewPeriod);
   }
@@ -125,34 +122,28 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
         if (object instanceof GameRound) {
           currentGameRound = object;
         } else if (object !== undefined) {
-          if (object.hasOwnProperty('firstCreatedOrInProgress')) {
-            const firstCreatedOrInProgress = object.firstCreatedOrInProgress;
-            if (typeof firstCreatedOrInProgress === 'number') {
-              currentGameRound = this.viewPeriod.getGameRound(firstCreatedOrInProgress);
-            }
-          } else if (object.hasOwnProperty('lastFinishedOrInPorgress')) {
+          if (object.hasOwnProperty('lastFinishedOrInPorgress')) {
             const lastFinishedOrInPorgress = object.lastFinishedOrInPorgress;
             if (typeof lastFinishedOrInPorgress === 'number') {
               currentGameRound = this.viewPeriod.getGameRound(lastFinishedOrInPorgress);
             }
+          } else if (object.hasOwnProperty('firstCreatedOrInProgress')) {
+            const firstCreatedOrInProgress = object.firstCreatedOrInProgress;
+            if (typeof firstCreatedOrInProgress === 'number') {
+              currentGameRound = this.viewPeriod.getGameRound(firstCreatedOrInProgress);
+            }
           }
         }
-        this.currentGameRound = currentGameRound;
-
+        console.log(object);
         const gameRounds: (GameRound | undefined)[] = this.viewPeriod.getGameRounds().slice();
         this.gameRounds = gameRounds;
         if (currentGameRound !== undefined) {
           const idx = this.gameRounds.indexOf(this.currentGameRound);
           if (idx >= 0) {
-            this.gameRounds = this.gameRounds.splice(idx).concat([undefined], this.gameRounds);
-          } else {
-            this.gameRounds.push(undefined);
-          }
-        } else {
-          this.gameRounds.unshift(undefined);
-        }
-
-        this.updateGameRound(formation, currentGameRound);
+            this.gameRounds = this.gameRounds.splice(idx).concat([], this.gameRounds);
+          } 
+          this.updateGameRound(formation, currentGameRound);
+        }        
       },
       error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
       complete: () => this.processing = false
@@ -170,7 +161,6 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       return;
     }
     this.processingStatistics = true;
-
     const setStatistics: Observable<StatisticsMap>[] = this.statisticsRepository.getFormationRequests(formation);
     
     if (setStatistics.length === 0) {
@@ -207,17 +197,6 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     this.router.navigate(['/pool/player/', this.pool.getId(), s11Player.getId(), gameRoundNumber]/*, {
       state: { s11Player, "pool": this.pool, currentGameRound: undefined }
     }*/);
-  }
-
-  initTotalPoints(): void {
-    const assembleFormation = this.poolUser.getAssembleFormation();
-    if (assembleFormation !== undefined) {
-      this.totalPointsAssemble = assembleFormation.getPoints(this.currentGameRound);
-    }
-    const transferFormation = this.poolUser.getTransferFormation();
-    if (transferFormation !== undefined) {
-      this.totalPointsTransfer = transferFormation.getPoints(this.currentGameRound);
-    }
   }
 
   inAfterTransfer(): boolean {

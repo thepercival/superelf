@@ -1,7 +1,7 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
 
-    <div *ngIf="!processing && pool" class="d-flex justify-content-between mt-3 mb-1 mx-1">
+    <div *ngIf="!processing && pool && poolUser" class="d-flex justify-content-between mt-3 mb-1 mx-1">
       <h2 class="me-2 text-truncate">
         <fa-icon [icon]="['fas', 'users']"></fa-icon> {{getPoolUserName()}}
       </h2>
@@ -11,7 +11,7 @@
           <fa-icon [icon]="['fas', 'user-secret']"></fa-icon> <span class="ms-1 d-none d-sm-inline">
             scoutingslijst</span>
         </button> -->
-        <button *ngIf="inAfterTransfer()" class="btn btn-outline-info me-1" [routerLink]="['/pool/formation/actions', pool.getId()]">
+        <button *ngIf="inAfterTransfer()" class="btn btn-outline-info me-1" [routerLink]="['/pool/formation/actions', pool.getId(), poolUser.getId()]">
           <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
         </button>
         <button class="btn btn-secondary" disabled>
@@ -35,17 +35,17 @@
         (updateViewPeriod)="updateViewPeriod(poolUser, $event, undefined)"
           (update)="updateGameRound(formation, $event)">
         </app-gameround-scroller>
-        <div>
+        <!-- <div class="ms-1">
           <span *ngIf="totalPointsAssemble" class="badge bg-totals">{{totalPointsAssemble}}</span>
           <span *ngIf="totalPointsAssemble && totalPointsTransfer"> + </span>
           <span *ngIf="totalPointsAssemble && totalPointsTransfer" class="badge bg-totals">{{totalPointsTransfer}}</span>
-        </div>
+        </div> -->
       </div>
 
-      <!-- lines-->
-      <table class="table">
+      <!-- lines-->      
+      <table *ngIf="currentGameRound" class="table">
         <tbody app-pool-formationline-view *ngFor="let line of formation?.getLines()" [line]="line"
-            (linkToPlayer)="linkToPlayer($event)" [gameRound]="currentGameRound" class="">          
+            (linkToPlayer)="linkToPlayer($event)" [gameRound]="currentGameRound" [totalPoints]="line.getNumber() === GoalKeeper ? totalPoints : undefined" class="">
         </tbody>
       </table>
     </div>
@@ -54,3 +54,6 @@
     </h2>
   </div>
 </div>
+
+<app-pool-navbar *ngIf="pool" [pool]="pool" [poolUser]="poolUser">
+</app-pool-navbar>

@@ -16,7 +16,8 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let sportRankingItem of sportRankingItems">
+        <tr *ngFor="let sportRankingItem of sportRankingItems" class="pointer"
+            (click)="linkToPoolUser(sportRankingItem.getPerformance().getPlace(), currentGameRound)">
 
             <ng-container *ngIf="!worldcupQualify2(sportRankingItem);else worldcupQualify">
                 <td class="rankingnr text-end ps-0"><!-- badge text-black -->
@@ -24,7 +25,7 @@
                 </td>
             </ng-container>
             <ng-template #worldcupQualify>
-                <td class="rankingnr text-end ps-0 pointer" (click)="openModal(worldcupModal)">
+                <td class="rankingnr text-end ps-0 pointer" (click)="openModal(worldcupModal); $event.stopPropagation()">
                     <span class="badge text-bg-success text-decoration-underline">{{sportRankingItem.getUniqueRank()}}</span>
                 </td>
             </ng-template>
@@ -35,14 +36,11 @@
                 class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon>
             </td>
             <td *ngIf="currentGameRound" class="text-end ps-0 pointer">
-                <a [routerLink]="getRouterLink(sportRankingItem.getPerformance().getPlace(), currentGameRound)"
-                    class="badge {{getPointsBadgeClass(sportRankingItem)}}">
-                    {{getScore(sportRankingItem.getPlaceLocation(),currentGameRound )}}</a>
+                <span class="badge {{getPointsBadgeClass(sportRankingItem)}}">
+                    {{getScore(sportRankingItem.getPlaceLocation(),currentGameRound )}}</span>
             </td>
             <td class="text-end ps-0">
-                <a [routerLink]="getRouterLink(sportRankingItem.getPerformance().getPlace(), undefined)"
-                    class="badge bg-totals">
-                    {{sportRankingItem.getPerformance().getPoints()}}</a>
+                <span class="badge bg-totals">{{sportRankingItem.getPerformance().getPoints()}}</span>
             </td>
         </tr>
     </tbody>

@@ -18,6 +18,7 @@ import { CompetitionConfig } from '../../lib/competitionConfig';
 import { ViewPeriod } from '../../lib/period/view';
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
+import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 
 @Component({
@@ -109,6 +110,9 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
     });
   }
 
+  get Competitions(): NavBarItem { return NavBarItem.Competitions }
+  get CupStructure(): CompetitionsNavBarItem { return CompetitionsNavBarItem.CupStructure }
+  
   initCurrentGameRound(competitionConfig: CompetitionConfig, viewPeriod: ViewPeriod): void {
     this.gameRoundRepository.getCurrentNumbers(competitionConfig, viewPeriod).subscribe({
       next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {

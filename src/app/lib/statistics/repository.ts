@@ -7,7 +7,6 @@ import { APIRepository } from '../repository';
 import { S11Player, StatisticsMap } from '../player';
 import { JsonStatistics } from './json';
 import { StatisticsMapper } from './mapper';
-import { Formation } from 'ngx-sport';
 import { GameRound } from '../gameRound';
 import { S11Formation } from '../formation';
 import { S11FormationLine } from '../formation/line';

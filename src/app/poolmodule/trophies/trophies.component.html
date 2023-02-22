@@ -17,6 +17,9 @@
     </div>
 </div>
 
+<app-pool-navbar [current]="Trophies" *ngIf="pool" [pool]="pool" [poolUser]="poolUser">
+</app-pool-navbar>
+
 <!-- <ng-template #contentMessageTitle let-message="message" let-end="end">
     <div class="d-flex mx-1" [ngClass]="{'flex-row-reverse': end}">
         <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>

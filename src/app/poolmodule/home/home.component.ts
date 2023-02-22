@@ -23,6 +23,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { CompetitionConfigRepository } from '../../lib/competitionConfig/repository';
 import { S11FormationCalculator } from '../../lib/formation/calculator';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 @Component({
     selector: 'app-pool-public',
@@ -105,6 +106,8 @@ export class HomeComponent extends PoolComponent implements OnInit {
         this.initPoolUsers(pool);
     }
 
+    // get PouleRankingTogetherSport(): NavBarItem { return NavBarItem.PouleRankingTogetherSport }
+    
     initPoolUsers(pool: Pool) {
         
         if (pool.getCreateAndJoinPeriod().isIn() || pool.getAssemblePeriod().isIn()) {

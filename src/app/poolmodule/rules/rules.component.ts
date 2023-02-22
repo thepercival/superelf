@@ -10,6 +10,7 @@ import { CompetitionConfigRepository } from '../../lib/competitionConfig/reposit
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { FootballCard, FootballGoal, FootballResult, FootballScore, FootballSheet } from '../../lib/score';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 @Component({
   selector: 'app-pool-rules',
@@ -43,6 +44,8 @@ export class RulesComponent extends PoolComponent implements OnInit {
       }
     });
   }
+
+  get Rules(): NavBarItem { return NavBarItem.Rules }
 
   getFormationNames(): string | undefined {
     return this.availableFormations?.map((formation: Formation) => {

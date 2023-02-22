@@ -194,13 +194,13 @@ export class TogetherRankingComponent implements OnInit {
     return competitor?.getPoolUser();
   }
 
-  getRouterLink(place: Place, gameRound: GameRound | undefined): (string | number)[] {
+  linkToPoolUser(place: Place, gameRound: GameRound | undefined): void {
     const poolUser = this.getPoolUser(place);
     if (poolUser == undefined) {
       throw new Error('could not find pooluser');
     }
 
-    return ['/pool/user', poolUser.getPool().getId(), poolUser.getId(), gameRound ? gameRound.getNumber() : 0];
+    this.router.navigate(['/pool/user', poolUser.getPool().getId(), poolUser.getId(), gameRound ? gameRound.getNumber() : 0]);
   }
 
   openModal(modalContent: TemplateRef<any>) {

@@ -1,8 +1,11 @@
-<tr *ngIf="line">
-  <td class="table-no-bottom-border">
-    <h5 class="card-title mt-3">
+<tr *ngIf="line" class="mt-3">
+  <td colspan="3" class="table-no-bottom-border">
+    <h5 class="card-title">
       <app-lineicon [line]="line.getNumber()" [abbreviate]="false"></app-lineicon>
     </h5>
+  </td>
+  <td class="table-no-bottom-border text-end">
+    <span *ngIf="totalPoints" class="badge bg-totals">{{totalPoints}}</span>    
   </td>
 </tr>
   
@@ -20,7 +23,7 @@
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </td>
   </tr>
-  <tr *ngIf="!processing" (click)="maybeLinkToPlayer(place)" [ngClass]="{'pointer': s11Player}">
+  <tr *ngIf="!processing" (click)="maybeLinkToPlayer(place)" [ngClass]="{'pointer': s11Player}">   
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
       <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
       <!-- <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="editPlace.emit(place)">
@@ -28,45 +31,41 @@
       </button> -->
       <span *ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
     </td>
-    <td class="{{getSubstituteClass(place.isSubstitute())}}">
+    <td class="{{getSubstituteClass(place.isSubstitute())}} text-nowrap">
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
     </td>
-    <ng-container *ngIf="gameRound;else viewPeriod">
-      <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
-        <ng-container *ngIf="place.hasStatistics(gameRound)">
-          <ng-container *ngIf="!place.isSubstitute();else substitute">
+    
+    <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
+      <ng-container *ngIf="place.hasStatistics(gameRound)">
+        <ng-container *ngIf="!place.isSubstitute();else substitute">
 
-            <ng-container *ngIf="place.hasAppeared(gameRound);else startingNotAppeared">
-              <span class="badge {{getPointsTotalsClass()}}">
+          <ng-container *ngIf="place.hasAppeared(gameRound);else startingNotAppeared">
+            <span class="badge bg-points">
+              {{place.getPoints(gameRound)}}</span>
+          </ng-container>
+          <ng-template #startingNotAppeared>
+            <span class="badge bg-nopoints">x</span>
+          </ng-template>
+
+        </ng-container>
+        <ng-template #substitute>
+          <div *ngIf="place.getFormationLine().hasSubstituteAppareance(gameRound)">
+            <ng-container *ngIf="place.hasAppeared(gameRound);else substituteNotAppeared">
+              <span class="badge bg-points">
                 {{place.getPoints(gameRound)}}</span>
             </ng-container>
-            <ng-template #startingNotAppeared>
+            <ng-template #substituteNotAppeared>
               <span class="badge bg-nopoints">x</span>
             </ng-template>
+          </div>
+        </ng-template>
+      </ng-container>
 
-          </ng-container>
-          <ng-template #substitute>
-            <div *ngIf="place.getFormationLine().hasSubstituteAppareance(gameRound)">
-              <ng-container *ngIf="place.hasAppeared(gameRound);else substituteNotAppeared">
-                <span class="badge {{getPointsTotalsClass()}}">
-                  {{place.getPoints(gameRound)}}</span>
-              </ng-container>
-              <ng-template #substituteNotAppeared>
-                <span class="badge bg-nopoints">x</span>
-              </ng-template>
-            </div>
-          </ng-template>
-        </ng-container>
-
-      </td>
-    </ng-container>
-    <ng-template #viewPeriod>
-      <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
-        <span class="badge {{getPointsTotalsClass()}}">
-          {{place.getPoints(gameRound)}}</span>
-      </td>
-    </ng-template>
-
-
+    </td>
+    
+    <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
+      <span class="badge bg-totals">
+        {{place.getTotalPoints()}}</span>
+    </td>
   </tr>
 </ng-template>
