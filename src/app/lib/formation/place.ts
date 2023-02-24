@@ -76,7 +76,7 @@ export class S11FormationPlace extends Identifiable {
         return this.totalPoints;
     }
 
-    getPoints(gameRound: GameRound | undefined): number {
+    getPoints(gameRound: GameRound | number | undefined): number {
         const player = this.getPlayer();
         if (player === undefined) {
             return 0;
@@ -84,7 +84,8 @@ export class S11FormationPlace extends Identifiable {
         if (gameRound === undefined) {
             return this.totalPoints;
         }
-        const statistics = player.getGameStatistics(gameRound.getNumber());
+        const gameRoundNr = gameRound instanceof GameRound ? gameRound.getNumber() : gameRound;
+        const statistics = player.getGameStatistics(gameRoundNr);
         if (statistics === undefined) {
             return 0;
         }

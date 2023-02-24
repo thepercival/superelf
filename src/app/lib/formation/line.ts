@@ -87,12 +87,13 @@ export class S11FormationLine extends Identifiable {
         return place;
     }
 
-    public hasSubstituteAppareance(gameRound: GameRound | undefined): boolean {
+    public hasSubstituteAppareance(gameRound: GameRound | number | undefined): boolean {
         if (gameRound === undefined) {
             return this.substituteAppearances.size > 0;
         }
+        const gameRoundNr = gameRound instanceof GameRound ? gameRound.getNumber() : gameRound;
         // console.log(this.getNumber(), this.substituteAppearances.has(gameRound.getNumber()));
-        return this.substituteAppearances.has(gameRound.getNumber());
+        return this.substituteAppearances.has(gameRoundNr);
     }
 
     // public getSubstituteAppearances(): Map<number, boolean> {
@@ -119,7 +120,7 @@ export class S11FormationLine extends Identifiable {
         return players;
     }
 
-    getPoints(gameRound: GameRound): number {
+    getPoints(gameRound: GameRound|number): number {
         let points = 0;
         for (let place of this.getPlaces()) {
             points += place.getPoints(gameRound);

@@ -45,7 +45,10 @@
       <!-- lines-->      
       <table *ngIf="currentGameRound" class="table">
         <tbody app-pool-formationline-view *ngFor="let line of formation?.getLines()" [line]="line"
-            (linkToPlayer)="linkToPlayer($event)" [gameRound]="currentGameRound" [totalPoints]="line.getNumber() === GoalKeeper ? totalPoints : undefined" class="">
+            (linkToPlayer)="linkToPlayer($event)" [gameRound]="currentGameRound" 
+            [totalPoints]="line.getNumber() === GoalKeeper ? totalPoints : undefined"
+            [totalGameRoundPoints]="line.getNumber() === GoalKeeper ? totalGameRoundPoints : undefined"
+            class="">
         </tbody>
       </table>
     </div>

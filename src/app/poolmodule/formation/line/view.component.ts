@@ -22,7 +22,8 @@ export class FormationLineViewComponent implements OnInit {
   @Input() selectedPlace: S11FormationPlace | undefined;
   @Input() gameRound!: GameRound;
   @Input() processing: boolean = true;
-  @Input() totalPoints: number|undefined
+  @Input() totalPoints: number|undefined;
+  @Input() totalGameRoundPoints: number|undefined;
   @Output() linkToPlayer = new EventEmitter<S11Player>();
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();

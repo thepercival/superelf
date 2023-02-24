@@ -268,7 +268,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
             return;
         }
         if (leagueName === LeagueName.SuperCup) {
-            this.router.navigate(['/pool/poule', this.pool.getId(), leagueName, 0]);
+            this.router.navigate(['/pool/poule-againstgames', this.pool.getId(), leagueName, 0]);
             return;
         }
         const currentRound = this.getCurrentRound(competition, gameRoundNumber);
@@ -277,7 +277,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
             currentPoule = this.getCurrentPoule(currentRound, leagueName, this.poolUser);
         }
         if (currentPoule !== undefined) {
-            this.router.navigate(['/pool/poule', this.pool.getId(), leagueName, currentPoule.getId()]);
+            this.router.navigate(['/pool/poule-againstgames', this.pool.getId(), leagueName, currentPoule.getId()]);
         } else {
             this.router.navigate(['/pool/cup', this.pool.getId()]);
         }

@@ -146,6 +146,6 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
   }
 
   navigateToPoule(poule: Poule): void {
-    this.router.navigate(['/pool/poule', this.pool.getId(), this.leagueName, poule.getId()]);
+    this.router.navigate(['/pool/poule-againstgames', this.pool.getId(), this.leagueName, poule.getId()]);
   }
 }

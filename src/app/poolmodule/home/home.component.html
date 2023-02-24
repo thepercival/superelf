@@ -37,7 +37,7 @@
         </ng-container>         
         <ng-template #superCupCard let-supercup="competition">                
           <div *ngIf="supercup && isFinished(supercup)" class="card card-competition pointer px-0" 
-              [routerLink]="['/pool/poule', pool.getId(), SuperCup, 0]">
+              [routerLink]="['/pool/poule-againstgames', pool.getId(), SuperCup, 0]">
             <div class="card-body text-center p-1 pt-2">
               <h1 class="card-title">
                 <app-superelf-icon [leagueName]="SuperCup"></app-superelf-icon>

@@ -91,7 +91,7 @@ export class                           S11Formation extends Identifiable {
         } ) );
     }
 
-    getPoints(gameRound: GameRound): number {
+    getPoints(gameRound: GameRound|number): number {
         let points = 0;
         for (let line of this.getLines()) {
             points += line.getPoints(gameRound);

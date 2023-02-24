@@ -39,6 +39,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   public gameRounds: (GameRound | undefined)[] = [];
   public currentGameRound: GameRound | undefined;
   public totalPoints: number = 0;
+  public totalGameRoundPoints: number = 0;
   
   public processingStatistics: boolean = false;
 
@@ -102,6 +103,11 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     this.viewPeriod = viewPeriod;
     this.formation = poolUser.getFormationFromViewPeriod(viewPeriod);
     this.totalPoints = this.formation.getTotalPoints();
+    
+    if( gameRoundNr !== undefined) {
+      this.totalGameRoundPoints = this.formation.getPoints(gameRoundNr);
+      console.log(this.totalGameRoundPoints);
+    }
 
     this.initGameRounds(this.formation, gameRoundNr);
   }

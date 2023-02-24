@@ -1,8 +1,11 @@
 <tr *ngIf="line" class="mt-3">
-  <td colspan="3" class="table-no-bottom-border">
+  <td colspan="2" class="table-no-bottom-border">
     <h5 class="card-title">
       <app-lineicon [line]="line.getNumber()" [abbreviate]="false"></app-lineicon>
     </h5>
+  </td>
+  <td class="table-no-bottom-border text-end">
+    <span *ngIf="totalGameRoundPoints" class="badge bg-totals">{{totalGameRoundPoints}}</span>    
   </td>
   <td class="table-no-bottom-border text-end">
     <span *ngIf="totalPoints" class="badge bg-totals">{{totalPoints}}</span>    
