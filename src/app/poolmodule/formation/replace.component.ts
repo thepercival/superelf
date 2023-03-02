@@ -33,6 +33,7 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
   selectedSearchLine: FootballLine | undefined;
   selectedTeamMap: TeamMap = new TeamMap();
   public calcFormation: S11Formation|undefined;
+  public assembleFormation: S11Formation|undefined;
   public calculator = new S11FormationCalculator();
   public oneTeamSimultaneous = new OneTeamSimultaneous();
 
@@ -63,14 +64,22 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
               if( this.hasNoNextEditAction(poolUser) ) {
                 this.setAlert('danger', 'je hebt al transfers of wissels gedaan');
               } else {
-                const calculator = new S11FormationCalculator();
-                this.calcFormation = calculator.getCurrentFormation(poolUser);
+                this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
+                  next: (assembleFormation: S11Formation) => {                    
+                    const calculator = new S11FormationCalculator();
+                    this.assembleFormation = assembleFormation;
+                    this.calcFormation = calculator.getCurrentFormation(assembleFormation, poolUser.getTransferPeriodActionList());
+                  },
+                  error: (e: string) => {
+                    this.setAlert('danger', e); this.processing = false;
+                  },
+                  complete: () => this.processing = false
+                });
               }
             },
             error: (e: string) => {
               this.setAlert('danger', e); this.processing = false;
-            },
-            complete: () => this.processing = false
+            }
           });
         },
         error: (e) => {
@@ -80,26 +89,18 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
   }
 
   hasNoNextEditAction(poolUser: PoolUser): boolean {
-    return poolUser.getTransfers().length > 0 || poolUser.getSubstitutions().length > 0
+    return poolUser.getTransferPeriodActionList().transfers.length > 0 || poolUser.getTransferPeriodActionList().substitutions.length > 0
   }
 
-  linkToReplace(place: S11FormationPlace) {
+  linkToReplace(assembleFormation: S11Formation, place: S11FormationPlace) {
     const navigationExtras: NavigationExtras = {
       queryParams: {
         line: place.getFormationLine().getNumber(),
         teamId: this.getTeamId(place)
       }
     };
-    const placeId = this.getAssemblePlaceId(place);
+    const placeId = assembleFormation.getPlace(place.getLine(), place.getNumber()).getId();
     this.router.navigate(['/pool/formation/place/replace/', this.pool.getId(), placeId], navigationExtras);
-  }
-
-  getAssemblePlaceId(place: S11FormationPlace): string|number {
-    const assembleFormation = this.poolUser.getAssembleFormation();
-    if( assembleFormation === undefined) {
-      throw new Error('assemble should be set');
-    }
-    return assembleFormation.getPlace(place.getLine(), place.getNumber()).getId();
   }
 
   getTeamId(place: S11FormationPlace): number | undefined {
@@ -116,12 +117,12 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
     }*/);
   }
   
-  remove(replacement: Replacement) {
+  remove(assembleFormation: S11Formation, replacement: Replacement) {
     this.processing = true;   
     this.formationRepository.removeReplacement(replacement, replacement.getPoolUser()).subscribe({
       next: () => {
         const calculator = new S11FormationCalculator();
-        this.calcFormation = calculator.getCurrentFormation(replacement.getPoolUser());
+        this.calcFormation = calculator.getCurrentFormation(assembleFormation, replacement.getPoolUser().getTransferPeriodActionList());
         this.processing = false;   
       },
       error: (e) => {

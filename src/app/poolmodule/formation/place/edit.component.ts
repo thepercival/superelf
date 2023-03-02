@@ -5,6 +5,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FootballLine, Team, Person, TeamCompetitor } from 'ngx-sport';
+import { S11Formation } from '../../../lib/formation';
 import { S11FormationPlace } from '../../../lib/formation/place';
 import { FormationRepository } from '../../../lib/formation/repository';
 import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
@@ -26,7 +27,7 @@ import { ChoosePlayersFilter } from '../../player/choose.component';
   styleUrls: ['./edit.component.scss']
 })
 export class FormationPlaceEditComponent extends PoolComponent implements OnInit {
-  poolUser!: PoolUser;
+  assembleFormation: S11Formation|undefined;
   scoutingList: ScoutingList = { scoutedPlayers: []/*, mappedPersons: new PersonMap()*/ };
   public form: UntypedFormGroup;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
@@ -43,8 +44,8 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
     poolRepository: PoolRepository,
     globalEventsManager: GlobalEventsManager,
     protected poolUserRepository: PoolUserRepository,
+    protected formationRepository: FormationRepository,
     private location: Location,
-    private formationRepository: FormationRepository,
     public myNavigation: MyNavigation,
     private modalService: NgbModal,
     fb: UntypedFormBuilder
@@ -67,21 +68,22 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
       });
       this.poolUserRepository.getObjectFromSession(pool).subscribe({
         next: (poolUser: PoolUser) => {
-          this.poolUser = poolUser;
           this.route.params.subscribe(params => {
-            if (params.placeId !== undefined) {
-              this.initPlace(+params.placeId);;
+            if (params.placeId === undefined) {
+              return;
             }
+            this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
+              next: (assembleFormation: S11Formation) => {
+                this.assembleFormation = assembleFormation;
+                this.initPlace(assembleFormation, +params.placeId);;
+              },
+              error: (e: string) => {
+                this.setAlert('danger', e); this.processing = false;
+              },
+              complete: () => this.processing = false
+            });                      
+            this.selectableTeams = this.pool.getSourceCompetition().getTeamCompetitors().map((teamCompetitor: TeamCompetitor) => teamCompetitor.getTeam())        
           });
-
-          this.selectableTeams = this.pool.getSourceCompetition().getTeamCompetitors().map((teamCompetitor: TeamCompetitor) => teamCompetitor.getTeam())
-
-          // const s11Formation = poolUser.getAssembleFormation();
-          // if (!s11Formation) {
-          //   this.form.controls.formation.setValue(undefined);
-          //   return;
-          // }
-          // this.assembleLines = this.getAssembleLines(formation);
         },
         error: (e: string) => {
           this.setAlert('danger', e); this.processing = false;
@@ -93,9 +95,9 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
 
   get AssembleViewPeriod(): ViewPeriodType { return ViewPeriodType.Assemble; }
 
-  private initPlace(placeId: number) {
-    this.place = this.getPlaceById(placeId);
-    this.initPlayerChoose();
+  private initPlace(assembleFormation: S11Formation, placeId: number) {
+    this.place = this.getPlaceById(assembleFormation, placeId);
+    this.initPlayerChoose(assembleFormation);
   }
 
   initPlayerChooseFilter(params: Params) {
@@ -108,15 +110,15 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
     }
   }
 
-  initPlayerChoose() {
+  initPlayerChoose(assembleFormation: S11Formation) {
     this.alreadyChosenPersons = [];
-    this.alreadyChosenTeams = this.getChoosenTeams();
+    this.alreadyChosenTeams = this.getChoosenTeams(assembleFormation);
     this.selectableLine = this.place.getFormationLine().getNumber();
   }
 
-  getChoosenTeams(): Team[] {
+  getChoosenTeams(assembleFormation: S11Formation): Team[] {
     const teams: Team[] = [];
-    this.poolUser.getAssembleFormation()?.getPlayers().forEach((player: S11Player) => {
+    assembleFormation.getPlayers().forEach((player: S11Player) => {
       const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player);
       if (currentPlayer === undefined) {
         return;
@@ -137,10 +139,8 @@ export class FormationPlaceEditComponent extends PoolComponent implements OnInit
     return teams;
   }
 
-  getPlaceById(placeId: number): S11FormationPlace {
-    const formation = this.poolUser.getAssembleFormation();
-
-    const place = formation?.getPlaces().find((place: S11FormationPlace): boolean => {
+  getPlaceById(assembleFormation: S11Formation, placeId: number): S11FormationPlace {
+    const place = assembleFormation.getPlaces().find((place: S11FormationPlace): boolean => {
       return place.getId() === placeId;
     });
     if (place === undefined) {

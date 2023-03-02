@@ -12,7 +12,7 @@
             scoutingslijst</span>
         </button>
         <button class="btn btn-secondary" [routerLink]="['/pool/formation/choose', pool.getId()]">
-          {{getFormationName()}}
+          <span *ngIf="assembleFormation">{{assembleFormation.getName()}}</span>
         </button>
       </div>
 
@@ -23,10 +23,10 @@
     </h2>
     <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-    <div *ngIf="!processing && pool && poolUser">
+    <div *ngIf="!processing && assembleFormation">
       <div *ngIf="!selectedPlace">
         <!-- lines-->
-        <app-pool-formationline-assemble *ngFor="let line of poolUser.getAssembleFormation()?.getLines()" [line]="line"
+        <app-pool-formationline-assemble *ngFor="let line of assembleFormation.getLines()" [line]="line"
           (editPlace)="editPlace($event)" (linkToPlayer)="linkToPlayer($event)">
         </app-pool-formationline-assemble>
       </div>

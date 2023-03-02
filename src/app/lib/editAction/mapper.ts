@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Association, PersonMapper, PlayerMapper } from 'ngx-sport';
+import { TransferPeriodActionList } from '../editAction';
 import { S11Formation } from '../formation';
 import { S11FormationPlace } from '../formation/place';
 import { JsonTransferPeriod } from '../period/transfer/json';
@@ -22,11 +23,11 @@ export class EditActionMapper {
         protected playerMapper: PlayerMapper,
         ) { }
 
-    toReplacement(json: JsonReplacement, poolUser: PoolUser, association: Association): Replacement {
-        const assembleFormation = poolUser.getAssembleFormation();
-        if( assembleFormation === undefined ) {
-            throw new Error('assembleFormation not found');
-        }
+    toReplacement(
+        json: JsonReplacement, 
+        poolUser: PoolUser,
+        association: Association): Replacement 
+    {
         const jsonPersonIn = json.playerIn.person;
         if( jsonPersonIn === undefined) {
             throw new Error('person can not be empty');
@@ -44,11 +45,7 @@ export class EditActionMapper {
         return replacement;
     }
 
-    toTransfer(json: JsonTransfer, poolUser: PoolUser, association: Association): Transfer {
-        const assembleFormation = poolUser.getAssembleFormation();
-        if( assembleFormation === undefined ) {
-            throw new Error('assembleFormation not found');
-        }
+    toTransfer(json: JsonTransfer, poolUser: PoolUser, association: Association): Transfer {        
         const jsonPersonIn = json.playerIn.person;
         if( jsonPersonIn === undefined) {
             throw new Error('person can not be empty');
@@ -67,10 +64,6 @@ export class EditActionMapper {
     }
 
     toSubstitution(json: JsonSubstitution, poolUser: PoolUser): Substitution {
-        const assembleFormation = poolUser.getAssembleFormation();
-        if( assembleFormation === undefined ) {
-            throw new Error('assembleFormation not found');
-        }
         const substitution = new Substitution(poolUser, json.lineNumberOut, json.placeNumberOut, new Date(json.createdDate));
         substitution.setId(json.id);
         return substitution;

@@ -24,7 +24,7 @@
             <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
 
-        <div *ngIf="!processing && poolPoule && homeCompetitor && awayCompetitor">
+        <div *ngIf="!processing && poolPoule">
             <h2 class="d-flex justify-content-center">
                 <app-poule-title [poule]="poolPoule" [poolCompetitors]="pool.getCompetitors(leagueName)">
                 </app-poule-title>
@@ -32,14 +32,14 @@
 
             <div class="d-flex justify-content-center mt-2">
                 <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
-                    (update)="updateGameRound($event)">
+                    (update)="setGameRoundAndGetStatistics($event)">
                 </app-gameround-scroller>
             </div>
 
-            <h2 *ngIf="!processing && processingGameRound" class="text-center">
+            <h2 *ngIf="processingGameRound" class="text-center">
                 <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-            </h2>
-            <table class="table" *ngIf="currentGameRound && !processingGameRound">
+            </h2>            
+            <table class="table" *ngIf="!processingGameRound && homeCompetitor && awayCompetitor && currentGameRound">
                 <tbody *ngFor="let sourceGame of sourceGames; let first = first;">
                     <tr *ngIf="first" class="fs-5">
                         <td class="border-bottom-0 pt-3 pb-0"></td>
@@ -124,6 +124,7 @@
 
             </table>
 
+            <!-- Start      PlayerName, Team And Line -->
             <ng-template #contentForamtionPlace let-formationPlace="formationPlace" let-away="away">
                 <ng-container *ngIf="formationPlace">
                     <div class="d-flex align-items-start" [ngClass]="{'flex-row-reverse': away}">
@@ -136,8 +137,9 @@
                         <span *ngIf="formationPlace.isSubstitute()" class="badge badge-reserve">r</span>
                     </div>
                 </ng-container>
-            </ng-template>
+            </ng-template> <!-- End      PlayerName, Team And Line -->
 
+            <!-- Start      PlayerScore -->
             <ng-template #contentForamtionPlaceScore let-formationPlace="formationPlace" let-sourceGame="sourceGame">
                 <ng-container *ngIf="formationPlace">
 
@@ -151,7 +153,7 @@
                     <ng-template #substituteScore>
 
                         <ng-container
-                            *ngIf="formationPlace.getFormationLine().getStartingPlacesState(currentGameRound) === Finished">
+                            *ngIf="currentGameRound && statisticsGetter.getStartingPlacesState(formationPlace.getFormationLine(),currentGameRound) === Finished">
 
                             <ng-container
                                 *ngIf="formationPlace.getFormationLine().hasSubstituteAppareance(currentGameRound);else subDoesNotAppear">
@@ -173,7 +175,7 @@
                     </ng-template>
 
                 </ng-container>
-            </ng-template>
+            </ng-template> <!-- End      PlayerScore -->
 
             <ng-template #contentPlayer let-s11Player="s11Player">
                 <span class="mx-1 text-break" *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
@@ -186,11 +188,12 @@
 </app-pool-navbar>
 
 <ng-template #lineupScore let-formationPlace="formationPlace" let-sourceGame="sourceGame">
-
-    <ng-container *ngIf="formationPlace.hasAppeared(currentGameRound);else startingNotAppeared">
+    <ng-container *ngIf="statisticsGetter.hasAppeared(formationPlace,currentGameRound);else startingNotAppeared">
         <span class="badge bg-points">
             <a [routerLink]="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
-                {{formationPlace.getPoints(currentGameRound)}}
+                <span *ngIf="currentGameRound">
+                    {{statisticsGetter.getFormationPlacePoints(formationPlace,currentGameRound)}}
+                </span>
             </a>
         </span>
     </ng-container>

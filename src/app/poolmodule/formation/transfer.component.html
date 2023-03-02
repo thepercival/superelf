@@ -14,10 +14,10 @@
     </div>
 
     <!-- start header --> 
-    <div *ngIf="!processing && poolUser" class="d-flex justify-content-between mt-3 mb-1">
+    <div *ngIf="!processing && poolUser && assembleFormation" class="d-flex justify-content-between mt-3 mb-1">
       <!-- left -->      
-        <button *ngIf="hasPlayersWithoutCurrentTeam(poolUser)" class="btn btn-outline-primary btn-sm"
-          (click)="linkToReplacements(poolUser, contentRemove)">
+        <button *ngIf="hasPlayersWithoutCurrentTeam(assembleFormation)" class="btn btn-outline-primary btn-sm"
+          (click)="linkToReplacements(poolUser, assembleFormation, contentRemove)">
           <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
           <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
         </button>                
@@ -25,15 +25,15 @@
       <!-- center/right -->
       <div class="d-flex">        
         <button *ngIf="transferEditMode === SingleEditMode 
-        && poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()" class="btn btn-outline-primary ms-1"
+        && poolUser.getTransferPeriodActionList().transfers.length < transferPeriod.getMaxNrOfTransfers()" class="btn btn-outline-primary ms-1"
           (click)="toggleTransferEditMode(contentInfo)">
           <fa-icon [icon]="['fas', 'users']"></fa-icon>
           </button>
-        <button *ngIf="transferEditMode === DoubleEditMode && (poolUser.getTransfers().length + 1) < transferPeriod.getMaxNrOfTransfers()" class="btn btn-secondary ms-1"
+        <button *ngIf="transferEditMode === DoubleEditMode && (poolUser.getTransferPeriodActionList().transfers.length + 1) < transferPeriod.getMaxNrOfTransfers()" class="btn btn-secondary ms-1"
         (click)="toggleTransferEditMode(contentInfo)">
         <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
         </button>
-        <button *ngIf="poolUser.getTransfers().length" type="button" class="btn btn-primary ms-1" (click)="remove(poolUser.getTransfers(), false)">
+        <button *ngIf="poolUser.getTransferPeriodActionList().transfers.length" type="button" class="btn btn-primary ms-1" (click)="remove(assembleFormation, poolUser.getTransferPeriodActionList().transfers, false)">
           <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
         </button>
       </div>
@@ -51,14 +51,14 @@
 
     <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-    <div *ngIf="!processing && pool && poolUser && calcFormation">
+    <div *ngIf="!processing && pool && poolUser && assembleFormation && calcFormation">
       <div *ngIf="!selectedPlace">
         <!-- lines-->
         <app-pool-formationline-transfers *ngFor="let line of calcFormation.getLines()" [line]="line"
-          [transfers]="poolUser.getTransfers()" [maxNrOfTransfers]="transferPeriod.getMaxNrOfTransfers()"
+          [transfers]="poolUser.getTransferPeriodActionList().transfers" [maxNrOfTransfers]="transferPeriod.getMaxNrOfTransfers()"
           [canRemoveTransfer]="canRemoveTransfer(calcFormation,line)"
           (transfer)="linkToTransfer($event)" (linkToPlayer)="linkToPlayer($event)"
-          (remove)="remove($event, false)">
+          (remove)="remove(assembleFormation, $event, false)">
         </app-pool-formationline-transfers>
       </div>
     </div>

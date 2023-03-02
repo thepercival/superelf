@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Competition } from 'ngx-sport';
 import { S11Formation } from '../formation';
 import { ViewPeriod } from '../period/view';
 import { PoolUser } from '../pool/user';

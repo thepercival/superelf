@@ -1,9 +1,9 @@
 import { FootballLine, Person, Player } from 'ngx-sport';
-import { EditAction } from '../editAction';
+import { TransferPeriodAction } from '../editAction';
 
 import { PoolUser } from '../pool/user';
 
-export class Transfer extends EditAction {
+export class Transfer extends TransferPeriodAction {
     constructor(
         poolUser: PoolUser, 
         lineNumberOut: FootballLine, 
@@ -12,7 +12,7 @@ export class Transfer extends EditAction {
         protected playerOut: Player,
         createdDateTime: Date) {
         super(poolUser, lineNumberOut, placeNumberOut, createdDateTime);
-        poolUser.getTransfers().push(this);
+        poolUser.getTransferPeriodActionList().transfers.push(this);
     }
 
     public getPlayerIn(): Player {

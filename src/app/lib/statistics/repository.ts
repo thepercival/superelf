@@ -4,18 +4,18 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
-import { S11Player, StatisticsMap } from '../player';
+import { S11Player } from '../player';
 import { JsonStatistics } from './json';
 import { StatisticsMapper } from './mapper';
 import { GameRound } from '../gameRound';
 import { S11Formation } from '../formation';
-import { S11FormationLine } from '../formation/line';
-import { S11FormationPlace } from '../formation/place';
+import { StatisticsGetter } from './getter';
 
 @Injectable({
     providedIn: 'root'
 })
 export class StatisticsRepository extends APIRepository {
+    
     constructor(
         private mapper: StatisticsMapper,
         private http: HttpClient) {
@@ -27,37 +27,38 @@ export class StatisticsRepository extends APIRepository {
     }
 
     getFormationUrl(formation: S11Formation, gameRound: GameRound): string {
-        return super.getApiUrl() + 'formation/' + formation.getId() + '/statistics/' + gameRound.getNumber();
+        return super.getApiUrl() + 'formations/' + formation.getId() + '/statistics/' + gameRound.getNumber();
     }
 
-    setPlayerObjects(s11Player: S11Player): Observable<StatisticsMap> {
-        return this.http.get<JsonStatistics[]>(this.getPlayerUrl(s11Player), this.getOptions()).pipe(
+
+    // gebruik deze repos als cache!!
+
+    getGameRoundObjects(formation: S11Formation, gameRound: GameRound, getter: StatisticsGetter): Observable<void> {
+        return this.http.get<JsonStatistics[]>(this.getFormationUrl(formation, gameRound), this.getOptions()).pipe(
             map((jsonStatistics: JsonStatistics[]) => {
-                const map = new StatisticsMap();
-                jsonStatistics.forEach((jsonGameRoundStatistics: JsonStatistics) => {
-                    map.set(
-                        jsonGameRoundStatistics.gameRound.number,
-                        this.mapper.toObject(jsonGameRoundStatistics));
+                jsonStatistics.forEach((jsonStatistics: JsonStatistics) => {
+                    const personId = jsonStatistics.person?.id;
+                    if( personId !== undefined ) {
+                        getter.addStatistics(gameRound, personId, this.mapper.toObject(jsonStatistics));
+                    }
                 });
-                s11Player.setStatistics(map);
-                return map;
             }),
             catchError((err) => this.handleError(err))
         );
     }
 
-    getFormationRequests(formation: S11Formation): Observable<StatisticsMap>[] {
-        const setStatistics: Observable<StatisticsMap>[] = [];
-
-        formation.getLines().forEach((line: S11FormationLine) => {
-            line.getPlaces().forEach((formationPlace: S11FormationPlace) => {
-                const s11Player = formationPlace.getPlayer();
-                if (s11Player === undefined || s11Player.hasStatistics()) {
-                    return;
-                }
-                setStatistics.push(this.setPlayerObjects(s11Player));
-            });
-        });
-        return setStatistics;
+    getPlayerObjects(s11Player: S11Player, getter: StatisticsGetter): Observable<void> {
+        return this.http.get<JsonStatistics[]>(this.getPlayerUrl(s11Player), this.getOptions()).pipe(
+            map((jsonStatistics: JsonStatistics[]) => {
+                const personId = s11Player.getPerson().getId();
+                jsonStatistics.forEach((jsonStatistics: JsonStatistics) => {
+                    const gameRoundNr = jsonStatistics.gameRound?.number;
+                    if( gameRoundNr !== undefined ) {
+                        getter.addStatistics(gameRoundNr, personId, this.mapper.toObject(jsonStatistics));
+                    }
+                });
+            }),
+            catchError((err) => this.handleError(err))
+        );
     }
 }

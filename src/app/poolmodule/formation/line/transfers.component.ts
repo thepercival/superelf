@@ -92,14 +92,6 @@ export class FormationLineTransfersComponent implements OnInit {
     return this.viewGameRound === undefined ? 'bg-totals' : 'bg-points';
   }
 
-  hasAppearances(place: S11FormationPlace): boolean {
-    const viewGameRound = this.viewGameRound;
-    if (viewGameRound === undefined) {
-      return true;
-    }
-    return place.getPlayer()?.getGameStatistics(viewGameRound.getNumber())?.hasAppeared() === true;
-  }
-
   maybeLinkToPlayer(place: S11FormationPlace): void {
     const s11Player = place.getPlayer();
     if (s11Player === undefined) {
@@ -146,8 +138,9 @@ export class FormationLineTransfersComponent implements OnInit {
     if( transfer === undefined) {
       return;
     }
-    if( transfer.getPoolUser().hasDoubleTransfer() ) {
-      this.remove.emit(transfer.getPoolUser().getTransfers())
+    const list = transfer.getPoolUser().getTransferPeriodActionList();
+    if( list.hasDoubleTransfer() ) {
+      this.remove.emit(list.transfers)
     } else {
       this.remove.emit([transfer])
     }

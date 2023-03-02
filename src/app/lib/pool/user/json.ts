@@ -15,6 +15,6 @@ export interface JsonPoolUser {
     replacements?: JsonReplacement[];
     transfers?: JsonTransfer[];
     substitutions?: JsonSubstitution[];
-    assembleFormation?: JsonS11Formation;
-    transferFormation?: JsonS11Formation;
+    hasAssembleFormation: boolean;
+    hasTransferFormation: boolean;
 }

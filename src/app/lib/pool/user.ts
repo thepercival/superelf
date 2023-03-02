@@ -10,17 +10,16 @@ import { Replacement } from '../editAction/replacement';
 import { Substitution } from '../editAction/substitution';
 import { Transfer } from '../editAction/transfer';
 import { ViewPeriod } from '../period/view';
+import { TransferPeriodActionList } from '../editAction';
 
 export class PoolUser extends Identifiable {
     private admin: boolean = false;
     protected competitors: PoolCompetitor[] = [];
     protected nrOfAssembled: number = 0;
     protected nrOfTransfers: number = 0;
-    protected assembleFormation: S11Formation | undefined;
-    protected transferFormation: S11Formation | undefined;
-    protected replacements: Replacement[] = [];
-    protected transfers: Transfer[] = [];
-    protected substitutions: Substitution[] = [];
+    protected hasAssembleFormationProp: boolean = false;
+    protected hasTransferFormationProp: boolean = false;
+    protected transferPeriodActionList = new TransferPeriodActionList();
 
     constructor(protected pool: Pool, protected user: User) {
         super();
@@ -73,62 +72,23 @@ export class PoolUser extends Identifiable {
         this.nrOfTransfers = nrOfTransfers;
     }
 
-    getAssembleFormation(): S11Formation | undefined {
-        return this.assembleFormation;
+    hasAssembleFormation(): boolean {
+        return this.hasAssembleFormationProp;
     }
 
-    setAssembleFormation(formation: S11Formation | undefined) {
-        return this.assembleFormation = formation;
+    setAssembleFormation(hasAssembleFormation: boolean) {
+        this.hasAssembleFormationProp = hasAssembleFormation;
     }
 
-    getReplacements(): Replacement[] {
-        return this.replacements;
+    getTransferPeriodActionList(): TransferPeriodActionList {
+        return this.transferPeriodActionList;
+    }
+    
+    hasTransferFormation(): boolean {
+        return this.hasTransferFormationProp;
     }
 
-    getTransfers(): Transfer[] {
-        return this.transfers;
-    }
-
-    hasDoubleTransfer(): boolean {
-        return this.transfers.some((transfer: Transfer): boolean => {
-            return this.transfers.some((nextTransfer: Transfer): boolean => {
-                return transfer !== nextTransfer 
-                && transfer.getCreatedDate().getTime() === nextTransfer.getCreatedDate().getTime()
-            });
-        });
-    }
-
-    getSubstitutions(): Substitution[] {
-        return this.substitutions;
-    }
-
-    getTransferFormation(): S11Formation | undefined {
-        return this.transferFormation;
-    }
-
-    setTransferFormation(formation: S11Formation | undefined) {
-        return this.transferFormation = formation;
-    }
-
-    getFormation(editOrViewPeriod: AssemblePeriod | TransferPeriod): S11Formation | undefined {
-        if (editOrViewPeriod instanceof AssemblePeriod) {
-            return this.assembleFormation;
-        } else if (editOrViewPeriod instanceof TransferPeriod) {
-            return this.transferFormation;
-        } 
-        return undefined;
-    }
-
-    getFormationFromViewPeriod(viewPeriod: ViewPeriod): S11Formation {
-        let formation;
-        if( this.pool.getAssembleViewPeriod() === viewPeriod ) {
-            formation = this.assembleFormation;
-        } else if( this.pool.getTransferViewPeriod() === viewPeriod ) {
-            formation = this.transferFormation;
-        }
-        if( formation === undefined) {
-            throw new Error('formation not found from viewPeriod');
-        }
-        return formation;
+    setTransferFormation(hasTransferFormation: boolean) {
+        this.hasTransferFormationProp = hasTransferFormation;
     }
 }

@@ -82,36 +82,38 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
       .subscribe({
         next: (poolUser: PoolUser) => {
           this.poolUser = poolUser;
-          const calculator = new S11FormationCalculator();
-          this.calcFormation = calculator.getCurrentFormation(poolUser);
-          this.route.params.subscribe(params => {
-            if (params.lineNr !== undefined && params.placeNr !== undefined) {
-              this.initPlace(+params.lineNr,+params.placeNr);
+          this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
+            next: (assembleFormation: S11Formation) => {
+              const calculator = new S11FormationCalculator();
+              const calcFormation = calculator.getCurrentFormation(assembleFormation, poolUser.getTransferPeriodActionList());
+              this.route.params.subscribe(params => {
+                if (params.lineNr !== undefined && params.placeNr !== undefined) {
+                  this.initPlace(assembleFormation, +params.lineNr,+params.placeNr);
+                }
+              });
+            },
+            error: (e) => {
+              this.setAlert('danger', e); this.processing = false;
             }
           });
         },
         error: (e) => {
           this.setAlert('danger', e); this.processing = false;
-        },
-        complete: () => this.processing = false
+        }
       });     
     });
   }
 
-  private initPlace(lineNumber: number, placeNumber: number) {
-    this.place = this.getPlace(lineNumber, placeNumber);
-    this.initPlayerChoose();
+  private initPlace(calcFormation: S11Formation, lineNumber: number, placeNumber: number) {
+    this.place = this.getPlace(calcFormation, lineNumber, placeNumber);
+    this.initPlayerChoose(calcFormation);
   }
 
-  initPlayerChoose() {
+  initPlayerChoose(calcFormation: S11Formation) {
     this.alreadyChosenPersons = [];
     const placeTeam = this.getTeamDescendingStart(this.place.getPlayer());
 
     const calculator = new S11FormationCalculator();
-    const calcFormation = calculator.getCurrentFormation(this.poolUser);
-    if( calcFormation === undefined ) {
-      throw new Error();
-    }
     const teams = calculator.getFormationTeams(calcFormation);
     const alreadyChosenTeams = teams.filter((team: Team): boolean => {
         return placeTeam !== team;
@@ -151,8 +153,8 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
     return s11Player.getPlayersDescendingStart().shift();
   }
 
-  getPlace(lineNumber: number, placeNumber: number): S11FormationPlace {
-    const place = this.calcFormation?.getPlace(lineNumber, placeNumber);
+  getPlace(calcFormation: S11Formation, lineNumber: number, placeNumber: number): S11FormationPlace {
+    const place = calcFormation.getPlace(lineNumber, placeNumber);
     if (place === undefined) {
       throw Error('de opstellings-plaats kan niet gevonden worden');
     }
@@ -191,7 +193,7 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
     
     this.formationRepository.transfer(jsonTransfer, this.poolUser).subscribe({
       next: () => {
-        if( this.poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()) {
+        if( this.poolUser.getTransferPeriodActionList().transfers.length < transferPeriod.getMaxNrOfTransfers()) {
           this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);
         } else {
           this.router.navigate(['/pool/formation/substitutions', this.pool.getId()]);

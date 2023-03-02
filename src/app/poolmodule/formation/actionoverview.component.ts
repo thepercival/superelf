@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { FootballLine, NameService, Player } from 'ngx-sport';
+import { FootballLine, Formation, NameService, Player } from 'ngx-sport';
 import { Pool } from '../../lib/pool';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { PoolUser } from '../../lib/pool/user';
@@ -13,6 +13,8 @@ import { Transfer } from '../../lib/editAction/transfer';
 import { Substitution } from '../../lib/editAction/substitution';
 import { S11FormationCalculator } from '../../lib/formation/calculator';
 import { S11Formation } from '../../lib/formation';
+import { TransferPeriodActionList } from '../../lib/editAction';
+import { FormationRepository } from '../../lib/formation/repository';
 
 @Component({
   selector: 'app-pool-actionoverview',
@@ -21,6 +23,7 @@ import { S11Formation } from '../../lib/formation';
 })
 export class FormationActionOverviewComponent extends PoolComponent implements OnInit {
   poolUser!: PoolUser;
+  list!: TransferPeriodActionList;
   nameService = new NameService();
   replacements: Replacement[]|undefined;
   transfers: Transfer[]|undefined;
@@ -32,7 +35,8 @@ export class FormationActionOverviewComponent extends PoolComponent implements O
     router: Router,
     poolRepository: PoolRepository,
     globalEventsManager: GlobalEventsManager,
-    protected poolUserRepository: PoolUserRepository
+    protected poolUserRepository: PoolUserRepository,
+    protected formationRepository: FormationRepository
   ) {
     super(route, router, poolRepository, globalEventsManager);
   }
@@ -46,11 +50,17 @@ export class FormationActionOverviewComponent extends PoolComponent implements O
             this.poolUserRepository.getObject(pool, +params.poolUserId).subscribe({
               next: ((poolUser: PoolUser) => {
                 this.poolUser = poolUser;
-                this.replacements = poolUser.getReplacements();
-                this.transfers = poolUser.getTransfers();
-                this.substitutions = poolUser.getSubstitutions();
-                const calculator = new S11FormationCalculator();                
-                this.calcFormation = calculator.getCurrentFormation(poolUser);
+                this.list = poolUser.getTransferPeriodActionList();
+                this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
+                  next: ((assembleFormation: S11Formation) => {
+                    const calculator = new S11FormationCalculator();                
+                    this.calcFormation = calculator.getCurrentFormation(assembleFormation, this.list);
+                  }),
+                  error: (e: string) => {
+                    this.setAlert('danger', e); this.processing = false;
+                  },
+                  complete: () => this.processing = false
+                });
               }),
               error: (e: string) => {
                 this.setAlert('danger', e); this.processing = false;
@@ -65,19 +75,15 @@ export class FormationActionOverviewComponent extends PoolComponent implements O
       });
   }
 
-  getPlayerIn(substitution: Substitution): Player {
-    return this.getPlayer(substitution.getLineNumberOut());
+  getPlayerIn(calcFormation: S11Formation, substitution: Substitution): Player {
+    return this.getPlayer(calcFormation, substitution.getLineNumberOut());
   }
 
-  getPlayerOut(substitution: Substitution): Player {
-    return this.getPlayer(substitution.getLineNumberOut(), substitution.getPlaceNumberOut());
+  getPlayerOut(calcFormation: S11Formation, substitution: Substitution): Player {
+    return this.getPlayer(calcFormation, substitution.getLineNumberOut(), substitution.getPlaceNumberOut());
   }
 
-  private getPlayer(lineNumber: FootballLine, placeNumber?: number|undefined): Player {
-    const calcFormation = this.calcFormation;
-    if( calcFormation === undefined ) {
-      throw new Error('no formation found');
-    }
+  private getPlayer(calcFormation: S11Formation, lineNumber: FootballLine, placeNumber?: number|undefined): Player {
     const formationLine = calcFormation.getLine(lineNumber);
     let place = formationLine.getSubstitute();
     if( placeNumber !== undefined) {

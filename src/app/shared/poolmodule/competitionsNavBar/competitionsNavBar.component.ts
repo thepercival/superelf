@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgainstGame, Competition, Poule, Round, Structure, TogetherGame, TogetherGamePlace } from 'ngx-sport';
 
@@ -15,7 +15,7 @@ import { CompetitionsNavBarItem } from './items';
   templateUrl: './competitionsNavBar.component.html',
   styleUrls: ['./competitionsNavBar.component.scss']
 })
-export class PoolCompetitionsNavBarComponent {
+export class PoolCompetitionsNavBarComponent implements OnInit{
   @Input() pool!: Pool;
   @Input() poolUser: PoolUser|undefined;
   @Input() current: CompetitionsNavBarItem|undefined;
@@ -31,6 +31,10 @@ export class PoolCompetitionsNavBarComponent {
     public nameService: SuperElfNameService,
   ) {
 
+  }
+
+  ngOnInit(){
+    this.hasSuperCup = this.pool.getCompetition(LeagueName.SuperCup) !== undefined;
   }
 
   get Competition(): LeagueName { return LeagueName.Competition };

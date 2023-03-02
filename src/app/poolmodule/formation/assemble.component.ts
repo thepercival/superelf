@@ -16,6 +16,8 @@ import { S11Player } from '../../lib/player';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { S11Formation } from '../../lib/formation';
+import { StatisticsGetter } from '../../lib/statistics/getter';
 
 @Component({
   selector: 'app-pool-assemble',
@@ -23,13 +25,14 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
   styleUrls: ['./assemble.component.scss']
 })
 export class FormationAssembleComponent extends PoolComponent implements OnInit {
-  poolUser!: PoolUser;
+  assembleFormation: S11Formation|undefined;
   nameService = new NameService();
   teamPersonMap = new PersonMap();
   selectedPlace: S11FormationPlace | undefined;
   selectedSearchLine: FootballLine | undefined;
   selectedTeamMap: TeamMap = new TeamMap();
   public oneTeamSimultaneous = new OneTeamSimultaneous();
+  public statisticsGetter = new StatisticsGetter();
 
   constructor(
     route: ActivatedRoute,
@@ -52,7 +55,15 @@ export class FormationAssembleComponent extends PoolComponent implements OnInit 
         next: (pool: Pool) => {
           this.setPool(pool);
           this.poolUserRepository.getObjectFromSession(pool).subscribe({
-            next: (poolUser: PoolUser) => this.poolUser = poolUser,
+            next: (poolUser: PoolUser) => {
+              this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
+                next: (formation: S11Formation) => this.assembleFormation = formation,
+                error: (e: string) => {
+                  this.setAlert('danger', e); this.processing = false;
+                },
+                complete: () => this.processing = false
+              });
+            },
             error: (e: string) => {
               this.setAlert('danger', e); this.processing = false;
             },
@@ -63,10 +74,6 @@ export class FormationAssembleComponent extends PoolComponent implements OnInit 
           this.setAlert('danger', e); this.processing = false;
         }
       });
-  }
-
-  getFormationName(): string {
-    return this.poolUser?.getAssembleFormation()?.getName() ?? 'kies formatie';
   }
 
   editPlace(place: S11FormationPlace) {

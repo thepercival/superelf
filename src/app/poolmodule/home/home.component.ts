@@ -316,25 +316,25 @@ export class HomeComponent extends PoolComponent implements OnInit {
     // }
 
     linkToAssemble() {
-        if (!this.inAssembleMode()) {
-            return;
-        }
-        if (this.poolUser?.getAssembleFormation() !== undefined) {
-            this.router.navigate(['/pool/formation/assemble', this.pool.getId()]);
-        } else {
-            this.router.navigate(['/pool/formation/choose', this.pool.getId()]);
-        }
+        // if (!this.inAssembleMode()) {
+        //     return;
+        // }
+        // if (this.poolUser?.getAssembleFormation() !== undefined) {
+        //     this.router.navigate(['/pool/formation/assemble', this.pool.getId()]);
+        // } else {
+        //     this.router.navigate(['/pool/formation/choose', this.pool.getId()]);
+        // }
     }
 
     linkToTransferPeriodAction(poolUser: PoolUser) {
-        const transferPeriod = poolUser.getPool().getCompetitionConfig().getTransferPeriod();
-        if( !(new S11FormationCalculator()).areAllPlacesWithoutTeamReplaced(poolUser) ) {
-            this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
-          } else if( poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()) {
-            this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);
-          } else {
-            this.router.navigate(['/pool/formation/substitutions', this.pool.getId()]);
-          }
+        // const transferPeriod = poolUser.getPool().getCompetitionConfig().getTransferPeriod();
+        // if( !(new S11FormationCalculator()).areAllPlacesWithoutTeamReplaced(poolUser) ) {
+        //     this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
+        //   } else if( poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()) {
+        //     this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);
+        //   } else {
+        //     this.router.navigate(['/pool/formation/substitutions', this.pool.getId()]);
+        //   }
     }
     
     

@@ -20,6 +20,11 @@ import { Transfer } from '../editAction/transfer';
 import { JsonTransfer } from '../editAction/transfer/json';
 import { Substitution } from '../editAction/substitution';
 import { JsonSubstitution } from '../editAction/substitution/json';
+import { ViewPeriod } from '../period/view';
+import { AssemblePeriod } from '../period/assemble';
+import { TransferPeriod } from '../period/transfer';
+import { Pool } from '../pool';
+import { S11FormationMap } from '../../poolmodule/schedule/allinonegame.component';
 
 @Injectable({
     providedIn: 'root'
@@ -45,18 +50,61 @@ export class FormationRepository extends APIRepository {
         return baseUrl;
     }
 
+    getMapUrl(pool: Pool, viewPeriod: ViewPeriod): string {
+        return super.getApiUrl() + 'pools/' + pool.getId() + '/viewperiods/' + viewPeriod.getId();
+    }
+
     getTransferPeriodActionUrl(poolUser: PoolUser, action: string, id?: string|number): string {
         return super.getApiUrl() + 'poolusers/' + poolUser.getId() + '/' + action + (id ? '/' + id : '');
     }
 
 
-    // getObjects(sport: Sport): Observable<Formation[]> {
-    //     return this.http.get(this.getUrl(sport), this.getOptions()).pipe(
-    //         map((jsonFormations: JsonFormation[]) => jsonFormations.map(jsonFormation => {
-    //             return this.mapper.toObject(jsonFormation, sport);
-    //         })),
-    //         catchError((err) => this.handleError(err))
-    //     );
+    getObject(poolUser: PoolUser, editOrViewPeriod: AssemblePeriod | TransferPeriod | ViewPeriod): Observable<S11Formation> {
+        const viewPeriod = editOrViewPeriod instanceof ViewPeriod ? editOrViewPeriod : editOrViewPeriod.getViewPeriod();
+        const url = super.getApiUrl() + 'poolusers/' + poolUser.getId() + '/viewperiods/' + viewPeriod.getId();
+        return this.http.get<JsonS11Formation>(url, this.getOptions()).pipe(
+            map((jsonFormation: JsonS11Formation) => this.mapper.toObject(jsonFormation, poolUser, viewPeriod)),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    getObjectMap(pool: Pool, editOrViewPeriod: AssemblePeriod | TransferPeriod | ViewPeriod): Observable<S11FormationMap> {
+        const viewPeriod = editOrViewPeriod instanceof ViewPeriod ? editOrViewPeriod : editOrViewPeriod.getViewPeriod();
+        return this.http.get<JsonS11FormationMap>(this.getMapUrl(pool,viewPeriod), this.getOptions()).pipe(
+            map((jsonFormationMap: JsonS11FormationMap) => {
+                const map = new Map<number,S11Formation>();
+                for (const [poolUserId, jsonFormation] of Object.entries(jsonFormationMap)) {
+                    const poolUser = pool.getUsers().find(poolUser => poolUser.getId() == poolUserId);
+                    if( poolUser !== undefined ) {
+                        map.set(+poolUserId, this.mapper.toObject(jsonFormation, poolUser, viewPeriod));
+                    }
+                }
+                return map;                
+            }),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+     // getFormation(): S11Formation | undefined {
+    //     if (editOrViewPeriod instanceof AssemblePeriod) {
+    //         return this.assembleFormation;
+    //     } else if (editOrViewPeriod instanceof TransferPeriod) {
+    //         return this.transferFormation;
+    //     } 
+    //     return undefined;
+    // }
+
+    // getFormationFromViewPeriod(viewPeriod: ViewPeriod): S11Formation {
+    //     let formation;
+    //     if( this.pool.getAssembleViewPeriod() === viewPeriod ) {
+    //         formation = this.assembleFormation;
+    //     } else if( this.pool.getTransferViewPeriod() === viewPeriod ) {
+    //         formation = this.transferFormation;
+    //     }
+    //     if( formation === undefined) {
+    //         throw new Error('formation not found from viewPeriod');
+    //     }
+    //     return formation;
     // }
 
     editObject(poolUser: PoolUser, availableFormation: Formation): Observable<S11Formation> {
@@ -65,7 +113,7 @@ export class FormationRepository extends APIRepository {
         return this.http.put<JsonS11Formation>(this.getUrl(poolUser), jsonFormation, { headers: super.getHeaders() }).pipe(
             map((jsonS11Formation: JsonS11Formation) => {
                 const formation = this.mapper.toObject(jsonS11Formation, poolUser, viewPeriod);
-                poolUser.setAssembleFormation(formation);
+                // poolUser.setAssembleFormation(formation);
                 return formation;
             }),
             catchError((err) => this.handleError(err))
@@ -132,7 +180,7 @@ export class FormationRepository extends APIRepository {
         const url = this.getTransferPeriodActionUrl(poolUser, 'replace', replacement.getId());
         return this.http.delete<void>(url, { headers: super.getHeaders() }).pipe(
             map(() => {
-                const replacements = poolUser.getReplacements();
+                const replacements = poolUser.getTransferPeriodActionList().replacements;
                 const idx = replacements.indexOf(replacement);
                 if (idx >= 0) {
                     replacements.splice(idx);                     
@@ -146,7 +194,7 @@ export class FormationRepository extends APIRepository {
         const url = this.getTransferPeriodActionUrl(poolUser, 'transfer', transfer.getId());
         return this.http.delete<void>(url, { headers: super.getHeaders() }).pipe(
             map(() => {
-                const transfers = poolUser.getTransfers();
+                const transfers = poolUser.getTransferPeriodActionList().transfers;
                 const idx = transfers.indexOf(transfer);
                 if (idx >= 0) {
                     transfers.splice(idx);                     
@@ -160,7 +208,7 @@ export class FormationRepository extends APIRepository {
         const url = this.getTransferPeriodActionUrl(poolUser, 'substitute', substitution.getId());
         return this.http.delete<void>(url, { headers: super.getHeaders() }).pipe(
             map(() => {
-                const substitutions = poolUser.getSubstitutions();
+                const substitutions = poolUser.getTransferPeriodActionList().substitutions;
                 const idx = substitutions.indexOf(substitution);
                 if (idx >= 0) {
                     substitutions.splice(idx);                     
@@ -222,3 +270,5 @@ export class FormationRepository extends APIRepository {
 
     */
 }
+
+export interface JsonS11FormationMap extends Map<number,JsonS11Formation>{};

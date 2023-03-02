@@ -1,9 +1,10 @@
-import { FootballLine } from "ngx-sport";
+import { FootballLine, JsonPerson } from "ngx-sport";
 import { JsonGameRound } from "../gameRound/json";
 import { Sheet } from "../sheet";
 
 export interface JsonStatistics {
-    gameRound: JsonGameRound,
+    gameRound: JsonGameRound|undefined,
+    person: JsonPerson|undefined,
     result: number,
     beginMinute: number,
     endMinute: number,

@@ -4,7 +4,9 @@ import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, Co
 import { Observable } from 'rxjs';
 import { AuthService } from '../../lib/auth/auth.service';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
+import { S11Formation } from '../../lib/formation';
 import { S11FormationPlace } from '../../lib/formation/place';
+import { FormationRepository } from '../../lib/formation/repository';
 import { GameRound } from '../../lib/gameRound';
 import { ImageRepository } from '../../lib/image/repository';
 import { LeagueName } from '../../lib/leagueName';
@@ -35,6 +37,7 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
   public currentSourceGame: AgainstGame | undefined;
   private startLocationMap!: StartLocationMap;
   private sourceStartLocationMap!: StartLocationMap;
+  public formationMap: Map<number,S11Formation>|undefined;
 
   public poule: Poule | undefined;
   public structureNameService!: StructureNameService;
@@ -53,7 +56,7 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
     router: Router,
     poolRepository: PoolRepository,
     globalEventsManager: GlobalEventsManager,
-    private playerRepository: PlayerRepository,
+    private formationRepository: FormationRepository,
     private poolUserRepository: PoolUserRepository,
     private structureRepository: StructureRepository,
     private gameRepository: GameRepository,
@@ -78,44 +81,57 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
           throw Error('competitionSport not found');
         }
 
-        this.structureRepository.getObject(competition).subscribe({
-          next: (structure: Structure) => {
-
-            const poolCompetitors = this.pool.getCompetitors(this.leagueName);
-            const round = structure.getSingleCategory().getRootRound();
-            const poule = round.getFirstPoule();
-            this.poule = poule;
-            const competitionSport = this.pool.getCompetitionSport(this.leagueName);
-            this.startLocationMap = new StartLocationMap(poolCompetitors);
-            this.structureNameService = new StructureNameService(this.startLocationMap);
-            const togetherRankingCalculator = new TogetherSportRoundRankingCalculator(competitionSport, [GameState.InProgress, GameState.Finished]);
-            this.sportRankingItems = togetherRankingCalculator.getItemsForPoule(poule);
-
-            this.gameRounds = this.getCurrentViewPeriod(pool).getGameRounds();
-
-            this.route.params.subscribe(params => {
-
-              this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
-                next: (structure: Structure) => {
-                  this.sourceStructure = structure;
-
-                  const gameRoundNumber = this.getCurrentSourceGameRoundNumber(poule);
-                  const gameRoundFromUrl = this.getGameRoundByNumber(gameRoundNumber);
-                  this.updateGameRound(gameRoundFromUrl, undefined);
+        const editPeriod = this.getMostRecentEndedEditPeriod(this.pool);
+        if (editPeriod === undefined) {
+          this.processing = false;
+          throw Error('geen competitie periode gevonden');
+        }
+        this.formationRepository.getObjectMap(this.pool, editPeriod).subscribe({
+          next: (formationMap: S11FormationMap) => {
+            this.formationMap = formationMap;
+            this.structureRepository.getObject(competition).subscribe({
+              next: (structure: Structure) => {
+    
+                const poolCompetitors = this.pool.getCompetitors(this.leagueName);
+                const round = structure.getSingleCategory().getRootRound();
+                const poule = round.getFirstPoule();
+                this.poule = poule;
+                const competitionSport = this.pool.getCompetitionSport(this.leagueName);
+                this.startLocationMap = new StartLocationMap(poolCompetitors);
+                this.structureNameService = new StructureNameService(this.startLocationMap);
+                const togetherRankingCalculator = new TogetherSportRoundRankingCalculator(competitionSport, [GameState.InProgress, GameState.Finished]);
+                this.sportRankingItems = togetherRankingCalculator.getItemsForPoule(poule);
+    
+                this.gameRounds = this.getCurrentViewPeriod(pool).getGameRounds();
+    
+                this.route.params.subscribe(params => {
+    
+                  this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
+                    next: (structure: Structure) => {
+                      this.sourceStructure = structure;
+    
+                      const gameRoundNumber = this.getCurrentSourceGameRoundNumber(poule);
+                      const gameRoundFromUrl = this.getGameRoundByNumber(gameRoundNumber);
+                      this.updateGameRound(gameRoundFromUrl, undefined);
+                    }
+                  });
+    
+                });
+    
+                if (this.poolUser && this.poule) {
+                  this.chatMessageRepository.getNrOfUnreadObjects(this.poule, pool).subscribe({
+                    next: (nrOfUnreadMessages: number) => {
+                      this.nrOfUnreadMessages = nrOfUnreadMessages;
+                    }
+                  });
                 }
-              });
-
-            });
-
-            if (this.poolUser && this.poule) {
-              this.chatMessageRepository.getNrOfUnreadObjects(this.poule, pool).subscribe({
-                next: (nrOfUnreadMessages: number) => {
-                  this.nrOfUnreadMessages = nrOfUnreadMessages;
-                }
-              });
-            }
+              },
+              error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
+            });            
           },
-          error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
+          error: (e) => {
+            this.setAlert('danger', e); this.processing = false;
+          }
         });
       });
     });
@@ -218,10 +234,13 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
   isCompetitor(sideCompetitor: Competitor | undefined): boolean {
     return sideCompetitor instanceof CompetitorBase;
   }
-
-  getFormationPlaces(sourceGame: AgainstGame, side: AgainstSide, poolUser: PoolUser): S11FormationPlace[] {
-    const editPeriod = this.getMostRecentEndedEditPeriod(poolUser.getPool());
-    const formation = editPeriod ? poolUser.getFormation(editPeriod) : undefined;
+  
+  public getFormationPlaces(sourceGame: AgainstGame, side: AgainstSide, formationMap: S11FormationMap, sportRankingItem: SportRoundRankingItem): S11FormationPlace[] {
+    const poolUser = this.getPoolUser(sportRankingItem);
+    if( poolUser === undefined) {
+      return [];
+    }
+    const formation = formationMap.get(+poolUser.getId());
     const team = this.getTeam(sourceGame.getSidePlaces(side));
     if (formation === undefined || team === undefined) {
       return [];
@@ -279,3 +298,5 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
     return ['/pool/user', poolUser.getPool().getId(), poolUser.getId(), gameRound ? gameRound.getNumber() : 0];
   }
 }
+
+export interface S11FormationMap extends Map<number,S11Formation>{};

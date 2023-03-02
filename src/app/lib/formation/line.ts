@@ -38,19 +38,7 @@ export class S11FormationLine extends Identifiable {
         });
     }
 
-    public getStartingPlacesState(gameRound: GameRound): GameState {
-        const finishedPlaces = this.getStartingPlaces().filter((formationPlace: S11FormationPlace): boolean => {
-            return formationPlace.getPlayer()?.getGameStatistics(gameRound.getNumber()) !== undefined;
-        });
-
-        if (finishedPlaces.length === this.getStartingPlaces().length) {
-            return GameState.Finished;
-        }
-        if (finishedPlaces.length > 0) {
-            return GameState.InProgress;
-        }
-        return GameState.Created;
-    }
+    
 
     // public canSubstituteAppear(gameRound: GameRound): GameState {
     //     const finishedPlaces = this.getStartingPlaces().filter((formationPlace: S11FormationPlace): boolean => {
@@ -118,14 +106,6 @@ export class S11FormationLine extends Identifiable {
             players.push(player);
         });
         return players;
-    }
-
-    getPoints(gameRound: GameRound|number): number {
-        let points = 0;
-        for (let place of this.getPlaces()) {
-            points += place.getPoints(gameRound);
-        }
-        return points;
     }
 
     getTotalPoints(): number {

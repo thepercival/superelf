@@ -9,12 +9,13 @@ import { ImageRepository } from '../../lib/image/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
-import { S11Player, StatisticsMap } from '../../lib/player';
+import { S11Player } from '../../lib/player';
 import { S11PlayerRepository } from '../../lib/player/repository';
 import { PointsCalculator } from '../../lib/points/calculator';
 import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
 import { Statistics } from '../../lib/statistics';
+import { StatisticsGetter } from '../../lib/statistics/getter';
 import { StatisticsRepository } from '../../lib/statistics/repository';
 
 import { CSSService } from '../../shared/commonmodule/cssservice';
@@ -41,6 +42,7 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
   public currentPoints: number | undefined;
   public sourceStructure: Structure | undefined;
   public startLocationMap!: StartLocationMap;
+  public statisticsGetter = new StatisticsGetter();
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public player: Player | undefined;
@@ -91,8 +93,8 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
         ).subscribe({
           next: (s11Player: S11Player) => {
             this.s11Player = s11Player;
-            this.statisticsRepository.setPlayerObjects(this.s11Player).subscribe({
-              next: (statistics: StatisticsMap) => {
+            this.statisticsRepository.getPlayerObjects(this.s11Player, this.statisticsGetter).subscribe({
+              next: () => {
                 this.pointsCalculator = new PointsCalculator(this.pool.getCompetitionConfig());
                 this.startLocationMap = new StartLocationMap(this.pool.getSourceCompetition().getTeamCompetitors());
                 this.initSliderGameRounds(currentGameRound);
@@ -142,7 +144,7 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
       }
       return;
     }
-    this.currentStatistics = this.s11Player.getGameStatistics(currentGameRound.getNumber());
+    this.currentStatistics = this.statisticsGetter.getStatistics(this.s11Player, currentGameRound);
 
     if (currentGameRound.hasAgainstGames()) {
       this.currentGame = (new GamePicker(this.pool.getSourceCompetition(), currentGameRound)).getGame(this.s11Player);

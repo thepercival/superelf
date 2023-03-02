@@ -20,6 +20,7 @@ export class S11PlayerMapper {
         const players = json.players.map((jsonPlayer: JsonPlayer) => this.playerMapper.toObject(
             jsonPlayer, association, person
         ));
+        console.log('S11Player');
         const s11Player = new S11Player(viewPeriod, person, players, json.totals, json.totalPoints);
         s11Player.setId(json.id);
         // if (json.statistics) {

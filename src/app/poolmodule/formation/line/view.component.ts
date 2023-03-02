@@ -7,9 +7,9 @@ import { FormationRepository } from '../../../lib/formation/repository';
 import { GameRound } from '../../../lib/gameRound';
 import { ImageRepository } from '../../../lib/image/repository';
 import { SuperElfNameService } from '../../../lib/nameservice';
-import { GameRepository } from '../../../lib/ngx-sport/game/repository';
 import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../../lib/player';
+import { StatisticsGetter } from '../../../lib/statistics/getter';
 import { CSSService } from '../../../shared/commonmodule/cssservice';
 
 @Component({
@@ -19,8 +19,8 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 })
 export class FormationLineViewComponent implements OnInit {
   @Input() line!: S11FormationLine;
-  @Input() selectedPlace: S11FormationPlace | undefined;
   @Input() gameRound!: GameRound;
+  @Input() statisticsGetter!: StatisticsGetter;
   @Input() processing: boolean = true;
   @Input() totalPoints: number|undefined;
   @Input() totalGameRoundPoints: number|undefined;
@@ -54,12 +54,13 @@ export class FormationLineViewComponent implements OnInit {
   }
 
   getCurrentTeam(s11Player: S11Player | undefined): Team | undefined {
-    if (!s11Player) {
+    if (s11Player === undefined ) {
       return undefined;
     }
     let date;
-    if( this.gameRound ) {
-      date = s11Player.getGameStatistics(this.gameRound.getNumber())?.getGameStartDate();
+    if( this.gameRound !== undefined ) {
+      const stats = this.statisticsGetter.getStatistics(s11Player, this.gameRound);
+      date = stats?.getGameStartDate();
     }
     const player = this.oneTeamSimultaneous.getPlayer(s11Player, date ?? new Date());
     if (!player) {

@@ -1,7 +1,10 @@
 import { FootballLine, Identifiable } from 'ngx-sport';
+import { Replacement } from './editAction/replacement';
+import { Substitution } from './editAction/substitution';
+import { Transfer } from './editAction/transfer';
 import { PoolUser } from './pool/user';
 
-export class EditAction extends Identifiable{
+export class TransferPeriodAction extends Identifiable{
 
     constructor(
         protected poolUser: PoolUser, 
@@ -25,5 +28,22 @@ export class EditAction extends Identifiable{
 
     public getCreatedDate(): Date {
         return this.createdDate;
+    }
+}
+
+export class TransferPeriodActionList {
+    constructor(
+        public replacements: Replacement[] = [],
+        public transfers: Transfer[] = [],
+        public substitutions: Substitution[] = []
+    ){}
+
+    hasDoubleTransfer(): boolean {
+        return this.transfers.some((transfer: Transfer): boolean => {
+            return this.transfers.some((nextTransfer: Transfer): boolean => {
+                return transfer !== nextTransfer 
+                && transfer.getCreatedDate().getTime() === nextTransfer.getCreatedDate().getTime()
+            });
+        });
     }
 }

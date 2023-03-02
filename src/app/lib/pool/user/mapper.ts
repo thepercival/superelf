@@ -33,10 +33,12 @@ export class PoolUserMapper {
             poolUser.setNrOfTransfers(json.nrOfTransfers);
         }
         const association = pool.getSourceCompetition().getAssociation();
-        if (json.assembleFormation) {
-            const formation = this.formationMapper.toObject(json.assembleFormation, poolUser, pool.getAssemblePeriod().getViewPeriod());
-            poolUser.setAssembleFormation(formation);
-        }
+        poolUser.setAssembleFormation(json.hasAssembleFormation);
+        poolUser.setTransferFormation(json.hasTransferFormation);
+        // if (json.assembleFormation) {
+        //     const formation = this.formationMapper.toObject(json.assembleFormation, poolUser, pool.getAssemblePeriod().getViewPeriod());
+        //     poolUser.setAssembleFormation(formation);
+        // }
         if (json.replacements) {
             json.replacements.forEach(jsonTransfer => this.editActionMapper.toReplacement(jsonTransfer, poolUser, association));
         }
@@ -46,10 +48,10 @@ export class PoolUserMapper {
         if (json.substitutions) {
             json.substitutions.forEach(jsonSub => this.editActionMapper.toSubstitution(jsonSub, poolUser));
         }
-        if (json.transferFormation) {
-            const formation = this.formationMapper.toObject(json.transferFormation, poolUser, pool.getTransferPeriod().getViewPeriod());
-            poolUser.setTransferFormation(formation)
-        }
+        // if (json.transferFormation) {
+        //     const formation = this.formationMapper.toObject(json.transferFormation, poolUser, pool.getTransferPeriod().getViewPeriod());
+        //     poolUser.setTransferFormation(formation)
+        // }
         json.competitors.forEach(jsonPoolCompetitor => {
             const competition = pool.getCompetitions().find(competition => competition.getId() === jsonPoolCompetitor.competitionId);
             if (competition) {

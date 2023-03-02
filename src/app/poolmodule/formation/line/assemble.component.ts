@@ -7,7 +7,6 @@ import { FormationRepository } from '../../../lib/formation/repository';
 import { GameRound } from '../../../lib/gameRound';
 import { ImageRepository } from '../../../lib/image/repository';
 import { SuperElfNameService } from '../../../lib/nameservice';
-import { GameRepository } from '../../../lib/ngx-sport/game/repository';
 import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../../lib/player';
 import { CSSService } from '../../../shared/commonmodule/cssservice';
@@ -20,7 +19,7 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 export class FormationLineAssembleComponent implements OnInit {
   @Input() line!: S11FormationLine;
   @Input() selectedPlace: S11FormationPlace | undefined;
-  @Input() viewGameRound: GameRound | undefined;
+  @Input() viewGameRound: GameRound | undefined;  
   @Input() processing: boolean = true;
   @Output() editPlace = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
@@ -83,14 +82,6 @@ export class FormationLineAssembleComponent implements OnInit {
 
   getPointsTotalsClass() {
     return this.viewGameRound === undefined ? 'bg-totals' : 'bg-points';
-  }
-
-  hasAppearances(place: S11FormationPlace): boolean {
-    const viewGameRound = this.viewGameRound;
-    if (viewGameRound === undefined) {
-      return true;
-    }
-    return place.getPlayer()?.getGameStatistics(viewGameRound.getNumber())?.hasAppeared() === true;
   }
 
   maybeLinkToPlayer(place: S11FormationPlace): void {

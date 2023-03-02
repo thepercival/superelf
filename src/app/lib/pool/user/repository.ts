@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -9,6 +9,8 @@ import { PoolUser } from '../user';
 import { AuthService } from '../../auth/auth.service';
 import { JsonPoolUser } from './json';
 import { PoolUserMapper } from './mapper';
+import { LeagueName } from '../../leagueName';
+import { StartLocation } from 'ngx-sport';
 
 @Injectable({
     providedIn: 'root'
@@ -46,8 +48,15 @@ export class PoolUserRepository extends APIRepository {
         );
     }
 
-    getObjects(pool: Pool): Observable<PoolUser[]> {
-        return this.http.get<JsonPoolUser[]>(this.getUrl(pool), this.getOptions()).pipe(
+    getObjects(pool: Pool, leagueName?: LeagueName, startLocations?: StartLocation[]): Observable<PoolUser[]> {
+        let options = this.getOptions();
+        if( leagueName !== undefined ) {
+            options = {
+                headers: this.getHeaders(),
+                params: this.getObjectsHttpParams(leagueName, startLocations ? startLocations : [])
+            };
+        }
+        return this.http.get<JsonPoolUser[]>(this.getUrl(pool), options).pipe(
             map((jsonPoolUsers: JsonPoolUser[]) => jsonPoolUsers.map(jsonPoolUser => {
                 return this.mapper.toObject(jsonPoolUser, pool);
             })),
@@ -61,5 +70,14 @@ export class PoolUserRepository extends APIRepository {
         return this.http.delete(url, this.getOptions()).pipe(
             catchError((err) => this.handleError(err))
         );
+    }
+
+    private getObjectsHttpParams(leagueName: LeagueName, startLocations: StartLocation[]): HttpParams {
+        let httpParams = new HttpParams();
+        let it = 0;
+        startLocations.forEach((startLocation: StartLocation) => {
+            httpParams = httpParams.set('startLocation' + it++, '' + startLocation.getStartId())
+        });
+        return httpParams.set('leagueName', leagueName);;
     }
 }

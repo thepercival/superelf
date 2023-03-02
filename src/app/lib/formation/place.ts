@@ -1,5 +1,4 @@
 import { FootballLine, Identifiable, Team } from 'ngx-sport';
-import { S11Formation } from '../formation';
 import { GameRound } from '../gameRound';
 import { OneTeamSimultaneous } from '../oneTeamSimultaneousService';
 import { S11Player } from '../player';
@@ -75,55 +74,5 @@ export class S11FormationPlace extends Identifiable {
     public getTotalPoints(): number {
         return this.totalPoints;
     }
-
-    getPoints(gameRound: GameRound | number | undefined): number {
-        const player = this.getPlayer();
-        if (player === undefined) {
-            return 0;
-        }
-        if (gameRound === undefined) {
-            return this.totalPoints;
-        }
-        const gameRoundNr = gameRound instanceof GameRound ? gameRound.getNumber() : gameRound;
-        const statistics = player.getGameStatistics(gameRoundNr);
-        if (statistics === undefined) {
-            return 0;
-        }
-        if (this.isSubstitute() && !this.getFormationLine().hasSubstituteAppareance(gameRound)) {
-            return 0;
-        }
-        const competitionConfig = this.getFormationLine().getFormation().getPoolUser().getPool().getCompetitionConfig();
-        return (new PointsCalculator(competitionConfig)).getPoints(this.getLine(), statistics);
-    }
-
-    hasStatistics(gameRound: GameRound | undefined): boolean {
-        const player = this.getPlayer();
-        if (player === undefined) {
-            return false;
-        }
-        if (gameRound === undefined) {
-            return player.hasSomeStatistics();
-        }
-        const statistics = player.getGameStatistics(gameRound.getNumber());
-        if (statistics === undefined) {
-            return false;
-        }
-        return !this.isSubstitute() || this.getFormationLine().hasSubstituteAppareance(gameRound);
-    }
-
-    hasAppeared(gameRound?: GameRound | undefined): boolean {
-        if (this.isSubstitute() && !this.getFormationLine().hasSubstituteAppareance(gameRound)) {
-            return false;
-        }
-        const s11Player = this.getPlayer();
-        if (s11Player === undefined) {
-            return false;
-        }
-        if (gameRound === undefined) {
-            return s11Player.hasAppeared();
-        }
-        return s11Player.getGameStatistics(gameRound.getNumber())?.hasAppeared() === true;
-    }
-
 }
 

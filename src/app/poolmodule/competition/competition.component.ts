@@ -150,15 +150,10 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
         if (currentGameRound !== undefined) {
           const idx = this.gameRounds.indexOf(this.currentGameRound);
           if (idx >= 0) {
-            this.gameRounds = this.gameRounds.splice(idx).concat([undefined], this.gameRounds);
-          } else {
-            this.gameRounds.push(undefined);
+            this.gameRounds = this.gameRounds.splice(idx).concat([], this.gameRounds);
           }
-        } else {
-          this.gameRounds.unshift(undefined);
         }
         console.log(this.gameRounds);
-
         
         this.updateGameRound(currentGameRound);
       },

@@ -46,7 +46,7 @@
                                 [competitionConfig]="pool.getCompetitionConfig()">
                             </app-s11player-viewperiod-statistics>
                             <app-s11player-gameround-statistics *ngIf="pool && currentGameRound"
-                                [statistics]="s11Player.getGameStatistics(currentGameRound.getNumber())"
+                                [statistics]="statisticsGetter.getStatistics(s11Player,currentGameRound)"
                                 [line]="s11Player.getLine()" [competitionConfig]="pool.getCompetitionConfig()">
                             </app-s11player-gameround-statistics>
                         </div>

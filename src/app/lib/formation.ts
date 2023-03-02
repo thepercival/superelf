@@ -7,7 +7,7 @@ import { ViewPeriod } from './period/view';
 import { S11Player } from './player';
 import { PoolUser } from './pool/user';
 
-export class                           S11Formation extends Identifiable {
+export class S11Formation extends Identifiable {
     static readonly FootbalNrOfPersons: number = 11;
     private lines: S11FormationLine[] = [];
 
@@ -89,14 +89,6 @@ export class                           S11Formation extends Identifiable {
         return new Formation( this.getLines().map((s11Line: S11FormationLine): FormationLine => {
             return new FormationLine(s11Line.getNumber(), s11Line.getStartingPlaces().length );
         } ) );
-    }
-
-    getPoints(gameRound: GameRound|number): number {
-        let points = 0;
-        for (let line of this.getLines()) {
-            points += line.getPoints(gameRound);
-        }
-        return points;
     }
 
     getTotalPoints(): number {

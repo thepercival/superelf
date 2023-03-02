@@ -1,4 +1,5 @@
 import { FootballLine, Player, Team } from "ngx-sport";
+import { TransferPeriodActionList } from "../editAction";
 import { Replacement } from "../editAction/replacement";
 import { Substitution } from "../editAction/substitution";
 import { Transfer } from "../editAction/transfer";
@@ -15,24 +16,20 @@ export class S11FormationCalculator {
         
     }
 
-    getCurrentFormation(poolUser: PoolUser): S11Formation|undefined {
-        const assembleFormation = poolUser.getAssembleFormation();
-        if( assembleFormation === undefined) {
-            return undefined;
-        }
+    getCurrentFormation(assembleFormation: S11Formation, transferPeriodActionList: TransferPeriodActionList): S11Formation|undefined {
         let newFormation = assembleFormation;        
         this.toConsole('after assemble', newFormation);        
-        poolUser.getReplacements().forEach((replacement: Replacement) => {
+        transferPeriodActionList.replacements.forEach((replacement: Replacement) => {
             newFormation = this.processReplacement(newFormation, replacement);            
         });
         this.toConsole('after replace', newFormation);        
         
-        poolUser.getTransfers().forEach((transfer: Transfer) => {
+        transferPeriodActionList.transfers.forEach((transfer: Transfer) => {
             newFormation = this.processTransfer(newFormation, transfer);            
         });
         this.toConsole('after transfer', newFormation);        
         
-        poolUser.getSubstitutions().forEach((substitution: Substitution) => {
+        transferPeriodActionList.substitutions.forEach((substitution: Substitution) => {
             newFormation = this.processSubstitution(newFormation, substitution);            
         });
         this.toConsole('after substitute', newFormation);        
@@ -99,6 +96,7 @@ export class S11FormationCalculator {
                 if( editAction.getLineNumberOut() === line.getNumber()
                 && editAction.getPlaceNumberOut() === currentPlace.getNumber()  ) {
                     const playerIn = editAction.getPlayerIn();
+                    //console.log('S11Player');
                     newS11Player = new S11Player(
                         currentFormation.getViewPeriod(), playerIn.getPerson(), [playerIn], currentPlace.getTotals(), 0
                     );
@@ -127,6 +125,7 @@ export class S11FormationCalculator {
                 );                
             });
             if( line.getNumber() === playerLineNumber) {
+                //console.log('S11Player');
                 const newS11Player = new S11Player(
                     currentFormation.getViewPeriod(), player.getPerson(), [player], 
                     this.createTotals(), 0
@@ -216,15 +215,11 @@ export class S11FormationCalculator {
         return newFormation;
     }
 
-    public areAllPlacesWithoutTeamReplaced(poolUser: PoolUser): boolean {        
-        const replacements = poolUser.getReplacements().slice();
+    public areAllPlacesWithoutTeamReplaced(assembleFormation: S11Formation, replacements: Replacement[]): boolean {        
+        replacements = replacements.slice();
 
-        const transferPeriodStart = poolUser.getPool().getTransferPeriod().getStartDateTime();
+        const transferPeriodStart = assembleFormation.getViewPeriod().getEndDateTime();
 
-        const assembleFormation = poolUser.getAssembleFormation();
-        if( assembleFormation === undefined ) {
-            throw new Error('kies eerst een startformatie');
-        }
         const placesWithoutTeam = assembleFormation.getPlacesWithoutTeam(transferPeriodStart);
 
         if( replacements.length > placesWithoutTeam.length ) {

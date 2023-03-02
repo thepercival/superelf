@@ -5,12 +5,12 @@
       <h2 class="me-2 text-truncate">
         <span>1. gestopte spelers vervangen</span>
       </h2>
-      <div *ngIf="calcFormation">
-        <button *ngIf="calculator.areAllPlacesWithoutTeamReplaced(poolUser)" class="btn btn-outline-primary"
-        (click)="linkToTransfers()">
-        <span>ga naar transfers</span>
-      </button>
-        <button *ngIf="!calculator.areAllPlacesWithoutTeamReplaced(poolUser)" class="btn btn-secondary ms-1" disabled>
+      <div *ngIf="poolUser && assembleFormation && calcFormation">
+        <button *ngIf="calculator.areAllPlacesWithoutTeamReplaced(assembleFormation, poolUser.getTransferPeriodActionList().replacements)" class="btn btn-outline-primary"
+          (click)="linkToTransfers()">
+          <span>ga naar transfers</span>
+        </button>
+        <button *ngIf="!calculator.areAllPlacesWithoutTeamReplaced(assembleFormation, poolUser.getTransferPeriodActionList().replacements)" class="btn btn-secondary ms-1" disabled>
           {{calcFormation.getName()}}
         </button>        
       </div>
@@ -18,13 +18,13 @@
     
     <ngb-alert class="mt-5" *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-    <div *ngIf="!processing && pool && poolUser && calcFormation">
+    <div *ngIf="!processing && pool && poolUser && calcFormation && assembleFormation">
       <div *ngIf="!selectedPlace">
         <!-- lines-->
         <app-pool-formationline-replacements *ngFor="let line of calcFormation.getLines()" [line]="line"
-          [replacements]="poolUser.getReplacements()"
-          (replace)="linkToReplace($event)" (linkToPlayer)="linkToPlayer($event)"
-          (remove)="remove($event)">
+          [replacements]="poolUser.getTransferPeriodActionList().replacements"
+          (replace)="linkToReplace(assembleFormation,$event)" (linkToPlayer)="linkToPlayer($event)"
+          (remove)="remove(assembleFormation,$event)">
         </app-pool-formationline-replacements>
       </div>
     </div>

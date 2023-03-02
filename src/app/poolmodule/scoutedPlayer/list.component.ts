@@ -17,6 +17,8 @@ import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addrem
 import { PoolUser } from '../../lib/pool/user';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { S11FormationPlace } from '../../lib/formation/place';
+import { S11FormationLine } from '../../lib/formation/line';
+import { S11Formation } from '../../lib/formation';
 
 @Component({
   selector: 'app-pool-scouting-list',
@@ -26,7 +28,7 @@ import { S11FormationPlace } from '../../lib/formation/place';
 export class ScoutedPlayerListComponent extends PoolComponent implements OnInit {
   scoutingList: ScoutingList = { scoutedPlayers: []/*, mappedPersons: new PersonMap()*/ };
   public oneTeamSimultaneous = new OneTeamSimultaneous();
-  private assembleFormationPlayers: S11Player[] | undefined;
+  public assembleFormation: S11Formation|undefined;
 
   constructor(
     route: ActivatedRoute,
@@ -50,10 +52,19 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
   }
 
   initPoolUser(pool: Pool) {
-    this.poolUserRepository.getObjectFromSession(pool)
-      .subscribe({
+    this.poolUserRepository.getObjectFromSession(pool).subscribe({
         next: (poolUser: PoolUser | undefined) => {
           this.poolUser = poolUser;
+          if( pool.getAssemblePeriod().isIn() && poolUser?.hasAssembleFormation() ) {            
+
+            this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod() ).subscribe({
+              next: (formation: S11Formation) => {
+                this.assembleFormation = formation;                
+              },
+              error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
+            });
+          }
+          
           // console.log(poolUser);
           // need to know team first
           this.initScoutedPlayers(pool);
@@ -61,14 +72,11 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
         error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
       });
   }
-
+  
   initScoutedPlayers(pool: Pool) {
     this.scoutedPlayerRepository.getObjects(pool.getSourceCompetition(), pool.getCreateAndJoinPeriod()).subscribe({
       next: (scoutedPlayers: ScoutedPlayer[]) => {
-        scoutedPlayers.forEach(scoutedPlayer => this.addToScoutingList(scoutedPlayer))
-        if (pool.getAssemblePeriod().isIn()) {
-          this.assembleFormationPlayers = this.poolUser?.getAssembleFormation()?.getPlayers();
-        }
+        scoutedPlayers.forEach(scoutedPlayer => this.addToScoutingList(scoutedPlayer));
       },
       error: (e) => {
         this.setAlert('danger', e); this.processing = false;
@@ -126,19 +134,17 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
     });
   }
 
-  showCopyToTeam(s11Player: S11Player): boolean {
-    const assembleFormation = this.poolUser?.getAssembleFormation();
-    const assembleFormationPlayers = this.assembleFormationPlayers;
+  showCopyToTeam(assembleFormation: S11Formation, s11Player: S11Player): boolean {
+    const assembleFormationPlayers = assembleFormation.getPlayers();
     //console.log(assembleFormationPlayers, assembleFormationPlayers?.indexOf(s11Player), s11Player);
-    return assembleFormation !== undefined &&
-      assembleFormationPlayers !== undefined && assembleFormationPlayers.find((s11PlayerIt: S11Player): boolean => {
+    return assembleFormationPlayers !== undefined && assembleFormationPlayers.find((s11PlayerIt: S11Player): boolean => {
         return s11PlayerIt.getPerson() === s11Player.getPerson();
       }) === undefined;
   }
 
-  copyToTeam(s11Player: S11Player) {
-
-    const firstEmptyPlace = this.getFirstEmptyPlace(s11Player.getLine());
+  copyToTeam(assembleFormation: S11Formation, s11Player: S11Player) {
+    const formationLine = assembleFormation.getLine(s11Player.getLine());    
+    const firstEmptyPlace = this.getFirstEmptyPlace(formationLine);
     if (firstEmptyPlace === undefined) {
       this.setAlert('danger', 'er is geen vrije plek in deze linie');
       return;
@@ -159,12 +165,7 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
 
   }
 
-  getFirstEmptyPlace(line: FootballLine): S11FormationPlace | undefined {
-    const assembleFormation = this.poolUser?.getAssembleFormation();
-    if (assembleFormation === undefined) {
-      return undefined;
-    }
-    const formationLine = assembleFormation.getLine(line);
+  getFirstEmptyPlace(formationLine: S11FormationLine): S11FormationPlace | undefined {
     const firstEmptyPlace = formationLine.getStartingPlaces().find((formationPlace: S11FormationPlace): boolean => {
       return formationPlace.getPlayer() === undefined;
     });

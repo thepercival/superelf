@@ -21,13 +21,13 @@
     <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
     <!-- replacements-->
-    <div *ngIf="!processing && replacements && replacements.length > 0" class="mt-5">
+    <div *ngIf="!processing && list && list.replacements.length > 0" class="mt-5">
       <h2>
         vervangingen
       </h2>
       <table class="table">
         <tbody>
-          <tr *ngFor="let replacement of replacements">
+          <tr *ngFor="let replacement of list.replacements">
             <td>
               <app-team-name [team]="replacement.getPlayerIn().getTeam()" [fullName]="false"></app-team-name>
             </td>
@@ -48,13 +48,13 @@
     </div>
 
     <!-- transfers-->
-    <div *ngIf="!processing && transfers && transfers.length > 0" class="mt-5">
+    <div *ngIf="!processing && list && list.transfers.length > 0" class="mt-5">
       <h2>
         transfers
       </h2>
       <table class="table">
         <tbody>
-          <tr *ngFor="let transfer of transfers">
+          <tr *ngFor="let transfer of list.transfers">
             <td class="text-nowrap">
               <app-team-name [team]="transfer.getPlayerOut().getTeam()" [fullName]="false"></app-team-name>
             </td>
@@ -78,31 +78,31 @@
     </div>
 
     <!-- wissels-->
-    <div *ngIf="!processing && substitutions && substitutions.length > 0" class="mt-5">
+    <div *ngIf="!processing && calcFormation && list && list.substitutions.length > 0" class="mt-5">
       <h2>
         wissels
       </h2>
       <table class="table">
         <tbody>
           
-          <tr *ngFor="let substitution of substitutions">
+          <tr *ngFor="let substitution of list.substitutions">
             <td>
               <app-lineicon [line]="substitution.getLineNumberOut()"></app-lineicon>
             </td>
             <td class="text-nowrap">
-              <app-team-name [team]="getPlayerOut(substitution).getTeam()" [fullName]="false"></app-team-name>
+              <app-team-name [team]="getPlayerOut(calcFormation, substitution).getTeam()" [fullName]="false"></app-team-name>
             </td>
             <td>
-              <span class="text-break">{{getPlayerIn(substitution).getPerson().getName()}}</span>
+              <span class="text-break">{{getPlayerIn(calcFormation, substitution).getPerson().getName()}}</span>
             </td>
             <td>
               <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
             </td>
             <td class="text-nowrap">
-              <app-team-name [team]="getPlayerIn(substitution).getTeam()" [fullName]="false"></app-team-name>
+              <app-team-name [team]="getPlayerIn(calcFormation, substitution).getTeam()" [fullName]="false"></app-team-name>
             </td>
             <td>
-              <span class="text-break">{{getPlayerOut(substitution).getPerson().getName()}}</span>
+              <span class="text-break">{{getPlayerOut(calcFormation, substitution).getPerson().getName()}}</span>
             </td>
           </tr>
         </tbody>

@@ -49,19 +49,28 @@ export class FormationChooseComponent extends PoolComponent implements OnInit {
               return this.poolUserRepository.getObjectFromSession(pool);
             })
           )
-            .subscribe({
-              next: (poolUser: PoolUser) => {
-                this.poolUser = poolUser;
-                const s11Formation = poolUser.getAssembleFormation();
-                if (s11Formation !== undefined) {
-                  this.currentFormation = s11Formation.getEqualFormation(this.formations);
-                }
-              },
-              error: (e) => {
-                this.setAlert('danger', e); this.processing = false;
-              },
-              complete: () => this.processing = false
-            });
+          .subscribe({
+            next: (poolUser: PoolUser) => {
+              this.poolUser = poolUser;
+              if( poolUser.hasAssembleFormation() ) {
+                this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
+                  next: (assembleFormation: S11Formation) => {
+                    this.currentFormation = assembleFormation.getEqualFormation(this.formations);
+                    this.processing = false;
+                  },
+                  error: (e) => {
+                    this.setAlert('danger', e); this.processing = false;
+                  }
+                });
+              } else {
+                this.processing = false;
+              }
+            },
+            error: (e) => {
+              this.setAlert('danger', e); this.processing = false;
+            },
+            complete: () => this.processing = false
+          });
         },
         error: (e) => {
           this.setAlert('danger', e); this.processing = false;
@@ -72,8 +81,7 @@ export class FormationChooseComponent extends PoolComponent implements OnInit {
   editFormation(newFormation: Formation) {
     this.formationRepository.editObject(this.poolUser, newFormation)
       .subscribe({
-        next: (s11Formation: S11Formation) => {
-          this.poolUser.setAssembleFormation(s11Formation);
+        next: () => {
           this.router.navigate(['/pool/formation/assemble', this.pool.getId()]);
         },
         error: (e) => {

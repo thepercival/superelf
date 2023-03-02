@@ -14,10 +14,10 @@
     </div>
 
     <!-- start header --> 
-    <div *ngIf="!processing && poolUser" class="d-flex justify-content-between mt-3 mb-1">
+    <div *ngIf="!processing && poolUser && assembleFormation" class="d-flex justify-content-between mt-3 mb-1">
       <!-- left -->      
         <button class="btn btn-outline-primary btn-sm"
-          (click)="linkToTransfers(poolUser, contentRemove)">
+          (click)="linkToTransfers(poolUser, assembleFormation, contentRemove)">
           <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
           <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
         </button>                
@@ -34,13 +34,13 @@
 
     <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
 
-    <div *ngIf="!processing && pool && poolUser && calcFormation">
+    <div *ngIf="!processing && pool && poolUser && assembleFormation && calcFormation">
       <div *ngIf="!selectedPlace">
         <!-- lines-->
         <app-pool-formationline-substitutions *ngFor="let line of calcFormation.getLines()" [line]="line"
-          [substitutions]="poolUser.getSubstitutions()"
-          (substitute)="substitute($event)" (linkToPlayer)="linkToPlayer($event)"
-          (remove)="remove($event, false)">
+          [substitutions]="poolUser.getTransferPeriodActionList().substitutions"
+          (substitute)="substitute(assembleFormation, $event)" (linkToPlayer)="linkToPlayer($event)"
+          (remove)="remove(assembleFormation, $event, false)">
         </app-pool-formationline-substitutions>
       </div>
     </div>

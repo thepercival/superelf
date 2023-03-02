@@ -32,9 +32,9 @@
         <tr *ngFor="let scoutedPlayer of scoutingList.scoutedPlayers"
           (click)="linkToPlayer(scoutedPlayer.getS11Player())" class="pointer">
           <!-- <ng-template let-player="scoutedPlayer.getPlayer()"> -->
-          <td *ngIf="pool.getAssemblePeriod().isIn()" class="text-end" (click)="$event.stopPropagation()">
-            <button *ngIf="showCopyToTeam(scoutedPlayer.getS11Player())"
-              (click)="copyToTeam(scoutedPlayer.getS11Player())" type="button" class="btn btn-sm btn-secondary">
+          <td *ngIf="assembleFormation" class="text-end" (click)="$event.stopPropagation()">
+            <button *ngIf="showCopyToTeam(assembleFormation, scoutedPlayer.getS11Player())"
+              (click)="copyToTeam(assembleFormation, scoutedPlayer.getS11Player())" type="button" class="btn btn-sm btn-secondary">
               <fa-icon [icon]=" [ 'fas', 'sign-in-alt'] "></fa-icon>
               <span class="d-none d-sm-inline ms-1">plaats in team</span>
             </button>

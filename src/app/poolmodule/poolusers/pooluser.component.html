@@ -33,7 +33,7 @@
         [currentViewPeriod]="viewPeriod" [assembleViewPeriod]="pool.getAssembleViewPeriod()" 
         [transferViewPeriod]="pool.getTransferViewPeriod()"
         (updateViewPeriod)="updateViewPeriod(poolUser, $event, undefined)"
-          (update)="updateGameRound(formation, $event)">
+          (update)="setGameRoundAndGetStatistics(formation, $event)">
         </app-gameround-scroller>
         <!-- <div class="ms-1">
           <span *ngIf="totalPointsAssemble" class="badge bg-totals">{{totalPointsAssemble}}</span>
@@ -45,14 +45,14 @@
       <!-- lines-->      
       <table *ngIf="currentGameRound" class="table">
         <tbody app-pool-formationline-view *ngFor="let line of formation?.getLines()" [line]="line"
-            (linkToPlayer)="linkToPlayer($event)" [gameRound]="currentGameRound" 
+            [statisticsGetter]="statisticsGetter" [gameRound]="currentGameRound" 
             [totalPoints]="line.getNumber() === GoalKeeper ? totalPoints : undefined"
             [totalGameRoundPoints]="line.getNumber() === GoalKeeper ? totalGameRoundPoints : undefined"
-            class="">
+            (linkToPlayer)="linkToPlayer($event)">
         </tbody>
       </table>
     </div>
-    <h2 *ngIf="processingStatistics" class="text-center">
+    <h2 *ngIf="processingFormation || processingStatistics" class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
   </div>

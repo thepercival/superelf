@@ -88,14 +88,6 @@ export class FormationLineReplacementsComponent implements OnInit {
     return this.viewGameRound === undefined ? 'bg-totals' : 'bg-points';
   }
 
-  hasAppearances(place: S11FormationPlace): boolean {
-    const viewGameRound = this.viewGameRound;
-    if (viewGameRound === undefined) {
-      return true;
-    }
-    return place.getPlayer()?.getGameStatistics(viewGameRound.getNumber())?.hasAppeared() === true;
-  }
-
   maybeLinkToPlayer(place: S11FormationPlace): void {
     const s11Player = place.getPlayer();
     if (s11Player === undefined) {

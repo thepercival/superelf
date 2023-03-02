@@ -24,6 +24,7 @@ import { ChoosePlayersFilter } from '../../player/choose.component';
 import { JsonReplacement } from '../../../lib/editAction/replacement/json';
 import { S11FormationCalculator } from '../../../lib/formation/calculator';
 import { ViewPeriodType } from '../../../lib/period/view/json';
+import { S11Formation } from '../../../lib/formation';
 
 @Component({
   selector: 'app-pool-place-replace',
@@ -41,6 +42,7 @@ export class FormationPlaceReplaceComponent extends PoolComponent implements OnI
   public alreadyChosenTeams: Team[] = [];
   public selectableTeam: Team | undefined;
   public selectableLines!: FootballLine[];
+  public assembleFormation: S11Formation|undefined;
   public formationChecker: FootballFormationChecker|undefined;
 
   constructor(
@@ -81,21 +83,29 @@ export class FormationPlaceReplaceComponent extends PoolComponent implements OnI
         next: (poolUser: PoolUser) => {
           this.poolUser = poolUser;
           this.route.params.subscribe(params => {
-            if (params.placeId !== undefined) {
-              this.initPlace(+params.placeId);;
+            if (params.placeId !== undefined) {              
+              this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
+                next: (assembleFormation: S11Formation) => {
+                  this.assembleFormation = assembleFormation
+                  this.initPlace(assembleFormation, +params.placeId);
+                  this.processing = false;
+                },
+                error: (e) => {
+                  this.setAlert('danger', e); this.processing = false;
+                }
+              });
             }
           });
         },
         error: (e) => {
           this.setAlert('danger', e); this.processing = false;
-        },
-        complete: () => this.processing = false
+        }
       });     
     });
   }
 
-  private initPlace(placeId: number) {
-    this.place = this.getPlaceById(placeId);
+  private initPlace(assembleFormation: S11Formation, placeId: number) {
+    this.place = this.getPlaceById(assembleFormation, placeId);
     this.initPlayerChoose();
   }
 
@@ -133,10 +143,8 @@ export class FormationPlaceReplaceComponent extends PoolComponent implements OnI
     return s11Player.getPlayersDescendingStart().shift();
   }
 
-  getPlaceById(placeId: number): S11FormationPlace {
-    const formation = this.poolUser.getAssembleFormation();
-
-    const place = formation?.getPlaces().find((place: S11FormationPlace): boolean => {
+  getPlaceById(assembleFormation: S11Formation, placeId: number): S11FormationPlace {
+    const place = assembleFormation.getPlaces().find((place: S11FormationPlace): boolean => {
       return place.getId() === placeId;
     });
     if (place === undefined) {
@@ -153,7 +161,7 @@ export class FormationPlaceReplaceComponent extends PoolComponent implements OnI
   }
 
 
-  replace(playerIn: Player, placeOut: S11FormationPlace) {
+  replace(assembleFormation: S11Formation, playerIn: Player, placeOut: S11FormationPlace) {
     const s11Player = placeOut.getPlayer();
     if( s11Player === undefined) {
       throw new Error('player out can not be empty');
@@ -172,12 +180,13 @@ export class FormationPlaceReplaceComponent extends PoolComponent implements OnI
       createdDate: (new Date()).toISOString()
     }
     const transferPeriod = this.poolUser.getPool().getCompetitionConfig().getTransferPeriod();
+    const actionList = this.poolUser.getTransferPeriodActionList();
     
     this.formationRepository.replace(jsonReplacement, this.poolUser).subscribe({
       next: () => {
-        if( !(new S11FormationCalculator()).areAllPlacesWithoutTeamReplaced(this.poolUser) ) {
+        if( !(new S11FormationCalculator()).areAllPlacesWithoutTeamReplaced(assembleFormation, actionList.replacements) ) {
           this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
-        } else if( this.poolUser.getTransfers().length < transferPeriod.getMaxNrOfTransfers()) {
+        } else if( actionList.transfers.length < transferPeriod.getMaxNrOfTransfers()) {
           this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);
         } else {
           this.router.navigate(['/pool/formation/substitutions', this.pool.getId()]);

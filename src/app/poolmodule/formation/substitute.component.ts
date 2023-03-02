@@ -37,6 +37,7 @@ export class FormationSubstituteComponent extends PoolComponent implements OnIni
   selectedSearchLine: FootballLine | undefined;
   selectedTeamMap: TeamMap = new TeamMap();
   public transferPeriod!: TransferPeriod;
+  public assembleFormation: S11Formation|undefined;
   public calcFormation: S11Formation|undefined;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
 
@@ -65,12 +66,20 @@ export class FormationSubstituteComponent extends PoolComponent implements OnIni
           this.poolUserRepository.getObjectFromSession(pool).subscribe({
             next: ((poolUser: PoolUser) => {
               this.poolUser = poolUser;
-              const calculator = new S11FormationCalculator();                
-              if( !calculator.areAllPlacesWithoutTeamReplaced(poolUser) ) {
-                this.setAlert('danger', 'er zijn nog spelers zonder team');
-              } else {
-                this.calcFormation = calculator.getCurrentFormation(poolUser);
-              }
+              this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
+                next: (assembleFormation: S11Formation) => {
+                  this.assembleFormation = assembleFormation;
+                  const calculator = new S11FormationCalculator();                
+                  if( !calculator.areAllPlacesWithoutTeamReplaced(assembleFormation, poolUser.getTransferPeriodActionList().replacements) ) {
+                    this.setAlert('danger', 'er zijn nog spelers zonder team');
+                  } else {
+                    this.calcFormation = calculator.getCurrentFormation(assembleFormation, poolUser.getTransferPeriodActionList());
+                  }
+                },
+                error: (e) => {
+                  this.setAlert('danger', e); this.processing = false;
+                }
+              });
             }),
             error: (e: string) => {
               this.setAlert('danger', e); this.processing = false;
@@ -82,19 +91,6 @@ export class FormationSubstituteComponent extends PoolComponent implements OnIni
           this.setAlert('danger', e); this.processing = false;
         }
       });
-  }
-
-  hasNoNextEditAction(poolUser: PoolUser): boolean {
-    return poolUser.getSubstitutions().length > 0
-  }
-
-  hasPlayersWithoutCurrentTeam(poolUser: PoolUser): boolean {
-    const assembleFormation = poolUser.getAssembleFormation();
-    if( assembleFormation === undefined) {
-      throw new Error('assemblePeriod cannot be empty');
-    }
-    const transferPeriodStart = this.pool.getCompetitionConfig().getTransferPeriod().getStartDateTime();
-    return assembleFormation.getPlacesWithoutTeam(transferPeriodStart).length > 0;
   }
 
   linkToTransfer(place: S11FormationPlace) {
@@ -120,22 +116,22 @@ export class FormationSubstituteComponent extends PoolComponent implements OnIni
     }*/);
   }
 
-  linkToTransfers(poolUser: PoolUser, modalContent: TemplateRef<any>): void {
-    if( poolUser.getSubstitutions().length === 0 ) {
+  linkToTransfers(poolUser: PoolUser, assembleFormation: S11Formation, modalContent: TemplateRef<any>): void {
+    if( poolUser.getTransferPeriodActionList().substitutions.length === 0 ) {
       this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);        
     } else {
-      this.openRemoveModal(modalContent);
+      this.openRemoveModal(assembleFormation, modalContent);
     }    
   }
 
-  openRemoveModal(modalContent: TemplateRef<any>) {
+  openRemoveModal(assembleFormation: S11Formation, modalContent: TemplateRef<any>) {
     const modalRef = this.modalService.open(modalContent);
     modalRef.result.then((poolUser: PoolUser) => {
-      this.remove(poolUser.getSubstitutions(), true);
+      this.remove(assembleFormation, poolUser.getTransferPeriodActionList().substitutions, true);
     });
   }
 
-  substitute(placeOut: S11FormationPlace) {
+  substitute(assembleFormation: S11Formation, placeOut: S11FormationPlace) {
     
     this.processing = true; 
     const jsonSubstitution: JsonSubstitution = {
@@ -147,7 +143,7 @@ export class FormationSubstituteComponent extends PoolComponent implements OnIni
     this.formationRepository.substitute(jsonSubstitution, this.poolUser).subscribe({
       next: () => {
         const calculator = new S11FormationCalculator();
-        this.calcFormation = calculator.getCurrentFormation(this.poolUser);
+        this.calcFormation = calculator.getCurrentFormation(assembleFormation, this.poolUser.getTransferPeriodActionList());
         this.processing = false;
       },
       error: (e: string) => {
@@ -158,7 +154,7 @@ export class FormationSubstituteComponent extends PoolComponent implements OnIni
     });
   }
 
-  remove(substitutions: Substitution[], linkToTransfers: boolean) {
+  remove(assembleFormation: S11Formation, substitutions: Substitution[], linkToTransfers: boolean) {
     this.processing = true;   
     const removeSubstitutionRequests: Observable<void>[] = substitutions.map((substitution: Substitution): Observable<void> => {
       return this.formationRepository.removeSubstitution(substitution, substitution.getPoolUser());
@@ -170,7 +166,7 @@ export class FormationSubstituteComponent extends PoolComponent implements OnIni
           this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);        
         }
         const calculator = new S11FormationCalculator();
-        this.calcFormation = calculator.getCurrentFormation(this.poolUser);
+        this.calcFormation = calculator.getCurrentFormation(assembleFormation, this.poolUser.getTransferPeriodActionList());
         this.processing = false;
       },
       error: (e) => {

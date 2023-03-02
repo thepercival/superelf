@@ -35,7 +35,7 @@
                 </app-game-scroller>
             </div>
 
-            <table class="table" *ngIf="!processingGames && currentSourceGame && sportRankingItems.length > 0">
+            <table class="table" *ngIf="!processingGames && formationMap && currentSourceGame && sportRankingItems.length > 0">
                 <tbody>
                     <tr *ngFor="let sportRankingItem of sportRankingItems">
                         <td>
@@ -45,12 +45,12 @@
                         </td>
                         <td>
                             <ng-container [ngTemplateOutlet]="contentForamtionPlaces"
-                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(currentSourceGame, HomeSide, getPoolUser(sportRankingItem))}">
+                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(currentSourceGame, HomeSide, formationMap, sportRankingItem)}">
                             </ng-container>
                         </td>
                         <td>
                             <ng-container [ngTemplateOutlet]="contentForamtionPlaces"
-                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(currentSourceGame, AwaySide, getPoolUser(sportRankingItem))}">
+                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(currentSourceGame, AwaySide, formationMap, sportRankingItem)}">
                             </ng-container>
                         </td>
                     </tr>
