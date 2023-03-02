@@ -1,6 +1,4 @@
-// .card-person {
-//     max-width: 500px;
-// }
+@import '../../../sass/main.scss';
 
 .person-base {
     min-width: 152px;
@@ -17,6 +15,20 @@ app-lineicon {
 tr>td {
     padding-top: 0px;
     border-bottom: 0px;
+}
+
+tr>td.sourceGame {
+    @extend .table-active;
+    cursor: pointer;
+}
+
+tr.sourceGameHome {
+    border-top-width: 1rem;
+    border-top-color: white;
+}
+
+.underline {
+    text-decoration-line: underline;
 }
 
 .btn-fixed-width {

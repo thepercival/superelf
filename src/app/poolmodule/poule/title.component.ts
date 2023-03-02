@@ -19,13 +19,13 @@ export class PouleTitleComponent implements OnInit {
 
   ngOnInit() {
     const homeStartLocation = this.poule.getPlace(1).getStartLocation();
-        if (homeStartLocation) {
-          this.homeCompetitor =this.poolCompetitors.find((competitor: PoolCompetitor) => competitor.getStartLocation().equals(homeStartLocation));
-        }
-        const awayStartLocation = this.poule.getPlace(2).getStartLocation();
-        if (awayStartLocation) {
-          this.awayCompetitor = this.poolCompetitors.find((competitor: PoolCompetitor) => competitor.getStartLocation().equals(awayStartLocation));
-        }
+    if (homeStartLocation) {
+      this.homeCompetitor =this.poolCompetitors.find((competitor: PoolCompetitor) => competitor.getStartLocation().equals(homeStartLocation));
+    }
+    const awayStartLocation = this.poule.getPlace(2).getStartLocation();
+    if (awayStartLocation) {
+      this.awayCompetitor = this.poolCompetitors.find((competitor: PoolCompetitor) => competitor.getStartLocation().equals(awayStartLocation));
+    }
   }
   
 
@@ -36,6 +36,30 @@ export class PouleTitleComponent implements OnInit {
     const startLocationMap = new StartLocationMap([homeCompetitor, awayCompetitor]);
     const againstPoule = new AgainstPoule(this.poule, startLocationMap);
     return againstPoule.getScore(AgainstSide.Home) + ' - ' + againstPoule.getScore(AgainstSide.Away)
-  }  
+  }
+
+  get Home(): AgainstSide { return AgainstSide.Home; }
+  get Away(): AgainstSide { return AgainstSide.Away; }
+
+  hasQualified(side: AgainstSide): boolean {
+    if ( this.poule.getPlaces().length == 1 ) {
+      return true;
+    }
+    const againstPoule = this.getAgainstPoule();
+    if (againstPoule === undefined) {
+      return false;
+    }    
+    return againstPoule.hasQualified(side);
+  }
+
+  getAgainstPoule(): AgainstPoule|undefined {
+    // const startLocationMap = new this.structureNameService.getStartLocationMap();
+    // if (startLocationMap === undefined) {
+    //   return undefined;
+    // }
+    return new AgainstPoule(this.poule, new StartLocationMap(this.poolCompetitors));
+  }
+
+
 }
 

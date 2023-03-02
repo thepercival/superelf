@@ -1,8 +1,8 @@
 <ng-container *ngIf="!reverse;else reversed">
     <img *ngIf="team" src="{{getImageUrl(team)}}" class="center-block" />&nbsp;
-    <span *ngIf="team" class="align-bottom ms-1">{{getName(team)}}</span>
+    <span *ngIf="team" class="align-bottom ms-1" [ngClass]="{'underline': underline}">{{getName(team)}}</span>
 </ng-container>
 <ng-template #reversed>
-    <span *ngIf="team" class="align-bottom me-1">{{getName(team)}}</span>
+    <span *ngIf="team" class="align-bottom me-1" [ngClass]="{'underline': underline}">{{getName(team)}}</span>
     <img *ngIf="team" src="{{getImageUrl(team)}}" class="img-fluid" />
 </ng-template>

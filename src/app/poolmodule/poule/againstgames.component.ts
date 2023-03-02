@@ -487,6 +487,28 @@ export class PoolPouleAgainstGamesComponent extends PoolComponent implements OnI
     this.router.navigate(['/pool/chat', this.pool.getId(), this.leagueName, poolPoule.getId()]);
   }
 
+  navigateToSourceGame(sourceGame: AgainstGame): void {
+    this.router.navigate(['/pool/sourcegame', this.pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]);
+  }
+
+  getAgainstSide(sourceGame: AgainstGame, team: Team): AgainstSide {
+    const side = [AgainstSide.Home,AgainstSide.Away].find((side: AgainstSide): boolean => {
+      return sourceGame.getSidePlaces(side).some((sideGamePlace: AgainstGamePlace): boolean => {
+        const startLocation = sideGamePlace.getPlace().getStartLocation();
+        if (startLocation === undefined) {
+          return false;
+        }
+        const competitor = <TeamCompetitor>this.startLocationMap.getCompetitor(startLocation);
+        return competitor.getTeam() === team;
+      });
+    })
+    if( side === undefined) {
+      throw new Error('no side found for team');
+    }
+    return side;
+    
+  }
+
   navigateToStructure() {
     if( this.pool === undefined) {
       return;

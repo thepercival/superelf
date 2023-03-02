@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AgainstGame, Competition, FootballLine, GameState, ScoreConfigService } from 'ngx-sport';
+import { AgainstGame, AgainstSide, Competition, FootballLine, GameState, ScoreConfigService } from 'ngx-sport';
 import { LeagueName } from './leagueName';
 import { FootballCard, FootballGoal, FootballResult, FootballScore, FootballSheet } from './score';
 
@@ -79,15 +79,18 @@ export class SuperElfNameService {
         throw Error('unknown leagueName');
     }
 
-    getAgainstScore(againstGame: AgainstGame): string {
+    getAgainstScore(againstGame: AgainstGame, side?: AgainstSide): string {
         if (againstGame.getState() !== GameState.Finished) {
-            return ' vs ';
+            return side === undefined ? ' vs ' : '';
         }
         const score = ' - ';
         const finalScore = this.scoreConfigService.getFinalAgainstScore(againstGame);
         if (finalScore === undefined) {
             return score;
         }
-        return finalScore.getHome() + score + finalScore.getAway();
+        if( side === undefined ) {
+            return finalScore.getHome() + score + finalScore.getAway();
+        }
+        return '' + finalScore.get(side);
     }
 }

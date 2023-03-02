@@ -10,6 +10,7 @@ import { ImageRepository } from '../../lib/image/repository';
 export class TeamNameComponent implements OnInit {
   @Input() team: Team | undefined;
   @Input() fullName: boolean = false;
+  @Input() underline: boolean = false;
   @Input() reverse: boolean = false;
 
   constructor(
