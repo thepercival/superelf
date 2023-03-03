@@ -25,7 +25,6 @@ export class PoolComponent {
         protected poolRepository: PoolRepository,
         protected globalEventsManager: GlobalEventsManager
     ) {
-        console.log('footer false');
         this.globalEventsManager.showFooter.emit(false);
     }
 

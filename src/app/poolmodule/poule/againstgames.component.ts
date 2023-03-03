@@ -111,12 +111,9 @@ export class PoolPouleAgainstGamesComponent extends PoolComponent implements OnI
             const sportVariant = poolCompetition.getSingleSport().getVariant();
             const currentGameRoundNr = this.getCurrentSourceGameRoundNr(poule, sportVariant);
             const viewPeriod = this.getViewPeriodByRoundNumber(currentGameRoundNr);
-            console.log(viewPeriod);
             const gameRoundNrs: number[] = this.getGameRoundNumbers(poule, sportVariant);
             const startLocations = this.getStartLocationsFromGameRoundNrs(poule, gameRoundNrs);
-            console.log(gameRoundNrs, 'current', currentGameRoundNr);
-            // console.log('leagueName', this.leagueName);
-
+            
             // -- GETTING POOLUSERS FOR STARTLOCATIONS
             this.poolUserRepository.getObjects(pool, this.leagueName, startLocations).subscribe((poolUsers: PoolUser[]) => {
               this.poolUser = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
@@ -156,10 +153,16 @@ export class PoolPouleAgainstGamesComponent extends PoolComponent implements OnI
                       this.gameRounds = gameRoundNrs.map((gameRoundNr: number): GameRound => {
                         return viewPeriod.getGameRound(gameRoundNr);
                       });
-                      this.processing = false;
 
                       const gameRound = viewPeriod.getGameRound(currentGameRoundNr);
-                      this.setGameRoundAndGetStatistics(gameRound);
+                      if (gameRound !== undefined) { // init scroller
+                        const idx = this.gameRounds.indexOf(gameRound);
+                        if (idx >= 0) {
+                          this.gameRounds = this.gameRounds.splice(idx).concat([], this.gameRounds);
+                        } 
+                        this.setGameRoundAndGetStatistics(gameRound);
+                      }
+                      this.processing = false;
                     }
                   });
                 },

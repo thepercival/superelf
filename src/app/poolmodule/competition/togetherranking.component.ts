@@ -42,20 +42,7 @@ export class TogetherRankingComponent implements OnInit {
     this.structureNameService = new StructureNameService(this.startLocationMap);
     this.togetherRankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport, [GameState.InProgress, GameState.Finished]);
     this.sportRankingItems = this.togetherRankingCalculator.getItemsForPoule(this.poule);
-    let total = 0;
-    this.poule.getTogetherGames().forEach((g: TogetherGame) => {
-      g.getTogetherPlaces().forEach((tg: TogetherGamePlace) => {
-          if( tg.getPlace().getPlaceNr() === 1 ) {
-            tg.getScores().forEach((sc: TogetherScore) => {
-              if( tg.getPlace().getPlaceNr() === 1 ) {
-                console.log('gr' + tg.getGameRoundNumber() , sc.getScore());
-                total += sc.getScore();
-              }
-            });
-          }
-        });
-    });
-    console.log('total = ' + total);
+    
     this.gameAmountConfig = this.poule.getRound().getNumber().getValidGameAmountConfig(this.competitionSport);
     this.initScoreMap();
     this.initTableData();    

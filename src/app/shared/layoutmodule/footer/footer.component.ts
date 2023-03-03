@@ -17,7 +17,6 @@ export class FooterComponent implements OnInit {
 
   ngOnInit() {
     this.globalEventsManager.showFooter.subscribe((show: boolean) => {
-      console.log('set showFooter', show );
       this.showFooter = show;
     });
   }

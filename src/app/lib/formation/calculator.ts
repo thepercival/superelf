@@ -96,7 +96,6 @@ export class S11FormationCalculator {
                 if( editAction.getLineNumberOut() === line.getNumber()
                 && editAction.getPlaceNumberOut() === currentPlace.getNumber()  ) {
                     const playerIn = editAction.getPlayerIn();
-                    //console.log('S11Player');
                     newS11Player = new S11Player(
                         currentFormation.getViewPeriod(), playerIn.getPerson(), [playerIn], currentPlace.getTotals(), 0
                     );
@@ -125,7 +124,6 @@ export class S11FormationCalculator {
                 );                
             });
             if( line.getNumber() === playerLineNumber) {
-                //console.log('S11Player');
                 const newS11Player = new S11Player(
                     currentFormation.getViewPeriod(), player.getPerson(), [player], 
                     this.createTotals(), 0

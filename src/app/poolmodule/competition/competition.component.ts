@@ -153,8 +153,6 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
             this.gameRounds = this.gameRounds.splice(idx).concat([], this.gameRounds);
           }
         }
-        console.log(this.gameRounds);
-        
         this.updateGameRound(currentGameRound);
       },
       error: (e: string) => { this.setAlert('danger', e); this.processing = false; },

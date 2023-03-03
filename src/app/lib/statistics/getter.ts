@@ -70,15 +70,15 @@ export class StatisticsGetter {
         if (s11Player === undefined) {
             return false;
         }
-        if( s11Player.getPerson().getLastName() === 'Crooij') {
-            console.log('Crooij('+s11Player.getPerson().getId()+')');
-        }
+        // if( s11Player.getPerson().getLastName() === 'Crooij') {
+        //     console.log('Crooij('+s11Player.getPerson().getId()+')');
+        // }
         if (gameRound === undefined) {
             return s11Player.hasAppeared();
         }
-        if( s11Player.getPerson().getLastName() === 'Crooij') {
-            console.log('Crooij', gameRound, this.getStatistics(s11Player, gameRound), this.personMap);
-        }
+        // if( s11Player.getPerson().getLastName() === 'Crooij') {
+        //     console.log('Crooij', gameRound, this.getStatistics(s11Player, gameRound), this.personMap);
+        // }
         return this.getStatistics(s11Player,gameRound)?.hasAppeared() === true;
     }
 
@@ -120,7 +120,7 @@ export class StatisticsGetter {
 
     public addStatistics(gameRound: GameRound | number, personId: string|number, statistics: Statistics): void {
         const gameRoundNr = gameRound instanceof GameRound ? gameRound.getNumber() : gameRound;
-        console.log('addStats-' + gameRoundNr + '-' + personId);
+        // console.log('addStats-' + gameRoundNr + '-' + personId);
         let gameRoundStatsMap = this.personMap.get(personId);
         if( gameRoundStatsMap === undefined) {
             gameRoundStatsMap = new StatisticsMap();
