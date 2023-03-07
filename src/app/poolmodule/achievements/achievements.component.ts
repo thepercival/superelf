@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportRoundRankingCalculator, Competition, CompetitionSport, Competitor, CompetitorBase, GameState, Poule, SportRoundRankingItem, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
 import { Observable } from 'rxjs';
+import { Achievement } from '../../lib/achievement';
 import { Badge } from '../../lib/achievement/badge';
 import { AchievementRepository } from '../../lib/achievement/repository';
 import { Trophy } from '../../lib/achievement/trophy';
@@ -18,6 +20,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolUser } from '../../lib/pool/user';
+import { JsonPoolUser } from '../../lib/pool/user/json';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { S11Storage } from '../../lib/storage';
 import { CSSService } from '../../shared/commonmodule/cssservice';
@@ -25,6 +28,7 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
+import { UnviewedAchievementsModalComponent } from './unviewed-modal.component';
 
 @Component({
   selector: 'app-pool-achievements',
@@ -38,7 +42,7 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
   // public currentSourceGame: AgainstGame | undefined;
   // private startLocationMap!: StartLocationMap;
   // form: UntypedFormGroup;
-  public unviewedAchievements: (Trophy|Badge)[]|undefined;
+  public achievementListItems: AchievementListItem[]|undefined;
   public processing = true;
   // public leagueName!: LeagueName;
   // public poolPoule: Poule | undefined;
@@ -55,8 +59,8 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     router: Router,
     poolRepository: PoolRepository,
     globalEventsManager: GlobalEventsManager,
-    // private structureRepository: StructureRepository,
-    // private poolUserRepository: PoolUserRepository,
+    private modalService: NgbModal,
+    private poolUserRepository: PoolUserRepository,
     // private chatMessageRepository: ChatMessageRepository,
     // public nameService: SuperElfNameService,
     // private dateFormatter: DateFormatter,
@@ -75,59 +79,87 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.setPool(pool);
-      this.processing = false;
-      // this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
-      //   this.poolUsers = poolUsers;
 
-      //   this.route.params.subscribe((params: Params) => {
-      //     this.leagueName = params.leagueName;
+      this.achievementRepository.getPoolCollection(pool.getCollection()).subscribe({
+        next: (achievements: (Trophy|Badge)[]) => {
+          this.achievementListItems = this.mapToAchievementListItems(achievements);
+          this.processing = false;
+        },
+      });
 
-      //     // begin met het ophalen van de wedstrijden van de poolcompetitie 
-      //     const competition = this.pool.getCompetition(this.leagueName);
-      //     if (competition === undefined) {
-      //       this.processing = false;
-      //       throw Error('competition not found');
-      //     }
-
-      //     this.structureRepository.getObject(competition).subscribe({
-      //       next: (structure: Structure) => {
-
-      //         const round = structure.getSingleCategory().getRootRound();
-      //         const poule = round.getFirstPoule();
-      //         this.poolPoule = poule;
-
-      //         // this.poolStartLocationMap = new StartLocationMap(poolCompetitors);
-      //         // const gameRoundNumbers: number[] = poule.getAgainstGames().map((game: AgainstGame) => game.getGameRoundNumber());
-      //         // const currentGameRoundNumber = this.getCurrentSourceGameRoundNumber(poule);
-
-      //         const competitionSport = this.pool.getCompetitionSport(this.leagueName);
-      //         const rankingCalculator = new AgainstSportRoundRankingCalculator(competitionSport, [GameState.Finished]);
-      //         this.sportRankingItems = rankingCalculator.getItemsForPoule(poule);
-
-      //         this.chatMessageRepository.getObjects(poule, pool).subscribe({
-      //           next: (chatMessages: ChatMessage[]) => {
-      //             this.chatMessages = chatMessages;
-      //             this.processing = false;
-      //           }
-      //         });
-
-      //         // this.initCurrentGameRound(competitionConfig, currentViewPeriod);
-      //       },
-      //       error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
-      //     });
-      //   });
-      // });
+      this.poolUserRepository.getObjectFromSession(pool).subscribe({
+        next: ((poolUser: PoolUser) => {
+          this.achievementRepository.getUnviewedObjects(poolUser).subscribe({
+            next: (achievements: (Trophy|Badge)[]) => {
+              this.s11Storage.setLatestGetAchievementsRequest(new Date());
+              if( achievements.length > 0 ) {
+                this.openUnviewedModal(achievements);
+              }
+            },
+          });
+        }),
+        error: (e: string) => {
+          this.setAlert('danger', e); this.processing = false;
+        },
+        complete: () => this.processing = false
+      });
     });
   }
+
   get Achievements(): NavBarItem { return NavBarItem.Achievements }
 
-  private setUnviewedAchievements(poolUser: PoolUser): void {
-      
-    
-    
+  private mapToAchievementListItems(achievements: (Badge|Trophy)[]): AchievementListItem[] {
+    const map = new Map<string|number, AchievementListItem>();
+    achievements.forEach((achievement: Badge|Trophy) => {
+      let item = map.get(achievement.poolUser.id);
+      if( item === undefined) {
+        item = {
+          name: achievement.poolUser.user.name ?? '',
+          nrOfTrophies: achievement instanceof Trophy ? 1: 0,
+          nrOfBadges: achievement instanceof Badge ? 1: 0
+        };
+        map.set(achievement.poolUser.id, item);        
+      } else {
+        item.nrOfTrophies += achievement instanceof Trophy ? 1: 0;
+        item.nrOfBadges += achievement instanceof Badge ? 1: 0;
+      }
+    })
+
+    const list: AchievementListItem[] = [];
+    for (const [propertyKey, propertyValue] of map.entries()) {
+      list.push(propertyValue);
+    }
+
+    list.sort((item1: AchievementListItem, item2: AchievementListItem) => {
+      if( item1.nrOfTrophies !== item2.nrOfTrophies) {
+        return (item1.nrOfTrophies > item2.nrOfTrophies ? 1 : -1);
+      }
+      if( item1.nrOfBadges !== item2.nrOfBadges) {
+        return (item1.nrOfBadges > item2.nrOfBadges ? 1 : -1);
+      }
+      return (item1.name > item2.name ? 1 : -1);
+    });
+    return list;
   }
+
+  openUnviewedModal(achievements: (Trophy|Badge)[]) {
+    const modalRef = this.modalService.open(UnviewedAchievementsModalComponent);
+    modalRef.componentInstance.achievements = achievements;
+    modalRef.result.then((result) => {
+      
+    }, (reason) => {
+      
+    });
+  }
+ 
 
   navigateBack() {
     this.myNavigation.back();
   }
+}
+
+interface AchievementListItem {
+  name: string,
+  nrOfTrophies: number,
+  nrOfBadges: number
 }

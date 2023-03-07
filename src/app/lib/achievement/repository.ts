@@ -10,6 +10,7 @@ import { Trophy } from './trophy';
 import { Badge } from './badge';
 import { JsonBadge } from './badge/json';
 import { JsonTrophy } from './trophy/json';
+import { PoolCollection } from '../pool/collection';
 
 @Injectable({
     providedIn: 'root'
@@ -28,6 +29,16 @@ export class AchievementRepository extends APIRepository {
     getUnviewedObjects(poolUser: PoolUser): Observable<(Trophy|Badge)[]> {
         // return this.getApiUrl() + 'achievements/' + pool.getId() + '/poules/' + poule.getId() + '/' + suffix;
         return this.http.get<(JsonTrophy|JsonBadge)[]>(this.getUrl(poolUser) + 'unviewed', this.getOptions()).pipe(
+            map((jsonAchievements: (JsonTrophy|JsonBadge)[]) => jsonAchievements.map((jsonAchievement: JsonTrophy|JsonBadge): Trophy|Badge => {
+                return this.mapper.toObject(jsonAchievement);
+            })),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    getPoolCollection(poolCollection: PoolCollection): Observable<(Trophy|Badge)[]> {
+        const url = this.getApiUrl() + 'poolcollections/' + poolCollection.getId() + '/achievements';
+        return this.http.get<(JsonTrophy|JsonBadge)[]>(url, this.getOptions()).pipe(
             map((jsonAchievements: (JsonTrophy|JsonBadge)[]) => jsonAchievements.map((jsonAchievement: JsonTrophy|JsonBadge): Trophy|Badge => {
                 return this.mapper.toObject(jsonAchievement);
             })),

@@ -12,7 +12,34 @@
         </h2>
 
         <div *ngIf="!processing">
-            toon hier een lijst van alle poolCollectionUsers met het aantal trofeeën en badges
+            <table class="table">
+                <thead>                  
+                    <tr>
+                        <th>
+                        naam
+                        </th>
+                        <th class="text-end">
+                        bekers
+                        </th>
+                        <th class="text-end">
+                        badges
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>                  
+                  <tr *ngFor="let achievementListItem of achievementListItems">
+                    <td>
+                      {{achievementListItem.name}}
+                    </td>
+                    <td class="text-nowrap text-end">
+                      {{achievementListItem.nrOfTrophies}}
+                    </td>
+                    <td class="text-nowrap text-end">
+                        {{achievementListItem.nrOfBadges}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
         </div>
     </div>
 </div>

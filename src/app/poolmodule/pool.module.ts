@@ -76,6 +76,7 @@ import { PoolPouleAgainstGamesComponent } from './poule/againstgames.component';
 import { PouleTitleComponent } from './poule/title.component';
 import { PoolAllInOneGameScheduleComponent } from './schedule/allinonegame.component';
 import { PoolUserAchievementsComponent } from './achievements/pooluser-achievements.component';
+import { UnviewedAchievementsModalComponent } from './achievements/unviewed-modal.component';
 
 @NgModule({
   imports: [
@@ -119,7 +120,7 @@ import { PoolUserAchievementsComponent } from './achievements/pooluser-achieveme
     PoolPouleAgainstGamesComponent,
     PoolUserAchievementsComponent,
     PoolUserComponent,
-    PoolUserRemoveModalComponent,
+    PoolUserRemoveModalComponent,    
     PoolUsersComponent,
     PouleTitleComponent,
     PreNewComponent,
@@ -134,6 +135,7 @@ import { PoolUserAchievementsComponent } from './achievements/pooluser-achieveme
     SourceGameComponent,
     TeamNameComponent,
     TogetherRankingComponent,
+    UnviewedAchievementsModalComponent,
     WorldCupComponent
   ],
   providers: [
