@@ -3,7 +3,7 @@
         
         <h2>
             <app-superelf-icon [name]="'trophy'"></app-superelf-icon>
-            <span class="ms-1">trofeeënkast</span>
+            <span class="ms-1">trofeeënlijst</span>
             
         </h2>
 
@@ -12,12 +12,12 @@
         </h2>
 
         <div *ngIf="!processing">
-            <ngb-alert [type]="'info'">deze is in de maak..</ngb-alert>
+            toon hier een lijst van alle poolCollectionUsers met het aantal trofeeën en badges
         </div>
     </div>
 </div>
 
-<app-pool-navbar [current]="Trophies" *ngIf="pool" [pool]="pool" [poolUser]="poolUser">
+<app-pool-navbar [current]="Achievements" *ngIf="pool" [pool]="pool" [poolUser]="poolUser">
 </app-pool-navbar>
 
 <!-- <ng-template #contentMessageTitle let-message="message" let-end="end">

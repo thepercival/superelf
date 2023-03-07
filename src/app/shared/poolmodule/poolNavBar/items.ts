@@ -3,7 +3,7 @@ export enum NavBarItem {
     
     Schedule = 'programma', 
 
-    Trophies = 'prijzen',
+    Achievements = 'prijzen',
 
     Rules = 'spelregels',
 

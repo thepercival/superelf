@@ -21,7 +21,7 @@ import { PoolChatComponent } from './chat/chat.component';
 import { PoolCompetitionComponent } from './competition/competition.component';
 import { PoolCupComponent } from './cup/structure.component';
 import { SourceGameComponent } from './game/source.component';
-import { TrophiesComponent } from './trophies/trophies.component';
+import { AchievementsComponent } from './achievements/achievements.component';
 import { FormationReplaceComponent } from './formation/replace.component';
 import { FormationPlaceReplaceComponent } from './formation/place/replace.component';
 import { FormationTransferComponent } from './formation/transfer.component';
@@ -30,10 +30,14 @@ import { FormationSubstituteComponent } from './formation/substitute.component';
 import { FormationActionOverviewComponent } from './formation/actionoverview.component';
 import { PoolPouleAgainstGamesComponent } from './poule/againstgames.component';
 import { PoolAllInOneGameScheduleComponent } from './schedule/allinonegame.component';
+import { PoolUserAchievementsComponent } from './achievements/pooluser-achievements.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent, canActivate: [AuthUserGuardService] },
   { path: 'prenew', component: PreNewComponent },
+  { path: 'achievements/:id', component: AchievementsComponent },  
+  { path: 'achievements/:id/:poolUserId', component: PoolUserAchievementsComponent },  
+  { path: 'allinonegame/:id', component: PoolAllInOneGameScheduleComponent },
   { path: 'chat/:id/:leagueName/:pouleId', component: PoolChatComponent },
   { path: 'competition/:id', component: PoolCompetitionComponent, canActivate: [AuthUserGuardService] },
   { path: 'cup/:id', component: PoolCupComponent, canActivate: [AuthUserGuardService] },
@@ -55,8 +59,7 @@ const routes: Routes = [
   { path: 'scouting/list/:id', component: ScoutedPlayerListComponent, canActivate: [AuthUserGuardService] },
   { path: 'scouting/search/:id', component: ScoutedPlayerAddComponent, canActivate: [AuthUserGuardService] },
   { path: 'sourcegame/:id/:gameRound/:gameId', component: SourceGameComponent },
-  { path: 'allinonegame/:id', component: PoolAllInOneGameScheduleComponent },
-  { path: 'trophies/:id', component: TrophiesComponent },  
+  
   { path: 'users/:id', component: PoolUsersComponent, canActivate: [AuthUserGuardService] },
   { path: 'user/:id/:poolUserId/:gameRound', component: PoolUserComponent, canActivate: [AuthUserGuardService] },  
   { path: 'worldcup/:originPoolId/:seasonId', component: WorldCupComponent },

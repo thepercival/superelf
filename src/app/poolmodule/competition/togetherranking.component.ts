@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges, TemplateRef } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Poule, GameAmountConfig, GameState, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, Place, AgainstGpp, AgainstH2h, Single, AllInOneGame, StartLocationMap, StructureNameService, TogetherScore } from 'ngx-sport';
@@ -14,7 +14,7 @@ import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../shared/
   templateUrl: './togetherranking.component.html',
   styleUrls: ['./togetherranking.component.scss']
 })
-export class TogetherRankingComponent implements OnInit {
+export class TogetherRankingComponent implements OnInit, OnChanges {
   @Input() poule!: Poule;
   @Input() startLocationMap!: StartLocationMap;
   @Input() competitionSport!: CompetitionSport;

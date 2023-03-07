@@ -3,6 +3,9 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportRoundRankingCalculator, Competition, CompetitionSport, Competitor, CompetitorBase, GameState, Poule, SportRoundRankingItem, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
 import { Observable } from 'rxjs';
+import { Badge } from '../../lib/achievement/badge';
+import { AchievementRepository } from '../../lib/achievement/repository';
+import { Trophy } from '../../lib/achievement/trophy';
 import { ChatMessage } from '../../lib/chatMessage';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
 import { DateFormatter } from '../../lib/dateFormatter';
@@ -16,6 +19,7 @@ import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
+import { S11Storage } from '../../lib/storage';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
@@ -23,18 +27,18 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 @Component({
-  selector: 'app-pool-trophies',
-  templateUrl: './trophies.component.html',
-  styleUrls: ['./trophies.component.scss']
+  selector: 'app-pool-achievements',
+  templateUrl: './achievements.component.html',
+  styleUrls: ['./achievements.component.scss']
 })
-export class TrophiesComponent extends PoolComponent implements OnInit {
+export class AchievementsComponent extends PoolComponent implements OnInit {
   // public gameRounds: GameRound[] = [];
   // public currentGameRound: GameRound | undefined;
   // public sourceGameRoundGames: AgainstGame[] = [];
   // public currentSourceGame: AgainstGame | undefined;
   // private startLocationMap!: StartLocationMap;
   // form: UntypedFormGroup;
-
+  public unviewedAchievements: (Trophy|Badge)[]|undefined;
   public processing = true;
   // public leagueName!: LeagueName;
   // public poolPoule: Poule | undefined;
@@ -58,7 +62,9 @@ export class TrophiesComponent extends PoolComponent implements OnInit {
     // private dateFormatter: DateFormatter,
     // public imageRepository: ImageRepository,
     // public cssService: CSSService,
-    private myNavigation: MyNavigation
+    private myNavigation: MyNavigation,
+    private achievementRepository: AchievementRepository,
+    private s11Storage: S11Storage
     ) {
     super(route, router, poolRepository, globalEventsManager);
     // this.form = fb.group({
@@ -113,7 +119,13 @@ export class TrophiesComponent extends PoolComponent implements OnInit {
       // });
     });
   }
-  get Trophies(): NavBarItem { return NavBarItem.Trophies }
+  get Achievements(): NavBarItem { return NavBarItem.Achievements }
+
+  private setUnviewedAchievements(poolUser: PoolUser): void {
+      
+    
+    
+  }
 
   navigateBack() {
     this.myNavigation.back();

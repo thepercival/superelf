@@ -61,7 +61,7 @@ import { PoolCompetitionComponent } from './competition/competition.component';
 import { PoolCupComponent } from './cup/structure.component';
 import { PoolCupRoundComponent } from './cup/round.component';
 import { TogetherRankingComponent } from './competition/togetherranking.component';
-import { TrophiesComponent } from './trophies/trophies.component';
+import { AchievementsComponent } from './achievements/achievements.component';
 import { FormationReplaceComponent } from './formation/replace.component';
 import { FormationTransferComponent } from './formation/transfer.component';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
@@ -75,6 +75,7 @@ import { FormationActionOverviewComponent } from './formation/actionoverview.com
 import { PoolPouleAgainstGamesComponent } from './poule/againstgames.component';
 import { PouleTitleComponent } from './poule/title.component';
 import { PoolAllInOneGameScheduleComponent } from './schedule/allinonegame.component';
+import { PoolUserAchievementsComponent } from './achievements/pooluser-achievements.component';
 
 @NgModule({
   imports: [
@@ -88,6 +89,7 @@ import { PoolAllInOneGameScheduleComponent } from './schedule/allinonegame.compo
     NgbPaginationModule
   ],
   declarations: [
+    AchievementsComponent,
     AgainstGameTitleComponent,
     FormationActionOverviewComponent,
     FormationAssembleComponent,
@@ -115,6 +117,7 @@ import { PoolAllInOneGameScheduleComponent } from './schedule/allinonegame.compo
     PoolCupComponent,
     PoolCupRoundComponent,
     PoolPouleAgainstGamesComponent,
+    PoolUserAchievementsComponent,
     PoolUserComponent,
     PoolUserRemoveModalComponent,
     PoolUsersComponent,
@@ -131,7 +134,6 @@ import { PoolAllInOneGameScheduleComponent } from './schedule/allinonegame.compo
     SourceGameComponent,
     TeamNameComponent,
     TogetherRankingComponent,
-    TrophiesComponent,
     WorldCupComponent
   ],
   providers: [

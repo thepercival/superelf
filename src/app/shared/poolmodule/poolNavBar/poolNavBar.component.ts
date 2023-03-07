@@ -1,11 +1,15 @@
-import { Component, Input, TemplateRef } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgainstGame, Competition, Poule, Round, Structure, TogetherGame, TogetherGamePlace } from 'ngx-sport';
+import { Badge } from '../../../lib/achievement/badge';
+import { AchievementRepository } from '../../../lib/achievement/repository';
+import { Trophy } from '../../../lib/achievement/trophy';
 
 import { AuthService } from '../../../lib/auth/auth.service';
 import { LeagueName } from '../../../lib/leagueName';
 import { Pool } from '../../../lib/pool';
 import { PoolUser } from '../../../lib/pool/user';
+import { S11Storage } from '../../../lib/storage';
 import { NavBarItem } from './items';
 
 @Component({
@@ -13,24 +17,58 @@ import { NavBarItem } from './items';
   templateUrl: './poolNavBar.component.html',
   styleUrls: ['./poolNavBar.component.scss']
 })
-export class PoolNavBarComponent {
+export class PoolNavBarComponent implements OnInit, OnChanges{
   @Input() upperNavBar: TemplateRef<any> | undefined;
   @Input() pool!: Pool;
   @Input() poolUser: PoolUser|undefined;
   @Input() current!: NavBarItem;    
 
   public structureMap = new Map<number, Structure>();
+  public unviewedAchievements: (Trophy|Badge)[] = [];
+  public latestGetUnviewedRequest: Date|undefined;
 
   constructor(
     public authService: AuthService,
-    private router: Router
+    private router: Router,
+    private achievementRepository: AchievementRepository,
+    private s11Storage: S11Storage
   ) {
 
   }
 
+  ngOnInit() {
+    
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.poolUser !== undefined 
+      && changes.poolUser.currentValue !== changes.poolUser.previousValue
+       ) {
+        if( changes.poolUser.currentValue !== undefined) {
+          this.setUnviewedAchievements(changes.poolUser.currentValue);
+        }
+    }
+  }
+
+  private setUnviewedAchievements(poolUser: PoolUser): void {
+    const latestRequestDate = this.s11Storage.getLatestGetAchievementsRequest();
+    const checkDate = new Date();
+    checkDate.setHours(checkDate.getHours() - 1);
+    if( latestRequestDate === undefined || latestRequestDate.getTime() < checkDate.getTime() ) {
+      
+      this.achievementRepository.getUnviewedObjects(poolUser).subscribe({
+        next: (achievements: (Trophy|Badge)[]) => {
+          console.log('set this.unviewedAchievements', achievements);
+          this.unviewedAchievements = achievements;
+          this.s11Storage.setLatestGetAchievementsRequest(new Date());
+        },
+      });
+    }
+  }
+
   get Competitions(): NavBarItem { return NavBarItem.Competitions }
   get Schedule(): NavBarItem { return NavBarItem.Schedule }
-  get Trophies(): NavBarItem { return NavBarItem.Trophies }
+  get Achievements(): NavBarItem { return NavBarItem.Achievements }
   get Rules(): NavBarItem { return NavBarItem.Rules }
   get Admin(): NavBarItem { return NavBarItem.Admin }
   // get LockerRoomsScreen(): TournamentScreen { return TournamentScreen.LockerRooms }
@@ -52,8 +90,8 @@ export class PoolNavBarComponent {
       case NavBarItem.Schedule:
         this.linkToSchedule();
         return;       
-      case NavBarItem.Trophies:
-        this.router.navigate(['/pool/trophies', this.pool.getId()]);
+      case NavBarItem.Achievements:
+        this.router.navigate(['/pool/achievements', this.pool.getId()]);
         return;      
       case NavBarItem.Rules:
         this.router.navigate(['/pool/rules', this.pool.getId()]);
