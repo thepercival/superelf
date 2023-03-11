@@ -2,5 +2,5 @@
 export const environment = {
   production: true,
   apiurl: 'https://api.superelf-eredivisie.nl/',
-  apiVersion: '15'
+  apiVersion: '16'
 };
