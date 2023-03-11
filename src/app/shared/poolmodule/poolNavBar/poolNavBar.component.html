@@ -42,7 +42,7 @@ competities  | programma | prijzenkast | spelregels | beheer
       <a type="button" class="btn {{getTextColorClass(Achievements)}} long-and-truncated position-relative" (click)="linkTo(Achievements)">
         <app-superelf-icon [large]="true" [name]="'trophy'"></app-superelf-icon>
         <br /><span>trofeeën</span>   
-        <span *ngIf="unviewedAchievements.length > 0" class="position-absolute top-0 start-75 translate-middle p-2 mt-2 me-2 bg-danger border border-light rounded-circle">
+        <span *ngIf="hasUnviewedAchievements" class="position-absolute top-0 start-75 translate-middle p-2 mt-2 me-2 bg-danger border border-light rounded-circle">
           <span class="visually-hidden">nieuwe trofeeën</span>
         </span>     
       </a>

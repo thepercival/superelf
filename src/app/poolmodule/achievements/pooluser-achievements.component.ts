@@ -16,7 +16,7 @@ import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 @Component({
   selector: 'app-pool-pooluser-achievements',
   templateUrl: './pooluser-achievements.component.html',
-  styleUrls: ['./achievements-achievements.component.scss']
+  styleUrls: ['./pooluser-achievements.component.scss']
 })
 export class PoolUserAchievementsComponent extends PoolComponent implements OnInit {
   // public gameRounds: GameRound[] = [];

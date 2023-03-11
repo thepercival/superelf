@@ -24,7 +24,7 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
   @Input() current!: NavBarItem;    
 
   public structureMap = new Map<number, Structure>();
-  public unviewedAchievements: (Trophy|Badge)[] = [];
+  public hasUnviewedAchievements: boolean = false;
   public latestGetUnviewedRequest: Date|undefined;
 
   constructor(
@@ -45,24 +45,26 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
       && changes.poolUser.currentValue !== changes.poolUser.previousValue
        ) {
         if( changes.poolUser.currentValue !== undefined) {
-          this.setUnviewedAchievements(changes.poolUser.currentValue);
+          this.getHasUnviewedAchievements(changes.poolUser.currentValue);
         }
     }
   }
 
-  private setUnviewedAchievements(poolUser: PoolUser): void {
-    const latestRequestDate = this.s11Storage.getLatestGetAchievementsRequest();
+  private getHasUnviewedAchievements(poolUser: PoolUser): void {
+    const latestRequest = this.s11Storage.getLatest(poolUser.getPool());
     const checkDate = new Date();
     checkDate.setHours(checkDate.getHours() - 1);
-    if( latestRequestDate === undefined || latestRequestDate.getTime() < checkDate.getTime() ) {
-      
+    console.log(checkDate, latestRequest);
+    if( latestRequest === undefined || latestRequest.date.getTime() < checkDate.getTime() ) {      
       this.achievementRepository.getUnviewedObjects(poolUser).subscribe({
         next: (achievements: (Trophy|Badge)[]) => {
           console.log('set this.unviewedAchievements', achievements);
-          this.unviewedAchievements = achievements;
-          this.s11Storage.setLatestGetAchievementsRequest(new Date());
+          this.hasUnviewedAchievements = achievements.length > 0;
+          this.s11Storage.setLatest(poolUser.getPool(), new Date(), achievements.length > 0);
         },
       });
+    } else {
+      this.hasUnviewedAchievements = latestRequest.has;      
     }
   }
 

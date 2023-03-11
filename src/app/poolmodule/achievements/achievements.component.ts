@@ -91,9 +91,10 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
         next: ((poolUser: PoolUser) => {
           this.achievementRepository.getUnviewedObjects(poolUser).subscribe({
             next: (achievements: (Trophy|Badge)[]) => {
-              this.s11Storage.setLatestGetAchievementsRequest(new Date());
               if( achievements.length > 0 ) {
-                this.openUnviewedModal(achievements);
+                this.achievementRepository.removeUnviewedObjects(poolUser).subscribe({});
+                this.openUnviewedModal(achievements);                
+                this.s11Storage.setLatest(pool, new Date(), false);
               }
             },
           });
@@ -143,7 +144,7 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
   }
 
   openUnviewedModal(achievements: (Trophy|Badge)[]) {
-    const modalRef = this.modalService.open(UnviewedAchievementsModalComponent);
+    const modalRef = this.modalService.open(UnviewedAchievementsModalComponent, { backdrop: 'static'});
     modalRef.componentInstance.achievements = achievements;
     modalRef.result.then((result) => {
       

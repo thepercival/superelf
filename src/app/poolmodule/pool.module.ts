@@ -77,6 +77,7 @@ import { PouleTitleComponent } from './poule/title.component';
 import { PoolAllInOneGameScheduleComponent } from './schedule/allinonegame.component';
 import { PoolUserAchievementsComponent } from './achievements/pooluser-achievements.component';
 import { UnviewedAchievementsModalComponent } from './achievements/unviewed-modal.component';
+import { NgParticlesModule } from 'ng-particles';
 
 @NgModule({
   imports: [
@@ -87,7 +88,8 @@ import { UnviewedAchievementsModalComponent } from './achievements/unviewed-moda
     PoolSharedModule,
     CommonSharedModule,
     ClipboardModule,
-    NgbPaginationModule
+    NgbPaginationModule,
+    NgParticlesModule
   ],
   declarations: [
     AchievementsComponent,

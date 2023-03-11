@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
+import { IconName, IconPrefix, SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { LeagueName } from '../../../lib/leagueName';
 import { FootballCard, FootballEvent, FootballGoal } from '../../../lib/score';
 
@@ -13,6 +13,7 @@ export class SuperElfIconComponent {
     @Input() leagueName: LeagueName | undefined;
     @Input() gameEvent: FootballEvent | undefined;
     @Input() large: boolean = false;
+    @Input() size: SizeProp|undefined;
 
     get color(): string { 
         if( this.gameEvent === undefined ) {
@@ -40,6 +41,10 @@ export class SuperElfIconComponent {
         // }
         // return this.getRotateFromFootballEvent(this.gameEvent);
     }
+
+    // get sizeTimes(): string {
+    //     return this.sizeX ? this.sizeX + '' : '';
+    // }
 
     get iconName(): IconName { 
         if( this.leagueName !== undefined) {

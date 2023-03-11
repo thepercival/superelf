@@ -1,26 +1,52 @@
 import { Injectable } from "@angular/core";
+import { Pool } from "./pool";
+import { PoolUser } from "./pool/user";
 
 @Injectable({
     providedIn: 'root'
 })
-export class S11Storage {
-    private latestGetAchievementsRequestId = 'latestGetAchievementsRequestId';
+export class S11Storage {        
 
-    getLatestGetAchievementsRequest(): Date|undefined {
-        const stringFromStorage = localStorage.getItem(this.latestGetAchievementsRequestId);
-        if( stringFromStorage === null) {
-            return undefined;
+    getLatest(pool: Pool): GetAchievementsRequest|undefined {
+        const achievementsRequestDates = this.getJson();
+        const poolId = '' + pool.getId();
+
+        const request = achievementsRequestDates.find( (request: GetAchievementsRequest): boolean => {
+            return request.poolId === poolId;
+        });
+        if( request !== undefined) {
+            request.date = new Date(request.date);
         }
-        const valueFromStorage = JSON.parse(stringFromStorage);
-        return new Date(valueFromStorage.date);
+        return request;
     }
 
-    setLatestGetAchievementsRequest(date: Date): void {
-        const request: LatestGetAchievementsRequest = {date}
-        localStorage.setItem(this.latestGetAchievementsRequestId, JSON.stringify(request));
-    }    
+    setLatest(pool: Pool, date: Date, has: boolean): void {
+        const achievementsRequestDates = this.getJson();
+        const poolId = '' + pool.getId();
+        const request = achievementsRequestDates.find( (request: GetAchievementsRequest): boolean => {
+            return request.poolId === poolId;
+        });
+        if( request !== undefined) {
+            request.date = date;
+            request.has = has;
+        } else {
+            achievementsRequestDates.push({poolId, date, has});
+        }
+        localStorage.setItem('achievementsRequestDates', JSON.stringify(achievementsRequestDates));
+    }
+
+    private getJson(): GetAchievementsRequest[] {
+        let stringFromStorage = localStorage.getItem('achievementsRequestDates');
+        if( stringFromStorage === null) {
+            stringFromStorage = '[]';
+            localStorage.setItem('achievementsRequestDates', stringFromStorage);    
+        }        
+        return JSON.parse(stringFromStorage);
+    }
 }
 
-interface LatestGetAchievementsRequest{
+interface GetAchievementsRequest{
+    poolId: string;
     date: Date;
+    has: boolean;
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ChatMessage } from '../chatMessage';
-import { PoolUser } from '../pool/user';import { Badge } from './badge';
+import { CompetitionMapper } from 'ngx-sport';
+import { Badge } from './badge';
 import { JsonBadge } from './badge/json';
 import { Trophy } from './trophy';
 import { JsonTrophy } from './trophy/json';
@@ -10,13 +10,18 @@ import { JsonTrophy } from './trophy/json';
     providedIn: 'root'
 })
 export class AchievementMapper {
-    constructor() { }
+    constructor(private competitinMapper: CompetitionMapper) { }
 
     toObject(json: JsonBadge|JsonTrophy): Badge|Trophy {
         if( 'category' in json ) {
-            return new Badge(json.category, json.poolUser, json.competition, json.rank, new Date(json.created));
+            let competition = undefined;
+            if( json.competition !== undefined) {
+                competition = this.competitinMapper.toObject(json.competition);
+            }
+            return new Badge(json.category, json.poolUser, competition, json.rank, new Date(json.created));
         }
-        return new Trophy(json.poolUser, json.competition, json.rank, new Date(json.created));
+        const competition = this.competitinMapper.toObject(json.competition);
+        return new Trophy(json.poolUser, competition, json.rank, new Date(json.created));
     }
 }
 

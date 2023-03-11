@@ -36,6 +36,12 @@ export class AchievementRepository extends APIRepository {
         );
     }
 
+    removeUnviewedObjects(poolUser: PoolUser): Observable<void> {
+        return this.http.delete<(JsonTrophy|JsonBadge)[]>(this.getUrl(poolUser) + 'viewed', this.getOptions()).pipe(
+            catchError((err) => this.handleError(err))
+        );
+    }
+
     getPoolCollection(poolCollection: PoolCollection): Observable<(Trophy|Badge)[]> {
         const url = this.getApiUrl() + 'poolcollections/' + poolCollection.getId() + '/achievements';
         return this.http.get<(JsonTrophy|JsonBadge)[]>(url, this.getOptions()).pipe(

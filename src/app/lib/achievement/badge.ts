@@ -1,4 +1,4 @@
-import { JsonCompetition } from 'ngx-sport';
+import { Competition } from 'ngx-sport';
 import { Achievement } from '../achievement';
 
 import { JsonPoolUser } from '../pool/user/json';
@@ -8,10 +8,14 @@ export class Badge extends Achievement {
     constructor(
         private category: BadgeCategory, 
         poolUser: JsonPoolUser, 
-        competition: JsonCompetition,
+        protected competition: Competition|undefined,
         rank: number,
         created: Date) {
-        super(poolUser, competition, rank, created);
+        super(poolUser, rank, created);
+    }
+
+    getCompetition(): Competition|undefined {
+        return this.competition;
     }
 
     public getCategory(): BadgeCategory {
