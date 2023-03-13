@@ -33,8 +33,7 @@ export class PoolCupRoundComponent implements OnInit {
   }
 
   allPlacesHaveCompetitors(): boolean {
-    this.structureNameService.getStartLocationMap()
-
+    
     return this.round.getPlaces().every((place: Place): boolean => {
       const startLocation = place.getStartLocation();
       if (startLocation === undefined) {
@@ -45,7 +44,6 @@ export class PoolCupRoundComponent implements OnInit {
   }
 
   isCurrentUser(poule: Poule, side: AgainstSide): boolean {
-    this.structureNameService.getStartLocationMap()
 
     const startLocation = this.getSidePlace(poule, side).getStartLocation();
     if (startLocation === undefined) {
