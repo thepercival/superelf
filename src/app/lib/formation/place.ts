@@ -1,8 +1,8 @@
 import { FootballLine, Identifiable, Team } from 'ngx-sport';
-import { GameRound } from '../gameRound';
+import { BadgeCategory } from '../achievement/badge/category';
 import { OneTeamSimultaneous } from '../oneTeamSimultaneousService';
 import { S11Player } from '../player';
-import { PointsCalculator } from '../points/calculator';
+import { Totals } from '../totals';
 import { JsonTotals } from '../totals/json';
 import { S11FormationLine } from './line';
 
@@ -14,8 +14,7 @@ export class S11FormationPlace extends Identifiable {
         protected formationLine: S11FormationLine,
         protected player: S11Player | undefined,
         number: number | undefined,
-        protected totals: JsonTotals,
-        protected totalPoints: number) {
+        protected totals: Totals) {
         super();
         this.formationLine.getPlaces().push(this);
         if (number === undefined) {
@@ -67,12 +66,13 @@ export class S11FormationPlace extends Identifiable {
     }
 
 
-    public getTotals(): JsonTotals {
+    public getTotals(): Totals {
         return this.totals;
     }
 
-    public getTotalPoints(): number {
-        return this.totalPoints;
+    public getTotalPoints(badgeCategory: BadgeCategory|undefined): number {
+        const lineScorePointsMap = this.getFormationLine().getFormation().getPoolUser().getPool().getCompetitionConfig().getLineScorePointsMap();
+        return this.totals.getPoints(this.getLine(), lineScorePointsMap, badgeCategory);
     }
 }
 

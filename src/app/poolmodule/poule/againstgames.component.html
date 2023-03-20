@@ -209,7 +209,7 @@
     </div>
 </div>
 
-<app-pool-navbar [current]="Competitions" *ngIf="pool" [pool]="pool" [poolUser]="poolUser">
+<app-pool-navbar [current]="Competitions" *ngIf="pool" [pool]="pool" [poolUser]="poolUserFromSession">
 </app-pool-navbar>
 
 <ng-template #lineupScore let-formationPlace="formationPlace" let-sourceGame="sourceGame">
@@ -217,7 +217,7 @@
         <span class="badge bg-points">
             <a [routerLink]="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
                 <span *ngIf="currentGameRound">
-                    {{statisticsGetter.getFormationPlacePoints(formationPlace,currentGameRound)}}
+                    {{statisticsGetter.getFormationPlaceGameRoundPoints(formationPlace,currentGameRound, undefined)}}
                 </span>
             </a>
         </span>

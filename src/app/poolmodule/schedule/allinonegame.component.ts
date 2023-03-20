@@ -74,7 +74,7 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
       const user = this.authService.getUser();
       this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
         // this.poolUsers = poolUsers;
-        this.poolUser = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
+        this.poolUserFromSession = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
         const competition = this.pool.getCompetition(this.leagueName);
         if (competition === undefined) {
           this.processing = false;
@@ -118,7 +118,7 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
     
                 });
     
-                if (this.poolUser && this.poule) {
+                if (this.poolUserFromSession && this.poule) {
                   this.chatMessageRepository.getNrOfUnreadObjects(this.poule, pool).subscribe({
                     next: (nrOfUnreadMessages: number) => {
                       this.nrOfUnreadMessages = nrOfUnreadMessages;

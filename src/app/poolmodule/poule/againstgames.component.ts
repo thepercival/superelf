@@ -110,13 +110,13 @@ export class PoolPouleAgainstGamesComponent extends PoolComponent implements OnI
             // -- determine gameRoundNumbers
             const sportVariant = poolCompetition.getSingleSport().getVariant();
             const currentGameRoundNr = this.getCurrentSourceGameRoundNr(poule, sportVariant);
-            const viewPeriod = this.getViewPeriodByRoundNumber(currentGameRoundNr);
+            const viewPeriod = pool.getViewPeriodByRoundNumber(currentGameRoundNr);
             const gameRoundNrs: number[] = this.getGameRoundNumbers(poule, sportVariant);
             const startLocations = this.getStartLocationsFromGameRoundNrs(poule, gameRoundNrs);
             
             // -- GETTING POOLUSERS FOR STARTLOCATIONS
             this.poolUserRepository.getObjects(pool, this.leagueName, startLocations).subscribe((poolUsers: PoolUser[]) => {
-              this.poolUser = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
+              this.poolUserFromSession = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
               const poolCompetitors = pool.getCompetitors(this.leagueName);
               this.initPouleCompetitors(poule, poolCompetitors);
               this.poolStartLocationMap = new StartLocationMap(poolCompetitors);              
@@ -171,7 +171,7 @@ export class PoolPouleAgainstGamesComponent extends PoolComponent implements OnI
                 }
               });            
 
-              if (this.poolUser) {
+              if (this.poolUserFromSession) {
                 this.chatMessageRepository.getNrOfUnreadObjects(poule, pool).subscribe({
                   next: (nrOfUnreadMessages: number) => {
                     this.nrOfUnreadMessages = nrOfUnreadMessages;
@@ -517,16 +517,6 @@ export class PoolPouleAgainstGamesComponent extends PoolComponent implements OnI
       return;
     }
     this.router.navigate(['/pool/' + this.leagueName.toLowerCase(), this.pool.getId()]);
-  }
-
-  private getViewPeriodByRoundNumber(gameRoundNumber: number): ViewPeriod {    
-    if( this.pool.getAssembleViewPeriod().hasGameRound(gameRoundNumber) ) {
-      return this.pool.getAssembleViewPeriod();
-    }
-    if( this.pool.getTransferViewPeriod().hasGameRound(gameRoundNumber) ) {
-      return this.pool.getTransferViewPeriod();
-    }
-    throw new Error('gameroundnumber should be in a viewperiod');
   }
 }
 

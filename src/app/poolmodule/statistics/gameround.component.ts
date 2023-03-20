@@ -1,12 +1,11 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { AgainstGame, FootballLine, Person, Player } from 'ngx-sport';
+import { FootballLine } from 'ngx-sport';
+import { BadgeCategory } from '../../lib/achievement/badge/category';
 import { CompetitionConfig } from '../../lib/competitionConfig';
 import { GameRound } from '../../lib/gameRound';
 import { ImageRepository } from '../../lib/image/repository';
-import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
-import { S11Player } from '../../lib/player';
-import { PointsCalculator } from '../../lib/points/calculator';
-import { FootballCard, FootballGoal } from '../../lib/score';
+import { FootballCard, FootballGoal, FootballSheet } from '../../lib/score';
+import { LineScorePointsMap } from '../../lib/score/points';
 import { Statistics } from '../../lib/statistics';
 
 import { CSSService } from '../../shared/commonmodule/cssservice';
@@ -21,8 +20,7 @@ export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsCo
   @Input() statistics!: Statistics | undefined;
   @Input() line!: FootballLine;
   @Input() gameRound!: GameRound;
-  @Input() competitionConfig!: CompetitionConfig;
-  public pointsCalculator!: PointsCalculator;
+  @Input() lineScorePointsMap!: LineScorePointsMap;
   // public oneTeamSimultaneous = new OneTeamSimultaneous();
   // public player: Player | undefined;
 
@@ -41,9 +39,6 @@ export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsCo
     // this.player = this.oneTeamSimultaneous.getCurrentPlayer(this.s11Player.getPerson());
 
     // this.updateCurrentGame();    
-    if (this.pointsCalculator === undefined) {
-      this.pointsCalculator = new PointsCalculator(this.competitionConfig);
-    }
     // console.log('init pointsCaLCulator', this.pointsCalculator);
     this.sheetActive = this.line === FootballLine.GoalKeeper || this.line === FootballLine.Defense;
     this.processing = false;
@@ -57,19 +52,17 @@ export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsCo
   ngOnChanges(changes: SimpleChanges) {
     if (changes.statistics.currentValue !== changes.statistics.previousValue
       && changes.statistics.currentValue !== undefined) {
-      if (this.pointsCalculator === undefined) {
-        this.pointsCalculator = new PointsCalculator(this.competitionConfig);
-      }
-      // console.log(changes.statistics.currentValue, changes.statistics.currentValue.getSpottySheet23());
-
+      const statistics: Statistics = changes.statistics.currentValue;
+      
       // console.log('first changes statistics', changes.statistics.currentValue);
       const sheetLines = (this.line & FootballLine.GoalKeeper) + (this.line & FootballLine.Defense);
-      const sheetPoints = sheetLines > 0 ? this.pointsCalculator.getSheetPoints(this.line, changes.statistics.currentValue) : 0
+      const sheetPoints = sheetLines > 0 ? statistics.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Sheet ) : 0
       this.categoryPoints = {
-        result: this.pointsCalculator.getResultPoints(changes.statistics.currentValue),
-        goal: this.pointsCalculator.getGoalPoints(this.line, changes.statistics.currentValue),
+        result: statistics.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Result),
+        goal: statistics.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Goal)
+            + statistics.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Assist),
         sheet: sheetPoints,
-        card: this.pointsCalculator.getCardPoints(changes.statistics.currentValue),
+        card: statistics.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Card),
       }
     }
   }

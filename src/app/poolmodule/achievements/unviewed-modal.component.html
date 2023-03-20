@@ -7,26 +7,27 @@
 
 <div *ngIf="current" class="modal-body">    
 
+    <ng-particles
+        [id]="tsparticlesId"
+        [options]="particlesOptions"
+        [particlesInit]="particlesInit"            
+        (particlesLoaded)="particlesLoaded($event)"
+    ></ng-particles>
     <div *ngIf="currentTrophy" class="text-center">    
-         <ng-particles
-            [id]="tsparticlesId"
-            [options]="particlesOptions"
-            [particlesInit]="particlesInit"            
-            (particlesLoaded)="particlesLoaded($event)"
-        ></ng-particles>
-        
-
         <div><h4>{{currentTrophy.getCompetition().getName().replace('20', '').replace('20', '')}}</h4></div>
         <div>
-            <app-superelf-icon size="5x" [leagueName]="nameService.convertToLeagueName(currentTrophy.getCompetition())"></app-superelf-icon>
+            <app-superelf-trophy-icon size="10x" [leagueName]="nameService.convertToLeagueName(currentTrophy.getCompetition())"></app-superelf-trophy-icon>
         </div>
         <div>{{ currentTrophy.getRank() === 1 ? 'kampioen' : 'runner-up'}}</div>
         <div><h2 class="fw-bold">{{currentTrophy.poolUser.user.name}}</h2></div>
     </div>
     <div *ngIf="currentBadge" class="text-center">    
-        <!-- <div>{{ trophy.getRank() === 1 ? 'kampioen' : 'runner-up'}}</div>
-        <div><app-superelf-icon [large]="true" [leagueName]="trophy.getCompetition().league.name"></app-superelf-icon>          </div>
-        <div>{{trophy.poolUser.user.name}}</div> -->
+        <div><h4>{{currentBadge.getScopeDescription()}}</h4></div>
+        <div><h4>{{nameService.getBadgeCategoryName(currentBadge.getCategory())}}-badge</h4></div>
+        <div>
+            <app-superelf-badge-icon size="5x" [badgeCategory]="currentBadge.getCategory()"></app-superelf-badge-icon>
+        </div>
+        <div><h2 class="fw-bold">{{currentBadge.poolUser.user.name}}</h2></div>
     </div>
     
 </div>

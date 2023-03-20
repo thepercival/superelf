@@ -20,7 +20,7 @@
       </div>
 
       <div *ngIf="assembleFormation && selectableTeams.length < 1" class="d-flex justify-content-center">
-        <app-pool-player-choose class="w-100" [competition]="pool.getSourceCompetition()"
+        <app-pool-player-choose class="w-100" [competitionConfig]="pool.getCompetitionConfig()"
           [viewPeriod]="pool.getCreateAndJoinPeriod()" [viewPeriodType]="AssembleViewPeriod"
           [alreadyChosenPersons]="alreadyChosenPersons"
           [alreadyChosenTeams]="alreadyChosenTeams" [selectableLines]="[selectableLine]" 

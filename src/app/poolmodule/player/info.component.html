@@ -43,11 +43,11 @@
                         <div class="">
                             <app-s11player-viewperiod-statistics *ngIf="!currentGameRound"
                                 [totals]="s11Player.getTotals()" [line]="s11Player.getLine()"
-                                [competitionConfig]="pool.getCompetitionConfig()">
+                                [lineScorePointsMap]="pool.getCompetitionConfig().getLineScorePointsMap()">
                             </app-s11player-viewperiod-statistics>
                             <app-s11player-gameround-statistics *ngIf="pool && currentGameRound"
                                 [statistics]="statisticsGetter.getStatistics(s11Player,currentGameRound)"
-                                [line]="s11Player.getLine()" [competitionConfig]="pool.getCompetitionConfig()">
+                                [line]="s11Player.getLine()" [lineScorePointsMap]="pool.getCompetitionConfig().getLineScorePointsMap()">
                             </app-s11player-gameround-statistics>
                         </div>
 

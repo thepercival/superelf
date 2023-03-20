@@ -1,6 +1,8 @@
 import { FootballLine, Identifiable, Period, Person, Player, Team } from 'ngx-sport';
+import { BadgeCategory } from './achievement/badge/category';
 import { ViewPeriod } from './period/view';
-import { JsonTotals } from './totals/json';
+import { LineScorePointsMap } from './score/points';
+import { Totals } from './totals';
 
 export class S11Player extends Identifiable {
 
@@ -8,8 +10,7 @@ export class S11Player extends Identifiable {
         protected viewPeriod: ViewPeriod,
         protected person: Person,
         protected readonly players: Player[],
-        protected totals: JsonTotals,
-        protected totalPoints: number) {
+        protected totals: Totals) {
         super();
     }
 
@@ -29,12 +30,8 @@ export class S11Player extends Identifiable {
         return player.getLine();
     }
 
-    public getTotals(): JsonTotals {
+    public getTotals(): Totals {
         return this.totals;
-    }
-
-    public getTotalPoints(): number {
-        return this.totalPoints;
     }
 
     public getPlayers(team?: Team, period?: Period, line?: number): Player[] {
@@ -78,6 +75,10 @@ export class S11Player extends Identifiable {
     }
 
     hasAppeared(): boolean {
-        return this.getTotals().nrOfTimesStarted > 0 || this.getTotals().nrOfTimesSubstitute > 0;
+        return this.getTotals().getNrOfTimesStarted() > 0 || this.getTotals().getNrOfTimesSubstitute() > 0;
+    }
+
+    public getTotalPoints(lineScorePointsMap: LineScorePointsMap, badgeCategory: BadgeCategory|undefined): number {
+        return this.totals.getPoints(this.getLine(), lineScorePointsMap, badgeCategory);
     }
 }

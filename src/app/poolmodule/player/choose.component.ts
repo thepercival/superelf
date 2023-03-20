@@ -10,6 +10,7 @@ import { S11Player } from '../../lib/player';
 import { S11PlayerRepository } from '../../lib/player/repository';
 import { ImageRepository } from '../../lib/image/repository';
 import { ViewPeriodType } from '../../lib/period/view/json';
+import { CompetitionConfig } from '../../lib/competitionConfig';
 
 @Component({
   selector: 'app-pool-player-choose',
@@ -17,7 +18,7 @@ import { ViewPeriodType } from '../../lib/period/view/json';
   styleUrls: ['./choose.component.scss']
 })
 export class S11PlayerChooseComponent implements OnInit {
-  @Input() competition!: Competition;
+  @Input() competitionConfig!: CompetitionConfig;
   @Input() viewPeriod!: ViewPeriod;
   @Input() alreadyChosenPersons: Person[] | undefined;
   @Input() alreadyChosenTeams: Team[] | undefined;
@@ -103,7 +104,7 @@ export class S11PlayerChooseComponent implements OnInit {
   // }
 
   searchPersons() {
-    this.playerRepository.getObjects(this.competition, this.viewPeriod, this.filter.team, this.filter.line)
+    this.playerRepository.getObjects(this.competitionConfig.getSourceCompetition(), this.viewPeriod, this.filter.team, this.filter.line)
       .subscribe({
         next: (players: S11Player[]) => {
           this.setChoosePersonItems(players);
@@ -128,8 +129,13 @@ export class S11PlayerChooseComponent implements OnInit {
         choosePersonItems.push({ player: currentPlayer, s11Player: player });
       }
     });
-    choosePersonItems.sort((itemA, itemB) => itemA.s11Player.getTotalPoints() < itemB.s11Player.getTotalPoints() ? 1 : -1);
+    choosePersonItems.sort((itemA, itemB) => 
+      this.getTotalPoints(itemA.s11Player) < this.getTotalPoints(itemB.s11Player) ? 1 : -1);
     this.choosePersonItems = choosePersonItems;
+  }
+
+  getTotalPoints(s11Player: S11Player): number {
+    return s11Player.getTotalPoints(this.competitionConfig.getLineScorePointsMap(), undefined);
   }
 
   isChoosable(player: Player): boolean {

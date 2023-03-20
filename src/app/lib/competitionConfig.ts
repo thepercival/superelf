@@ -8,7 +8,7 @@ export class CompetitionConfig extends Identifiable {
 
     protected scorePointsMap: Map<FootballScore, number>;
     protected lineScorePointsMap: LineScorePointsMap;
-    public static readonly NrToQualifyForWorldCup = 2;
+    public static readonly MinRankToToQualifyForWorldCup = 2;
 
     constructor(
         protected sourceCompetition: Competition,
@@ -54,13 +54,9 @@ export class CompetitionConfig extends Identifiable {
         return this.lineScorePointsMap.get(lineScore);
     }
 
-    // public getPoints(score: Score | LineScore): number {
-    //     if (score.hasOwnProperty('line')) {
-    //         return this.lineScorePointsMap.get(score);
-    //     }
-    //     return this.scorePointsMap.get(score);
-
-    // }
+    public getLineScorePointsMap(): LineScorePointsMap {
+        return this.lineScorePointsMap;
+    }
 
     public getCreateAndJoinPeriod(): ViewPeriod {
         return this.createAndJoinPeriod;

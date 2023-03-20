@@ -7,5 +7,4 @@ export interface JsonS11FormationPlace extends JsonIdentifiable {
     penaltyPoints: number;
     player: JsonS11Player | undefined;
     totals: JsonTotals;
-    totalPoints: number;
 }

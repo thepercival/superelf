@@ -49,7 +49,7 @@
             <app-team-name [team]="getCurrentTeam(scoutedPlayer.getS11Player())"></app-team-name>
           </td>
           <td class="text-end">
-            <span class="badge bg-totals" style="width: 2rem">{{scoutedPlayer.getS11Player().getTotalPoints()}}</span>
+            <span class="badge bg-totals" style="width: 2rem">{{getTotalPoints(scoutedPlayer.getS11Player())}}</span>
           </td>
           <td (click)="$event.stopPropagation()">
             <button type="button" class="btn btn-sm btn-outline-danger" (click)="openRemoveModal(scoutedPlayer, pool)">

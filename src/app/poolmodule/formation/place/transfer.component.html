@@ -17,7 +17,7 @@
       </div>
 
       <div *ngIf="selectableTeams && alreadyChosenTeams" class="d-flex justify-content-center">
-        <app-pool-player-choose class="w-100" [competition]="pool.getSourceCompetition()"
+        <app-pool-player-choose class="w-100" [competitionConfig]="pool.getCompetitionConfig()"
           [viewPeriod]="pool.getAssemblePeriod().getViewPeriod()" [viewPeriodType]="TransferViewPeriod"
           [alreadyChosenPersons]="alreadyChosenPersons" [selectableTeams]="selectableTeams"
           [alreadyChosenTeams]="alreadyChosenTeams" [selectableLines]="selectableLines" [filter]="choosePlayersFilter"

@@ -6,6 +6,7 @@ import { Transfer } from "../editAction/transfer";
 import { S11Formation } from "../formation";
 import { S11Player } from "../player";
 import { PoolUser } from "../pool/user";
+import { Totals } from "../totals";
 import { JsonTotals } from "../totals/json";
 import { S11FormationLine } from "./line";
 import { S11FormationPlace } from "./place";
@@ -97,16 +98,10 @@ export class S11FormationCalculator {
                 && editAction.getPlaceNumberOut() === currentPlace.getNumber()  ) {
                     const playerIn = editAction.getPlayerIn();
                     newS11Player = new S11Player(
-                        currentFormation.getViewPeriod(), playerIn.getPerson(), [playerIn], currentPlace.getTotals(), 0
+                        currentFormation.getViewPeriod(), playerIn.getPerson(), [playerIn], currentPlace.getTotals()
                     );
                 }                
-                new S11FormationPlace(
-                    line, 
-                    newS11Player, 
-                    currentPlace.getNumber(), 
-                    currentPlace.getTotals(), 
-                    currentPlace.getTotalPoints() 
-                );                
+                new S11FormationPlace(line, newS11Player, currentPlace.getNumber(), currentPlace.getTotals());                
             });    
         });
         return newFormation;
@@ -120,43 +115,20 @@ export class S11FormationCalculator {
             currentLine.getPlaces().forEach((currentPlace: S11FormationPlace) => {
                 new S11FormationPlace(
                     line, currentPlace.getPlayer(), currentPlace.getNumber(), 
-                    currentPlace.getTotals(), currentPlace.getTotalPoints() 
+                    currentPlace.getTotals()
                 );                
             });
             if( line.getNumber() === playerLineNumber) {
                 const newS11Player = new S11Player(
                     currentFormation.getViewPeriod(), player.getPerson(), [player], 
-                    this.createTotals(), 0
+                    new Totals()
                 );
                 const placeNumber = asSubstitute ? 0 : currentLine.getStartingPlaces().length + 1;
                 // console.log('add Place to lineNr ' + line.getNumber() + ' as placeNr ' + placeNumber);
-                new S11FormationPlace(
-                    line, newS11Player, placeNumber, 
-                    this.createTotals(), 0 
-                );                
+                new S11FormationPlace(line, newS11Player, placeNumber, new Totals());                
             }  
         });
         return newFormation;
-    }
-
-    private createTotals(): JsonTotals {
-        return {
-            nrOfWins: 0,
-            nrOfDraws: 0,
-            nrOfTimesStarted: 0,
-            nrOfTimesSubstituted: 0,
-            nrOfTimesSubstitute: 0,
-            nrOfTimesNotAppeared: 0,
-            nrOfFieldGoals: 0,
-            nrOfAssists: 0,
-            nrOfPenalties: 0,
-            nrOfOwnGoals: 0,
-            nrOfCleanSheets: 0,
-            nrOfSpottySheets: 0,
-            nrOfYellowCards: 0,
-            nrOfRedCards: 0
-        }
-
     }
 
     private removePlace(currentFormation: S11Formation, lineNumber: FootballLine, placeNumber: number): S11Formation {
@@ -180,10 +152,7 @@ export class S11FormationCalculator {
                 if( removed && currentPlace.getNumber() > 0 ) {
                     newPlaceNumber--;
                 }
-                new S11FormationPlace(
-                    line, currentPlace.getPlayer(), newPlaceNumber, 
-                    currentPlace.getTotals(), currentPlace.getTotalPoints() 
-                );                
+                new S11FormationPlace(line, currentPlace.getPlayer(), newPlaceNumber, currentPlace.getTotals() );                
             });    
         });
         return newFormation;
@@ -203,10 +172,7 @@ export class S11FormationCalculator {
 
             places.forEach((currentPlace: S11FormationPlace) => {
                 let newPlaceNumber = currentPlace.getNumber();
-                new S11FormationPlace(
-                    line, currentPlace.getPlayer(), newPlaceNumber, 
-                    currentPlace.getTotals(), currentPlace.getTotalPoints() 
-                );                
+                new S11FormationPlace(line, currentPlace.getPlayer(), newPlaceNumber, currentPlace.getTotals() );                
             });    
             
         });

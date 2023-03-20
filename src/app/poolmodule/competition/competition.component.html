@@ -10,21 +10,32 @@
         <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
           (update)="updateGameRound($event)">
         </app-gameround-scroller>
-        <button *ngIf="poule" (click)="navigateToChat(poule)" type="button"
-          class="btn btn-outline-dark me-3 position-relative">
-          <fa-icon [icon]="['fas', 'message']"></fa-icon>
-          <span class="ms-1"> chat</span>
-          <span *ngIf="nrOfUnreadMessages > 0"
-            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            {{nrOfUnreadMessages}}
-            <span class="visually-hidden">ongelezen berichten</span>
-          </span>
-        </button>
+        <div *ngIf="poule">
+          <button (click)="navigateToChat(poule)" type="button"
+            class="btn btn-outline-dark me-3 position-relative">
+            <fa-icon [icon]="['fas', 'message']"></fa-icon>
+            <span class="ms-1 d-none d-sm-inline"> chat</span>
+            <span *ngIf="nrOfUnreadMessages > 0"
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{nrOfUnreadMessages}}
+              <span class="visually-hidden">ongelezen berichten</span>
+            </span>
+          </button>
+          <button (click)="openChooseBadgeCategoryModal()" type="button"
+            class="btn btn-outline-dark me-3 position-relative">
+            <app-superelf-icon [name]="'trophy'"></app-superelf-icon>
+          </button>          
+        </div>
+        
       </div>
-
-      <app-together-ranking [poule]="poule" [competitionSport]="competitionSport" [startLocationMap]="startLocationMap"
-        [header]="true" [currentGameRound]="currentGameRound">
+  
+      <app-together-ranking [poolUsers]="poolUsers" [viewPeriod]="viewPeriod" [gameRound]="currentGameRound"
+        [header]="true" >
       </app-together-ranking>
+
+      <!-- <app-together-ranking [poule]="poule" [competitionSport]="competitionSport" [startLocationMap]="startLocationMap"
+        [header]="true" [currentGameRound]="currentGameRound">
+      </app-together-ranking> -->
 
     </div>
 
@@ -37,5 +48,5 @@
   </app-competitions-navbar>
 </ng-template>
 
-<app-pool-navbar [current]="Competitions" *ngIf="pool" [pool]="pool" [poolUser]="poolUser" [upperNavBar]="competitionsNavBar">
+<app-pool-navbar [current]="Competitions" *ngIf="pool" [pool]="pool" [poolUser]="poolUserFromSession" [upperNavBar]="competitionsNavBar">
 </app-pool-navbar>

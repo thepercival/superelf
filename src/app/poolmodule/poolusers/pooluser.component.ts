@@ -110,7 +110,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     this.formationRepository.getObject(poolUser, viewPeriod).subscribe({
       next: (formation: S11Formation) => {
         this.formation = formation;
-        this.totalPoints = this.formation.getTotalPoints();
+        this.totalPoints = this.formation.getTotalPoints(undefined);
         
         this.initGameRounds(this.formation, gameRoundNr);    
         this.processingFormation = false;
@@ -176,7 +176,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     }
     if( this.gameRoundCacheMap.has(gameRound.getNumber())) {
       this.currentGameRound = gameRound;
-      this.totalGameRoundPoints = this.statisticsGetter.getFormationPoints(formation, gameRound);
+      this.totalGameRoundPoints = this.statisticsGetter.getFormationGameRoundPoints(formation, gameRound, undefined);
       return;
     }
 
@@ -184,7 +184,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     this.statisticsRepository.getGameRoundObjects(formation, gameRound, this.statisticsGetter).subscribe({
       next: () => {
         this.currentGameRound = gameRound;
-        this.totalGameRoundPoints = this.statisticsGetter.getFormationPoints(formation, gameRound);
+        this.totalGameRoundPoints = this.statisticsGetter.getFormationGameRoundPoints(formation, gameRound, undefined);
         this.gameRoundCacheMap.set(gameRound.getNumber(), true);
         this.processingStatistics = false;
       },

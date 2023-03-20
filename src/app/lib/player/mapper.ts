@@ -4,6 +4,7 @@ import { ViewPeriod } from '../period/view';
 import { S11Player } from '../player';
 import { JsonS11Player } from './json';
 import { StatisticsMapper } from '../statistics/mapper';
+import { TotalsMapper } from '../totals/mapper';
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +13,7 @@ export class S11PlayerMapper {
     constructor(
         protected personMapper: PersonMapper,
         protected playerMapper: PlayerMapper,
+        protected totalsMapper: TotalsMapper,
         protected statisticsMapper: StatisticsMapper) { }
 
     toObject(json: JsonS11Player, competition: Competition, viewPeriod: ViewPeriod): S11Player {
@@ -20,7 +22,7 @@ export class S11PlayerMapper {
         const players = json.players.map((jsonPlayer: JsonPlayer) => this.playerMapper.toObject(
             jsonPlayer, association, person
         ));
-        const s11Player = new S11Player(viewPeriod, person, players, json.totals, json.totalPoints);
+        const s11Player = new S11Player(viewPeriod, person, players, this.totalsMapper.toObject(json.totals));
         s11Player.setId(json.id);
         return s11Player;
     }
@@ -31,8 +33,7 @@ export class S11PlayerMapper {
             person: this.personMapper.toJson(player.getPerson()),
             players: [],
             statistics: undefined,
-            totals: player.getTotals(),
-            totalPoints: player.getTotalPoints()
+            totals: this.totalsMapper.toJson(player.getTotals())
             // gameRoundScores: []
         };
     }

@@ -54,7 +54,7 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
   initPoolUser(pool: Pool) {
     this.poolUserRepository.getObjectFromSession(pool).subscribe({
         next: (poolUser: PoolUser | undefined) => {
-          this.poolUser = poolUser;
+          this.poolUserFromSession = poolUser;
           if( pool.getAssemblePeriod().isIn() && poolUser?.hasAssembleFormation() ) {            
 
             this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod() ).subscribe({
@@ -193,7 +193,11 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
   linkToSearch() {
     this.router.navigate(['/pool/scouting/search/', this.pool.getId()]);
   }
-
+  
+  getTotalPoints(s11Player: S11Player): number {
+    const lineScorePointsMap = this.pool.getCompetitionConfig().getLineScorePointsMap();
+    return s11Player.getTotalPoints(lineScorePointsMap, undefined);
+  }
 }
 
 interface ScoutingList {

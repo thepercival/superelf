@@ -9,9 +9,9 @@ import { ImageRepository } from '../../lib/image/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
+import { ViewPeriod } from '../../lib/period/view';
 import { S11Player } from '../../lib/player';
 import { S11PlayerRepository } from '../../lib/player/repository';
-import { PointsCalculator } from '../../lib/points/calculator';
 import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
 import { Statistics } from '../../lib/statistics';
@@ -31,7 +31,6 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 export class S11PlayerComponent extends PoolComponent implements OnInit {
   public s11Player!: S11Player;
   public pool!: Pool;
-  private pointsCalculator!: PointsCalculator;
   public currentGameRound: GameRound | undefined;
 
   // @Input() team: Team | undefined;
@@ -76,26 +75,29 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
       this.setPool(pool);
 
       const competitionConfig = this.pool.getCompetitionConfig();
-      const currentViewPeriod = this.getCurrentViewPeriod(pool);
-      if (currentViewPeriod === undefined) {
-        return;
-      }
+      
       this.route.params.subscribe(params => {
+        let viewPeriod: ViewPeriod|undefined = undefined
         let currentGameRound: GameRound | undefined;
         const gameRoundNumber = +params.gameRound;
         if (gameRoundNumber > 0) {
-          currentGameRound = currentViewPeriod.getGameRound(gameRoundNumber)
+          viewPeriod = pool.getViewPeriodByRoundNumber(gameRoundNumber);          
+          if (viewPeriod !== undefined) {
+            currentGameRound = viewPeriod.getGameRound(gameRoundNumber)
+          }
+        }
+        if (viewPeriod === undefined) {
+          return;
         }
         this.playerRepository.getObject(
           +params.playerId,
           competitionConfig.getSourceCompetition(),
-          currentViewPeriod
+          viewPeriod
         ).subscribe({
           next: (s11Player: S11Player) => {
             this.s11Player = s11Player;
             this.statisticsRepository.getPlayerObjects(this.s11Player, this.statisticsGetter).subscribe({
               next: () => {
-                this.pointsCalculator = new PointsCalculator(this.pool.getCompetitionConfig());
                 this.startLocationMap = new StartLocationMap(this.pool.getSourceCompetition().getTeamCompetitors());
                 this.initSliderGameRounds(currentGameRound);
                 this.updateGameRound(currentGameRound, true);
@@ -187,12 +189,13 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
 
   getCurrentGameRoundPoints(): number {
     if (this.currentGameRound === undefined) {
-      return this.s11Player.getTotalPoints();
+      return this.s11Player.getTotalPoints(this.pool.getCompetitionConfig().getLineScorePointsMap(), undefined);
     }
     if (this.currentStatistics === undefined) {
       return 0;
     }
-    return this.pointsCalculator.getPoints(this.s11Player.getLine(), this.currentStatistics);
+    const map = this.pool.getCompetitionConfig().getLineScorePointsMap();
+    return this.currentStatistics.getPoints(this.s11Player.getLine(), map, undefined)
   }
 
   navigateBack() {

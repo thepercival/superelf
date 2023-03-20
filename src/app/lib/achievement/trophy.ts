@@ -7,10 +7,15 @@ export class Trophy extends Achievement {
     constructor(
         poolUser: JsonPoolUser, 
         protected competition: Competition,
-        rank: number,
+        protected rank: number,
         created: Date) {
-        super(poolUser, rank, created);
+        super(poolUser, created);
     }
+
+    getRank(): number {
+        return this.rank;
+    }
+
 
     getCompetition(): Competition {
         return this.competition;

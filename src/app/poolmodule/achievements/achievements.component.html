@@ -3,7 +3,7 @@
         
         <h2>
             <app-superelf-icon [name]="'trophy'"></app-superelf-icon>
-            <span class="ms-1">prijzenkast</span>
+            <span class="ms-1">prijzenkasten</span>
             
         </h2>
 
@@ -47,7 +47,7 @@
 
 
 
-<app-pool-navbar [current]="Achievements" *ngIf="pool" [pool]="pool" [poolUser]="poolUser">
+<app-pool-navbar [current]="Achievements" *ngIf="pool" [pool]="pool" [poolUser]="poolUserFromSession">
 </app-pool-navbar>
 
 <!-- <ng-template #contentMessageTitle let-message="message" let-end="end">

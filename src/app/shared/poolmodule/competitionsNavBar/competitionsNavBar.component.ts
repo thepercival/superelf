@@ -48,7 +48,7 @@ export class PoolCompetitionsNavBarComponent implements OnInit{
   get WorldCupStructure(): CompetitionsNavBarItem { return CompetitionsNavBarItem.WorldCupStructure }
   
   getTextColorClass(item: CompetitionsNavBarItem): string {
-    return this.current !== item ? 'btn-outline-success' : 'text-white';
+    return this.current !== item ? 'text-success' : 'text-white';
   }
 
   linkTo(navBarItem: CompetitionsNavBarItem): void {
@@ -67,74 +67,4 @@ export class PoolCompetitionsNavBarComponent implements OnInit{
         return;
     }
   }
-
-//   linkToSchedule(): void {
-//     const competition = this.pool.getCompetition(LeagueName.Competition)
-//     if( competition === undefined) {
-//       return;
-//     }
-//     this.router.navigate(['/pool/allinonegame', this.pool.getId()]);
-//     // this.router.navigate(['/pool/poule-schedule', this.pool.getId(), LeagueName.Competition, 0]);
-// }
-
-// getCurrentRound(competition: Competition, gameRoundNumber: number): Round|undefined {
-//   const structure = this.structureMap.get(+competition.getId());
-//   if( structure === undefined ) {
-//       return undefined;
-//   }
-  
-//   const round = structure.getSingleCategory().getRootRound();
-//   return this.getCurrentRoundHelper(round, gameRoundNumber);
-// }
-
-// getCurrentRoundHelper(round: Round, gameRoundNumber: number): Round|undefined {
-//   if( this.hasRoundGameRoundNumber(round, gameRoundNumber) ) {
-//       return round;
-//   }
-//   return round.getChildren().find((childRound: Round): boolean => {
-//       return this.hasRoundGameRoundNumber(childRound, gameRoundNumber);
-//   });
-// }
-
-// hasRoundGameRoundNumber(round: Round, gameRoundNumber: number): boolean {
-//   return round.getGames().some((game: (AgainstGame|TogetherGame)): boolean => {
-//       if( game instanceof TogetherGame) {
-//           return game.getTogetherPlaces().some((gamePlace: TogetherGamePlace): boolean => {
-//               return gamePlace.getGameRoundNumber() === gameRoundNumber;
-//           })
-//       }
-//       return game.getGameRoundNumber() === gameRoundNumber;
-//   });
-// }
-
-// getCurrentPoule(round: Round, leagueName: LeagueName, poolUser: PoolUser): Poule | undefined {
-//   const competitor = poolUser.getCompetitor(leagueName)
-//   if (competitor === undefined) {
-//       return undefined;
-//   }
-//   return round.getPoules().find((poule: Poule): boolean => {
-//       return poule.getPlaceByStartLocation(competitor.getStartLocation()) !== undefined;
-//   });
-// }
-  
-  // hasRole(roles: number): boolean {
-  //   const loggedInUserId = this.authService.getLoggedInUserId();
-  //   const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
-  //   return tournamentUser ? tournamentUser.hasARole(roles) : false;
-  // }
-
-  // showNrOfItems(): number {
-  //   if (!this.public) {
-  //     return 4;
-  //   }
-  //   let nrOfItems = 3;
-  //   if (this.tournament.getLockerRooms().length > 0) {
-  //     nrOfItems++;
-  //   }
-  //   return this.tournament.getCompetitors().length > 0 ? nrOfItems + 1 : nrOfItems;
-  // }
-
-  // getFavSuffix(): string {
-  //   return this.showNrOfItems() > 4 ? 'd-none d-sm-inline' : '';
-  // }
 }

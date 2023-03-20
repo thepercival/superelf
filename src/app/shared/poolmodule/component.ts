@@ -15,7 +15,8 @@ export class PoolComponent {
 
     public pool!: Pool;
     public currentViewPeriod!: ViewPeriod;
-    public poolUser: PoolUser | undefined;
+    public poolUserFromSession: PoolUser | undefined;
+    public poolUserFromId: PoolUser | undefined;
     public alert: IAlert | undefined;
     public processing = true;
 

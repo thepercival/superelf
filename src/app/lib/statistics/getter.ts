@@ -1,10 +1,10 @@
 import { GameState } from "ngx-sport";
+import { BadgeCategory } from "../achievement/badge/category";
 import { S11Formation } from "../formation";
 import { S11FormationLine } from "../formation/line";
 import { S11FormationPlace } from "../formation/place";
 import { GameRound } from "../gameRound";
 import { S11Player } from "../player";
-import { PointsCalculator } from "../points/calculator";
 import { Statistics } from "../statistics";
 
 
@@ -14,23 +14,23 @@ export class StatisticsGetter {
 
     private personMap: Map<string|number, StatisticsMap> = new Map();
 
-    getFormationPoints(formation: S11Formation, gameRound: GameRound|number): number {
+    getFormationGameRoundPoints(formation: S11Formation, gameRound: GameRound|number, badgeCategory: BadgeCategory|undefined): number {
         let points = 0;
         for (let line of formation.getLines()) {
-            points += this.getFormationLinePoints(line, gameRound);
+            points += this.getFormationLineGameRoundPoints(line, gameRound, badgeCategory);
         }
         return points;
     }
 
-    getFormationLinePoints(formationLine: S11FormationLine, gameRound: GameRound|number): number {
+    getFormationLineGameRoundPoints(formationLine: S11FormationLine, gameRound: GameRound|number, badgeCategory: BadgeCategory|undefined): number {
         let points = 0;
         for (let place of formationLine.getPlaces()) {
-            points += this.getFormationPlacePoints(place, gameRound);
+            points += this.getFormationPlaceGameRoundPoints(place, gameRound, badgeCategory);
         }
         return points;
     }
 
-    getFormationPlacePoints(formationPlace: S11FormationPlace, gameRound: GameRound | number): number {
+    getFormationPlaceGameRoundPoints(formationPlace: S11FormationPlace, gameRound: GameRound|number, badgeCategory: BadgeCategory|undefined): number {
         const player = formationPlace.getPlayer();
         if (player === undefined) {
             return 0;
@@ -44,8 +44,8 @@ export class StatisticsGetter {
         if (formationPlace.isSubstitute() && !formationLine.hasSubstituteAppareance(gameRound)) {
             return 0;
         }
-        const competitionConfig = formationLine.getFormation().getPoolUser().getPool().getCompetitionConfig();
-        return (new PointsCalculator(competitionConfig)).getPoints(formationPlace.getLine(), statistics);
+        const lineScorePointsMap = formationLine.getFormation().getPoolUser().getPool().getCompetitionConfig().getLineScorePointsMap();
+        return statistics.getPoints(formationPlace.getLine(), lineScorePointsMap, badgeCategory);
     }
 
     placeHasStatistics(formationPlace: S11FormationPlace, gameRound: GameRound): boolean {

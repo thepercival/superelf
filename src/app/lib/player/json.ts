@@ -7,5 +7,4 @@ export interface JsonS11Player extends JsonIdentifiable {
     players: JsonPlayer[];
     statistics: JsonStatistics[] | undefined;
     totals: JsonTotals;
-    totalPoints: number;
 }

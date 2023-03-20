@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AgainstGame, AgainstSide, Competition, FootballLine, GameState, ScoreConfigService } from 'ngx-sport';
+import { BadgeCategory } from './achievement/badge/category';
 import { LeagueName } from './leagueName';
 import { FootballCard, FootballGoal, FootballResult, FootballScore, FootballSheet } from './score';
 
@@ -92,5 +93,21 @@ export class SuperElfNameService {
             return finalScore.getHome() + score + finalScore.getAway();
         }
         return '' + finalScore.get(side);
+    }
+
+    getBadgeCategoryName(badgeCategory: BadgeCategory): string {
+        switch (badgeCategory) {
+            case BadgeCategory.Result:
+              return 'resultaten';
+            case BadgeCategory.Goal:
+                return 'goals';
+            case BadgeCategory.Assist:
+                return 'assists';
+            case BadgeCategory.Sheet:
+                return 'de-nul houden';
+            case BadgeCategory.Card:
+                return 'sportiviteit';
+        }
+        throw Error('unknown badgeCategory');
     }
 }

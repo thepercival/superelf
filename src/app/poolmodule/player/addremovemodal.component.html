@@ -4,7 +4,7 @@
         (click)="activeModal.dismiss()"></button>
 </div>
 <div class="modal-body p-0">
-    <app-player-basics [player]="player" [points]="s11Player.getTotalPoints()"></app-player-basics>
+    <app-player-basics [player]="player" [points]="getTotalPoints()"></app-player-basics>
 </div>
 <div class="modal-footer d-flex justify-content-center">
     <button *ngIf="action === Remove" type="button" class="btn btn-danger" data-dismiss="modal"

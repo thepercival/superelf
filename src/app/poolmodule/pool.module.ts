@@ -78,6 +78,7 @@ import { PoolAllInOneGameScheduleComponent } from './schedule/allinonegame.compo
 import { PoolUserAchievementsComponent } from './achievements/pooluser-achievements.component';
 import { UnviewedAchievementsModalComponent } from './achievements/unviewed-modal.component';
 import { NgParticlesModule } from 'ng-particles';
+import { ChooseBadgeCategoryModalComponent } from './badge/choosecategory-modal.component';
 
 @NgModule({
   imports: [
@@ -94,6 +95,7 @@ import { NgParticlesModule } from 'ng-particles';
   declarations: [
     AchievementsComponent,
     AgainstGameTitleComponent,
+    ChooseBadgeCategoryModalComponent,
     FormationActionOverviewComponent,
     FormationAssembleComponent,
     FormationChooseComponent,

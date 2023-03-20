@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Competition, FootballLine } from 'ngx-sport';
+import { Competition } from 'ngx-sport';
 import { ViewPeriod } from '../../period/view';
 import { S11PlayerMapper } from '../../player/mapper';
-import { Totals } from '../../totals';
-import { TotalsCalculator } from '../../totals/calculator';
+import { TotalsMapper } from '../../totals/mapper';
 import { S11FormationLine } from '../line';
 import { S11FormationPlace } from '../place';
 import { JsonS11FormationPlace } from './json';
@@ -12,11 +11,11 @@ import { JsonS11FormationPlace } from './json';
     providedIn: 'root'
 })
 export class FormationPlaceMapper {
-    constructor(protected playerMapper: S11PlayerMapper) { }
+    constructor(protected playerMapper: S11PlayerMapper, protected totalsMapper: TotalsMapper) { }
 
     toObject(json: JsonS11FormationPlace, line: S11FormationLine, competition: Competition, viewPeriod: ViewPeriod): S11FormationPlace {
         const s11Player = json.player ? this.playerMapper.toObject(json.player, competition, viewPeriod) : undefined;
-        const place = new S11FormationPlace(line, s11Player, json.number, json.totals, json.totalPoints);
+        const place = new S11FormationPlace(line, s11Player, json.number, this.totalsMapper.toObject(json.totals));
         place.setId(json.id);
         place.setPenaltyPoints(json.penaltyPoints);
         return place;
@@ -29,7 +28,6 @@ export class FormationPlaceMapper {
             number: place.getNumber(),
             player: player ? this.playerMapper.toJson(player) : player,
             penaltyPoints: place.getPenaltyPoints(),
-            totalPoints: 0,
             totals: {
                 nrOfWins: 0,
                 nrOfDraws: 0,

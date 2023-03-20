@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FootballLine } from 'ngx-sport';
-import { CompetitionConfig } from '../../lib/competitionConfig';
+import { BadgeCategory } from '../../lib/achievement/badge/category';
 import { ImageRepository } from '../../lib/image/repository';
-import { TotalsCalculator } from '../../lib/totals/calculator';
-import { JsonTotals } from '../../lib/totals/json';
+import { LineScorePointsMap } from '../../lib/score/points';
+import { Totals } from '../../lib/totals';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { S11PlayerStatisticsComponent } from './base.component';
 
@@ -13,11 +13,9 @@ import { S11PlayerStatisticsComponent } from './base.component';
   styleUrls: ['./viewperiod.component.scss']
 })
 export class S11PlayerViewPeriodStatisticsComponent extends S11PlayerStatisticsComponent implements OnInit {
-  @Input() totals!: JsonTotals;
+  @Input() totals!: Totals;
   @Input() line!: FootballLine;
-  @Input() competitionConfig!: CompetitionConfig;
-
-  public totalsCalculator!: TotalsCalculator;
+  @Input() lineScorePointsMap!: LineScorePointsMap;
 
   constructor(
     public imageRepository: ImageRepository,
@@ -26,16 +24,16 @@ export class S11PlayerViewPeriodStatisticsComponent extends S11PlayerStatisticsC
   }
 
   ngOnInit() {
-    this.totalsCalculator = new TotalsCalculator(this.competitionConfig);
     const sheetLines: number = (this.line & FootballLine.GoalKeeper) + (this.line & FootballLine.Defense);
     this.sheetActive = sheetLines > 0;
 
-    const sheetPoints = sheetLines > 0 ? this.totalsCalculator.getSheetPoints(sheetLines, this.totals) : 0
+    const sheetPoints = sheetLines > 0 ? this.totals.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Sheet) : 0
     this.categoryPoints = {
-      result: this.totalsCalculator.getResultPoints(this.totals),
-      goal: this.totalsCalculator.getGoalPoints(this.line, this.totals),
+      result: this.totals.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Result),
+      goal: this.totals.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Goal) 
+        + this.totals.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Assist),
       sheet: sheetPoints,
-      card: this.totalsCalculator.getCardPoints(this.totals),
+      card: this.totals.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Card),
     }
     this.processing = false;
   }

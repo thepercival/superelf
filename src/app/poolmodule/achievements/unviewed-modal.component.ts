@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ClickMode, Container, Engine, HoverMode, MoveDirection, OutMode } from 'tsparticles-engine';
+import { Container, Engine } from 'tsparticles-engine';
 import { Badge } from '../../lib/achievement/badge';
 import { Trophy } from '../../lib/achievement/trophy';
 import { SuperElfNameService } from '../../lib/nameservice';
-import { loadFull } from "tsparticles";
 import { loadConfettiPreset } from 'tsparticles-preset-confetti';
 
 @Component({
@@ -95,7 +94,7 @@ export class UnviewedAchievementsModalComponent implements OnInit {
 
         await loadConfettiPreset(engine);
     }
-
+    
     getHeader(): string {
         if( this.achievements.length === 1 ) {
             return '1 nieuwe prijs';

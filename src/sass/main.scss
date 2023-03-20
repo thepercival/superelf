@@ -16,6 +16,13 @@ $enable-responsive-font-sizes: true !default;
   @extend .font-weight-bold !optional;
 }
 
+.text-gold {
+  color: gold;
+}
+.text-silver {
+  color: silver;
+}
+
 a {
   color: inherit;
 }

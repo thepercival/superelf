@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IconName, IconPrefix, SizeProp } from '@fortawesome/fontawesome-svg-core';
+import { BadgeCategory } from '../../../lib/achievement/badge/category';
 import { LeagueName } from '../../../lib/leagueName';
 import { FootballCard, FootballEvent, FootballGoal } from '../../../lib/score';
 
@@ -10,7 +11,6 @@ import { FootballCard, FootballEvent, FootballGoal } from '../../../lib/score';
 })
 export class SuperElfIconComponent {
     @Input() name: CustomIconName | undefined;
-    @Input() leagueName: LeagueName | undefined;
     @Input() gameEvent: FootballEvent | undefined;
     @Input() large: boolean = false;
     @Input() size: SizeProp|undefined;
@@ -23,7 +23,7 @@ export class SuperElfIconComponent {
     }
 
     get prefix(): IconPrefix { 
-        if( this.name || this.leagueName ) {
+        if( this.name ) {
             return <IconPrefix>'fac'; 
         }
         switch (this.gameEvent) {
@@ -42,31 +42,11 @@ export class SuperElfIconComponent {
         // return this.getRotateFromFootballEvent(this.gameEvent);
     }
 
-    // get sizeTimes(): string {
-    //     return this.sizeX ? this.sizeX + '' : '';
-    // }
-
     get iconName(): IconName { 
-        if( this.leagueName !== undefined) {
-            return <IconName>this.getNameFromLeagueName(this.leagueName);
-        }
-        else if( this.gameEvent !== undefined) {
+        if( this.gameEvent !== undefined) {
             return <IconName>this.getNameFromFootballEvent(this.gameEvent);
         }
         return <IconName>this.name; 
-    }
-
-    private getNameFromLeagueName(leagueName: LeagueName): CustomIconName {
-        switch (leagueName) {
-            case LeagueName.Competition:
-              return 'plate';
-            case LeagueName.Cup:
-                return 'cup';
-            case LeagueName.SuperCup:
-                return 'super-cup';
-            case LeagueName.WorldCup:
-                return 'world-cup';
-        }
     }
 
     private getNameFromFootballEvent(event: FootballEvent): CustomIconName | IconName {
@@ -94,15 +74,6 @@ export class SuperElfIconComponent {
         }
         return '';
     }
-
-    // private getRotateFromFootballEvent(event: FootballEvent): boolean {
-    //     switch (event) {
-    //         case FootballCard.Red:
-    //         case FootballCard.Yellow:                
-    //             return true;
-    //     }
-    //     return false;
-    // }
 }
 
 export type CustomIconName = 'cup' | 'super-cup' | 'structure' | 'trophy' | 'plate' | 

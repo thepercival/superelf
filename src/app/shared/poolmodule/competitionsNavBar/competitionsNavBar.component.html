@@ -2,33 +2,33 @@
   
   <!-- PouleRankingTogetherSport -->
   <h2 class="mb-0 navbar-item">
-    <a type="button" class="btn {{getTextColorClass(PouleRankingTogetherSport)}} pt-cus" (click)="linkTo(PouleRankingTogetherSport)">
-      <app-superelf-icon [large]="true" [name]="'plate'"></app-superelf-icon>
-      <br /><span>{{nameService.getLeagueName(Competition)}}</span>
+    <a type="button" class="btn pt-cus" (click)="linkTo(PouleRankingTogetherSport)">
+      <app-superelf-trophy-icon size="2x" [leagueName]="Competition"></app-superelf-trophy-icon>
+      <br /><span class="{{getTextColorClass(PouleRankingTogetherSport)}}">{{nameService.getLeagueName(Competition)}}</span>
     </a>
   </h2>
 
   <!--CupStructure -->
   <h2 class="mb-0 navbar-item">
-    <a type="button" class="btn {{getTextColorClass(CupStructure)}} pt-cus" (click)="linkTo(CupStructure)">
-      <app-superelf-icon [large]="true" [leagueName]="Cup"></app-superelf-icon>
-      <br /><span>{{nameService.getLeagueName(Cup)}}</span>
+    <a type="button" class="btn pt-cus" (click)="linkTo(CupStructure)">
+      <app-superelf-trophy-icon size="2x" [leagueName]="Cup"></app-superelf-trophy-icon>
+      <br /><span class="{{getTextColorClass(CupStructure)}}">{{nameService.getLeagueName(Cup)}}</span>
     </a>
   </h2>
 
   <!--SuperCupGame -->
   <h2 *ngIf="hasSuperCup" class="mb-0 navbar-item">
-    <a type="button" class="btn {{getTextColorClass(SuperCupGame)}} pt-cus" (click)="linkTo(SuperCupGame)">
-      <app-superelf-icon [large]="true" [leagueName]="SuperCup"></app-superelf-icon>          
-      <br /><span>{{nameService.getLeagueName(SuperCup)}}</span>        
+    <a type="button" class="btn pt-cus" (click)="linkTo(SuperCupGame)">
+      <app-superelf-trophy-icon size="2x" [leagueName]="SuperCup"></app-superelf-trophy-icon>
+      <br /><span class="{{getTextColorClass(SuperCupGame)}}">{{nameService.getLeagueName(SuperCup)}}</span>        
     </a>
   </h2>
   
   <!--WorldCupStructure -->
   <h2 *ngIf="hasWorldCup" class="mb-0 navbar-item">
-    <a type="button" class="btn {{getTextColorClass(WorldCupStructure)}} pt-cus" (click)="linkTo(WorldCupStructure)">
-      <app-superelf-icon [large]="true" [leagueName]="WorldCup"></app-superelf-icon>          
-      <br /><span>{{nameService.getLeagueName(WorldCup)}}</span>        
+    <a type="button" class="btn pt-cus" (click)="linkTo(WorldCupStructure)">
+      <app-superelf-trophy-icon size="2x" [leagueName]="WorldCup"></app-superelf-trophy-icon>
+      <br /><span class="{{getTextColorClass(WorldCupStructure)}}">{{nameService.getLeagueName(WorldCup)}}</span>        
     </a>
   </h2>
 

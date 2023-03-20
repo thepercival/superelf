@@ -44,7 +44,7 @@
 
           <ng-container *ngIf="statisticsGetter.hasAppeared(place, gameRound);else startingNotAppeared">
             <span class="badge bg-points">
-              {{statisticsGetter.getFormationPlacePoints(place,gameRound)}}</span>
+              {{statisticsGetter.getFormationPlaceGameRoundPoints(place,gameRound, undefined)}}</span>
           </ng-container>
           <ng-template #startingNotAppeared>
             <span class="badge bg-nopoints">x</span>
@@ -55,7 +55,7 @@
           <div *ngIf="place.getFormationLine().hasSubstituteAppareance(gameRound)">
             <ng-container *ngIf="statisticsGetter.hasAppeared(place,gameRound);else substituteNotAppeared">
               <span class="badge bg-points">
-                {{statisticsGetter.getFormationPlacePoints(place,gameRound)}}</span>
+                {{statisticsGetter.getFormationPlaceGameRoundPoints(place,gameRound, undefined)}}</span>
             </ng-container>
             <ng-template #substituteNotAppeared>
               <span class="badge bg-nopoints">x</span>

@@ -3,7 +3,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt, faMedal, faSpinner,
-  faMinus, faPlus, faRectangleXmark, faFutbol
+  faMinus, faPlus, faRectangleXmark, faFutbol, faCircle, faHandshakeAngle
 } from '@fortawesome/free-solid-svg-icons';
 import { EndRankingComponent } from './ranking/end.component';
 import { PouleRankingComponent } from './ranking/poule.component';
@@ -13,10 +13,12 @@ import { NameModalComponent } from './namemodal/namemodal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RankingRulesComponent } from './rankingrules/rankingrules.component';
-import { facCard, facCleanSheet, facCrown, facCup, facPenalty, facPlate, facSpottySheet, facStructure, facSuperCup, facTrophy, facWorldCup } from './icons';
+import { facCard, facCleanSheet, facCornerFlag, facCrown, facCup, facPenalty, facPlate, facScoreboard, facSpottySheet, facStructure, facSuperCup, facTrophy, facWorldCup } from './icons';
 import { SuperElfIconComponent } from './icon/icon.component';
 import { PoolNavBarComponent } from './poolNavBar/poolNavBar.component';
 import { PoolCompetitionsNavBarComponent } from './competitionsNavBar/competitionsNavBar.component';
+import { SuperElfBadgeIconComponent } from './icon/badge.component';
+import { SuperElfTrophyIconComponent } from './icon/trophy.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { PoolCompetitionsNavBarComponent } from './competitionsNavBar/competitio
     PouleRankingComponent,
     RankingRulesComponent,
     SuperElfIconComponent,
+    SuperElfBadgeIconComponent,
+    SuperElfTrophyIconComponent,
     PoolNavBarComponent,
     PoolCompetitionsNavBarComponent
   ],
@@ -47,6 +51,8 @@ import { PoolCompetitionsNavBarComponent } from './competitionsNavBar/competitio
     NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
     NgbNavModule,
     SuperElfIconComponent,
+    SuperElfBadgeIconComponent,
+    SuperElfTrophyIconComponent,
     PoolNavBarComponent,
     PoolCompetitionsNavBarComponent
   ]
@@ -56,7 +62,7 @@ export class PoolSharedModule {
     library.addIcons(faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
       faMedal, faSpinner, faMinus, faPlus, faRectangleXmark, faFutbol,
       facCup, facStructure, facSuperCup, facTrophy, facPlate, facWorldCup, facCleanSheet,
-      facCrown, facSpottySheet, facCard, facPenalty);
+      facCrown, facSpottySheet, facCard, facPenalty, facScoreboard, faCircle, faHandshakeAngle, facCornerFlag, facCleanSheet);
     modalConfig.centered = true;
     modalConfig.scrollable = true;
     modalConfig.size = 'lg';

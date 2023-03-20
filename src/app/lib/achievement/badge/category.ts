@@ -1,8 +1,7 @@
-export enum BadgeCategory
-{
-    Result,
-    Goal,
-    Assist,
-    Sheet,
-    Card
+export enum BadgeCategory{
+    Result = 'Result',
+    Goal = 'Goal',
+    Assist = 'Assist',
+    Sheet = 'Sheet',
+    Card = 'Card',
 }

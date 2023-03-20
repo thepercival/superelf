@@ -130,6 +130,16 @@ export class Pool extends Identifiable {
         return checkDate < this.getTransferPeriod().getStartDateTime();
     }
 
+    public getViewPeriodByRoundNumber(gameRoundNumber: number): ViewPeriod {    
+        if( this.getAssembleViewPeriod().hasGameRound(gameRoundNumber) ) {
+          return this.getAssembleViewPeriod();
+        }
+        if( this.getTransferViewPeriod().hasGameRound(gameRoundNumber) ) {
+          return this.getTransferViewPeriod();
+        }
+        throw new Error('gameroundnumber should be in a viewperiod');
+      }
+
     public getCompetitionSport(leagueName: LeagueName): CompetitionSport {
         const competition = this.getCompetition(leagueName);
         if (competition === undefined) {

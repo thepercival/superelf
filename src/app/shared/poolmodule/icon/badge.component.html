@@ -1,0 +1,11 @@
+<!-- <fa-icon class="{{color}}" [size]=size [ngClass]="{ 'fs-1': large}" [icon]="[prefix, iconName]" [rotate]="rotate ? 90 : undefined"></fa-icon> -->
+
+<!-- <span class="fa-stack fa-2x">
+    <i class="fa-thin fa-circle fa-stack-2x"></i>
+    <i class="fa-solid fa-lock fa-stack-1x fa-inverse"></i>
+</span> -->
+
+<fa-stack [size]="size">
+    <fa-icon class="{{color}}" [icon]="['fas', 'circle']" stackItemSize="2x"></fa-icon>
+    <fa-icon [icon]="[prefix, iconName]" stackItemSize="1x"></fa-icon>
+</fa-stack>

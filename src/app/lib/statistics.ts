@@ -1,4 +1,7 @@
 import { AgainstResult, FootballLine } from 'ngx-sport';
+import { BadgeCategory } from './achievement/badge/category';
+import { FootballCard, FootballGoal, FootballResult, FootballSheet } from './score';
+import { LineScorePointsMap } from './score/points';
 import { Sheet } from './sheet';
 import { JsonStatistics } from './statistics/json';
 
@@ -87,5 +90,48 @@ export class Statistics {
 
     public getGameStartDate(): Date {
         return this.gameStartDate;
+    }
+
+    public getPoints(line: FootballLine, points: LineScorePointsMap, badgeCategory: BadgeCategory|undefined): number
+    {
+        let result = 0;
+        if( this.getResult() === AgainstResult.Win ) {
+            result = points.get({ line, score: FootballResult.Win });
+        } else if( this.getResult() === AgainstResult.Draw ) {
+            result = points.get({ line, score: FootballResult.Draw });
+        }
+        
+        let goals = this.getNrOfFieldGoals() * points.get({ line, score: FootballGoal.Normal });
+        goals += this.getNrOfPenalties() * points.get({ line, score: FootballGoal.Penalty });
+        goals += this.getNrOfOwnGoals() * points.get({ line, score: FootballGoal.Own });
+
+        const assists = this.getNrOfAssists() * points.get({ line, score: FootballGoal.Assist });
+
+        let sheet = 0;
+        if( this.hasCleanSheet() ) {
+            sheet += points.get({ line, score: FootballSheet.Clean });
+        }
+        if( this.hasSpottySheet() ) {
+            sheet += points.get({ line, score: FootballSheet.Spotty });
+        }
+
+        let cards = this.getNrOfYellowCards() * points.get({ line, score: FootballCard.Yellow });
+        if( this.gotDirectRedCard() ) {
+            cards += points.get({ line, score: FootballCard.Red });
+        }
+       
+        switch (badgeCategory) {
+            case BadgeCategory.Result:
+                return result;
+            case BadgeCategory.Goal:
+                return goals;
+            case BadgeCategory.Assist:
+                return assists;
+            case BadgeCategory.Sheet:
+                return sheet;
+            case BadgeCategory.Card:
+                return cards;
+        }
+        return result + goals + assists + sheet + cards;
     }
 }

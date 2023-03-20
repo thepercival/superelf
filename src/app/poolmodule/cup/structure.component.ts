@@ -73,7 +73,7 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => {
             this.poolUsers = poolUsers;
-            this.poolUser = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
+            this.poolUserFromSession = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
 
             const competition = this.pool.getCompetition(this.leagueName);
             if (competition === undefined) {

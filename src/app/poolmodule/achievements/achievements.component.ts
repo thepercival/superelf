@@ -89,10 +89,11 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
 
       this.poolUserRepository.getObjectFromSession(pool).subscribe({
         next: ((poolUser: PoolUser) => {
+          this.poolUserFromSession = poolUser;
           this.achievementRepository.getUnviewedObjects(poolUser).subscribe({
             next: (achievements: (Trophy|Badge)[]) => {
               if( achievements.length > 0 ) {
-                this.achievementRepository.removeUnviewedObjects(poolUser).subscribe({});
+                // this.achievementRepository.removeUnviewedObjects(poolUser).subscribe({});
                 this.openUnviewedModal(achievements);                
                 this.s11Storage.setLatest(pool, new Date(), false);
               }

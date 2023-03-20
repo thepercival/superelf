@@ -7,7 +7,7 @@
 
     <div *ngIf="!processing && pool && poule">
 
-      <app-superelf-cup-round [poolUser]="poolUser" [round]="poule.getRound()" class="px-0"
+      <app-superelf-cup-round [poolUser]="poolUserFromSession" [round]="poule.getRound()" class="px-0"
         [structureNameService]="structureNameService" (navigateToPoule)="navigateToPoule($event)">
       </app-superelf-cup-round>
 
@@ -22,5 +22,5 @@
   </app-competitions-navbar>
 </ng-template>
 
-<app-pool-navbar [current]="Competitions" *ngIf="pool" [pool]="pool" [poolUser]="poolUser" [upperNavBar]="competitionsNavBar">
+<app-pool-navbar [current]="Competitions" *ngIf="pool" [pool]="pool" [poolUser]="poolUserFromSession" [upperNavBar]="competitionsNavBar">
 </app-pool-navbar>

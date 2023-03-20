@@ -1,27 +1,27 @@
-<table class="table table-striped mb-2 mt-3">   
+<table class="table table-striped mb-2 mt-3" *ngIf="rankingItems">   
     <tbody>
-        <tr *ngFor="let sportRankingItem of sportRankingItems" class="pointer"
-            (click)="linkToPoolUser(sportRankingItem.getPerformance().getPlace(), currentGameRound)">
+        <tr *ngFor="let rankingItem of rankingItems" class="pointer"
+            (click)="linkToPoolUser(rankingItem.poolUser, gameRound)">
 
-            <ng-container *ngIf="!worldcupQualify2(sportRankingItem);else worldcupQualify">
+            <ng-container *ngIf="!worldcupQualify2(rankingItem);else worldcupQualify">
                 <td class="rankingnr text-end ps-0"><!-- badge text-black -->
-                    <span class="">{{sportRankingItem.getUniqueRank()}}</span>
+                    <span class="">{{rankingItem.rank}}</span>
                 </td>
             </ng-container>
             <ng-template #worldcupQualify>
                 <td class="rankingnr text-end ps-0 pointer" (click)="openModal(worldcupModal); $event.stopPropagation()">
-                    <span class="badge text-bg-success text-decoration-underline">{{sportRankingItem.getUniqueRank()}}</span>
+                    <span class="badge text-bg-success text-decoration-underline">{{rankingItem.rank}}</span>
                 </td>
             </ng-template>
 
             <td class="text-break ps-0" [ngClass]="{ 'favitem': false}">
-                <span>{{structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true)}}</span>
-                <app-superelf-icon *ngIf="structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true) === 'storm'" 
+                <span>{{rankingItem.poolUser.getUser().getName()}}</span>
+                <app-superelf-icon *ngIf="rankingItem.poolUser.getUser().getName() === 'storm'" 
                 class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon>
             </td>
-            <td *ngIf="currentGameRound" class="text-end ps-0 pointer">
-                <span class="badge {{getPointsBadgeClass(sportRankingItem)}}">
-                    {{getScore(sportRankingItem.getPlaceLocation(),currentGameRound )}}</span>
+            <td *ngIf="gameRound" class="text-end ps-0 pointer">
+                <span class="badge {{getPointsBadgeClass(rankingItem)}}">
+                    {{getScore(sportRankingItem.getPlaceLocation(),gameRound )}}</span>
             </td>
             <td class="text-end ps-0">
                 <span class="badge bg-totals">{{sportRankingItem.getPerformance().getPoints()}}</span>

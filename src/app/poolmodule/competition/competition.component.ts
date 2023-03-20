@@ -19,6 +19,8 @@ import { ViewPeriod } from '../../lib/period/view';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
+import { BadgeCategory } from '../../lib/achievement/badge/category';
+import { ChooseBadgeCategoryModalComponent } from '../badge/choosecategory-modal.component';
 
 
 @Component({
@@ -35,6 +37,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   public leagueName = LeagueName.Competition;
   public competitionSport!: CompetitionSport;
   public startLocationMap!: StartLocationMap;
+  public badgeCategory: BadgeCategory|undefined;
   public currentGameRound: GameRound | undefined;
   public gameRounds: (GameRound | undefined)[] = [];
   public nrOfUnreadMessages = 0;
@@ -74,7 +77,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => {
             this.poolUsers = poolUsers;
-            this.poolUser = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
+            this.poolUserFromSession = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
             const competition = this.pool.getCompetition(this.leagueName);            
             if (competition === undefined) {
               this.processing = false;
@@ -90,7 +93,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
                 this.competitionSport = this.pool.getCompetitionSport(this.leagueName);
                 this.startLocationMap = new StartLocationMap(poolCompetitors);
 
-                if (this.poolUser && this.poule) {
+                if (this.poolUserFromSession && this.poule) {
                   this.chatMessageRepository.getNrOfUnreadObjects(this.poule, pool).subscribe({
                     next: (nrOfUnreadMessages: number) => {
                       this.nrOfUnreadMessages = nrOfUnreadMessages;
@@ -125,25 +128,6 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
           currentGameRound = viewPeriod.getGameRound(currentGameRoundNumbers.lastFinishedOrInPorgress);
         }
         this.currentGameRound = currentGameRound;
-        // if (this.currentGameRound !== undefined) {
-        //   while (this.currentGameRound !== this.gameRounds[0]) {
-        //     const gameRound = this.gameRounds.shift();
-        //     if (gameRound !== undefined) {
-        //       this.gameRounds.push(gameRound);              
-        //     }
-        //   }
-        // }
-        
-        // let currentGameRound;
-        // if (object instanceof GameRound) {
-        //   currentGameRound = object;
-        // } else if (object !== undefined && object.hasOwnProperty('firstNotFinished')) {
-        //   const firstNotFinished = object.lastFinishedOrInPorgress;
-        //   if (typeof firstNotFinished === 'number') {
-        //     currentGameRound = this.viewPeriod.getGameRound(firstNotFinished);
-        //   }
-        // }
-        // this.currentGameRound = currentGameRound;
 
         const gameRounds: (GameRound | undefined)[] = viewPeriod.getGameRounds().slice();
         this.gameRounds = gameRounds;
@@ -166,5 +150,15 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
 
   navigateToChat(poolPoule: Poule): void {
     this.router.navigate(['/pool/chat', this.pool.getId(), this.leagueName, poolPoule.getId()]);
+  }
+
+  openChooseBadgeCategoryModal(): void {
+    const modalRef = this.modalService.open(ChooseBadgeCategoryModalComponent);
+    modalRef.componentInstance.currentBadgeCategory = this.badgeCategory;
+    modalRef.result.then((choosenBadgeCategory: BadgeCategory|undefined) => {
+      this.badgeCategory = choosenBadgeCategory;
+    }, (reason) => {
+      
+    });
   }
 }

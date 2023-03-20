@@ -4,6 +4,7 @@ import { FootballLine, Player } from 'ngx-sport';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
 import { Pool } from '../../lib/pool';
+import { LineScorePointsMap } from '../../lib/score/points';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 
 @Component({
@@ -14,6 +15,7 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 export class S11PlayerAddRemoveModalComponent implements OnInit {
     @Input() s11Player!: S11Player;
     @Input() action!: PlayerAction;
+    @Input() lineScorePointsMap!: LineScorePointsMap;
 
     public player: Player | undefined;
 
@@ -32,6 +34,10 @@ export class S11PlayerAddRemoveModalComponent implements OnInit {
 
     getLineClass(): string {
         return this.cssService.getLine(this.s11Player.getLine());
+    }
+
+    getTotalPoints(): number {
+        return this.s11Player.getTotalPoints(this.lineScorePointsMap, undefined);
     }
 }
 

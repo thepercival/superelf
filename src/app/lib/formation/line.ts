@@ -1,9 +1,9 @@
-import { FootballLine, GameState, Identifiable } from 'ngx-sport';
+import { FootballLine, GameState, Identifiable, Place } from 'ngx-sport';
+import { BadgeCategory } from '../achievement/badge/category';
 import { S11Formation } from '../formation';
 import { GameRound } from '../gameRound';
 import { S11Player } from '../player';
-import { PointsCalculator } from '../points/calculator';
-import { ScorePoints } from '../score/points';
+import { Totals } from '../totals';
 import { S11FormationPlace } from './place';
 
 export class S11FormationLine extends Identifiable {
@@ -108,10 +108,19 @@ export class S11FormationLine extends Identifiable {
         return players;
     }
 
-    getTotalPoints(): number {
+    public getTotals(): Totals
+    {
+        let totals = new Totals();
+        this.getPlaces().forEach((place: S11FormationPlace) => {
+            totals = totals.add(place.getTotals());
+        });
+        return totals;
+    }
+    
+    getTotalPoints(badgeCategory: BadgeCategory|undefined): number {
         let points = 0;
         for (let place of this.getPlaces()) {
-            points += place.getTotalPoints();
+            points += place.getTotalPoints(badgeCategory);
         }
         return points;
     }

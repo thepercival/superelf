@@ -1,5 +1,6 @@
 
 import { FootballLine, Formation, FormationLine, Identifiable, Person } from 'ngx-sport';
+import { BadgeCategory } from './achievement/badge/category';
 import { S11FormationLine } from './formation/line';
 import { S11FormationPlace } from './formation/place';
 import { GameRound } from './gameRound';
@@ -91,10 +92,10 @@ export class S11Formation extends Identifiable {
         } ) );
     }
 
-    getTotalPoints(): number {
+    getTotalPoints(badgeCategory: BadgeCategory|undefined): number {
         let points = 0;
         for (let line of this.getLines()) {
-            points += line.getTotalPoints();
+            points += line.getTotalPoints(badgeCategory);
         }
         return points;
     }
