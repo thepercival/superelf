@@ -2,12 +2,11 @@ import { Competition, Identifiable, Season } from 'ngx-sport';
 import { AssemblePeriod } from './period/assemble';
 import { TransferPeriod } from './period/transfer';
 import { ViewPeriod } from './period/view';
-import { FootballLineScore, FootballScore } from './score';
-import { LineScorePoints, LineScorePointsMap, ScorePoints } from './score/points';
+import { FootballLineScore, FootballResult, FootballScore } from './score';
+import { LineScorePoints, ScorePoints, ScorePointsMap } from './score/points';
 export class CompetitionConfig extends Identifiable {
 
-    protected scorePointsMap: Map<FootballScore, number>;
-    protected lineScorePointsMap: LineScorePointsMap;
+    protected scorePointsMap: ScorePointsMap;
     public static readonly MinRankToToQualifyForWorldCup = 2;
 
     constructor(
@@ -19,11 +18,7 @@ export class CompetitionConfig extends Identifiable {
         protected transferPeriod: TransferPeriod
     ) {
         super();
-        this.scorePointsMap = new Map(scorePoints.map((points: ScorePoints) => {
-            return [points.score, points.points];
-        }),
-        );
-        this.lineScorePointsMap = new LineScorePointsMap(this.lineScorePoints);
+        this.scorePointsMap = new ScorePointsMap(this.scorePoints, this.lineScorePoints);
     }
 
     public getSeason(): Season {
@@ -38,7 +33,7 @@ export class CompetitionConfig extends Identifiable {
         return this.scorePoints;
     }
 
-    public getScorePoints(score: FootballScore): number {
+    public getScorePoints(score: FootballResult): number {
         const retVal = this.scorePointsMap.get(score);
         if (retVal === undefined) {
             throw new Error('scoreNotFound');
@@ -50,12 +45,8 @@ export class CompetitionConfig extends Identifiable {
         return this.lineScorePoints;
     }
 
-    public getLineScorePoints(lineScore: FootballLineScore): number {
-        return this.lineScorePointsMap.get(lineScore);
-    }
-
-    public getLineScorePointsMap(): LineScorePointsMap {
-        return this.lineScorePointsMap;
+    public getScorePointsMap(): ScorePointsMap {
+        return this.scorePointsMap;
     }
 
     public getCreateAndJoinPeriod(): ViewPeriod {

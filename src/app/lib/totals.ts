@@ -1,7 +1,7 @@
 import { FootballLine } from "ngx-sport";
 import { BadgeCategory } from "./achievement/badge/category";
 import { FootballCard, FootballGoal, FootballResult, FootballSheet } from "./score";
-import { LineScorePointsMap } from "./score/points";
+import { ScorePointsMap } from "./score/points";
 
 // unable to determine line, class is of no use
 export class Totals {
@@ -80,22 +80,26 @@ export class Totals {
         return this.nrOfRedCards;
     }
 
-    public getPoints(line: FootballLine, points: LineScorePointsMap, badgeCategory: BadgeCategory|undefined): number
+    public getPoints(line: FootballLine, points: ScorePointsMap, badgeCategory: BadgeCategory|undefined): number
     {
-        let results = this.getNrOfWins() * points.get({ line, score: FootballResult.Win });
-        results += this.getNrOfDraws() * points.get({ line, score: FootballResult.Draw });
+        let results = this.getNrOfWins() * points.get(FootballResult.Win);
+        results += this.getNrOfDraws() * points.get(FootballResult.Draw);
 
-        let goals = this.getNrOfFieldGoals() * points.get({ line, score: FootballGoal.Normal });
-        goals += this.getNrOfPenalties() * points.get({ line, score: FootballGoal.Penalty });
-        goals += this.getNrOfOwnGoals() * points.get({ line, score: FootballGoal.Own });
+        let goals = this.getNrOfFieldGoals() * points.getLine({ line, score: FootballGoal.Normal });
+        goals += this.getNrOfPenalties() * points.get(FootballGoal.Penalty);
+        goals += this.getNrOfOwnGoals() * points.get(FootballGoal.Own);
     
-        const assists = this.getNrOfAssists() * points.get({ line, score: FootballGoal.Assist });
+        const assists = this.getNrOfAssists() * points.getLine({ line, score: FootballGoal.Assist });
 
-        let sheets = this.getNrOfCleanSheets() * points.get({ line, score: FootballSheet.Clean });
-        sheets += this.getNrOfSpottySheets() * points.get({ line, score: FootballSheet.Spotty });
+        let sheets = 0;
+        if( line === FootballLine.GoalKeeper || line === FootballLine.Defense) {
+            sheets = this.getNrOfCleanSheets() * points.getLine({ line, score: FootballSheet.Clean });
+            sheets += this.getNrOfSpottySheets() * points.getLine({ line, score: FootballSheet.Spotty });
+        }
+        
 
-        let cards = this.getNrOfYellowCards() * points.get({ line, score: FootballCard.Yellow });
-        cards += this.getNrOfRedCards() * points.get({ line, score: FootballCard.Red });
+        let cards = this.getNrOfYellowCards() * points.get(FootballCard.Yellow);
+        cards += this.getNrOfRedCards() * points.get(FootballCard.Red);
 
         switch (badgeCategory) {
             case BadgeCategory.Result:

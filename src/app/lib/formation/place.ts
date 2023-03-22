@@ -71,8 +71,8 @@ export class S11FormationPlace extends Identifiable {
     }
 
     public getTotalPoints(badgeCategory: BadgeCategory|undefined): number {
-        const lineScorePointsMap = this.getFormationLine().getFormation().getPoolUser().getPool().getCompetitionConfig().getLineScorePointsMap();
-        return this.totals.getPoints(this.getLine(), lineScorePointsMap, badgeCategory);
+        const scorePointsMap = this.getFormationLine().getFormation().getPoolUser().getPool().getCompetitionConfig().getScorePointsMap();
+        return this.totals.getPoints(this.getLine(), scorePointsMap, badgeCategory);
     }
 }
 

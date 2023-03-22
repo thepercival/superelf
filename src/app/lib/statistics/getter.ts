@@ -44,8 +44,8 @@ export class StatisticsGetter {
         if (formationPlace.isSubstitute() && !formationLine.hasSubstituteAppareance(gameRound)) {
             return 0;
         }
-        const lineScorePointsMap = formationLine.getFormation().getPoolUser().getPool().getCompetitionConfig().getLineScorePointsMap();
-        return statistics.getPoints(formationPlace.getLine(), lineScorePointsMap, badgeCategory);
+        const scorePointsMap = formationLine.getFormation().getPoolUser().getPool().getCompetitionConfig().getScorePointsMap();
+        return statistics.getPoints(formationPlace.getLine(), scorePointsMap, badgeCategory);
     }
 
     placeHasStatistics(formationPlace: S11FormationPlace, gameRound: GameRound): boolean {

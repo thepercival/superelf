@@ -5,14 +5,15 @@
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
 
-    <div *ngIf="!processing && pool && poule">
-      <div class="d-flex justify-content-between mt-2">
-        <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
-          (update)="updateGameRound($event)">
+    <div *ngIf="!processing && pool">
+      <div class="d-flex flex-nowrap justify-content-between mt-2">
+        <app-gameround-scroller *ngIf="currentViewPeriod" [gameRounds]="gameRounds" [current]="currentGameRound"
+          (update)="updateGameRoundFromScroller($event)" [currentViewPeriod]="currentViewPeriod"
+          [assembleViewPeriod]="pool.getAssembleViewPeriod()" [transferViewPeriod]="pool.getTransferViewPeriod()">
         </app-gameround-scroller>
-        <div *ngIf="poule">
-          <button (click)="navigateToChat(poule)" type="button"
-            class="btn btn-outline-dark me-3 position-relative">
+        <div>
+          <button *ngIf="poolPoule" (click)="navigateToChat(poolPoule)" type="button"
+            class="btn btn-outline-dark me-1 position-relative">
             <fa-icon [icon]="['fas', 'message']"></fa-icon>
             <span class="ms-1 d-none d-sm-inline"> chat</span>
             <span *ngIf="nrOfUnreadMessages > 0"
@@ -22,20 +23,20 @@
             </span>
           </button>
           <button (click)="openChooseBadgeCategoryModal()" type="button"
-            class="btn btn-outline-dark me-3 position-relative">
+            class="btn btn-outline-dark me-0 position-relative">
             <app-superelf-icon [name]="'trophy'"></app-superelf-icon>
           </button>          
         </div>
         
       </div>
   
-      <app-together-ranking [poolUsers]="poolUsers" [viewPeriod]="viewPeriod" [gameRound]="currentGameRound"
+      <app-together-ranking *ngIf="poolUsersTotalsMap" [poolUsers]="poolUsers" 
+        [poolUsersTotalsMap]="poolUsersTotalsMap" 
+        [gameRoundPoolUserTotalsMap]="currentGameRoundPoolUsersTotalsMap" 
+        [gameRound]="currentGameRound" [badgeCategory]="badgeCategory" 
+        [scorePointsMap]="pool.getCompetitionConfig().getScorePointsMap()"
         [header]="true" >
       </app-together-ranking>
-
-      <!-- <app-together-ranking [poule]="poule" [competitionSport]="competitionSport" [startLocationMap]="startLocationMap"
-        [header]="true" [currentGameRound]="currentGameRound">
-      </app-together-ranking> -->
 
     </div>
 

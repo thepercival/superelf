@@ -8,7 +8,7 @@ import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { CompetitionConfigRepository } from '../../lib/competitionConfig/repository';
 import { CSSService } from '../../shared/commonmodule/cssservice';
-import { FootballCard, FootballGoal, FootballResult, FootballScore, FootballSheet } from '../../lib/score';
+import { FootballCard, FootballGoal, FootballResult, FootballScore, FootballScoreLine, FootballSheet } from '../../lib/score';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
@@ -74,23 +74,24 @@ export class RulesComponent extends PoolComponent implements OnInit {
   }
 
   getPointsItems(): PointsItem[] {
-    return [FootballResult.Win, FootballResult.Draw, FootballGoal.Penalty,
-    FootballGoal.Own, FootballCard.Yellow, FootballCard.Red].map((score: FootballScore): PointsItem => {
+    const scorePointsMap = this.pool.getCompetitionConfig().getScorePointsMap();
+    return scorePointsMap.getScorePoints().map((score: FootballScore): PointsItem => {
       return {
-        name: this.nameService.getScoreName(score), points: this.pool.getCompetitionConfig().getScorePoints(score)
+        name: this.nameService.getScoreName(score), points: scorePointsMap.get(score)
       }
     });
   }
 
   getLinePointsItems(line: FootballLine): PointsItem[] {
-    const scores: FootballScore[] = [FootballGoal.Normal, FootballGoal.Assist];
+    const scores: FootballScoreLine[] = [FootballGoal.Normal, FootballGoal.Assist];
     if (line === FootballLine.GoalKeeper || line === FootballLine.Defense) {
       scores.push(FootballSheet.Clean);
       scores.push(FootballSheet.Spotty);
     }
-    return scores.map((score: FootballScore): PointsItem => {
+    const scorePointsMap = this.pool.getCompetitionConfig().getScorePointsMap();
+    return scores.map((score: FootballScoreLine): PointsItem => {
       return {
-        name: this.nameService.getScoreName(score), points: this.pool.getCompetitionConfig().getLineScorePoints({ line, score })
+        name: this.nameService.getScoreName(score), points: scorePointsMap.getLine({ line, score })
       }
     });
   }

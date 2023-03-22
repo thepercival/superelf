@@ -195,7 +195,7 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
   }
   
   getTotalPoints(s11Player: S11Player): number {
-    const lineScorePointsMap = this.pool.getCompetitionConfig().getLineScorePointsMap();
+    const lineScorePointsMap = this.pool.getCompetitionConfig().getScorePointsMap();
     return s11Player.getTotalPoints(lineScorePointsMap, undefined);
   }
 }

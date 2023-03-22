@@ -1,11 +1,10 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FootballLine } from 'ngx-sport';
 import { BadgeCategory } from '../../lib/achievement/badge/category';
-import { CompetitionConfig } from '../../lib/competitionConfig';
 import { GameRound } from '../../lib/gameRound';
 import { ImageRepository } from '../../lib/image/repository';
-import { FootballCard, FootballGoal, FootballSheet } from '../../lib/score';
-import { LineScorePointsMap } from '../../lib/score/points';
+import { FootballCard, FootballGoal } from '../../lib/score';
+import { ScorePointsMap } from '../../lib/score/points';
 import { Statistics } from '../../lib/statistics';
 
 import { CSSService } from '../../shared/commonmodule/cssservice';
@@ -20,7 +19,7 @@ export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsCo
   @Input() statistics!: Statistics | undefined;
   @Input() line!: FootballLine;
   @Input() gameRound!: GameRound;
-  @Input() lineScorePointsMap!: LineScorePointsMap;
+  @Input() scorePointsMap!: ScorePointsMap;
   // public oneTeamSimultaneous = new OneTeamSimultaneous();
   // public player: Player | undefined;
 
@@ -56,13 +55,13 @@ export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsCo
       
       // console.log('first changes statistics', changes.statistics.currentValue);
       const sheetLines = (this.line & FootballLine.GoalKeeper) + (this.line & FootballLine.Defense);
-      const sheetPoints = sheetLines > 0 ? statistics.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Sheet ) : 0
+      const sheetPoints = sheetLines > 0 ? statistics.getPoints(this.line, this.scorePointsMap, BadgeCategory.Sheet ) : 0
       this.categoryPoints = {
-        result: statistics.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Result),
-        goal: statistics.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Goal)
-            + statistics.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Assist),
+        result: statistics.getPoints(this.line, this.scorePointsMap, BadgeCategory.Result),
+        goal: statistics.getPoints(this.line, this.scorePointsMap, BadgeCategory.Goal)
+            + statistics.getPoints(this.line, this.scorePointsMap, BadgeCategory.Assist),
         sheet: sheetPoints,
-        card: statistics.getPoints(this.line, this.lineScorePointsMap, BadgeCategory.Card),
+        card: statistics.getPoints(this.line, this.scorePointsMap, BadgeCategory.Card),
       }
     }
   }

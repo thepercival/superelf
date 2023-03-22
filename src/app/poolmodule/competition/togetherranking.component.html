@@ -21,10 +21,10 @@
             </td>
             <td *ngIf="gameRound" class="text-end ps-0 pointer">
                 <span class="badge {{getPointsBadgeClass(rankingItem)}}">
-                    {{getScore(sportRankingItem.getPlaceLocation(),gameRound )}}</span>
+                    {{getGameRoundPoints(rankingItem.poolUser)}}</span>
             </td>
             <td class="text-end ps-0">
-                <span class="badge bg-totals">{{sportRankingItem.getPerformance().getPoints()}}</span>
+                <span class="badge bg-totals">{{getTotalPoints(rankingItem.poolUser)}}</span>
             </td>
         </tr>
     </tbody>

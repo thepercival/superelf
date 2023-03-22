@@ -30,8 +30,8 @@
     <div *ngIf="!processing && !processingStatistics && pool && poolUser && formation">
       <div class="d-flex justify-content-between mt-3 mb-1 mx-1">
         <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
-        [currentViewPeriod]="viewPeriod" [assembleViewPeriod]="pool.getAssembleViewPeriod()" 
-        [transferViewPeriod]="pool.getTransferViewPeriod()"
+        [currentViewPeriod]="viewPeriod" 
+        [assembleViewPeriod]="pool.getAssembleViewPeriod()" [transferViewPeriod]="pool.getTransferViewPeriod()"
         (updateViewPeriod)="updateViewPeriod(poolUser, $event, undefined)"
           (update)="setGameRoundAndGetStatistics(formation, $event)">
         </app-gameround-scroller>

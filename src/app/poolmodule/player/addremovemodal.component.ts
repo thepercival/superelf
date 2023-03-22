@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { FootballLine, Player } from 'ngx-sport';
+import { Player } from 'ngx-sport';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
-import { Pool } from '../../lib/pool';
-import { LineScorePointsMap } from '../../lib/score/points';
+import { ScorePointsMap } from '../../lib/score/points';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 
 @Component({
@@ -15,7 +14,7 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 export class S11PlayerAddRemoveModalComponent implements OnInit {
     @Input() s11Player!: S11Player;
     @Input() action!: PlayerAction;
-    @Input() lineScorePointsMap!: LineScorePointsMap;
+    @Input() scorePointsMap!: ScorePointsMap;
 
     public player: Player | undefined;
 
@@ -37,7 +36,7 @@ export class S11PlayerAddRemoveModalComponent implements OnInit {
     }
 
     getTotalPoints(): number {
-        return this.s11Player.getTotalPoints(this.lineScorePointsMap, undefined);
+        return this.s11Player.getTotalPoints(this.scorePointsMap, undefined);
     }
 }
 

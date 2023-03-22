@@ -22,11 +22,13 @@ export enum FootballCard {
     Red = 'redcard'
 }
 
-export type FootballScore = FootballResult | FootballGoal | FootballSheet | FootballCard;
+export type FootballScore = FootballResult | FootballCard | FootballGoal.Penalty | FootballGoal.Own;
+
+export type FootballScoreLine = FootballSheet | FootballGoal.Normal | FootballGoal.Assist;
 
 export interface FootballLineScore {
     line: FootballLine;
-    score: FootballScore;
+    score: FootballScoreLine;
 }
 
 export type FootballEvent = FootballGoal | FootballCard;

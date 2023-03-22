@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AgainstGame, AgainstSide, Competition, FootballLine, GameState, ScoreConfigService } from 'ngx-sport';
 import { BadgeCategory } from './achievement/badge/category';
 import { LeagueName } from './leagueName';
-import { FootballCard, FootballGoal, FootballResult, FootballScore, FootballSheet } from './score';
+import { FootballCard, FootballGoal, FootballLineScore, FootballResult, FootballScore, FootballScoreLine, FootballSheet } from './score';
 
 @Injectable({
     providedIn: 'root'
@@ -28,7 +28,7 @@ export class SuperElfNameService {
         return 'alle linies';
     }
 
-    getScoreName(score: FootballScore): string {
+    getScoreName(score: FootballScore|FootballScoreLine): string {
         switch (score) {
             case FootballResult.Win:
                 return 'gewonnen';

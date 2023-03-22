@@ -189,12 +189,12 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
 
   getCurrentGameRoundPoints(): number {
     if (this.currentGameRound === undefined) {
-      return this.s11Player.getTotalPoints(this.pool.getCompetitionConfig().getLineScorePointsMap(), undefined);
+      return this.s11Player.getTotalPoints(this.pool.getCompetitionConfig().getScorePointsMap(), undefined);
     }
     if (this.currentStatistics === undefined) {
       return 0;
     }
-    const map = this.pool.getCompetitionConfig().getLineScorePointsMap();
+    const map = this.pool.getCompetitionConfig().getScorePointsMap();
     return this.currentStatistics.getPoints(this.s11Player.getLine(), map, undefined)
   }
 

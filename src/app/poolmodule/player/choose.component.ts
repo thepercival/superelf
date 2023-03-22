@@ -135,7 +135,7 @@ export class S11PlayerChooseComponent implements OnInit {
   }
 
   getTotalPoints(s11Player: S11Player): number {
-    return s11Player.getTotalPoints(this.competitionConfig.getLineScorePointsMap(), undefined);
+    return s11Player.getTotalPoints(this.competitionConfig.getScorePointsMap(), undefined);
   }
 
   isChoosable(player: Player): boolean {

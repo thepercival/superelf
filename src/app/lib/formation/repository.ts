@@ -85,28 +85,6 @@ export class FormationRepository extends APIRepository {
         );
     }
 
-     // getFormation(): S11Formation | undefined {
-    //     if (editOrViewPeriod instanceof AssemblePeriod) {
-    //         return this.assembleFormation;
-    //     } else if (editOrViewPeriod instanceof TransferPeriod) {
-    //         return this.transferFormation;
-    //     } 
-    //     return undefined;
-    // }
-
-    // getFormationFromViewPeriod(viewPeriod: ViewPeriod): S11Formation {
-    //     let formation;
-    //     if( this.pool.getAssembleViewPeriod() === viewPeriod ) {
-    //         formation = this.assembleFormation;
-    //     } else if( this.pool.getTransferViewPeriod() === viewPeriod ) {
-    //         formation = this.transferFormation;
-    //     }
-    //     if( formation === undefined) {
-    //         throw new Error('formation not found from viewPeriod');
-    //     }
-    //     return formation;
-    // }
-
     editObject(poolUser: PoolUser, availableFormation: Formation): Observable<S11Formation> {
         const viewPeriod = poolUser.getPool().getAssemblePeriod().getViewPeriod();
         const jsonFormation = this.sportsFormationMapper.toJson(availableFormation);
@@ -217,58 +195,6 @@ export class FormationRepository extends APIRepository {
             catchError((err) => this.handleError(err))
         );
     }
-
-    /*addPerson(person: Person, line: FormationLine, asSubstitute: boolean): Observable<S11Player> {
-        if (asSubstitute) {
-            return this.editSubstitute(person, line);
-        }
-        return this.addPlayer(person, line);
-    }
-
-    addPlayer(person: Person, line: FormationLine): Observable<S11Player> {
-        const formation = line.getFormation();
-        const json = this.personMapper.toJson(person);
-        const urlSuffix = '/lines/' + line.getNumber() + '/players';
-        const url = this.getUrl(formation.getPoolUser(), formation) + urlSuffix;
-        return this.http.post<JsonS11Player>(url, json, { headers: super.getHeaders() }).pipe(
-            map((jsonPlayer: JsonS11Player) => {
-                const player = this.playerMapper.toObject(jsonPlayer, formation.getViewPeriod());
-                line.getPlayers().push(player);
-                return player;
-            }),
-            catchError((err) => this.handleError(err))
-        );
-    }
-
-    editSubstitute(person: Person, line: FormationLine): Observable<S11Player> {
-        const formation = line.getFormation();
-        const json = this.personMapper.toJson(person);
-        const urlSuffix = '/lines/' + line.getNumber() + '/substitute';
-        const url = this.getUrl(formation.getPoolUser(), formation) + urlSuffix;
-        return this.http.post<JsonS11Player>(url, json, { headers: super.getHeaders() }).pipe(
-            map((jsonPlayer: JsonS11Player) => {
-                const player = this.playerMapper.toObject(jsonPlayer, formation.getViewPeriod());
-                line.setSubstitute(player);
-            }),
-            catchError((err) => this.handleError(err))
-        );
-    }
-
-    removePlayer(player: S11Player, line: FormationLine): Observable<void> {
-        const formation = line.getFormation();
-        const url = this.getUrl(formation.getPoolUser(), formation) + '/lines/' + line.getNumber() + '/players/' + player.getId();
-        return this.http.delete<void>(url, { headers: super.getHeaders() }).pipe(
-            map(() => {
-                const index = line.getPlayers().indexOf(player);
-                if (index > -1) {
-                    line.getPlayers().splice(index, 1);
-                }
-            }),
-            catchError((err) => this.handleError(err))
-        );
-    }
-
-    */
 }
 
 export interface JsonS11FormationMap extends Map<number,JsonS11Formation>{};

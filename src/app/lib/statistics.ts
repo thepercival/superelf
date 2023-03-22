@@ -1,7 +1,7 @@
 import { AgainstResult, FootballLine } from 'ngx-sport';
 import { BadgeCategory } from './achievement/badge/category';
 import { FootballCard, FootballGoal, FootballResult, FootballSheet } from './score';
-import { LineScorePointsMap } from './score/points';
+import { ScorePointsMap } from './score/points';
 import { Sheet } from './sheet';
 import { JsonStatistics } from './statistics/json';
 
@@ -92,32 +92,34 @@ export class Statistics {
         return this.gameStartDate;
     }
 
-    public getPoints(line: FootballLine, points: LineScorePointsMap, badgeCategory: BadgeCategory|undefined): number
+    public getPoints(line: FootballLine, points: ScorePointsMap, badgeCategory: BadgeCategory|undefined): number
     {
         let result = 0;
         if( this.getResult() === AgainstResult.Win ) {
-            result = points.get({ line, score: FootballResult.Win });
+            result = points.get(FootballResult.Win);
         } else if( this.getResult() === AgainstResult.Draw ) {
-            result = points.get({ line, score: FootballResult.Draw });
+            result = points.get(FootballResult.Draw);
         }
         
-        let goals = this.getNrOfFieldGoals() * points.get({ line, score: FootballGoal.Normal });
-        goals += this.getNrOfPenalties() * points.get({ line, score: FootballGoal.Penalty });
-        goals += this.getNrOfOwnGoals() * points.get({ line, score: FootballGoal.Own });
+        let goals = this.getNrOfFieldGoals() * points.getLine({ line, score: FootballGoal.Normal });
+        goals += this.getNrOfPenalties() * points.get(FootballGoal.Penalty);
+        goals += this.getNrOfOwnGoals() * points.get(FootballGoal.Own);
 
-        const assists = this.getNrOfAssists() * points.get({ line, score: FootballGoal.Assist });
+        const assists = this.getNrOfAssists() * points.getLine({ line, score: FootballGoal.Assist });
 
         let sheet = 0;
-        if( this.hasCleanSheet() ) {
-            sheet += points.get({ line, score: FootballSheet.Clean });
-        }
-        if( this.hasSpottySheet() ) {
-            sheet += points.get({ line, score: FootballSheet.Spotty });
+        if( line === FootballLine.GoalKeeper || line === FootballLine.Defense) {
+            if( this.hasCleanSheet() ) {
+                sheet += points.getLine({ line, score: FootballSheet.Clean });
+            }
+            if( this.hasSpottySheet() ) {
+                sheet += points.getLine({ line, score: FootballSheet.Spotty });
+            }
         }
 
-        let cards = this.getNrOfYellowCards() * points.get({ line, score: FootballCard.Yellow });
+        let cards = this.getNrOfYellowCards() * points.get(FootballCard.Yellow);
         if( this.gotDirectRedCard() ) {
-            cards += points.get({ line, score: FootballCard.Red });
+            cards += points.get(FootballCard.Red);
         }
        
         switch (badgeCategory) {

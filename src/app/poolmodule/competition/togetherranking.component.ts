@@ -1,13 +1,13 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { SportRoundRankingItem, Formation } from 'ngx-sport';
+import { Formation } from 'ngx-sport';
+import { BadgeCategory } from '../../lib/achievement/badge/category';
 import { CompetitionConfig } from '../../lib/competitionConfig';
 import { GameRound } from '../../lib/gameRound';
-import { ViewPeriod } from '../../lib/period/view';
-import { PoolCompetitor } from '../../lib/pool/competitor';
 import { PoolUser } from '../../lib/pool/user';
-import { StatisticsGetter } from '../../lib/statistics/getter';
+import { ScorePointsMap } from '../../lib/score/points';
+import { PoolUsersTotalsMap } from '../../lib/totals/repository';
 import { CSSService } from '../../shared/commonmodule/cssservice'; 
 
 @Component({
@@ -17,10 +17,11 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 })
 export class TogetherRankingComponent implements OnInit, OnChanges {
   @Input() poolUsers!: PoolUser[];
-  @Input() viewPeriod!: ViewPeriod;
+  @Input() poolUsersTotalsMap: PoolUsersTotalsMap|undefined;
+  @Input() gameRoundPoolUserTotalsMap: PoolUsersTotalsMap|undefined;
   @Input() gameRound: GameRound | undefined;
-  @Input() formationMap!: FormationMap;
-  @Input() statisticsGetter!: StatisticsGetter;
+  @Input() scorePointsMap!: ScorePointsMap;
+  @Input() badgeCategory: BadgeCategory | undefined;
   
   @Input() header!: boolean;
   // protected togetherRankingCalculator!: TogetherSportRoundRankingCalculator;
@@ -30,8 +31,8 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
   // protected gameAmountConfig!: GameAmountConfig;
   public rankingItems: RankingItem[]|undefined;
   // protected scoreMap = new ScoreMap();
-  protected bestMapForGameRound = new Map<number, SportRoundRankingItem>();
-  protected worstMapForGameRound = new Map<number, SportRoundRankingItem>();
+  protected bestMapForGameRound = new Map<string|number, PoolUser>();
+  protected worstMapForGameRound = new Map<string|number, PoolUser>();
   public processing = true;
 
   constructor(
@@ -53,6 +54,10 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
     // if( this.currentGameRound !== undefined ) {
     //   this.initBestAndWorstMap(this.currentGameRound);
     // }
+    if( this.poolUsersTotalsMap !== undefined ) {
+      this.updateRankingItems(this.poolUsersTotalsMap);
+    }
+    
     this.processing = false;
   }
 
@@ -61,71 +66,76 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
       && changes.gameRound.currentValue !== changes.gameRound.previousValue
        ) {
         if( changes.gameRound.currentValue !== undefined) {
-          this.initBestAndWorstMap(changes.gameRound.currentValue);
+          this.updateGameRoundBestAndWorstMap();
+        }
+    }
+    console.log('changes.poolUsersTotalsMap');
+    if (changes.poolUsersTotalsMap !== undefined && changes.poolUsersTotalsMap.firstChange !== true
+      && changes.poolUsersTotalsMap.currentValue !== changes.poolUsersTotalsMap.previousValue
+       ) {
+        console.log('changes.poolUsersTotalsMap check');
+        if( changes.poolUsersTotalsMap.currentValue !== undefined) {
+          this.updateRankingItems(changes.poolUsersTotalsMap.currentValue);
         }
     }
   }
 
-  // initScoreMap() {
-  //   this.poule.getPlaces().forEach((place: Place) => {
-  //     this.scoreMap.set(place.getRoundLocationId(), {});
-  //   });
-  // }
+  updateRankingItems(poolUsersTotalsMap: PoolUsersTotalsMap) {
+    const poolUsers = this.sortPoolUsers(this.poolUsers, poolUsersTotalsMap);
+    let rank = 1;
+    const rankingItems: RankingItem[] = [];
+    const firstPoolUser = poolUsers.shift();
+    if ( firstPoolUser === undefined ) {
+      return rankingItems;
+    }
+    rankingItems.push({ rank, poolUser: firstPoolUser});
+    
+    let points: number|undefined;
+    poolUsers.forEach((poolUser: PoolUser) => {      
+      const poolUserTotals = poolUsersTotalsMap.get(poolUser.getId());
+      const poolUserPoints = poolUserTotals?.getPoints(this.scorePointsMap, this.badgeCategory) ?? 0;
+      if( poolUserTotals === undefined || points === undefined || poolUserPoints < points ) {
+        rank++;
+      }
+      points = poolUserPoints;
+      rankingItems.push({ rank, poolUser: poolUser});
+    });
+    this.rankingItems = rankingItems;
+  }
 
-  /**
-   * door door games en plaats elke gameplace ergens in een map
-   * 
-   * je wilt per deelnemer door de gamerounds lopen en dan per gameRound wil je score weten
-   */
-  // initTableData() {
-  //   let gameRoundWithFinishedGame = 1;
-
-  //   this.getTogetherGames().forEach((game: TogetherGame) => {
-  //     const useSubScore = game.getScoreConfig()?.useSubScore();
-  //     const finished = game.getState() === GameState.Finished;
-  //     game.getTogetherPlaces().forEach((gamePlace: TogetherGamePlace) => {
-  //       const gameRoundMap = this.scoreMap.get(gamePlace.getPlace().getRoundLocationId());
-  //       if (gameRoundMap === undefined) {
-  //         return;
-  //       }
-  //       const finalScore = this.scoreConfigService.getFinalTogetherScore(gamePlace, useSubScore);
-  //       const gameRoundNr = gamePlace.getGameRoundNumber();
-  //       if (finished && gameRoundNr > gameRoundWithFinishedGame) {
-  //         gameRoundWithFinishedGame = gameRoundNr;
-  //       }
-  //       gameRoundMap[gameRoundNr] = finalScore;
-  //     });
-  //   });
-  // }
-
-
-  initBestAndWorstMap(gameRound: GameRound) {
-
-    this.bestMapForGameRound = new Map<number, SportRoundRankingItem>();
-    this.worstMapForGameRound = new Map<number, SportRoundRankingItem>();
+  updateGameRoundBestAndWorstMap() {
+    this.bestMapForGameRound = new Map<string|number, PoolUser>();
+    this.worstMapForGameRound = new Map<string|number, PoolUser>();
     let bestScore: number | undefined;
     let worstScore: number | undefined;
+    const gameRoundPoolUserTotalsMap = this.gameRoundPoolUserTotalsMap;
+    if( gameRoundPoolUserTotalsMap === undefined ) {
+      return;
+    }
     this.poolUsers.forEach((poolUser: PoolUser) => {
-      const score = this.getScore(sportRankingItem.getPlaceLocation(),gameRound );      
+      const points = gameRoundPoolUserTotalsMap.get(poolUser.getId())?.getPoints(this.scorePointsMap, this.badgeCategory);
+      if( points === undefined ) {
+        return;
+      }
       if( bestScore === undefined ) {
-        bestScore = score;
+        bestScore = points;
       }
       if( worstScore === undefined ) {
-        worstScore = score;
+        worstScore = points;
       }      
-      if( score > bestScore ) { // best        
+      if( points > bestScore ) { // best        
         this.bestMapForGameRound.clear();
-        this.bestMapForGameRound.set(sportRankingItem.getUniqueRank(), sportRankingItem);
-        bestScore = score;
-      } else if( score === bestScore ) {
-        this.bestMapForGameRound.set(sportRankingItem.getUniqueRank(), sportRankingItem);
+        this.bestMapForGameRound.set(poolUser.getId(), poolUser);
+        bestScore = points;
+      } else if( points === bestScore ) {
+        this.bestMapForGameRound.set(poolUser.getId(), poolUser);
       }
-      if( score < worstScore ) { // worst
+      if( points < worstScore ) { // worst
         this.worstMapForGameRound.clear();
-        this.worstMapForGameRound.set(sportRankingItem.getUniqueRank(), sportRankingItem);
-        worstScore = score;
-      } else if( score === worstScore ) {
-        this.worstMapForGameRound.set(sportRankingItem.getUniqueRank(), sportRankingItem);
+        this.worstMapForGameRound.set(poolUser.getId(), poolUser);
+        worstScore = points;
+      } else if( points === worstScore ) {
+        this.worstMapForGameRound.set(poolUser.getId(), poolUser);
       }
     });
     if( this.bestMapForGameRound.size > 3) { // best
@@ -135,6 +145,18 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
       this.worstMapForGameRound.clear();
     }
     // console.log(this.bestMap);
+  }
+
+  sortPoolUsers(poolUsers: PoolUser[], poolUsersTotalsMap: PoolUsersTotalsMap): PoolUser[] {
+      poolUsers.sort((pooluserA: PoolUser, pooluserB: PoolUser): number => {
+        const pointsA = poolUsersTotalsMap.get(pooluserA.getId())?.getPoints(this.scorePointsMap, this.badgeCategory);
+        const pointsB = poolUsersTotalsMap.get(pooluserB.getId())?.getPoints(this.scorePointsMap, this.badgeCategory);
+        if( pointsA === undefined || pointsB === undefined ) {
+          return 0;
+        }
+        return pointsB - pointsA;
+      });
+      return poolUsers;
   }
 
 
@@ -148,31 +170,6 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
     return 'bg-points';
   }
 
-  // protected getTogetherGames(): TogetherGame[] {
-  //   return this.poule.getTogetherGames().filter((game: TogetherGame) => game.getCompetitionSport() === this.competitionSport);
-  // }
-
-  // protected getSportVariant(): Single | AllInOneGame {
-  //   const sportVariant = this.competitionSport.getVariant();
-  //   if (sportVariant instanceof AgainstH2h || sportVariant instanceof AgainstGpp) {
-  //     throw new Error('incorrect sportvariant');
-  //   }
-  //   return sportVariant;
-  // }
-
-  // getScore(placeLocation: PlaceLocation, gameRound: GameRound): number {
-  //   const gameRoundMap = this.scoreMap.get(placeLocation.getRoundLocationId());
-  //   if (gameRoundMap === undefined) {
-  //     return 0;
-  //   }
-  //   // console.log('score is ', gameRound, gameRoundMap[gameRound]);
-  //   return gameRoundMap[gameRound.getNumber()];
-  // }
-
-  // getGameRound(competitionSport: CompetitionSport, gameRound: number): number {
-  //   return this.getGameRounds(competitionSport)[0] + gameRound;;
-  // }
-
   worldcupQualify2(rankingItem: RankingItem): boolean {
     return rankingItem.rank <= CompetitionConfig.MinRankToToQualifyForWorldCup;
   }
@@ -181,21 +178,29 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
     this.router.navigate(['/pool/user', poolUser.getPool().getId(), poolUser.getId(), gameRound ? gameRound.getNumber() : 0]);
   }
 
+  getGameRoundPoints(poolUser: PoolUser): number {
+    if( this.gameRoundPoolUserTotalsMap !== undefined ) {
+      return this.gameRoundPoolUserTotalsMap.get(poolUser.getId())?.getPoints(this.scorePointsMap, this.badgeCategory) ?? 0;
+    }
+    return 0;
+  }
+
+  getTotalPoints(poolUser: PoolUser): number {
+    if( this.poolUsersTotalsMap ) {
+      return this.poolUsersTotalsMap.get(poolUser.getId())?.getPoints(this.scorePointsMap, this.badgeCategory) ?? 0;
+    }
+    return 0;
+  }
+
   openModal(modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(modalContent);
     activeModal.result.then(() => {
     }, (reason) => {
     });
   }
-
-
 }
 
-interface GameRoundMap {
-  [key: number]: number;
-}
-// class ScoreMap extends Map<string, GameRoundMap> {
-// }
+
 export class FormationMap extends Map<string, Formation> {
 }
 

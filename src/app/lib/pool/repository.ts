@@ -57,23 +57,7 @@ export class PoolRepository extends APIRepository {
         );
     }
 
-    // editObject(pool: Pool): Observable<Pool> {
-    //     const url = this.getUrl(pool);
-    //     return this.http.put(url, this.mapper.toJson(pool), { headers: super.getHeaders() }).pipe(
-    //         map((res: JsonPool) => {
-    //             return this.mapper.toObject(res);
-    //         }),
-    //         catchError((err) => this.handleError(err))
-    //     );
-    // }
 
-    // removeObject(pool: Pool): Observable<boolean> {
-    //     const url = this.getUrl(pool);
-    //     return this.http.delete(url, { headers: super.getHeaders() }).pipe(
-    //         map((res) => true),
-    //         catchError((err) => this.handleError(err))
-    //     );
-    // }
 
     getJoinUrl(pool: Pool): Observable<string> {
         const baseUrl = super.getApiUrl() + this.getUrlpostfix() + '/' + pool.getId();

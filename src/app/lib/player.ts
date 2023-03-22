@@ -1,7 +1,7 @@
 import { FootballLine, Identifiable, Period, Person, Player, Team } from 'ngx-sport';
 import { BadgeCategory } from './achievement/badge/category';
 import { ViewPeriod } from './period/view';
-import { LineScorePointsMap } from './score/points';
+import { ScorePointsMap } from './score/points';
 import { Totals } from './totals';
 
 export class S11Player extends Identifiable {
@@ -78,7 +78,7 @@ export class S11Player extends Identifiable {
         return this.getTotals().getNrOfTimesStarted() > 0 || this.getTotals().getNrOfTimesSubstitute() > 0;
     }
 
-    public getTotalPoints(lineScorePointsMap: LineScorePointsMap, badgeCategory: BadgeCategory|undefined): number {
-        return this.totals.getPoints(this.getLine(), lineScorePointsMap, badgeCategory);
+    public getTotalPoints(scorePointsMap: ScorePointsMap, badgeCategory: BadgeCategory|undefined): number {
+        return this.totals.getPoints(this.getLine(), scorePointsMap, badgeCategory);
     }
 }
