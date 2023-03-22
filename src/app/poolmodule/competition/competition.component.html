@@ -12,7 +12,7 @@
           [assembleViewPeriod]="pool.getAssembleViewPeriod()" [transferViewPeriod]="pool.getTransferViewPeriod()">
         </app-gameround-scroller>
         <div>
-          <button *ngIf="poolPoule" (click)="navigateToChat(poolPoule)" type="button"
+          <button *ngIf="pouleId" (click)="navigateToChat(pouleId)" type="button"
             class="btn btn-outline-dark me-1 position-relative">
             <fa-icon [icon]="['fas', 'message']"></fa-icon>
             <span class="ms-1 d-none d-sm-inline"> chat</span>

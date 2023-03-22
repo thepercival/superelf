@@ -119,7 +119,7 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
                 });
     
                 if (this.poolUserFromSession && this.poule) {
-                  this.chatMessageRepository.getNrOfUnreadObjects(this.poule, pool).subscribe({
+                  this.chatMessageRepository.getNrOfUnreadObjects(this.poule.getId(), pool).subscribe({
                     next: (nrOfUnreadMessages: number) => {
                       this.nrOfUnreadMessages = nrOfUnreadMessages;
                     }

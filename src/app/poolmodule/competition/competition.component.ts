@@ -34,7 +34,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   poolUsers: PoolUser[] = [];
   private nrOfDaysToRemoveAfterAssemblePeriod = 6;
 
-  public poolPoule!: Poule;
+  public pouleId: string|number|undefined;
   public leagueName = LeagueName.Competition;
   public poolUsersTotalsMap: PoolUsersTotalsMap|undefined;
   public gameRoundTotalsMap: GameRoundTotalsMap = new GameRoundTotalsMap();
@@ -87,18 +87,17 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
               throw Error('competitionSport not found');
             }
             
-            if (this.poolUserFromSession) {
-            
-              this.structureRepository.getObject(competition).subscribe({
-                next: (structure: Structure) => {
-                  this.poolPoule = structure.getSingleCategory().getRootRound().getFirstPoule();
-                  if (this.poolPoule) {
-                    this.chatMessageRepository.getNrOfUnreadObjects(this.poolPoule, pool).subscribe({
+            if (this.poolUserFromSession) {            
+              this.structureRepository.getFirstPouleId(competition).subscribe({
+                next: (pouleId: string|number) => {
+                  if (pouleId) {
+                    this.chatMessageRepository.getNrOfUnreadObjects(pouleId, pool).subscribe({
                       next: (nrOfUnreadMessages: number) => {
                         this.nrOfUnreadMessages = nrOfUnreadMessages;
                       }
                     });
                   }
+                  this.pouleId = pouleId;
                 }  
               });    
             }
@@ -187,8 +186,8 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     return gameRound.getViewPeriod().getId() + '-' + gameRound.getNumber();
   }
 
-  navigateToChat(poolPoule: Poule): void {
-    this.router.navigate(['/pool/chat', this.pool.getId(), this.leagueName, poolPoule.getId()]);
+  navigateToChat(pouleId: string|number): void {
+    this.router.navigate(['/pool/chat', this.pool.getId(), this.leagueName, pouleId]);
   }
 
   openChooseBadgeCategoryModal(): void {

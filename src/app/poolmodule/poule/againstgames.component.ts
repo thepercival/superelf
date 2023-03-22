@@ -172,7 +172,7 @@ export class PoolPouleAgainstGamesComponent extends PoolComponent implements OnI
               });            
 
               if (this.poolUserFromSession) {
-                this.chatMessageRepository.getNrOfUnreadObjects(poule, pool).subscribe({
+                this.chatMessageRepository.getNrOfUnreadObjects(poule.getId(), pool).subscribe({
                   next: (nrOfUnreadMessages: number) => {
                     this.nrOfUnreadMessages = nrOfUnreadMessages;
                   }
