@@ -142,19 +142,33 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
   getCurrentSourceGameRoundNumber(poule: Poule): number {
     
     const firstInPogress = poule.getTogetherGames().find((game: TogetherGame) => game.getState() === GameState.InProgress);
+    let grInProgress = undefined;
     if (firstInPogress !== undefined) {
-      return firstInPogress.getTogetherPlaces()[0].getGameRoundNumber();
+      grInProgress = firstInPogress.getTogetherPlaces()[0].getGameRoundNumber();
     }
 
     const lastFinished = poule.getTogetherGames().slice().reverse().find((game: TogetherGame) => game.getState() === GameState.Finished);
+    let grLastFinished = undefined;
     if (lastFinished !== undefined) {
-      return lastFinished.getTogetherPlaces()[0].getGameRoundNumber();
+      grLastFinished = lastFinished.getTogetherPlaces()[0].getGameRoundNumber();
     }
     const firstCreated = poule.getTogetherGames().find((game: TogetherGame) => game.getState() === GameState.Created);
-      if( firstCreated !== undefined) {
-        return firstCreated.getTogetherPlaces()[0].getGameRoundNumber();
+    let grFirstCreated = undefined;
+    if( firstCreated !== undefined) {
+      grFirstCreated = firstCreated.getTogetherPlaces()[0].getGameRoundNumber();
+    }
+
+    if (grInProgress !== undefined ) {
+      if( grLastFinished === undefined || grInProgress > grLastFinished ) {
+        return grInProgress;
       }
-    
+    }
+    if (grLastFinished !== undefined) {
+      return grLastFinished;
+    }
+    if (grFirstCreated !== undefined) {
+      return grFirstCreated;
+    }
     throw new Error('should be a gameroundnumber');
   }
 
