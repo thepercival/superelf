@@ -18,7 +18,6 @@
         <div>
             <app-superelf-trophy-icon size="10x" [leagueName]="nameService.convertToLeagueName(currentTrophy.getCompetition())"></app-superelf-trophy-icon>
         </div>
-        <div>{{ currentTrophy.getRank() === 1 ? 'kampioen' : 'runner-up'}}</div>
         <div><h2 class="fw-bold">{{currentTrophy.poolUser.user.name}}</h2></div>
     </div>
     <div *ngIf="currentBadge" class="text-center">    

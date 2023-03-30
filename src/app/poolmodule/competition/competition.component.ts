@@ -22,6 +22,8 @@ import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/pool
 import { BadgeCategory } from '../../lib/achievement/badge/category';
 import { ChooseBadgeCategoryModalComponent } from '../badge/choosecategory-modal.component';
 import { GameRoundTotalsMap, PoolTotalsRepository, PoolUsersTotalsMap } from '../../lib/totals/repository';
+import { SuperElfNameService } from '../../lib/nameservice';
+import { DefaultGameRoundCalculator } from '../../lib/gameRound/defaultCalculator';
 
 
 @Component({
@@ -55,6 +57,8 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     protected structureRepository: StructureRepository,
     protected poolTotalsRepository: PoolTotalsRepository,
     private gameRoundRepository: GameRoundRepository,
+    private defaultGameRoundCalculator: DefaultGameRoundCalculator,
+    public nameService: SuperElfNameService,
     private authService: AuthService,
     private modalService: NgbModal
   ) {
@@ -137,26 +141,28 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   }
 
   initCurrentGameRound(competitionConfig: CompetitionConfig, viewPeriod: ViewPeriod): void {
-    this.gameRoundRepository.getCurrentNumbers(competitionConfig, viewPeriod).subscribe({
-      next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
-        let currentGameRound;
-        if (currentGameRoundNumbers.lastFinishedOrInPorgress) {
-          currentGameRound = viewPeriod.getGameRound(currentGameRoundNumbers.lastFinishedOrInPorgress);
-        }
+    this.defaultGameRoundCalculator.calculateFinished(competitionConfig, viewPeriod, undefined).subscribe({
+      next: (currentGameRound: GameRound) => {
+        
         const gameRounds: (GameRound | undefined)[] = viewPeriod.getGameRounds().slice();
         this.gameRounds = gameRounds;
-        if (currentGameRound !== undefined) {
-          const idx = this.gameRounds.indexOf(currentGameRound);
-          if (idx >= 0) {
-            this.gameRounds = this.gameRounds.splice(idx).concat([], this.gameRounds);
-          }
-          this.updateGameRound(currentGameRound);
-        } else {
-          this.processing = false;
+        
+        const idx = this.gameRounds.indexOf(currentGameRound);
+        if (idx >= 0) {
+          this.gameRounds = this.gameRounds.splice(idx).concat([], this.gameRounds);
         }
+        this.updateGameRound(currentGameRound);
+       
       },
       error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
     });
+  }
+
+  public updateViewPeriodFromScroller(competitionConfig: CompetitionConfig, viewPeriod: ViewPeriod): void {
+    this.processing = true;
+    this.currentViewPeriod = viewPeriod;
+    this.initPoolUsersTotals(viewPeriod);
+    this.initCurrentGameRound(competitionConfig, viewPeriod);
   }
 
   updateGameRoundFromScroller(gameRound: GameRound|undefined): void {

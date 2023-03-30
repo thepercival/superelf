@@ -1,29 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportRoundRankingCalculator, Competition, CompetitionSport, Competitor, CompetitorBase, GameState, Poule, SportRoundRankingItem, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
-import { Observable } from 'rxjs';
-import { Achievement } from '../../lib/achievement';
 import { Badge } from '../../lib/achievement/badge';
 import { AchievementRepository } from '../../lib/achievement/repository';
 import { Trophy } from '../../lib/achievement/trophy';
-import { ChatMessage } from '../../lib/chatMessage';
-import { ChatMessageRepository } from '../../lib/chatMessage/repository';
-import { DateFormatter } from '../../lib/dateFormatter';
-import { ImageRepository } from '../../lib/image/repository';
-import { LeagueName } from '../../lib/leagueName';
-import { SuperElfNameService } from '../../lib/nameservice';
-import { GameRepository } from '../../lib/ngx-sport/game/repository';
-import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
-import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolUser } from '../../lib/pool/user';
-import { JsonPoolUser } from '../../lib/pool/user/json';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { S11Storage } from '../../lib/storage';
-import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
@@ -36,23 +21,8 @@ import { UnviewedAchievementsModalComponent } from './unviewed-modal.component';
   styleUrls: ['./achievements.component.scss']
 })
 export class AchievementsComponent extends PoolComponent implements OnInit {
-  // public gameRounds: GameRound[] = [];
-  // public currentGameRound: GameRound | undefined;
-  // public sourceGameRoundGames: AgainstGame[] = [];
-  // public currentSourceGame: AgainstGame | undefined;
-  // private startLocationMap!: StartLocationMap;
-  // form: UntypedFormGroup;
   public achievementListItems: AchievementListItem[]|undefined;
   public processing = true;
-  // public leagueName!: LeagueName;
-  // public poolPoule: Poule | undefined;
-  // public processingMessage = false;
-  // public chatMessages: ChatMessage[] | undefined;
-  // public processingPoolUsers = true;
-  // public processingGames = true;
-  // public poolUsers!: PoolUser[];
-  // private sourceStructure!: Structure;
-  // public sportRankingItems!: SportRoundRankingItem[];
 
   constructor(
     route: ActivatedRoute,
@@ -61,11 +31,6 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     globalEventsManager: GlobalEventsManager,
     private modalService: NgbModal,
     private poolUserRepository: PoolUserRepository,
-    // private chatMessageRepository: ChatMessageRepository,
-    // public nameService: SuperElfNameService,
-    // private dateFormatter: DateFormatter,
-    // public imageRepository: ImageRepository,
-    // public cssService: CSSService,
     private myNavigation: MyNavigation,
     private achievementRepository: AchievementRepository,
     private s11Storage: S11Storage
@@ -90,10 +55,10 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
       this.poolUserRepository.getObjectFromSession(pool).subscribe({
         next: ((poolUser: PoolUser) => {
           this.poolUserFromSession = poolUser;
-          this.achievementRepository.getUnviewedObjects(poolUser).subscribe({
+          this.achievementRepository.getUnviewedObjects(poolUser.getPool()).subscribe({
             next: (achievements: (Trophy|Badge)[]) => {
               if( achievements.length > 0 ) {
-                // this.achievementRepository.removeUnviewedObjects(poolUser).subscribe({});
+                this.achievementRepository.removeUnviewedObjects(poolUser).subscribe({});
                 this.openUnviewedModal(achievements);                
                 this.s11Storage.setLatest(pool, new Date(), false);
               }
@@ -113,14 +78,14 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
   private mapToAchievementListItems(achievements: (Badge|Trophy)[]): AchievementListItem[] {
     const map = new Map<string|number, AchievementListItem>();
     achievements.forEach((achievement: Badge|Trophy) => {
-      let item = map.get(achievement.poolUser.id);
+      let item = map.get(achievement.poolUser.user.id);
       if( item === undefined) {
         item = {
           name: achievement.poolUser.user.name ?? '',
           nrOfTrophies: achievement instanceof Trophy ? 1: 0,
           nrOfBadges: achievement instanceof Badge ? 1: 0
         };
-        map.set(achievement.poolUser.id, item);        
+        map.set(achievement.poolUser.user.id, item);        
       } else {
         item.nrOfTrophies += achievement instanceof Trophy ? 1: 0;
         item.nrOfBadges += achievement instanceof Badge ? 1: 0;
@@ -134,10 +99,10 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
 
     list.sort((item1: AchievementListItem, item2: AchievementListItem) => {
       if( item1.nrOfTrophies !== item2.nrOfTrophies) {
-        return (item1.nrOfTrophies > item2.nrOfTrophies ? 1 : -1);
+        return (item1.nrOfTrophies < item2.nrOfTrophies ? 1 : -1);
       }
       if( item1.nrOfBadges !== item2.nrOfBadges) {
-        return (item1.nrOfBadges > item2.nrOfBadges ? 1 : -1);
+        return (item1.nrOfBadges < item2.nrOfBadges ? 1 : -1);
       }
       return (item1.name > item2.name ? 1 : -1);
     });

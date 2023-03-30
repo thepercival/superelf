@@ -1,14 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
 import { CompetitionConfig } from '../competitionConfig';
 import { ViewPeriod } from '../period/view';
-import { JsonGameRound } from './json';
 import { GameRoundMapper } from './mapper';
-import { GameRound } from '../gameRound';
 
 @Injectable({
     providedIn: 'root'

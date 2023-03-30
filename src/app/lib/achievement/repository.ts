@@ -11,6 +11,7 @@ import { Badge } from './badge';
 import { JsonBadge } from './badge/json';
 import { JsonTrophy } from './trophy/json';
 import { PoolCollection } from '../pool/collection';
+import { Pool } from '../pool';
 
 @Injectable({
     providedIn: 'root'
@@ -22,13 +23,16 @@ export class AchievementRepository extends APIRepository {
         super();
     }
 
-    getUrl(poolUser: PoolUser): string {
+    getPoolUrl(pool: Pool): string {
+        return this.getApiUrl() + 'pools/' + pool.getId() + '/achievements/';
+    }
+
+    getPoolUserUrl(poolUser: PoolUser): string {
         return this.getApiUrl() + 'poolusers/' + poolUser.getId() + '/achievements/';
     }
 
-    getUnviewedObjects(poolUser: PoolUser): Observable<(Trophy|Badge)[]> {
-        // return this.getApiUrl() + 'achievements/' + pool.getId() + '/poules/' + poule.getId() + '/' + suffix;
-        return this.http.get<(JsonTrophy|JsonBadge)[]>(this.getUrl(poolUser) + 'unviewed', this.getOptions()).pipe(
+    getUnviewedObjects(pool: Pool): Observable<(Trophy|Badge)[]> {
+        return this.http.get<(JsonTrophy|JsonBadge)[]>(this.getPoolUrl(pool) + 'unviewed', this.getOptions()).pipe(
             map((jsonAchievements: (JsonTrophy|JsonBadge)[]) => jsonAchievements.map((jsonAchievement: JsonTrophy|JsonBadge): Trophy|Badge => {
                 return this.mapper.toObject(jsonAchievement);
             })),
@@ -37,7 +41,7 @@ export class AchievementRepository extends APIRepository {
     }
 
     removeUnviewedObjects(poolUser: PoolUser): Observable<void> {
-        return this.http.delete<(JsonTrophy|JsonBadge)[]>(this.getUrl(poolUser) + 'viewed', this.getOptions()).pipe(
+        return this.http.delete<(JsonTrophy|JsonBadge)[]>(this.getPoolUserUrl(poolUser) + 'viewed', this.getOptions()).pipe(
             catchError((err) => this.handleError(err))
         );
     }

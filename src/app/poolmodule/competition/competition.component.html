@@ -9,6 +9,7 @@
       <div class="d-flex flex-nowrap justify-content-between mt-2">
         <app-gameround-scroller *ngIf="currentViewPeriod" [gameRounds]="gameRounds" [current]="currentGameRound"
           (update)="updateGameRoundFromScroller($event)" [currentViewPeriod]="currentViewPeriod"
+          (updateViewPeriod)="updateViewPeriodFromScroller(pool.getCompetitionConfig(), $event)"
           [assembleViewPeriod]="pool.getAssembleViewPeriod()" [transferViewPeriod]="pool.getTransferViewPeriod()">
         </app-gameround-scroller>
         <div>
@@ -23,10 +24,17 @@
             </span>
           </button>
           <button (click)="openChooseBadgeCategoryModal()" type="button"
-            class="btn btn-outline-dark me-0 position-relative">
+            class="btn {{badgeCategory !== undefined ? 'btn-success' : 'btn-outline-dark'}} me-0 position-relative">
             <app-superelf-icon [name]="'trophy'"></app-superelf-icon>
           </button>          
         </div>
+      </div>
+
+      <div *ngIf="badgeCategory" class="text-center mt-3">
+        <span class="">
+          <app-superelf-badge-icon [badgeCategory]="badgeCategory"></app-superelf-badge-icon>
+          <span class="ms-1">{{nameService.getBadgeCategoryName(badgeCategory)}}-badge</span>
+        </span>
         
       </div>
   

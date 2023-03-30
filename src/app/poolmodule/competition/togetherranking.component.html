@@ -3,13 +3,13 @@
         <tr *ngFor="let rankingItem of rankingItems" class="pointer"
             (click)="linkToPoolUser(rankingItem.poolUser, gameRound)">
 
-            <ng-container *ngIf="!worldcupQualify2(rankingItem);else worldcupQualify">
+            <ng-container *ngIf="!hasAchievement(rankingItem);else worldcupQualify">
                 <td class="rankingnr text-end ps-0"><!-- badge text-black -->
                     <span class="">{{rankingItem.rank}}</span>
                 </td>
             </ng-container>
             <ng-template #worldcupQualify>
-                <td class="rankingnr text-end ps-0 pointer" (click)="openModal(worldcupModal); $event.stopPropagation()">
+                <td class="rankingnr text-end ps-0 pointer" (click)="openModal(worldcupModal, badgeCategoryModal); $event.stopPropagation()">
                     <span class="badge text-bg-success text-decoration-underline">{{rankingItem.rank}}</span>
                 </td>
             </ng-template>
@@ -44,4 +44,23 @@
       <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.dismiss()">
         sluiten</button>
     </div>
-  </ng-template>
+</ng-template>
+
+<ng-template #badgeCategoryModal let-modal>
+    <div *ngIf="badgeCategory" class="modal-header">
+      <h4 class="modal-title">
+        <span>
+            <app-superelf-badge-icon [badgeCategory]="badgeCategory"></app-superelf-badge-icon>
+            <span class="ms-1">{{nameService.getBadgeCategoryName(badgeCategory)}}-badge</span>
+        </span>
+      </h4>
+      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <p>De nummer 1 van de pool krijgt een zilveren badge. De nummer 1 van alle pools krijgt een gouden badge</p>
+    </div>
+    <div class="modal-footer d-flex justify-content-reverse border-top-0">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.dismiss()">
+        sluiten</button>
+    </div>
+</ng-template>

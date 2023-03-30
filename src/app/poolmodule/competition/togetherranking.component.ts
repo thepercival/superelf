@@ -5,6 +5,7 @@ import { Formation } from 'ngx-sport';
 import { BadgeCategory } from '../../lib/achievement/badge/category';
 import { CompetitionConfig } from '../../lib/competitionConfig';
 import { GameRound } from '../../lib/gameRound';
+import { SuperElfNameService } from '../../lib/nameservice';
 import { PoolUser } from '../../lib/pool/user';
 import { ScorePointsMap } from '../../lib/score/points';
 import { PoolUsersTotalsMap } from '../../lib/totals/repository';
@@ -17,46 +18,28 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 })
 export class TogetherRankingComponent implements OnInit, OnChanges {
   @Input() poolUsers!: PoolUser[];
-  @Input() poolUsersTotalsMap: PoolUsersTotalsMap|undefined;
+  @Input() poolUsersTotalsMap!: PoolUsersTotalsMap;
   @Input() gameRoundPoolUserTotalsMap: PoolUsersTotalsMap|undefined;
   @Input() gameRound: GameRound | undefined;
   @Input() scorePointsMap!: ScorePointsMap;
   @Input() badgeCategory: BadgeCategory | undefined;
   
   @Input() header!: boolean;
-  // protected togetherRankingCalculator!: TogetherSportRoundRankingCalculator;
-
-  // public sportRankingItems!: SportRoundRankingItem[];
-  // public structureNameService!: StructureNameService;
-  // protected gameAmountConfig!: GameAmountConfig;
   public rankingItems: RankingItem[]|undefined;
-  // protected scoreMap = new ScoreMap();
   protected bestMapForGameRound = new Map<string|number, PoolUser>();
   protected worstMapForGameRound = new Map<string|number, PoolUser>();
   public processing = true;
 
   constructor(
-    // private scoreConfigService: ScoreConfigService,
     private router: Router,
     private modalService: NgbModal,
-    private cssService: CSSService) {
+    public nameService: SuperElfNameService) {
   }
 
   ngOnInit() {
     this.processing = true;
-    // this.structureNameService = new StructureNameService(this.startLocationMap);
-    // this.togetherRankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport, [GameState.InProgress, GameState.Finished]);
-    // this.sportRankingItems = this.togetherRankingCalculator.getItemsForPoule(this.poule);
-    
-    // this.gameAmountConfig = this.poule.getRound().getNumber().getValidGameAmountConfig(this.competitionSport);
-    // this.initScoreMap();
-    // this.initTableData();    
-    // if( this.currentGameRound !== undefined ) {
-    //   this.initBestAndWorstMap(this.currentGameRound);
-    // }
-    if( this.poolUsersTotalsMap !== undefined ) {
-      this.updateRankingItems(this.poolUsersTotalsMap);
-    }
+  
+    this.updateRankingItems();
     
     this.processing = false;
   }
@@ -68,34 +51,36 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
         if( changes.gameRound.currentValue !== undefined) {
           this.updateGameRoundBestAndWorstMap();
         }
+    
     }
-    console.log('changes.poolUsersTotalsMap');
-    if (changes.poolUsersTotalsMap !== undefined && changes.poolUsersTotalsMap.firstChange !== true
-      && changes.poolUsersTotalsMap.currentValue !== changes.poolUsersTotalsMap.previousValue
+    if (changes.badgeCategory.firstChange !== true
+      && changes.badgeCategory.currentValue !== changes.badgeCategory.previousValue
        ) {
-        console.log('changes.poolUsersTotalsMap check');
-        if( changes.poolUsersTotalsMap.currentValue !== undefined) {
-          this.updateRankingItems(changes.poolUsersTotalsMap.currentValue);
-        }
-    }
+        this.updateRankingItems();
+      }
   }
 
-  updateRankingItems(poolUsersTotalsMap: PoolUsersTotalsMap) {
-    const poolUsers = this.sortPoolUsers(this.poolUsers, poolUsersTotalsMap);
+  updateRankingItems(): void {
+    const poolUsers = this.sortPoolUsers(this.poolUsers, this.poolUsersTotalsMap);
     let rank = 1;
     const rankingItems: RankingItem[] = [];
     const firstPoolUser = poolUsers.shift();
     if ( firstPoolUser === undefined ) {
-      return rankingItems;
+      return;
     }
     rankingItems.push({ rank, poolUser: firstPoolUser});
     
     let points: number|undefined;
+    let nrOfEvenRanks = 0;
     poolUsers.forEach((poolUser: PoolUser) => {      
-      const poolUserTotals = poolUsersTotalsMap.get(poolUser.getId());
+      const poolUserTotals = this.poolUsersTotalsMap.get(poolUser.getId());
       const poolUserPoints = poolUserTotals?.getPoints(this.scorePointsMap, this.badgeCategory) ?? 0;
       if( poolUserTotals === undefined || points === undefined || poolUserPoints < points ) {
         rank++;
+        rank += nrOfEvenRanks;
+        nrOfEvenRanks = 0;
+      } else {
+        nrOfEvenRanks++;
       }
       points = poolUserPoints;
       rankingItems.push({ rank, poolUser: poolUser});
@@ -148,7 +133,8 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
   }
 
   sortPoolUsers(poolUsers: PoolUser[], poolUsersTotalsMap: PoolUsersTotalsMap): PoolUser[] {
-      poolUsers.sort((pooluserA: PoolUser, pooluserB: PoolUser): number => {
+    const sorted = poolUsers.slice();
+    sorted.sort((pooluserA: PoolUser, pooluserB: PoolUser): number => {
         const pointsA = poolUsersTotalsMap.get(pooluserA.getId())?.getPoints(this.scorePointsMap, this.badgeCategory);
         const pointsB = poolUsersTotalsMap.get(pooluserB.getId())?.getPoints(this.scorePointsMap, this.badgeCategory);
         if( pointsA === undefined || pointsB === undefined ) {
@@ -156,7 +142,7 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
         }
         return pointsB - pointsA;
       });
-      return poolUsers;
+      return sorted;
   }
 
 
@@ -170,8 +156,11 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
     return 'bg-points';
   }
 
-  worldcupQualify2(rankingItem: RankingItem): boolean {
-    return rankingItem.rank <= CompetitionConfig.MinRankToToQualifyForWorldCup;
+  hasAchievement(rankingItem: RankingItem): boolean {
+    if( this.badgeCategory === undefined) {
+      return rankingItem.rank <= CompetitionConfig.MinRankToToQualifyForWorldCup;
+    }
+    return rankingItem.rank <= 1;
   }
 
   linkToPoolUser(poolUser: PoolUser, gameRound: GameRound | undefined): void {
@@ -192,7 +181,8 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
     return 0;
   }
 
-  openModal(modalContent: TemplateRef<any>) {
+  openModal(worldCupModalContent: TemplateRef<any>, badgeCategoryModalContent: TemplateRef<any>) {
+    const modalContent = this.badgeCategory !== undefined ? badgeCategoryModalContent : worldCupModalContent;
     const activeModal = this.modalService.open(modalContent);
     activeModal.result.then(() => {
     }, (reason) => {

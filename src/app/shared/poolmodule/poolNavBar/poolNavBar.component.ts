@@ -56,7 +56,7 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
     checkDate.setHours(checkDate.getHours() - 1);
     console.log(checkDate, latestRequest);
     if( latestRequest === undefined || latestRequest.date.getTime() < checkDate.getTime() ) {      
-      this.achievementRepository.getUnviewedObjects(poolUser).subscribe({
+      this.achievementRepository.getUnviewedObjects(poolUser.getPool()).subscribe({
         next: (achievements: (Trophy|Badge)[]) => {
           console.log('set this.unviewedAchievements', achievements);
           this.hasUnviewedAchievements = achievements.length > 0;
