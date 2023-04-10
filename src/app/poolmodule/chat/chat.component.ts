@@ -84,9 +84,8 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
 
           this.structureRepository.getObject(competition).subscribe({
             next: (structure: Structure) => {
-
               const round = structure.getSingleCategory().getRootRound();
-              const poule = round.getFirstPoule();
+              const poule: Poule = this.structureRepository.getPouleFromPouleId(round, +params.pouleId);
               this.poolPoule = poule;
 
               // this.poolStartLocationMap = new StartLocationMap(poolCompetitors);

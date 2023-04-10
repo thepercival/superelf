@@ -103,7 +103,7 @@ export class PoolPouleAgainstGamesComponent extends PoolComponent implements OnI
 
             const round = structure.getSingleCategory().getRootRound();
             const firstPoule = this.leagueName === LeagueName.SuperCup || this.leagueName === LeagueName.Competition;
-            const poule: Poule = firstPoule ? round.getFirstPoule() : this.getPouleFromPouleId(round, +params.pouleId);
+            const poule: Poule = firstPoule ? round.getFirstPoule() : this.structureRepository.getPouleFromPouleId(round, +params.pouleId);
             this.poolPoule = poule;
             
 
@@ -204,35 +204,6 @@ export class PoolPouleAgainstGamesComponent extends PoolComponent implements OnI
   // }
 
   get Competitions(): NavBarItem { return NavBarItem.Competitions }
-
-  private getPouleFromPouleId(round: Round, pouleId: number): Poule {
-    const foundRound = this.getRoundWithPouleId(round, pouleId);
-    if( foundRound === undefined) {
-      throw new Error('poule not found for pouleId ' + pouleId);
-    }
-    const poule = foundRound.getPoules().find((poule: Poule): boolean => poule.getId() === pouleId);
-    if( poule !== undefined ) {
-      return poule;
-    }
-    throw new Error('poule not found for pouleId ' + pouleId);
-  }
-
-  private getRoundWithPouleId(round: Round, pouleId: number): Round|undefined {
-    const poule = round.getPoules().find((poule: Poule): boolean => poule.getId() === pouleId);
-    if( poule !== undefined ) {
-      return round;
-    }
-    let foundRound = undefined;
-    round.getChildren().some((childRound: Round): boolean => {
-      const foundChildRound = this.getRoundWithPouleId(childRound, pouleId);
-      if( foundChildRound !== undefined) {
-        foundRound = foundChildRound;
-        return true;
-      }
-      return false;
-    });
-    return foundRound;
-  }
 
   private getStartLocationsFromGameRoundNrs(poule: Poule, gameRoundNrs: number[]): StartLocation[] {
     const map = new Map();

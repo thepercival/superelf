@@ -7,7 +7,7 @@
                 <span class="ms-1">{{nameService.getLeagueName(leagueName)}}</span>
             </h2>
             <div>
-                <button *ngIf="poolPoule" (click)="navigateToChat(poolPoule)" type="button"
+                <button *ngIf="poolPoule && poolUserFromSession" (click)="navigateToChat(poolPoule)" type="button"
                     class="btn btn-outline-dark me-3 position-relative">
                     <fa-icon [icon]="['fas', 'message']"></fa-icon>
                     <span class="ms-1"> chat</span>
