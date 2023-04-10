@@ -63,7 +63,7 @@ export class PoolTotalsRepository extends APIRepository {
 
     protected mapPoolUsersTotals(jsonGameRoundPoolUsersTotals: JsonPoolUserTotals []): PoolUsersTotalsMap {        
         const map = new PoolUsersTotalsMap();
-        console.log('pre gameRoundPoolUsersTotals');
+        //console.log('pre gameRoundPoolUsersTotals');
         jsonGameRoundPoolUsersTotals.forEach((jsonPoolUserTotals: JsonPoolUserTotals) => {
             const formationLineMap = new FormationLineTotalsMap();                    
             jsonPoolUserTotals.formationLineTotals.forEach((json: JsonFormationLineTotals) => {
@@ -72,7 +72,7 @@ export class PoolTotalsRepository extends APIRepository {
             map.set(jsonPoolUserTotals.poolUserId, formationLineMap);
         });
         // gameRoundFormationLineTotals: GameRoundFormationLineTotals
-        console.log('check gameRoundPoolUsersTotals', map);
+        //console.log('check gameRoundPoolUsersTotals', map);
         return map;           
     }
 }

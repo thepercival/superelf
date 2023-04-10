@@ -40,7 +40,8 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
     this.processing = true;
   
     this.updateRankingItems();
-    
+    // console.log('init ranking');
+    this.updateGameRoundBestAndWorstMap();
     this.processing = false;
   }
 
@@ -48,6 +49,7 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
     if (changes.gameRound !== undefined && changes.gameRound.firstChange !== true
       && changes.gameRound.currentValue !== changes.gameRound.previousValue
        ) {
+        console.log('changes.gameRound', changes.gameRound);
         if( changes.gameRound.currentValue !== undefined) {
           this.updateGameRoundBestAndWorstMap();
         }
@@ -129,7 +131,6 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
     if( this.worstMapForGameRound.size > 3) { // worst
       this.worstMapForGameRound.clear();
     }
-    // console.log(this.bestMap);
   }
 
   sortPoolUsers(poolUsers: PoolUser[], poolUsersTotalsMap: PoolUsersTotalsMap): PoolUser[] {
@@ -147,10 +148,10 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
 
 
   getPointsBadgeClass(rankingItem: RankingItem): string {
-    if( this.bestMapForGameRound.has(rankingItem.rank)) {
+    if( this.bestMapForGameRound.has(rankingItem.poolUser.getId())) {
       return 'bg-success';  
     } 
-    if( this.worstMapForGameRound.has(rankingItem.rank)) {
+    if( this.worstMapForGameRound.has(rankingItem.poolUser.getId())) {
       return 'bg-danger';  
     }
     return 'bg-points';
