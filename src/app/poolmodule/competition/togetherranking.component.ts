@@ -87,6 +87,7 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
       points = poolUserPoints;
       rankingItems.push({ rank, poolUser: poolUser});
     });
+    console.log(rankingItems);
     this.rankingItems = rankingItems;
   }
 
