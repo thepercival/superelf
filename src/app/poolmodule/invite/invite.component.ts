@@ -8,6 +8,9 @@ import { PoolCollection } from '../../lib/pool/collection';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { Pool } from '../../lib/pool';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { PoolUserRepository } from '../../lib/pool/user/repository';
+import { PoolUser } from '../../lib/pool/user';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 
 @Component({
@@ -27,7 +30,8 @@ export class InviteComponent extends PoolComponent implements OnInit {
     router: Router,
     poolRepository: PoolRepository,
     globalEventsManager: GlobalEventsManager,
-    fb: UntypedFormBuilder
+    fb: UntypedFormBuilder,
+    protected poolUserRepository: PoolUserRepository,
   ) {
     super(route, router, poolRepository, globalEventsManager);
     this.form = fb.group({
@@ -42,12 +46,24 @@ export class InviteComponent extends PoolComponent implements OnInit {
         this.setPool(pool);
         this.setAlert('info', 'gebruik de link om mensen uit te nodigen');
         this.initUrl(pool);
+
+        this.poolUserRepository.getObjectFromSession(pool).subscribe({
+          next: ((poolUser: PoolUser) => {
+            this.poolUserFromSession = poolUser;
+          }),
+          error: (e: string) => {
+            this.setAlert('danger', e); this.processing = false;
+          },
+          complete: () => this.processing = false
+        });
       },
       error: (e) => {
         this.setAlert('danger', e); this.processing = false;
       }
     });
   }
+
+  get Invite(): NavBarItem { return NavBarItem.Invite }
 
   initUrl(pool: Pool) {
     this.poolRepository.getJoinUrl(pool).subscribe({

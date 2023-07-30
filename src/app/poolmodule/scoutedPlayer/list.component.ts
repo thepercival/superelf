@@ -19,6 +19,7 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { S11FormationLine } from '../../lib/formation/line';
 import { S11Formation } from '../../lib/formation';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 @Component({
   selector: 'app-pool-scouting-list',
@@ -47,10 +48,11 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.setPool(pool);
       this.initPoolUser(pool);
-
     });
   }
 
+  get Scouting(): NavBarItem { return NavBarItem.Scouting }
+  
   initPoolUser(pool: Pool) {
     this.poolUserRepository.getObjectFromSession(pool).subscribe({
         next: (poolUser: PoolUser | undefined) => {

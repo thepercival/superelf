@@ -10,7 +10,7 @@ import { Pool } from '../../lib/pool';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
-import { FootballLine, Person, Team } from 'ngx-sport';
+import { FootballLine, Person, Team, TeamCompetitor } from 'ngx-sport';
 import { HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addremovemodal.component';
@@ -18,6 +18,9 @@ import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { ChoosePlayersFilter } from '../player/choose.component';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { ViewPeriodType } from '../../lib/period/view/json';
+import { PoolUserRepository } from '../../lib/pool/user/repository';
+import { PoolUser } from '../../lib/pool/user';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 @Component({
   selector: 'app-pool-scouted-player-add',
@@ -29,12 +32,14 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   scoutingList: ScoutingList = { scoutedPlayers: []/*, mappedPersons: new PersonMap()*/ };
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public choosePlayersFilter: ChoosePlayersFilter;
+  public selectableTeams!: Team[];
 
   constructor(
     route: ActivatedRoute,
     router: Router,
     poolRepository: PoolRepository,
     globalEventsManager: GlobalEventsManager,
+    protected poolUserRepository: PoolUserRepository,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
     fb: UntypedFormBuilder,
     private location: Location,
@@ -53,6 +58,12 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.setPool(pool);
+      this.poolUserRepository.getObjectFromSession(pool).subscribe({
+        next: ((poolUser: PoolUser) => {
+          this.poolUserFromSession = poolUser;
+        })
+      });
+      this.selectableTeams = this.pool.getSourceCompetition().getTeamCompetitors().map((teamCompetitor: TeamCompetitor) => teamCompetitor.getTeam())  
       this.route.queryParams.subscribe(params => {
         if (params.line !== undefined) {
           this.choosePlayersFilter.line = +params.line;
@@ -65,6 +76,8 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
     });
   }
 
+  get Scouting(): NavBarItem { return NavBarItem.Scouting }
+  
   getTeamById(teamId: number): Team | undefined {
     const teamCompetitors = this.pool.getSourceCompetition().getTeamCompetitors();
     return teamCompetitors.map(teamCompetitor => teamCompetitor.getTeam()).find((team: Team): boolean => {
@@ -75,7 +88,9 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   initScoutedPlayers(pool: Pool) {
     this.scoutedPlayerRepository.getObjects(pool.getSourceCompetition(), pool.getCreateAndJoinPeriod()).subscribe({
       next: (scoutedPlayers: ScoutedPlayer[]) => {
-        scoutedPlayers.forEach(scoutedPlayer => this.addToScoutingList(scoutedPlayer))
+        console.log('test');
+        scoutedPlayers.forEach(scoutedPlayer => this.addToScoutingList(scoutedPlayer));
+        this.processing = false;
       },
       error: (e) => {
         this.setAlert('danger', e); this.processing = false;

@@ -75,7 +75,7 @@ export class NewComponent implements OnInit {
 
     this.poolRepository.createObject(name, competitionConfig).subscribe({
       next: (pool: Pool) => {
-        this.router.navigate(['/pool', pool.getId()]);
+        this.router.navigate(['/pool/invite', pool.getId()]);
       },
       error: (e) => {
         this.setAlert('danger', 'de pool kon niet worden aangemaakt: ' + e); this.processing = false;

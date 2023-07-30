@@ -11,6 +11,7 @@ import { Pool } from '../../lib/pool';
 import { PoolUserRemoveModalComponent } from './removemodal.component';
 import { Period } from 'ngx-sport';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 
 @Component({
@@ -47,12 +48,25 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
           error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
           complete: () => this.processing = false
         });
+
+        this.poolUserRepository.getObjectFromSession(pool).subscribe({
+          next: ((poolUser: PoolUser) => {
+            this.poolUserFromSession = poolUser;
+          }),
+          error: (e: string) => {
+            this.setAlert('danger', e); this.processing = false;
+          },
+          complete: () => this.processing = false
+        });
+
       },
       error: (e) => {
         this.setAlert('danger', e); this.processing = false;
       }
     });
   }
+
+  get PoolUsers(): NavBarItem { return NavBarItem.PoolUsers; }
 
   openRemoveApprovalModal(poolUser: PoolUser) {
     const modalRef = this.modalService.open(PoolUserRemoveModalComponent);

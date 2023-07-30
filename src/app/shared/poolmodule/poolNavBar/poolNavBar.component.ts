@@ -73,12 +73,9 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
   get Achievements(): NavBarItem { return NavBarItem.Achievements }
   get Rules(): NavBarItem { return NavBarItem.Rules }
   get Admin(): NavBarItem { return NavBarItem.Admin }
-  // get LockerRoomsScreen(): TournamentScreen { return TournamentScreen.LockerRooms }
-  // get GamesScreen(): TournamentScreen { return TournamentScreen.Games }
-  // get RankingScreen(): TournamentScreen { return TournamentScreen.Ranking }
-  // get FavoritesScreen(): TournamentScreen { return TournamentScreen.Favorites }
-  // get CompetitorsScreen(): TournamentScreen { return TournamentScreen.Competitors }
-  // get SettingsScreen(): TournamentScreen { return TournamentScreen.Settings }
+  get PoolUsers(): NavBarItem { return NavBarItem.PoolUsers }
+  get Invite(): NavBarItem { return NavBarItem.Invite }
+  get Scouting(): NavBarItem { return NavBarItem.Scouting }
 
   getTextColorClass(item: NavBarItem): string {
     return this.current !== item ? 'btn-outline-success' : 'text-white';
@@ -98,6 +95,20 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
       case NavBarItem.Rules:
         this.router.navigate(['/pool/rules', this.pool.getId()]);
         return;
+      case NavBarItem.PoolUsers:
+        this.router.navigate(['/pool/users', this.pool.getId()]);
+        return;
+      case NavBarItem.Admin:
+        this.router.navigate(['/pool/users', this.pool.getId()]);
+        return;
+      case NavBarItem.Invite:
+        this.router.navigate(['/pool/invite', this.pool.getId()]);
+        return;
+      case NavBarItem.Scouting:
+        this.router.navigate(['/pool/scouting/list', this.pool.getId()]);
+        return; 
+        
+        
     }
   }
 

@@ -33,8 +33,8 @@
           </button>
         </div>
 
-        <div *ngIf="joined && pool">
-          <button [routerLink]="['/pool', pool.getId()]" type="button" class="btn btn-primary btn-block">
+        <div *ngIf="joined && pool" class="text-center">
+          <button [routerLink]="['/pool/users', pool.getId()]" type="button" class="btn btn-primary btn-block">
             ga naar de pool
           </button>
         </div>

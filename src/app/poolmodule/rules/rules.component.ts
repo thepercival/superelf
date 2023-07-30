@@ -11,6 +11,8 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 import { FootballCard, FootballGoal, FootballResult, FootballScore, FootballScoreLine, FootballSheet } from '../../lib/score';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
+import { PoolUser } from '../../lib/pool/user';
+import { PoolUserRepository } from '../../lib/pool/user/repository';
 
 @Component({
   selector: 'app-pool-rules',
@@ -26,6 +28,7 @@ export class RulesComponent extends PoolComponent implements OnInit {
     poolRepository: PoolRepository,
     globalEventsManager: GlobalEventsManager,
     protected cssService: CSSService,
+    protected poolUserRepository: PoolUserRepository,
     protected competitionConfigRepository: CompetitionConfigRepository,
     public nameService: SuperElfNameService
   ) {
@@ -40,6 +43,11 @@ export class RulesComponent extends PoolComponent implements OnInit {
           .subscribe(
             (formations: Formation[]) => this.availableFormations = formations
           );
+        this.poolUserRepository.getObjectFromSession(pool).subscribe({
+          next: ((poolUser: PoolUser) => {
+            this.poolUserFromSession = poolUser;
+          })
+        });
         this.processing = false;
       }
     });

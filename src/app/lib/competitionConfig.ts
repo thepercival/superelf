@@ -57,6 +57,17 @@ export class CompetitionConfig extends Identifiable {
         return this.assamblePeriod;
     }
 
+    public isInCreateOrJoinOrAssemblePeriod(): boolean {
+        return this.getCreateAndJoinPeriod().isIn() || this.getAssemblePeriod().isIn();
+    }
+
+    afterAssemblePeriod(date?: Date): boolean {
+        if (date === undefined) {
+            date = new Date();
+        }
+        return this.getAssemblePeriod().getEndDateTime().getTime() < date.getTime();
+    }
+
     public getTransferPeriod(): TransferPeriod {
         return this.transferPeriod;
     }

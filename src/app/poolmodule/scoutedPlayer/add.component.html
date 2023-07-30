@@ -20,7 +20,7 @@
 
       <div class="d-flex justify-content-center">
         <app-pool-player-choose class="w-100" (selectS11Player)="openAddModal($event)"
-          [competitionConfig]="pool.getCompetitionConfig()" 
+          [competitionConfig]="pool.getCompetitionConfig()" [selectableTeams]="selectableTeams"
           [viewPeriod]="pool.getCreateAndJoinPeriod()" [viewPeriodType]="AssembleViewPeriod"
           [alreadyChosenPersons]="getPersons()" (linkToS11Player)="linkToPlayer($event)"
           (filterUpdate)="updateState($event)" [filter]="choosePlayersFilter">
@@ -30,3 +30,6 @@
     </div>
   </div>
 </div>
+
+<app-pool-navbar [current]="Scouting" *ngIf="pool" [pool]="pool" [poolUser]="poolUserFromSession">
+</app-pool-navbar>

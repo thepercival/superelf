@@ -42,7 +42,7 @@ export class CompetitionConfigRepository extends APIRepository {
     }
 
     getActiveObjects(): Observable<CompetitionConfig[]> {
-        const url = this.getUrl() + '/active';
+        const url = this.getPublicUrl() + '/active';
         return this.http.get<JsonCompetitionConfig[]>(url, { headers: super.getHeaders() }).pipe(
             map((jsonConfigs: JsonCompetitionConfig[]) => {
                 return jsonConfigs.map((jsonConfig) => this.mapper.toObject(jsonConfig));

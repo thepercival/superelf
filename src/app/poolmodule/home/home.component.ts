@@ -84,7 +84,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
             });
         }
 
-        if (this.afterAssemblePeriod()) {            
+        if (competitionConfig.afterAssemblePeriod()) {            
             this.gameRoundRepository.getCurrentNumbers(competitionConfig, this.currentViewPeriod).subscribe({
                 next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
                     console.log(currentGameRoundNumbers);
@@ -127,23 +127,23 @@ export class HomeComponent extends PoolComponent implements OnInit {
             }
         }
 
-        if( this.authService.isLoggedIn() ) {
-            this.poolUserRepository.getObjectFromSession(pool)
-            .subscribe({
-                next: (poolUser: PoolUser | undefined) => {
-                    this.poolUser = poolUser;
-                    // if (this.inTransferMode()) {
-                    //     this.competitionConfigRepository.getAvailableFormations(pool.getCompetitionConfig())
-                    //         .subscribe((formations: Formation[]) => {
-                    //             this.formationChecker = new FootballFormationChecker(formations);
-                    //         });
-                    // }
-                },
-                error: (e: string) => {
-                    this.setAlert('danger', e); this.processing = false;
-                }
-            });
-        }
+        // if( this.authService.isLoggedIn() ) {
+        //     this.poolUserRepository.getObjectFromSession(pool)
+        //     .subscribe({
+        //         next: (poolUser: PoolUser | undefined) => {
+        //             this.poolUser = poolUser;
+        //             // if (this.inTransferMode()) {
+        //             //     this.competitionConfigRepository.getAvailableFormations(pool.getCompetitionConfig())
+        //             //         .subscribe((formations: Formation[]) => {
+        //             //             this.formationChecker = new FootballFormationChecker(formations);
+        //             //         });
+        //             // }
+        //         },
+        //         error: (e: string) => {
+        //             this.setAlert('danger', e); this.processing = false;
+        //         }
+        //     });
+        // }
     }
         
 
@@ -261,27 +261,27 @@ export class HomeComponent extends PoolComponent implements OnInit {
         return ''
     }
 
-    navigateToSchedule(competition: Competition, gameRoundNumber: number): void {
-        const leagueName = this.superElfNameService.convertToLeagueName(competition);
-        if( leagueName === LeagueName.Competition) {
-            this.router.navigate(['/pool/togethergame', this.pool.getId(), gameRoundNumber, 0]);
-            return;
-        }
-        if (leagueName === LeagueName.SuperCup) {
-            this.router.navigate(['/pool/poule-againstgames', this.pool.getId(), leagueName, 0]);
-            return;
-        }
-        const currentRound = this.getCurrentRound(competition, gameRoundNumber);
-        let currentPoule = undefined;
-        if( currentRound !== undefined && this.poolUser !== undefined ) {
-            currentPoule = this.getCurrentPoule(currentRound, leagueName, this.poolUser);
-        }
-        if (currentPoule !== undefined) {
-            this.router.navigate(['/pool/poule-againstgames', this.pool.getId(), leagueName, currentPoule.getId()]);
-        } else {
-            this.router.navigate(['/pool/cup', this.pool.getId()]);
-        }
-    }
+    // navigateToSchedule(competition: Competition, gameRoundNumber: number): void {
+    //     const leagueName = this.superElfNameService.convertToLeagueName(competition);
+    //     if( leagueName === LeagueName.Competition) {
+    //         this.router.navigate(['/pool/togethergame', this.pool.getId(), gameRoundNumber, 0]);
+    //         return;
+    //     }
+    //     if (leagueName === LeagueName.SuperCup) {
+    //         this.router.navigate(['/pool/poule-againstgames', this.pool.getId(), leagueName, 0]);
+    //         return;
+    //     }
+    //     const currentRound = this.getCurrentRound(competition, gameRoundNumber);
+    //     let currentPoule = undefined;
+    //     if( currentRound !== undefined && this.poolUser !== undefined ) {
+    //         currentPoule = this.getCurrentPoule(currentRound, leagueName, this.poolUser);
+    //     }
+    //     if (currentPoule !== undefined) {
+    //         this.router.navigate(['/pool/poule-againstgames', this.pool.getId(), leagueName, currentPoule.getId()]);
+    //     } else {
+    //         this.router.navigate(['/pool/cup', this.pool.getId()]);
+    //     }
+    // }
 
      getCurrentPoule(round: Round, leagueName: LeagueName, poolUser: PoolUser): Poule | undefined {
         const competitor = poolUser.getCompetitor(leagueName)
@@ -360,13 +360,11 @@ export class HomeComponent extends PoolComponent implements OnInit {
         return 'vanaf ' + this.dateFormatter.toString(this.pool.getAssemblePeriod().getStartDateTime(), this.dateFormatter.niceDateTime()) + ' uur';
     }
 
-    getNrAssembled(): number {
-        return (this.poolUser?.getNrOfAssembled() ?? 0);
-    }
+    // getNrAssembled(): number {
+    //     return (this.poolUser?.getNrOfAssembled() ?? 0);
+    // }
 
-    afterAssemblePeriod(): boolean {
-        return this.pool.getAssemblePeriod().getEndDateTime().getTime() < (new Date()).getTime();
-    }
+
 
     inTransferMode(): boolean {
         return this.pool.getTransferPeriod().isIn();
