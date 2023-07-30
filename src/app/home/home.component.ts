@@ -114,7 +114,9 @@ export class HomeComponent implements OnInit {
   }
 
   linkToPool(shell: PoolShell) {
-    if( this.canCreate ) {
+    const year = (new Date()).getFullYear();
+    const shellYear = shell.seasonName.substring(0,4);
+    if (this.canCreate && year == +shellYear ) {
       this.router.navigate(['/pool/users', shell.poolId]);
     } else {
       this.router.navigate(['/pool', shell.poolId]);
