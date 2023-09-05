@@ -6,7 +6,6 @@ import { IAlert } from '../shared/commonmodule/alert';
 import { PoolShell, PoolShellFilter, PoolShellRepository } from '../lib/pool/shell/repository';
 import { Role } from '../lib/role';
 import { PoolRepository } from '../lib/pool/repository';
-import { timeout } from 'rxjs/operators';
 import { GlobalEventsManager } from '../shared/commonmodule/eventmanager';
 
 @Component({
@@ -16,7 +15,8 @@ import { GlobalEventsManager } from '../shared/commonmodule/eventmanager';
 })
 export class HomeComponent implements OnInit {
   public processingMyShells = true;
-  public canCreate = false;
+  public canCreateAndJoin = false;
+  public canAssemble = false;
   myShells: PoolShell[] = [];
 
   // static readonly FUTURE: number = 1;
@@ -62,8 +62,9 @@ export class HomeComponent implements OnInit {
     this.poolShellRepos.canCreateAndJoinPool()
       .subscribe(
         {
-          next: (canCreate: boolean) => {
-            this.canCreate = canCreate;
+          next: (poolActions: number) => {
+            this.canCreateAndJoin = (poolActions & PoolActions.CreateAndJoin) === PoolActions.CreateAndJoin;
+            this.canAssemble = (poolActions & PoolActions.Assemble) === PoolActions.Assemble;
             if (!this.authService.isLoggedIn()) {
               this.processingMyShells = false;
               return;
@@ -116,11 +117,21 @@ export class HomeComponent implements OnInit {
   linkToPool(shell: PoolShell) {
     const year = (new Date()).getFullYear();
     const shellYear = shell.seasonName.substring(0,4);
-    if (this.canCreate && year == +shellYear ) {
-      this.router.navigate(['/pool/users', shell.poolId]);
+    if (year == +shellYear ) {
+      console.log(this.canAssemble);
+      console.log(this.canCreateAndJoin);
+      if (this.canAssemble ) {
+        this.router.navigate(['/pool/formation/assemble', shell.poolId]);
+      } else if (this.canCreateAndJoin ) {
+        this.router.navigate(['/pool/users', shell.poolId]);
+      }
     } else {
       this.router.navigate(['/pool', shell.poolId]);
     }
   }
 
+}
+
+export enum PoolActions {
+  CreateAndJoin = 1, Assemble
 }

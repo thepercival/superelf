@@ -22,9 +22,9 @@ export class PoolShellRepository extends APIRepository {
         return super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix(withRole);
     }
 
-    canCreateAndJoinPool(): Observable<boolean> {
-        return this.http.get<boolean>(super.getApiUrl() + 'public/cancreateandjoinpool', { headers: super.getHeaders() }).pipe(
-            catchError((err) => this.handleError(err))
+    canCreateAndJoinPool(): Observable<number> {
+        return this.http.get<boolean>(super.getApiUrl() + 'public/poolActions', { headers: super.getHeaders() }).pipe(
+            catchError((err: Error) => this.handleError(err))
         );
     }
 
@@ -35,7 +35,7 @@ export class PoolShellRepository extends APIRepository {
         };
         const withRole: boolean = filter?.roles ? filter.roles > 0 : false;
         return this.http.get<PoolShell[]>(this.getUrl(withRole), options).pipe(
-            catchError((err) => this.handleError(err))
+            catchError((err: Error) => this.handleError(err))
         );
     }
 

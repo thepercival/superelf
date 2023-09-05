@@ -7,7 +7,7 @@
 
     <div *ngIf="!processingMyShells" class="mt-3">
       <!-- header -->
-      <div *ngIf="canCreate && myShells.length > 0" class="mt-3 d-flex justify-content-between">
+      <div *ngIf="(canCreateAndJoin || canAssemble) && myShells.length > 0" class="mt-3 d-flex justify-content-between">
         <h2 class="text-center">mijn pools</h2>
         <div class="d-flex justify-content-center">
           <button type="button" class="btn btn-primary" (click)="linkToNew()">
@@ -15,14 +15,14 @@
           </button>
         </div>
       </div>
-      <div *ngIf="canCreate && myShells.length === 0" class="mt-3">
+      <div *ngIf="(canCreateAndJoin || canAssemble) && myShells.length === 0" class="mt-3">
         <div class="d-flex justify-content-center">
           <button type="button" class="btn btn-primary" (click)="linkToNew()">
             <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> pool organiseren
           </button>
         </div>
       </div>
-      <div *ngIf="!canCreate && myShells.length > 0" class="mt-3">
+      <div *ngIf="!(canCreateAndJoin || canAssemble) && myShells.length > 0" class="mt-3">
         <h2 class="text-center">mijn pools</h2>
       </div>
 

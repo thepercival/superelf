@@ -23,6 +23,7 @@ export class AgainstGameTitleComponent implements OnInit {
 
   ngOnInit() {
     const competitors = this.againstGame.getPoule().getCompetition().getTeamCompetitors();
+    console.log(competitors);
     this.startLocationMap = new StartLocationMap(competitors);
   }
 
@@ -42,6 +43,8 @@ export class AgainstGameTitleComponent implements OnInit {
 
 
   getCompetitors(side: AgainstSide): (Competitor | undefined)[] {
+    console.log(this.againstGame.getAgainstPlaces());
+    console.log(this.againstGame.getAgainstPlaces().map(ap => ap.getSide()), side);
     return this.againstGame.getSidePlaces(side).map((gamePlace: AgainstGamePlace): Competitor | undefined => {
       if (gamePlace === undefined) {
         return undefined;

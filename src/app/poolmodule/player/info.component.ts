@@ -80,14 +80,13 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
         let viewPeriod: ViewPeriod|undefined = undefined
         let currentGameRound: GameRound | undefined;
         const gameRoundNumber = +params.gameRound;
-        if (gameRoundNumber > 0) {
+        if (gameRoundNumber > 1) {
           viewPeriod = pool.getViewPeriodByRoundNumber(gameRoundNumber);          
           if (viewPeriod !== undefined) {
             currentGameRound = viewPeriod.getGameRound(gameRoundNumber)
           }
-        }
-        if (viewPeriod === undefined) {
-          return;
+        } else {
+          viewPeriod = this.getCurrentViewPeriod(pool)
         }
         this.playerRepository.getObject(
           +params.playerId,
