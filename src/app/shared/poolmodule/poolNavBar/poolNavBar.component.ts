@@ -76,6 +76,7 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
   get PoolUsers(): NavBarItem { return NavBarItem.PoolUsers }
   get Invite(): NavBarItem { return NavBarItem.Invite }
   get Scouting(): NavBarItem { return NavBarItem.Scouting }
+  get MyTeam(): NavBarItem { return NavBarItem.MyTeam }
 
   getTextColorClass(item: NavBarItem): string {
     return this.current !== item ? 'btn-outline-success' : 'text-white';
@@ -107,8 +108,9 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
       case NavBarItem.Scouting:
         this.router.navigate(['/pool/scouting/list', this.pool.getId()]);
         return; 
-        
-        
+      case NavBarItem.MyTeam:
+        this.router.navigate(['/pool/formation/assemble', this.pool.getId()]);
+        return; 
     }
   }
 

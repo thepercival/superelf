@@ -55,13 +55,28 @@ competities  | programma | prijzenkast | spelregels | beheer
       </a>
     </h2>
 
-    <!-- scounting -->
-    <h2 *ngIf="pool.getCompetitionConfig().isInCreateOrJoinOrAssemblePeriod()" class="mb-0 navbar-item">
-      <a type="button" class="btn {{getTextColorClass(Scouting)}} pt-cus" (click)="linkTo(Scouting)">
-        <fa-icon style="display: 'inline-block'; font-size: 1.3rem" [icon]="['fas', 'user-secret']"></fa-icon>
-        <br /><span>scouting</span>
-      </a>
-    </h2>
+    <ng-container *ngIf="pool.getCompetitionConfig().getAssemblePeriod().isIn();else scouting">    
+      <!-- my team -->
+      <h2 class="mb-0 navbar-item">
+        <a type="button" class="btn {{getTextColorClass(MyTeam)}} pt-cus" (click)="linkTo(MyTeam)">
+          <fa-icon [icon]="['fas', 'users']"></fa-icon>
+          <br /><span>mijn team</span>
+        </a>
+      </h2>    
+    </ng-container>
+    <ng-template #scouting>
+      <!-- scouting -->
+      <h2 *ngIf="pool.getCompetitionConfig().getCreateAndJoinPeriod().isIn()" class="mb-0 navbar-item">
+        <a type="button" class="btn {{getTextColorClass(Scouting)}} pt-cus" (click)="linkTo(Scouting)">
+          <fa-icon style="display: 'inline-block'; font-size: 1.3rem" [icon]="['fas', 'user-secret']"></fa-icon>
+          <br /><span>scouting</span>
+        </a>
+      </h2>
+    </ng-template>
+
+
+
+
 
       <!--achievements -->
     <h2 class="mb-0 navbar-item">

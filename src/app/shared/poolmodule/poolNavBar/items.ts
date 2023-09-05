@@ -9,8 +9,10 @@ export enum NavBarItem {
 
     Admin = 'beheer',
     Invite = 'uitnodigen', 
+    
     Scouting = 'scounting',
-    PoolUsers = 'deelnemers'
+    PoolUsers = 'deelnemers',
+    MyTeam = 'mijn team',
 }
 
 export enum CompetitionsNavBarItem {

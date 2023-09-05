@@ -113,6 +113,7 @@ export class ScoutedPlayerListComponent extends PoolComponent implements OnInit 
   openRemoveModal(scoutedPlayer: ScoutedPlayer, pool: Pool) {
     const modalRef = this.modalService.open(S11PlayerAddRemoveModalComponent);
     modalRef.componentInstance.s11Player = scoutedPlayer.getS11Player();
+    modalRef.componentInstance.scorePointsMap = this.pool.getCompetitionConfig().getScorePointsMap();
     modalRef.componentInstance.action = PlayerAction.Remove;
     modalRef.result.then((s11Player: S11Player) => {
       if (s11Player === scoutedPlayer.getS11Player()) {

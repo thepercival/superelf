@@ -18,6 +18,7 @@ import { S11FormationPlace } from '../../lib/formation/place';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { S11Formation } from '../../lib/formation';
 import { StatisticsGetter } from '../../lib/statistics/getter';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 @Component({
   selector: 'app-pool-assemble',
@@ -56,10 +57,12 @@ export class FormationAssembleComponent extends PoolComponent implements OnInit 
           this.setPool(pool);
           this.poolUserRepository.getObjectFromSession(pool).subscribe({
             next: (poolUser: PoolUser) => {
+              this.poolUserFromSession = poolUser;
               this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
                 next: (formation: S11Formation) => this.assembleFormation = formation,
                 error: (e: string) => {
                   this.setAlert('danger', e); this.processing = false;
+                  this.router.navigate(['/pool/formation/choose', pool.getId()]);
                 },
                 complete: () => this.processing = false
               });
@@ -75,6 +78,8 @@ export class FormationAssembleComponent extends PoolComponent implements OnInit 
         }
       });
   }
+
+  get MyTeam(): NavBarItem { return NavBarItem.MyTeam }
 
   editPlace(place: S11FormationPlace) {
     const navigationExtras: NavigationExtras = {

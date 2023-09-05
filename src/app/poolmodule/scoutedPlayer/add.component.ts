@@ -111,8 +111,10 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   get AssembleViewPeriod(): ViewPeriodType { return ViewPeriodType.Assemble; }
 
   openAddModal(s11Player: S11Player) {
+    console.log(s11Player);
     const modalRef = this.modalService.open(S11PlayerAddRemoveModalComponent);
     modalRef.componentInstance.s11Player = s11Player;
+    modalRef.componentInstance.scorePointsMap = this.pool.getCompetitionConfig().getScorePointsMap();
     modalRef.componentInstance.action = PlayerAction.Add;
     modalRef.result.then((s11PlayerResult: S11Player) => {
       this.add(s11PlayerResult);
