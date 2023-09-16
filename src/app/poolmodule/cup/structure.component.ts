@@ -29,8 +29,7 @@ import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/pool
 export class PoolCupComponent extends PoolComponent implements OnInit {
 
   poolUsers: PoolUser[] = [];
-  private nrOfDaysToRemoveAfterAssemblePeriod = 6;
-
+  
   public poule!: Poule;
   public competitionSport!: CompetitionSport;
   public startLocationMap!: StartLocationMap;
@@ -60,9 +59,6 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
-        if (pool.getAssemblePeriod().isIn()) {
-          this.setAlert('info', 'vanaf de start tot ' + this.nrOfDaysToRemoveAfterAssemblePeriod + ' dagen erna zijn deelnemers te vewijderen');
-        }
         const competitionConfig = this.pool.getCompetitionConfig();        
         const currentViewPeriod = this.getCurrentViewPeriod(pool);
         if (currentViewPeriod === undefined) {

@@ -11,7 +11,7 @@
     <ngb-alert *ngIf="alert" [type]="alert.type">
       {{ alert.message }}</ngb-alert>
 
-    <ngb-alert *ngIf="pool && pool.getAssemblePeriod().isIn()" type="warning">Let op: wanneer een team incompleet is, doet het
+    <ngb-alert *ngIf="pool && pool.getAssemblePeriod().isIn()" type="warning">Let op: wanneer je team incompleet is, doet het
       NIET mee</ngb-alert>
 
     <table *ngIf="!processing && pool" class="table">
@@ -24,7 +24,7 @@
           <th *ngIf="pool.getTransferPeriod().isIn()">
             transfers
           </th>
-          <th></th>
+          <!-- <th></th> -->
         </tr>
       </thead>
       <tbody>
@@ -42,12 +42,12 @@
           <td *ngIf="pool.getTransferPeriod().isIn()">
             {{poolUser.getNrOfTransfers()}}/{{pool.getTransferPeriod().getMaxNrOfTransfers()}}
           </td>
-          <td class="text-end">
+          <!-- <td class="text-end">
             <button *ngIf="!poolUser.getAdmin() && canBeRemoved()" type="button" class="btn btn-sm btn-danger"
               [disabled]="processing" (click)="openRemoveApprovalModal(poolUser)">
               <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
             </button>
-          </td>
+          </td> -->
         </tr>
       </tbody>
     </table>

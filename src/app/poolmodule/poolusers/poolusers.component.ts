@@ -22,8 +22,7 @@ import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 export class PoolUsersComponent extends PoolComponent implements OnInit {
 
   poolUsers: PoolUser[] = [];
-  private nrOfDaysToRemoveAfterAssemblePeriod = 6;
-
+  
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -40,9 +39,6 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
-        if (pool.getAssemblePeriod().isIn()) {
-          this.setAlert('info', 'vanaf de start tot ' + this.nrOfDaysToRemoveAfterAssemblePeriod + ' dagen erna zijn deelnemers te vewijderen');
-        }
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => this.poolUsers = poolUsers,
           error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
@@ -68,31 +64,24 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
 
   get PoolUsers(): NavBarItem { return NavBarItem.PoolUsers; }
 
-  openRemoveApprovalModal(poolUser: PoolUser) {
-    const modalRef = this.modalService.open(PoolUserRemoveModalComponent);
-    modalRef.componentInstance.entittyName = 'deelnemer';
-    modalRef.componentInstance.name = poolUser.getName();
-    modalRef.result.then((result) => {
-      this.remove(poolUser);
-    }, (reason) => {
-    });
-  }
+  // openRemoveApprovalModal(poolUser: PoolUser) {
+  //   const modalRef = this.modalService.open(PoolUserRemoveModalComponent);
+  //   modalRef.componentInstance.entittyName = 'deelnemer';
+  //   modalRef.componentInstance.name = poolUser.getName();
+  //   modalRef.result.then((result) => {
+  //     this.remove(poolUser);
+  //   }, (reason) => {
+  //   });
+  // }
 
-  remove(poolUser: PoolUser) {
-    this.processing = true;
-    this.poolUserRepository.removeObject(poolUser).subscribe(
-      {
-        next: () => this.setAlert('success', 'deelnemer ' + poolUser.getName() + 'verwijderd'),
-        error: (e) => { this.setAlert('danger', e); this.processing = false; },
-        complete: () => this.processing = false
-      }
-    );
-  }
-
-  canBeRemoved(): boolean {
-    const assemblePeriod = this.pool.getAssemblePeriod();
-    const endDateTime = new Date(assemblePeriod.getEndDateTime().getTime() + (1000 * 60 * 60 * 24 * this.nrOfDaysToRemoveAfterAssemblePeriod));
-    const period = new Period(assemblePeriod.getEndDateTime(), endDateTime);
-    return period.isIn();
-  }
+  // remove(poolUser: PoolUser) {
+  //   this.processing = true;
+  //   this.poolUserRepository.removeObject(poolUser).subscribe(
+  //     {
+  //       next: () => this.setAlert('success', 'deelnemer ' + poolUser.getName() + 'verwijderd'),
+  //       error: (e) => { this.setAlert('danger', e); this.processing = false; },
+  //       complete: () => this.processing = false
+  //     }
+  //   );
+  // }
 }

@@ -5,11 +5,11 @@
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </h2>
 
-    <form *ngIf="!processing" name="form" (ngSubmit)="false" novalidate>
+    <form *ngIf="!processing" name="form" (ngSubmit)="false" [formGroup]="typedForm" novalidate>    
       <div class="d-flex justify-content-between">
         <h1>pools</h1>
         <select class="form-control ms-1 pointer input-sm seasonlist flex-shrink-1" formControlName="season" (change)="updatePools()">
-          <option *ngFor="let selectableSeason of selectableSeasons" [value]="selectableSeason">{{selectableSeason.getName()}}</option>
+          <option *ngFor="let selectableSeason of selectableSeasons" [ngValue]="selectableSeason">{{selectableSeason.getName()}}</option>
         </select>
       </div>
     </form>

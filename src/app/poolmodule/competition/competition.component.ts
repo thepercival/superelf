@@ -34,8 +34,7 @@ import { DefaultGameRoundCalculator } from '../../lib/gameRound/defaultCalculato
 export class PoolCompetitionComponent extends PoolComponent implements OnInit {
 
   poolUsers: PoolUser[] = [];
-  private nrOfDaysToRemoveAfterAssemblePeriod = 6;
-
+  
   public pouleId: string|number|undefined;
   public leagueName = LeagueName.Competition;
   public poolUsersTotalsMap: PoolUsersTotalsMap|undefined;
@@ -70,9 +69,6 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
-        if (pool.getAssemblePeriod().isIn()) {
-          this.setAlert('info', 'vanaf de start tot ' + this.nrOfDaysToRemoveAfterAssemblePeriod + ' dagen erna zijn deelnemers te vewijderen');
-        }
         const competitionConfig = this.pool.getCompetitionConfig();
         this.currentViewPeriod = this.getCurrentViewPeriod(pool);
         if (this.currentViewPeriod === undefined) {

@@ -28,6 +28,7 @@ import { GlobalEventsManager } from './shared/commonmodule/eventmanager';
 import { CommonSharedModule } from './shared/commonmodule/common.module';
 import { StartSessionService } from './shared/commonmodule/startSessionService';
 import { PoolListComponent } from './poollist/poollist.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { PoolListComponent } from './poollist/poollist.component';
     BrowserModule,
     HttpClientModule,
     RoutingModule,
+    ReactiveFormsModule,
     CommonSharedModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     FontAwesomeModule,

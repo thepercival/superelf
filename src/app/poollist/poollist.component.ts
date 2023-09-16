@@ -7,6 +7,7 @@ import { PoolShell,  PoolShellRepository } from '../lib/pool/shell/repository';
 import { GlobalEventsManager } from '../shared/commonmodule/eventmanager';
 import { Season } from 'ngx-sport';
 import { SeasonRepository } from '../lib/season/repository';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-pools',
@@ -18,9 +19,11 @@ export class PoolListComponent implements OnInit {
   public searching = false;
   // linethroughDate: Date;
   public selectableSeasons: Season[]|undefined;
-  public selectedSeason: Season|undefined;
   public poolShells: PoolShell[] = [];
   public alert: IAlert | undefined;
+  public typedForm: FormGroup<{
+    season: FormControl<Season|null>
+  }>;
   
 
   constructor(
@@ -32,6 +35,11 @@ export class PoolListComponent implements OnInit {
     protected globalEventsManager: GlobalEventsManager
   ) {
     this.globalEventsManager.navHeaderInfo.emit(undefined);
+    this.typedForm = new FormGroup({
+      season: new FormControl<Season | null>(null, {
+        nonNullable: false
+      })
+    });
   }
 
   ngOnInit() {
@@ -43,9 +51,12 @@ export class PoolListComponent implements OnInit {
         {
           next: (seasons: Season[]) => {
             
-            this.selectableSeasons = seasons;
-            this.selectedSeason = seasons[0];
+            this.selectableSeasons = seasons.sort((seasonA: Season, seasonB: Season): number => {
+              return seasonB.getStartDateTime().getTime() - seasonA.getStartDateTime().getTime();
+            }).slice();
+            this.typedForm.controls.season.setValue(this.selectableSeasons[0]);
             this.updatePools();
+            
             this.processing = false;
           },
           error: (e) => {
@@ -57,14 +68,17 @@ export class PoolListComponent implements OnInit {
       );
   }
 
+
   updatePools() {
-    if( this.selectedSeason === undefined) {
+    console.log(this.typedForm.controls.season.value);
+    const season = this.typedForm.controls.season.value;
+    if (season === null) {
       return;
-  }
+    }
     this.searching = true;
     // console.log(this.selectedSeason);
 
-    const filter = { seasonId: this.selectedSeason.getId() };
+    const filter = { seasonId: season.getId() };
     this.poolShellRepos.getObjects(filter)
       .subscribe({
         next: (shells: PoolShell[]) => {

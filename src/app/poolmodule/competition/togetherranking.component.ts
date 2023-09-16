@@ -63,6 +63,7 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
   }
 
   updateRankingItems(): void {
+    console.log(this.poolUsersTotalsMap);
     const poolUsers = this.sortPoolUsers(this.poolUsers, this.poolUsersTotalsMap);
     let rank = 1;
     const rankingItems: RankingItem[] = [];
@@ -70,9 +71,10 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
     if ( firstPoolUser === undefined ) {
       return;
     }
-    rankingItems.push({ rank, poolUser: firstPoolUser});
+    rankingItems.push({ rank, poolUser: firstPoolUser});    
+    const poolUserTotals = this.poolUsersTotalsMap.get(firstPoolUser.getId());
+    let points: number = poolUserTotals?.getPoints(this.scorePointsMap, this.badgeCategory) ?? 0;
     
-    let points: number|undefined;
     let nrOfEvenRanks = 0;
     poolUsers.forEach((poolUser: PoolUser) => {      
       const poolUserTotals = this.poolUsersTotalsMap.get(poolUser.getId());
