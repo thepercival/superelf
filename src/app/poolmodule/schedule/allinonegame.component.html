@@ -44,12 +44,12 @@
                             </a>
                         </td>
                         <td>
-                            <ng-container [ngTemplateOutlet]="contentForamtionPlaces"
+                            <ng-container [ngTemplateOutlet]="contentSideForamtionPlaces"
                                 [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(currentSourceGame, HomeSide, formationMap, sportRankingItem)}">
                             </ng-container>
                         </td>
                         <td>
-                            <ng-container [ngTemplateOutlet]="contentForamtionPlaces"
+                            <ng-container [ngTemplateOutlet]="contentSideForamtionPlaces"
                                 [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(currentSourceGame, AwaySide, formationMap, sportRankingItem)}">
                             </ng-container>
                         </td>
@@ -57,19 +57,21 @@
                 </tbody>
             </table>
 
-            <ng-template #contentForamtionPlaces let-formationPlaces="formationPlaces">
+            <ng-template #contentSideForamtionPlaces let-formationPlaces="formationPlaces">
                 <div *ngFor="let formationPlace of formationPlaces" class="d-flex justify-content-between">
-                    <ng-container *ngIf="formationPlace.getPlayer()" [ngTemplateOutlet]="contentPlayer"
+                    <ng-container *ngIf="formationPlace.getPlayer()" [ngTemplateOutlet]="contentSidePlayer"
                         [ngTemplateOutletContext]="{s11Player:formationPlace.getPlayer()}">
                     </ng-container>
                     <span *ngIf="formationPlace.isSubstitute()" class="badge badge-reserve ms-1">r</span>
                 </div>
             </ng-template>
 
-            <ng-template #contentPlayer let-s11Player="s11Player">
+            <ng-template #contentSidePlayer let-s11Player="s11Player">
                 <div>
                     <app-lineicon [line]="s11Player.getLine()"></app-lineicon>
-                    <span class="ps-1 text-break">{{s11Player.getPerson().getName()}}</span>
+                    <a href="javascript:void(0)" (click)="linkToPlayer(s11Player)">
+                        <span class="ps-1 text-break">{{s11Player.getPerson().getName()}}</span>
+                    </a>
                 </div>
             </ng-template>
 

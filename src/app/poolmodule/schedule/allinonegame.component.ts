@@ -23,6 +23,7 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
+import { S11Player } from '../../lib/player';
 
 
 @Component({
@@ -297,6 +298,13 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
 
   navigateToChat(poolPoule: Poule): void {
     this.router.navigate(['/pool/chat', this.pool.getId(), this.leagueName, poolPoule.getId()]);
+  }
+
+  linkToPlayer(s11Player: S11Player): void {
+    const gameRound = this.currentGameRound?.getNumber() ?? 0;
+    this.router.navigate(['/pool/player/', this.pool.getId(), s11Player.getId(), gameRound]/*, {
+      state: { s11Player, "pool": this.pool, currentGameRound: undefined }
+    }*/);
   }
 
   navigateBack() {
