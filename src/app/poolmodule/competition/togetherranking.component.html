@@ -16,8 +16,8 @@
 
             <td class="text-break ps-0" [ngClass]="{ 'favitem': false}">
                 <span>{{rankingItem.poolUser.getUser().getName()}}</span>
-                <app-superelf-icon *ngIf="rankingItem.poolUser.getUser().getName() === 'storm'" 
-                class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon>
+                <!-- <app-superelf-icon *ngIf="rankingItem.poolUser.getUser().getName() === 'storm'" 
+                class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon> -->
             </td>
             <td *ngIf="gameRound" class="text-end ps-0 pointer">
                 <span class="badge {{getPointsBadgeClass(rankingItem)}}">

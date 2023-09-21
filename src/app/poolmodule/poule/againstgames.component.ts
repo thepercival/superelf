@@ -26,7 +26,7 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
+import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
 @Component({
   selector: 'app-pool-againstgames',
@@ -204,6 +204,13 @@ export class PoolPouleAgainstGamesComponent extends PoolComponent implements OnI
   // }
 
   get Competitions(): NavBarItem { return NavBarItem.Competitions }
+
+  getCompetitionNavBarItem(): CompetitionsNavBarItem { 
+    if (this.leagueName === LeagueName.Cup) {
+      return CompetitionsNavBarItem.CupStructure;
+    }
+    return CompetitionsNavBarItem.SuperCupGame;
+  }
 
   private getStartLocationsFromGameRoundNrs(poule: Poule, gameRoundNrs: number[]): StartLocation[] {
     const map = new Map();
