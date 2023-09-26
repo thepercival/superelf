@@ -130,7 +130,7 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
     const formationLine = this.place.getFormationLine();
     const formationChecker = this.formationChecker;
     if( formationChecker ) {
-      console.log(formationLine.getFormation().convertToBase());
+      // console.log(formationLine.getFormation().convertToBase());
       const addableLines = formationChecker.addableLines(formationLine.getFormation().convertToBase(), formationLine.getNumber());      
       this.selectableLines = addableLines;
       // this.route.queryParams.subscribe(params => {

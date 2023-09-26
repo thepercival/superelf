@@ -41,7 +41,7 @@
     <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
       <ng-container *ngIf="statisticsGetter.placeHasStatistics(place,gameRound)">
         <ng-container *ngIf="!place.isSubstitute();else substitute">
-
+          <!-- {{statisticsGetter.hasAppeared(place, gameRound)}} -->
           <ng-container *ngIf="statisticsGetter.hasAppeared(place, gameRound);else startingNotAppeared">
             <span class="badge bg-points">
               {{statisticsGetter.getFormationPlaceGameRoundPoints(place,gameRound, undefined)}}</span>

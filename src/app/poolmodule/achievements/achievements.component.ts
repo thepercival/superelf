@@ -14,6 +14,8 @@ import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { UnviewedAchievementsModalComponent } from './unviewed-modal.component';
+import { LeagueName } from '../../lib/leagueName';
+import { Competition } from 'ngx-sport';
 
 @Component({
   selector: 'app-pool-achievements',
@@ -23,7 +25,8 @@ import { UnviewedAchievementsModalComponent } from './unviewed-modal.component';
 export class AchievementsComponent extends PoolComponent implements OnInit {
   public achievementListItems: AchievementListItem[]|undefined;
   public processing = true;
-
+  public leagueName!: LeagueName;
+  
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -44,6 +47,7 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.setPool(pool);
+      this.setLeagueName(pool.getCompetitions());
 
       this.achievementRepository.getPoolCollection(pool.getCollection()).subscribe({
         next: (achievements: (Trophy|Badge)[]) => {
@@ -73,8 +77,16 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     });
   }
 
+  get WorldCupLeagueName(): LeagueName { return LeagueName.WorldCup; }
   get Achievements(): NavBarItem { return NavBarItem.Achievements }
 
+  setLeagueName(competitions: Competition[]): void {
+    const hasWorldCup = competitions.some((competition: Competition): boolean => {
+      return competition.getLeague().getName() === LeagueName.WorldCup;
+    });
+    this.leagueName = hasWorldCup ? LeagueName.WorldCup : LeagueName.Competition;
+  }
+  
   private mapToAchievementListItems(achievements: (Badge|Trophy)[]): AchievementListItem[] {
     const map = new Map<string|number, AchievementListItem>();
     achievements.forEach((achievement: Badge|Trophy) => {

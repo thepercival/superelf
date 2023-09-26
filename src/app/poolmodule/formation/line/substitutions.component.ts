@@ -121,7 +121,7 @@ export class FormationLineSubstitutionsComponent implements OnInit {
   }
 
   removeSubstitution(substitution: Substitution|undefined): void {
-    console.log('removeSubstitution', substitution);
+    // console.log('removeSubstitution', substitution);
     if( substitution === undefined) {
       return;
     }

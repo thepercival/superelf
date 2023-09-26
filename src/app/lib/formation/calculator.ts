@@ -42,7 +42,7 @@ export class S11FormationCalculator {
         if( replacement.getLineNumberOut() === replacement.getPlayerIn().getLine() ) {
             return this.updatePlace(currentFormation, replacement);
         }
-        console.log('start processReplacement');
+        // console.log('start processReplacement');
         // remove place
         currentFormation = this.removePlace(currentFormation, replacement.getLineNumberOut(), replacement.getPlaceNumberOut() );
         
@@ -56,7 +56,7 @@ export class S11FormationCalculator {
         if( transfer.getLineNumberOut() === transfer.getPlayerIn().getLine() ) {
             return this.updatePlace(currentFormation, transfer);
         }
-        console.log('start processTransfer');
+        // console.log('start processTransfer');
         // remove place
         currentFormation = this.removePlace(currentFormation, transfer.getLineNumberOut(), transfer.getPlaceNumberOut() );
         
@@ -66,7 +66,7 @@ export class S11FormationCalculator {
 
     private processSubstitution(currentFormation: S11Formation, substitution: Substitution): S11Formation {
         
-        console.log('start processSubstitution');
+        // console.log('start processSubstitution');
         const place = currentFormation.getPlace(substitution.getLineNumberOut(), substitution.getPlaceNumberOut());
         const substitutePlace = currentFormation.getPlace(substitution.getLineNumberOut(), 0);
         // remove

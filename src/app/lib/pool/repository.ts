@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -39,6 +39,13 @@ export class PoolRepository extends APIRepository {
         return this.http.get<JsonPool>(url, { headers: super.getHeaders() }).pipe(
             map((jsonPool: JsonPool) => this.mapper.toObject(jsonPool)),
             catchError((err) => this.handleError(err))
+        );
+    }
+
+    getWorldCupId(seasonId: number): Observable<number> {
+        const url = super.getApiUrl() + 'public/pools/worldcupid/' + seasonId;
+        return this.http.get(url, { headers: this.getBaseHeaders(), responseType: 'text' }).pipe(
+            catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }
 

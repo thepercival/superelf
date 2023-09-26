@@ -8,7 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { Pool } from '../../lib/pool';
-import { Poule, Structure, StructureEditor } from 'ngx-sport';
+import { Competition, Poule, Structure, StructureEditor } from 'ngx-sport';
 import { LeagueName } from '../../lib/leagueName';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
@@ -36,7 +36,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   poolUsers: PoolUser[] = [];
   
   public pouleId: string|number|undefined;
-  public leagueName = LeagueName.Competition;
+  public leagueName!: LeagueName;
   public poolUsersTotalsMap: PoolUsersTotalsMap|undefined;
   public gameRoundTotalsMap: GameRoundTotalsMap = new GameRoundTotalsMap();
   public currentGameRoundPoolUsersTotalsMap: PoolUsersTotalsMap|undefined;
@@ -69,6 +69,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
+        this.setLeagueName(pool.getCompetitions());
         const competitionConfig = this.pool.getCompetitionConfig();
         this.currentViewPeriod = this.getCurrentViewPeriod(pool);
         if (this.currentViewPeriod === undefined) {
@@ -115,6 +116,14 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
 
   get Competitions(): NavBarItem { return NavBarItem.Competitions }
   get PouleRankingTogetherSport(): CompetitionsNavBarItem { return CompetitionsNavBarItem.PouleRankingTogetherSport }
+  get WorldCupLeagueName(): LeagueName { return LeagueName.WorldCup; }
+
+  setLeagueName(competitions: Competition[]): void {
+    const hasWorldCup = competitions.some((competition: Competition): boolean => {
+      return competition.getLeague().getName() === LeagueName.WorldCup;
+    });
+    this.leagueName = hasWorldCup ? LeagueName.WorldCup : LeagueName.Competition;
+  }
 
   initPoolUsersTotals(viewPeriod: ViewPeriod): void {
     const assembleViewPeriod = this.pool.getAssembleViewPeriod();

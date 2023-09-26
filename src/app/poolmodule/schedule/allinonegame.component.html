@@ -79,5 +79,9 @@
     </div>
 </div>
 
-<app-pool-navbar [current]="Schedule" *ngIf="pool" [pool]="pool" [poolUser]="poolUserFromSession">
+<app-pool-navbar *ngIf="pool && leagueName !== WorldCupLeagueName" [current]="Schedule" [pool]="pool"
+    [poolUser]="poolUserFromSession" >
 </app-pool-navbar>
+<app-worldcup-navbar *ngIf="pool && leagueName === WorldCupLeagueName" [current]="Schedule" [pool]="pool"
+    [poolUser]="poolUserFromSession">
+</app-worldcup-navbar>

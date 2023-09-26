@@ -63,22 +63,27 @@ export class StatisticsGetter {
 
     hasAppeared(formationPlace: S11FormationPlace, gameRound?: GameRound | undefined): boolean {
         const formationLine = formationPlace.getFormationLine();
+        // console.log('formationLine', formationLine.getNumber());
         if (formationPlace.isSubstitute() && !formationLine.hasSubstituteAppareance(gameRound)) {
+            // console.log('hasAppeared 1 false');
             return false;
         }
         const s11Player = formationPlace.getPlayer();
         if (s11Player === undefined) {
+            // console.log('hasAppeared 2 false');
             return false;
         }
         // if( s11Player.getPerson().getLastName() === 'Crooij') {
         //     console.log('Crooij('+s11Player.getPerson().getId()+')');
         // }
         if (gameRound === undefined) {
+            // console.log('hasAppeared 3 ', s11Player.hasAppeared());
             return s11Player.hasAppeared();
         }
-        // if( s11Player.getPerson().getLastName() === 'Crooij') {
-        //     console.log('Crooij', gameRound, this.getStatistics(s11Player, gameRound), this.personMap);
-        // }
+        if( s11Player.getPerson().getLastName() === 'Lozano') {
+            // console.log('Lozano', gameRound, this.getStatistics(s11Player, gameRound), this.personMap);
+        }
+        // console.log('hasAppeared 4 ', this.getStatistics(s11Player, gameRound)?.hasAppeared() === true);
         return this.getStatistics(s11Player,gameRound)?.hasAppeared() === true;
     }
 

@@ -30,7 +30,7 @@ export class UnviewedAchievementsModalComponent implements OnInit {
     ngOnInit() {
         const achievements = this.achievements.slice().reverse();
 
-        console.log(achievements);
+        // console.log(achievements);
         const current = achievements.pop(); 
         if( current !== undefined) {
             this.setCurrent(current);        

@@ -28,6 +28,16 @@ export class APIRepository {
         return headers;
     }
 
+    getBaseHeaders(): HttpHeaders {
+        let headers = new HttpHeaders({ 'X-Api-Version': this.apiVersion });
+
+        const token = this.getToken();
+        if (token !== undefined) {
+            headers = headers.append('Authorization', 'Bearer ' + token);
+        }
+        return headers;
+    }
+
     protected getToken(): string {
         const localStorageAuth = localStorage.getItem('auth');
         const auth = localStorageAuth !== null ? JSON.parse(localStorageAuth) : undefined;

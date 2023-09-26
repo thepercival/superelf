@@ -29,6 +29,7 @@ import { CommonSharedModule } from './shared/commonmodule/common.module';
 import { StartSessionService } from './shared/commonmodule/startSessionService';
 import { PoolListComponent } from './poollist/poollist.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { WorldCupPreviousService } from './shared/commonmodule/worldCupPreviousService';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     UserMapper,
     MyNavigation,
     GlobalEventsManager,
-    StartSessionService
+    StartSessionService,
+    WorldCupPreviousService
   ],
   bootstrap: [AppComponent]
 })

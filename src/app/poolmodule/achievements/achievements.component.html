@@ -45,10 +45,12 @@
     </div>
 </div>
 
-
-
-<app-pool-navbar [current]="Achievements" *ngIf="pool" [pool]="pool" [poolUser]="poolUserFromSession">
+<app-pool-navbar *ngIf="pool && leagueName !== WorldCupLeagueName" [current]="Achievements" [pool]="pool"
+    [poolUser]="poolUserFromSession">
 </app-pool-navbar>
+<app-worldcup-navbar *ngIf="pool && leagueName === WorldCupLeagueName" [current]="Achievements" [pool]="pool"
+    [poolUser]="poolUserFromSession">
+</app-worldcup-navbar>
 
 <!-- <ng-template #contentMessageTitle let-message="message" let-end="end">
     <div class="d-flex mx-1" [ngClass]="{'flex-row-reverse': end}">

@@ -88,7 +88,7 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   initScoutedPlayers(pool: Pool) {
     this.scoutedPlayerRepository.getObjects(pool.getSourceCompetition(), pool.getCreateAndJoinPeriod()).subscribe({
       next: (scoutedPlayers: ScoutedPlayer[]) => {
-        console.log('test');
+        // console.log('test');
         scoutedPlayers.forEach(scoutedPlayer => this.addToScoutingList(scoutedPlayer));
         this.processing = false;
       },
@@ -111,7 +111,7 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   get AssembleViewPeriod(): ViewPeriodType { return ViewPeriodType.Assemble; }
 
   openAddModal(s11Player: S11Player) {
-    console.log(s11Player);
+    // console.log(s11Player);
     const modalRef = this.modalService.open(S11PlayerAddRemoveModalComponent);
     modalRef.componentInstance.s11Player = s11Player;
     modalRef.componentInstance.scorePointsMap = this.pool.getCompetitionConfig().getScorePointsMap();

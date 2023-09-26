@@ -149,7 +149,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
             }
           }
         }
-        console.log(object);
+        // console.log(object);
         const gameRounds: (GameRound | undefined)[] = this.viewPeriod.getGameRounds().slice();
         this.gameRounds = gameRounds;
         if (currentGameRound !== undefined) {

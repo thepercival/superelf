@@ -23,7 +23,7 @@ export class PoolShellRepository extends APIRepository {
     }
 
     canCreateAndJoinPool(): Observable<number> {
-        return this.http.get<boolean>(super.getApiUrl() + 'public/poolActions', { headers: super.getHeaders() }).pipe(
+        return this.http.get<number>(super.getApiUrl() + 'public/poolActions', { headers: super.getHeaders() }).pipe(
             catchError((err: Error) => this.handleError(err))
         );
     }

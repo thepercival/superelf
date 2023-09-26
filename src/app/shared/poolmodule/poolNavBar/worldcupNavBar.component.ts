@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgainstGame, Competition, Poule, Round, Structure, TogetherGame, TogetherGamePlace } from 'ngx-sport';
 import { Badge } from '../../../lib/achievement/badge';
@@ -11,17 +11,18 @@ import { Pool } from '../../../lib/pool';
 import { PoolUser } from '../../../lib/pool/user';
 import { S11Storage } from '../../../lib/storage';
 import { NavBarItem } from './items';
+import { SuperElfNameService } from '../../../lib/nameservice';
+import { WorldCupPreviousService } from '../../commonmodule/worldCupPreviousService';
 
 @Component({
-  selector: 'app-pool-navbar',
-  templateUrl: './poolNavBar.component.html',
-  styleUrls: ['./poolNavBar.component.scss']
+  selector: 'app-worldcup-navbar',
+  templateUrl: './worldcupNavBar.component.html',
+  styleUrls: ['./worldcupNavBar.component.scss']
 })
-export class PoolNavBarComponent implements OnInit, OnChanges{
-  @Input() upperNavBar: TemplateRef<any> | undefined;
+export class WorldCupNavBarComponent implements OnInit, OnChanges{
   @Input() pool!: Pool;
   @Input() poolUser: PoolUser|undefined;
-  @Input() current!: NavBarItem;    
+  @Input() current!: NavBarItem;
 
   public structureMap = new Map<number, Structure>();
   public hasUnviewedAchievements: boolean = false;
@@ -31,7 +32,9 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
     public authService: AuthService,
     private router: Router,
     private achievementRepository: AchievementRepository,
-    private s11Storage: S11Storage
+    private s11Storage: S11Storage,
+    protected worldCupPreviousService: WorldCupPreviousService,
+    public nameService: SuperElfNameService,
   ) {
 
   }
@@ -39,6 +42,12 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
   ngOnInit() {
     
   }
+
+  get WorldCup(): LeagueName { return LeagueName.WorldCup };
+  get Competitions(): NavBarItem { return NavBarItem.Competitions }
+  get Schedule(): NavBarItem { return NavBarItem.Schedule }
+  get Achievements(): NavBarItem { return NavBarItem.Achievements }
+  get Rules(): NavBarItem { return NavBarItem.Rules }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.poolUser !== undefined 
@@ -54,11 +63,9 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
     const latestRequest = this.s11Storage.getLatest(poolUser.getPool());
     const checkDate = new Date();
     checkDate.setHours(checkDate.getHours() - 1);
-    // console.log(checkDate, latestRequest);
     if( latestRequest === undefined || latestRequest.date.getTime() < checkDate.getTime() ) {      
       this.achievementRepository.getUnviewedObjects(poolUser.getPool()).subscribe({
         next: (achievements: (Trophy|Badge)[]) => {
-          // console.log('set this.unviewedAchievements', achievements);
           this.hasUnviewedAchievements = achievements.length > 0;
           this.s11Storage.setLatest(poolUser.getPool(), new Date(), achievements.length > 0);
         },
@@ -68,16 +75,6 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
     }
   }
 
-  get Competitions(): NavBarItem { return NavBarItem.Competitions }
-  get Schedule(): NavBarItem { return NavBarItem.Schedule }
-  get Achievements(): NavBarItem { return NavBarItem.Achievements }
-  get Rules(): NavBarItem { return NavBarItem.Rules }
-  get Admin(): NavBarItem { return NavBarItem.Admin }
-  get PoolUsers(): NavBarItem { return NavBarItem.PoolUsers }
-  get Invite(): NavBarItem { return NavBarItem.Invite }
-  get Scouting(): NavBarItem { return NavBarItem.Scouting }
-  get MyTeam(): NavBarItem { return NavBarItem.MyTeam }
-
   getTextColorClass(item: NavBarItem): string {
     return this.current !== item ? 'btn-outline-success' : 'text-white';
   }
@@ -85,7 +82,7 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
   linkTo(navBarItem: NavBarItem): void {
     switch (navBarItem) {
       case NavBarItem.Competitions:
-        this.router.navigate(['/pool/competition', this.pool.getId()]);
+        this.router.navigate(['/pool/allinonegame', this.pool.getId()]);
         return;
       case NavBarItem.Schedule:
         this.linkToSchedule();
@@ -94,34 +91,23 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
         this.router.navigate(['/pool/achievements', this.pool.getId()]);
         return;      
       case NavBarItem.Rules:
-        this.router.navigate(['/pool/rules', this.pool.getId()]);
+        const previousPoolId = this.worldCupPreviousService.getPreviousPoolId();
+        if (previousPoolId !== undefined) {
+          this.router.navigate(['/pool/competition', previousPoolId]);
+        } else {
+          this.router.navigate(['/']);
+        }        
         return;
-      case NavBarItem.PoolUsers:
-        this.router.navigate(['/pool/users', this.pool.getId()]);
-        return;
-      case NavBarItem.Admin:
-        this.router.navigate(['/pool/users', this.pool.getId()]);
-        return;
-      case NavBarItem.Invite:
-        this.router.navigate(['/pool/invite', this.pool.getId()]);
-        return;
-      case NavBarItem.Scouting:
-        this.router.navigate(['/pool/scouting/list', this.pool.getId()]);
-        return; 
-      case NavBarItem.MyTeam:
-        this.router.navigate(['/pool/formation/assemble', this.pool.getId()]);
-        return; 
     }
   }
 
   linkToSchedule(): void {
-    const competition = this.pool.getCompetition(LeagueName.Competition)
-    if (competition === undefined) {
+    const worldCup = this.pool.getCompetition(LeagueName.WorldCup)
+    if (worldCup === undefined) {
       return;
-    }
+    }    
     this.router.navigate(['/pool/allinonegame', this.pool.getId()]);
-    // this.router.navigate(['/pool/poule-schedule', this.pool.getId(), LeagueName.Competition, 0]);
-}
+} 
 
 getCurrentRound(competition: Competition, gameRoundNumber: number): Round|undefined {
   const structure = this.structureMap.get(+competition.getId());

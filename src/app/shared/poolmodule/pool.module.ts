@@ -19,6 +19,7 @@ import { PoolNavBarComponent } from './poolNavBar/poolNavBar.component';
 import { PoolCompetitionsNavBarComponent } from './competitionsNavBar/competitionsNavBar.component';
 import { SuperElfBadgeIconComponent } from './icon/badge.component';
 import { SuperElfTrophyIconComponent } from './icon/trophy.component';
+import { WorldCupNavBarComponent } from './poolNavBar/worldcupNavBar.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { SuperElfTrophyIconComponent } from './icon/trophy.component';
     SuperElfBadgeIconComponent,
     SuperElfTrophyIconComponent,
     PoolNavBarComponent,
+    WorldCupNavBarComponent,
     PoolCompetitionsNavBarComponent
   ],
   imports: [
@@ -54,6 +56,7 @@ import { SuperElfTrophyIconComponent } from './icon/trophy.component';
     SuperElfBadgeIconComponent,
     SuperElfTrophyIconComponent,
     PoolNavBarComponent,
+    WorldCupNavBarComponent,
     PoolCompetitionsNavBarComponent
   ]
 })

@@ -27,6 +27,7 @@ export class PoolComponent {
         protected globalEventsManager: GlobalEventsManager
     ) {
         this.globalEventsManager.showFooter.emit(false);
+        // console.log('new pool component');
     }
 
     protected parentNgOnInit(): Observable<Pool> {

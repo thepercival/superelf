@@ -49,7 +49,7 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
     if (changes.gameRound !== undefined && changes.gameRound.firstChange !== true
       && changes.gameRound.currentValue !== changes.gameRound.previousValue
        ) {
-        console.log('changes.gameRound', changes.gameRound);
+        // console.log('changes.gameRound', changes.gameRound);
         if( changes.gameRound.currentValue !== undefined) {
           this.updateGameRoundBestAndWorstMap();
         }
@@ -63,7 +63,7 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
   }
 
   updateRankingItems(): void {
-    console.log(this.poolUsersTotalsMap);
+    //console.log(this.poolUsersTotalsMap);
     const poolUsers = this.sortPoolUsers(this.poolUsers, this.poolUsersTotalsMap);
     let rank = 1;
     const rankingItems: RankingItem[] = [];
@@ -89,7 +89,7 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
       points = poolUserPoints;
       rankingItems.push({ rank, poolUser: poolUser});
     });
-    console.log(rankingItems);
+    // console.log(rankingItems);
     this.rankingItems = rankingItems;
   }
 

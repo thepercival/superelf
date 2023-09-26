@@ -42,7 +42,7 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
 
   public poule: Poule | undefined;
   public structureNameService!: StructureNameService;
-  public leagueName = LeagueName.Competition;
+  public leagueName!: LeagueName;
   public nrOfUnreadMessages = 0;
 
   public processing = true;
@@ -72,6 +72,7 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.setPool(pool);
+      this.setLeagueName(pool.getCompetitions());
       const user = this.authService.getUser();
       this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
         // this.poolUsers = poolUsers;
@@ -138,6 +139,14 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
     });
   }
 
+  setLeagueName(competitions: Competition[]): void {
+    const hasWorldCup = competitions.some((competition: Competition): boolean => {
+      return competition.getLeague().getName() === LeagueName.WorldCup;
+    });
+    this.leagueName = hasWorldCup ? LeagueName.WorldCup : LeagueName.Competition;
+  }
+
+  get WorldCupLeagueName(): LeagueName { return LeagueName.WorldCup; }
   get Schedule(): NavBarItem { return NavBarItem.Schedule }
   
   getCurrentSourceGameRoundNumber(poule: Poule): number {
@@ -279,7 +288,7 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
   }
 
   getPoolUser(sportRankingItem: SportRoundRankingItem): PoolUser {
-
+    // console.log(sportRankingItem, this.startLocationMap);
     const startLocation = sportRankingItem.getPerformance().getPlace().getStartLocation();
     if (startLocation === undefined) {
       throw new Error('could not find pooluser');

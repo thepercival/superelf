@@ -87,7 +87,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
         if (competitionConfig.afterAssemblePeriod()) {            
             this.gameRoundRepository.getCurrentNumbers(competitionConfig, this.currentViewPeriod).subscribe({
                 next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
-                    console.log(currentGameRoundNumbers);
+                    // console.log(currentGameRoundNumbers);
                     this.currentGameRoundNumbers = currentGameRoundNumbers;
                     this.setStructureMap(this.getCompetitions());
                     if( !this.processingPoolUsers ) {

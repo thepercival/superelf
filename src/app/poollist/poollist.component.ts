@@ -70,7 +70,7 @@ export class PoolListComponent implements OnInit {
 
 
   updatePools() {
-    console.log(this.typedForm.controls.season.value);
+    // console.log(this.typedForm.controls.season.value);
     const season = this.typedForm.controls.season.value;
     if (season === null) {
       return;

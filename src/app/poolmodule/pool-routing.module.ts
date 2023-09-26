@@ -62,7 +62,7 @@ const routes: Routes = [
   
   { path: 'users/:id', component: PoolUsersComponent, canActivate: [AuthUserGuardService] },
   { path: 'user/:id/:poolUserId/:gameRound', component: PoolUserComponent, canActivate: [AuthUserGuardService] },  
-  { path: 'worldcup/:originPoolId/:seasonId', component: WorldCupComponent },
+  { path: 'worldcup/:seasonId/:originPoolId', component: WorldCupComponent },
   /*{ path: 'chooseplayers/:id', component: ChooseS11PlayersComponent, canActivate: [AuthUserGuardService] },*/
   { path: ':id', redirectTo: 'competition/:id', pathMatch: 'full' },
 ];

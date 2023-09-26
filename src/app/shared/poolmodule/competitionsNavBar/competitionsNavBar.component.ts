@@ -63,7 +63,7 @@ export class PoolCompetitionsNavBarComponent implements OnInit{
         this.router.navigate(['/pool/poule-againstgames', this.pool.getId(), LeagueName.SuperCup, 0]);
         return;      
       case CompetitionsNavBarItem.WorldCupStructure:
-        this.router.navigate(['/pool/worldcup', this.pool.getId(), this.pool.getSeason().getId()]);
+        this.router.navigate(['/pool/worldcup', this.pool.getSeason().getId(), this.pool.getId()]);
         return;
     }
   }
