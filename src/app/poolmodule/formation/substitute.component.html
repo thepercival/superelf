@@ -26,7 +26,7 @@
       <div></div>
 
       <!-- right -->    
-      <button class="btn btn-outline-info ms-1" [routerLink]="['/pool/formation/actions', pool.getId()]">
+      <button class="btn btn-outline-info ms-1" [routerLink]="['/pool/formation/actions', pool.getId(), poolUser.getId()]">
         <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
       </button>
       
@@ -47,18 +47,21 @@
   </div>
 </div>
 
-  <ng-template #contentRemove let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">
-        <span>wissels ongedaan maken</span>
-      </h4>
-      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
-    </div>
-    <div class="modal-body">
-      <p>Je wissels worden ongedaan gemaakt wanneer je naar "transfer" gaat</p>
-    </div>
-    <div class="modal-footer d-flex justify-content-reverse border-top-0">
-      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close(poolUser)">
-        ga naar "transfer"</button>
-    </div>
-  </ng-template>
+<app-pool-navbar *ngIf="pool" [pool]="pool" [poolUser]="poolUser">
+</app-pool-navbar>
+
+<ng-template #contentRemove let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <span>wissels ongedaan maken</span>
+    </h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p>Je wissels worden ongedaan gemaakt wanneer je naar "transfer" gaat</p>
+  </div>
+  <div class="modal-footer d-flex justify-content-reverse border-top-0">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close(poolUser)">
+      ga naar "transfer"</button>
+  </div>
+</ng-template>

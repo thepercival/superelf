@@ -13,6 +13,7 @@ export enum NavBarItem {
     Scouting = 'scounting',
     PoolUsers = 'deelnemers',
     MyTeam = 'mijn team',
+    Transfers = 'transfers',
 }
 
 export enum CompetitionsNavBarItem {

@@ -85,12 +85,13 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
           this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
             next: (assembleFormation: S11Formation) => {
               const calculator = new S11FormationCalculator();
-              const calcFormation = calculator.getCurrentFormation(assembleFormation, poolUser.getTransferPeriodActionList());
+              const calcFormation = calculator.getCurrentFormation(assembleFormation, poolUser.getTransferPeriodActionList());              
               this.route.params.subscribe(params => {
                 if (params.lineNr !== undefined && params.placeNr !== undefined) {
                   this.initPlace(assembleFormation, +params.lineNr,+params.placeNr);
                 }
               });
+              this.processing = false;
             },
             error: (e) => {
               this.setAlert('danger', e); this.processing = false;

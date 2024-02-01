@@ -74,20 +74,30 @@ competities  | programma | prijzenkast | spelregels | beheer
       </h2>
     </ng-template>
 
-
-
-
-
+    <ng-container *ngIf="poolUser && pool.getCompetitionConfig().getTransferPeriod().isIn();else achievements">
+      <!-- transfers -->
+      <h2 class="mb-0 navbar-item">
+        <a type="button" class="btn {{getTextColorClass(Transfers)}} long-and-truncated position-relative"
+          (click)="linkTo(Transfers)">
+          <app-superelf-icon [large]="true" [name]="'trophy'"></app-superelf-icon>
+          <br /><span>transfers</span>
+        </a>
+      </h2>
+    </ng-container>
+    <ng-template #achievements>
       <!--achievements -->
-    <h2 class="mb-0 navbar-item">
-      <a type="button" class="btn {{getTextColorClass(Achievements)}} long-and-truncated position-relative" (click)="linkTo(Achievements)">
-        <app-superelf-icon [large]="true" [name]="'trophy'"></app-superelf-icon>
-        <br /><span>prijzenkast</span>   
-        <span *ngIf="hasUnviewedAchievements" class="position-absolute top-0 start-75 translate-middle p-2 mt-2 me-2 bg-danger border border-light rounded-circle">
-          <span class="visually-hidden">nieuwe prijzen</span>
-        </span>     
-      </a>
-    </h2>
+      <h2 class="mb-0 navbar-item">
+        <a type="button" class="btn {{getTextColorClass(Achievements)}} long-and-truncated position-relative"
+          (click)="linkTo(Achievements)">
+          <app-superelf-icon [large]="true" [name]="'trophy'"></app-superelf-icon>
+          <br /><span>prijzenkast</span>
+          <span *ngIf="hasUnviewedAchievements"
+            class="position-absolute top-0 start-75 translate-middle p-2 mt-2 me-2 bg-danger border border-light rounded-circle">
+            <span class="visually-hidden">nieuwe prijzen</span>
+          </span>
+        </a>
+      </h2>
+    </ng-template>
 
     <!--rules (no admin)-->
     <h2 class="mb-0 pt-cus navbar-item">

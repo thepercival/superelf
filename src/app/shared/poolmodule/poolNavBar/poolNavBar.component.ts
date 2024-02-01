@@ -77,8 +77,12 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
   get Invite(): NavBarItem { return NavBarItem.Invite }
   get Scouting(): NavBarItem { return NavBarItem.Scouting }
   get MyTeam(): NavBarItem { return NavBarItem.MyTeam }
+  get Transfers(): NavBarItem { return NavBarItem.Transfers }
 
   getTextColorClass(item: NavBarItem): string {
+    if( item === NavBarItem.Transfers ) {
+      return 'btn-outline-warning';
+    }
     return this.current !== item ? 'btn-outline-success' : 'text-white';
   }
 
@@ -110,6 +114,9 @@ export class PoolNavBarComponent implements OnInit, OnChanges{
         return; 
       case NavBarItem.MyTeam:
         this.router.navigate(['/pool/formation/assemble', this.pool.getId()]);
+        return; 
+      case NavBarItem.Transfers:
+        this.router.navigate(['/pool/formation/replacements', this.pool.getId()]);
         return; 
     }
   }

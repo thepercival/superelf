@@ -65,41 +65,45 @@
   </div>
 </div>
 
-  <ng-template #contentRemove let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">
-        <span>transfers verwijderen</span>
-      </h4>
-      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
-    </div>
-    <div class="modal-body">
-      <p>Je transfers worden ongedaan gemaakt wanneer je naar "gestopte spelers vervangen" gaat</p>
-    </div>
-    <div class="modal-footer d-flex justify-content-reverse border-top-0">
-      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close(poolUser)">
-        ga naar "gestopte spelers vervangen"</button>
-    </div>
-  </ng-template>
+<app-pool-navbar *ngIf="pool" [pool]="pool" [poolUser]="poolUser">
+</app-pool-navbar>
 
-  
-  <ng-template #contentInfo let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">
-        <span>dubbele transfer</span>
-      </h4>
-      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
-    </div>
-    <div class="modal-body">
-      <p>Wil je een dubbele transfer <span class="fw-bold">met keeper</span> doen?</p>
-      <p>
-        <a href="mailto:info@superelf-eredivisie.nl" rel="noopener">
-          <fa-icon [icon]="[ 'fas', 'envelope'] "></fa-icon> info@superelf-eredivisie.nl
-        </a>
-      </p>
-      <p>
-        bijvoorbeeld : <br/>
-        eruit : Bijlow  (FEY - K) en Xavi Simons (PSV - M)<br/>
-        erin  : Benitez (PSV - K) en Kokcu (FEY - M)
-      </p>
-    </div>
-  </ng-template>
+<ng-template #contentRemove let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <span>transfers verwijderen</span>
+    </h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p>Je transfers worden ongedaan gemaakt wanneer je naar "gestopte spelers vervangen" gaat</p>
+  </div>
+  <div class="modal-footer d-flex justify-content-reverse border-top-0">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close(poolUser)">
+      ga naar "gestopte spelers vervangen"</button>
+  </div>
+</ng-template>
+
+
+<ng-template #contentInfo let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <span>dubbele transfer</span>
+    </h4>
+    <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p>Wil je een dubbele transfer <span class="fw-bold">met keeper</span> doen?</p>
+    <p>
+      <a href="mailto:info@superelf-eredivisie.nl" rel="noopener">
+        <fa-icon [icon]="[ 'fas', 'envelope'] "></fa-icon> info@superelf-eredivisie.nl
+      </a>
+    </p>
+    <p>
+      bijvoorbeeld : <br/>
+      eruit : Bijlow  (FEY - K) en Xavi Simons (PSV - M)<br/>
+      erin  : Benitez (PSV - K) en Kokcu (FEY - M)
+    </p>
+  </div>
+</ng-template>
+

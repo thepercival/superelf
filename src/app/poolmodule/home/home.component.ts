@@ -363,11 +363,4 @@ export class HomeComponent extends PoolComponent implements OnInit {
     // getNrAssembled(): number {
     //     return (this.poolUser?.getNrOfAssembled() ?? 0);
     // }
-
-
-
-    inTransferMode(): boolean {
-        return this.pool.getTransferPeriod().isIn();
-    }
-
 }
