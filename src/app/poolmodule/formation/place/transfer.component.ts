@@ -84,11 +84,11 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
           this.poolUser = poolUser;
           this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
             next: (assembleFormation: S11Formation) => {
-              const calculator = new S11FormationCalculator();
+              const calculator = new S11FormationCalculator();              
               const calcFormation = calculator.getCurrentFormation(assembleFormation, poolUser.getTransferPeriodActionList());              
               this.route.params.subscribe(params => {
-                if (params.lineNr !== undefined && params.placeNr !== undefined) {
-                  this.initPlace(assembleFormation, +params.lineNr,+params.placeNr);
+                if (params.lineNr !== undefined && params.placeNr !== undefined && calcFormation !== undefined) {
+                  this.initPlace(calcFormation, +params.lineNr,+params.placeNr);
                 }
               });
               this.processing = false;
@@ -130,10 +130,10 @@ export class FormationPlaceTransferComponent extends PoolComponent implements On
     
     const formationLine = this.place.getFormationLine();
     const formationChecker = this.formationChecker;
-    if( formationChecker ) {
+    if( formationChecker ) {      
       // console.log(formationLine.getFormation().convertToBase());
       const addableLines = formationChecker.addableLines(formationLine.getFormation().convertToBase(), formationLine.getNumber());      
-      this.selectableLines = addableLines;
+            this.selectableLines = addableLines;
       // this.route.queryParams.subscribe(params => {
       //   if (params.line !== undefined) {
           this.choosePlayersFilter.line = this.place.getLine();
