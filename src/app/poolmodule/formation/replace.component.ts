@@ -62,7 +62,7 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
             next: (poolUser: PoolUser) => {
               this.poolUser = poolUser;
               if( this.hasNoNextEditAction(poolUser) ) {
-                this.setAlert('danger', 'je hebt al transfers of wissels gedaan');
+                this.router.navigate(['/pool/formation/substitutions/', this.pool.getId()]);
               } else {
                 this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
                   next: (assembleFormation: S11Formation) => {                    

@@ -73,7 +73,7 @@ export class FormationTransferComponent extends PoolComponent implements OnInit 
                     this.assembleFormation = assembleFormation;
                     const calculator = new S11FormationCalculator();
                     if( this.hasNoNextEditAction(poolUser) ) {
-                      this.setAlert('danger', 'je hebt al wissels gedaan');
+                      this.router.navigate(['/pool/formation/substitutions/', this.pool.getId()]);
                     } else if( !calculator.areAllPlacesWithoutTeamReplaced(assembleFormation, poolUser.getTransferPeriodActionList().replacements) ) {
                       this.setAlert('danger', 'er zijn nog spelers zonder team');
                     } else {
