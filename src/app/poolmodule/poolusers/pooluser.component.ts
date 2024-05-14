@@ -89,7 +89,8 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
                 }
               },
               error: (e: string) => {
-                this.setAlert('danger', e); this.processing = false;
+                this.setAlert('danger', e); 
+                this.processing = false;
               },
               complete: () => this.processing = false
             });

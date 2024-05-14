@@ -22,8 +22,9 @@ export class PoolCompetitorMapper {
     toJson(competitor: PoolCompetitor): JsonPoolCompetitor {
         return {
             id: competitor.getId(),
-            registered: competitor.getRegistered(),
-            info: competitor.getInfo(),
+            present: competitor.getPresent(),
+            publicInfo: competitor.getPublicInfo(),
+            privateInfo: competitor.getPrivateInfo(),
             name: competitor.getName(),
             categoryNr: competitor.getStartLocation().getCategoryNr(),
             pouleNr: competitor.getStartLocation().getPouleNr(),

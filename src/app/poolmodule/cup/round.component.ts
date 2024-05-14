@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { Round, Competitor, StructureEditor, QualifyTarget, PlaceRanges, Place, StructureNameService, StartLocation, SingleQualifyRule, MultipleQualifyRule, AgainstGame, Poule, GameState, StartLocationMap, AgainstSide } from 'ngx-sport';
+import { Round, Competitor, PlaceRanges, Place, StructureNameService, StartLocation, AgainstGame, Poule, GameState, AgainstSide } from 'ngx-sport';
 import { AgainstPoule } from '../../lib/againstPoule';
 import { PoolCompetitor } from '../../lib/pool/competitor';
 import { PoolUser } from '../../lib/pool/user';
@@ -98,18 +98,7 @@ export class PoolCupRoundComponent implements OnInit {
   }
 
   protected getPreviousPlace(place: Place): Place | undefined {
-    let fromQualifyRule: SingleQualifyRule | MultipleQualifyRule | undefined;
-    try {
-      fromQualifyRule = place.getRound().getParentQualifyGroup()?.getRule(place);
-    } catch (e) { }
-    if (fromQualifyRule === undefined) {
-      return undefined;
-    }
-    if (fromQualifyRule instanceof MultipleQualifyRule) {
-      return undefined;
-    }
-    // SingleQualifyRule
-    return fromQualifyRule.getFromPlace(place);
+    return place.getRound().getParentQualifyGroup()?.getFromPlace(place);
   }
 
   getGameRoundNumbers(round: Round): string {
