@@ -5,6 +5,7 @@ import { Badge } from '../../lib/achievement/badge';
 import { Trophy } from '../../lib/achievement/trophy';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { loadConfettiPreset } from 'tsparticles-preset-confetti';
+import { LeagueName } from '../../lib/leagueName';
 
 @Component({
     selector: 'app-ngbd-modal-unviewed',
@@ -76,6 +77,23 @@ export class UnviewedAchievementsModalComponent implements OnInit {
             this.currentTrophy = undefined;
             this.currentBadge = achievement;
         }
+    }
+
+    
+    getTrophyTitle(trophy: Trophy): string {
+        let leagueName = trophy.getCompetition().getLeague().getName();
+        let seasonName = trophy.getCompetition().getSeason().getName();
+        switch (leagueName) {
+            case LeagueName.Competition:
+                leagueName = 'Competitie';
+                break;
+            case LeagueName.Cup:
+                leagueName = 'Beker';
+                break;
+            case LeagueName.SuperCup:
+                leagueName = 'Super Cup';
+        }
+        return leagueName + ' ' + seasonName.replace('20', '').replace('20', '');
     }
 
     public tsparticlesId = "tsparticles";

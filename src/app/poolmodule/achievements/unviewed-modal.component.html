@@ -14,7 +14,7 @@
         (particlesLoaded)="particlesLoaded($event)"
     ></ng-particles>
     <div *ngIf="currentTrophy" class="text-center">    
-        <div><h4>{{currentTrophy.getCompetition().getName().replace('20', '').replace('20', '')}}</h4></div>
+        <div><h4>{{getTrophyTitle(currentTrophy)}}</h4></div>
         <div>
             <app-superelf-trophy-icon size="10x" [leagueName]="nameService.convertToLeagueName(currentTrophy.getCompetition())"></app-superelf-trophy-icon>
         </div>
