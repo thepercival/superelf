@@ -8,19 +8,19 @@ import { BadgeCategory } from '../../../lib/achievement/badge/category';
     styleUrls: ['./badge.component.scss']
 })
 export class SuperElfBadgeIconComponent {
-    @Input() badgeCategory!: BadgeCategory;
+    @Input() badgeCategory: BadgeCategory | undefined;
     @Input() competitionConfig = true;
     @Input() size: SizeProp|undefined;
 
-    get prefix(): IconPrefix { 
-        if( this.badgeCategory === BadgeCategory.Goal || this.badgeCategory === BadgeCategory.Card ) {
+    getPrefix(badgeCategory: BadgeCategory): IconPrefix { 
+        if( badgeCategory === BadgeCategory.Goal || this.badgeCategory === BadgeCategory.Card ) {
             return 'fas'; 
         }
         return <IconPrefix>'fac'; 
     }
 
-    get iconName(): IconName { 
-        switch (this.badgeCategory) {
+    getIconName(badgeCategory: BadgeCategory): IconName { 
+        switch (badgeCategory) {
             case BadgeCategory.Result:
               return <IconName>'scoreboard';
             case BadgeCategory.Goal:

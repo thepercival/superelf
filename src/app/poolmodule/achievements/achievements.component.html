@@ -18,11 +18,17 @@
                         <th>
                         naam
                         </th>
-                        <th class="text-end">
-                        bekers
+                        <th class="text-center">
+                            <app-superelf-trophy-icon size="2x" [leagueName]="Competition"></app-superelf-trophy-icon>
                         </th>
-                        <th class="text-end">
-                        badges
+                        <th class="text-center">
+                            <app-superelf-trophy-icon size="2x" [leagueName]="Cup"></app-superelf-trophy-icon>
+                        </th>
+                        <th class="text-center">
+                            <app-superelf-trophy-icon size="2x" [leagueName]="SuperCup"></app-superelf-trophy-icon>
+                        </th>
+                        <th class="text-center">
+                        <app-superelf-badge-icon></app-superelf-badge-icon>
                         </th>
                     </tr>
                 </thead>
@@ -31,24 +37,29 @@
                     <td>
                       {{achievementListItem.name}}
                     </td>
-                    <td class="text-nowrap text-end">
-                      {{achievementListItem.nrOfTrophies}}
+                    <td class="text-nowrap text-center">
+                      {{achievementListItem.leagueNrOfTrophies.get(Competition)}}
                     </td>
-                    <td class="text-nowrap text-end">
+                    <td class="text-nowrap text-center">
+                        {{achievementListItem.leagueNrOfTrophies.get(Cup)}}
+                    </td>
+                    <td class="text-nowrap text-center">
+                        {{achievementListItem.leagueNrOfTrophies.get(SuperCup)}}
+                    </td>
+                    <td class="text-nowrap text-center">
                         {{achievementListItem.nrOfBadges}}
                     </td>
                   </tr>
                 </tbody>
               </table>
-        </div>
-        <ngb-alert type="info">binnenkort kun je ook de bekers per deelnemer zien</ngb-alert>
+        </div>        
     </div>
 </div>
 
-<app-pool-navbar *ngIf="pool && leagueName !== WorldCupLeagueName" [current]="Achievements" [pool]="pool"
+<app-pool-navbar *ngIf="pool && leagueName !== WorldCup" [current]="Achievements" [pool]="pool"
     [poolUser]="poolUserFromSession">
 </app-pool-navbar>
-<app-worldcup-navbar *ngIf="pool && leagueName === WorldCupLeagueName" [current]="Achievements" [pool]="pool"
+<app-worldcup-navbar *ngIf="pool && leagueName === WorldCup" [current]="Achievements" [pool]="pool"
     [poolUser]="poolUserFromSession">
 </app-worldcup-navbar>
 

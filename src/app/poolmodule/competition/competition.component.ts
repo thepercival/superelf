@@ -119,9 +119,9 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   get WorldCupLeagueName(): LeagueName { return LeagueName.WorldCup; }
 
   setLeagueName(competitions: Competition[]): void {
-    const hasWorldCup = competitions.some((competition: Competition): boolean => {
+    const hasWorldCup = false/*competitions.some((competition: Competition): boolean => {
       return competition.getLeague().getName() === LeagueName.WorldCup;
-    });
+    })*/;
     this.leagueName = hasWorldCup ? LeagueName.WorldCup : LeagueName.Competition;
   }
 

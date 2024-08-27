@@ -7,5 +7,5 @@
 
 <fa-stack [size]="size">
     <fa-icon class="{{color}}" [icon]="['fas', 'circle']" stackItemSize="2x"></fa-icon>
-    <fa-icon [icon]="[prefix, iconName]" stackItemSize="1x"></fa-icon>
+    <fa-icon *ngIf="badgeCategory" [icon]="[getPrefix(badgeCategory), getIconName(badgeCategory)]" stackItemSize="1x"></fa-icon>
 </fa-stack>

@@ -21,7 +21,7 @@ export class PoolCompetitionsNavBarComponent implements OnInit{
   @Input() current: CompetitionsNavBarItem|undefined;
 
   public hasSuperCup = true;
-  public hasWorldCup = true;
+  public hasWorldCup = false;
 
   public structureMap = new Map<number, Structure>();
 

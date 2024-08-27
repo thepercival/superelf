@@ -140,9 +140,9 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
   }
 
   setLeagueName(competitions: Competition[]): void {
-    const hasWorldCup = competitions.some((competition: Competition): boolean => {
+    const hasWorldCup = false/*competitions.some((competition: Competition): boolean => {
       return competition.getLeague().getName() === LeagueName.WorldCup;
-    });
+    })*/;
     this.leagueName = hasWorldCup ? LeagueName.WorldCup : LeagueName.Competition;
   }
 
