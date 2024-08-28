@@ -16,7 +16,6 @@ import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { UnviewedAchievementsModalComponent } from './unviewed-modal.component';
 import { LeagueName } from '../../lib/leagueName';
 import { Competition } from 'ngx-sport';
-
 @Component({
   selector: 'app-pool-achievements',
   templateUrl: './achievements.component.html',
@@ -26,6 +25,8 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
   public achievementListItems: AchievementListItem[]|undefined;
   public processing = true;
   public leagueName!: LeagueName;
+  public goatToggle = false;
+  public goatPoints: GoatPoints;
   
   constructor(
     route: ActivatedRoute,
@@ -39,6 +40,12 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     private s11Storage: S11Storage
     ) {
     super(route, router, poolRepository, globalEventsManager);
+    this.goatPoints = {
+      competitionTrophy: 15,
+      cupTrophy: 8,
+      supercupTrophy: 5,
+      badge: 1
+    }
     // this.form = fb.group({
     //   message: '',
     // });
@@ -98,53 +105,53 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
       if( item === undefined) {
         item = {
           name: achievement.poolUser.user.name ?? '',
-          leagueNrOfTrophies: new Map(            ),
-          nrOfBadges: 0
+          leagueNrOfTrophies: new Map(),
+          nrOfBadges: 0,
+          isGoat: false,
+          goatTotalPoints: 0
         };
         item.leagueNrOfTrophies.set(LeagueName.Competition, 0);
         item.leagueNrOfTrophies.set(LeagueName.Cup, 0);
         item.leagueNrOfTrophies.set(LeagueName.SuperCup, 0);
+        
         map.set(achievement.poolUser.user.id, item);        
-      } 
+      }       
       if (achievement instanceof Trophy ) {
         const leagueName = achievement.getCompetition().getLeague().getName();
+        item.goatTotalPoints += this.getLeagueGoatPoints(leagueName);
+
         const nrOfTropthies = item.leagueNrOfTrophies.get(leagueName);
         if (nrOfTropthies !== undefined) {
-          item.leagueNrOfTrophies.set(leagueName, nrOfTropthies + 1);
+          item.leagueNrOfTrophies.set(leagueName, nrOfTropthies + 1);          
         }
       }
       else {        
-        item.nrOfBadges += achievement instanceof Badge ? 1: 0;
+        item.nrOfBadges++;
+        item.goatTotalPoints++;
       }
     })
 
     const list: AchievementListItem[] = [];
-    for (const [propertyKey, propertyValue] of map.entries()) {
-      list.push(propertyValue);
+    for (const [propertyKey, achievementListItem] of map.entries()) {
+      list.push(achievementListItem);
     }
 
     list.sort((item1: AchievementListItem, item2: AchievementListItem) => {
-      const nrOfCompetitionTrohies1 = item1.leagueNrOfTrophies.get(LeagueName.Competition) ?? 0;
-      const nrOfCompetitionTrohies2 = item2.leagueNrOfTrophies.get(LeagueName.Competition) ?? 0;
-      if (nrOfCompetitionTrohies1 !== nrOfCompetitionTrohies2) {
-        return nrOfCompetitionTrohies1 < nrOfCompetitionTrohies2 ? 1 : -1;
-      }
-      const nrOfCupTrohies1 = item1.leagueNrOfTrophies.get(LeagueName.Cup) ?? 0;
-      const nrOfCupTrohies2 = item2.leagueNrOfTrophies.get(LeagueName.Cup) ?? 0;
-      if (nrOfCupTrohies1 !== nrOfCupTrohies2) {
-        return nrOfCupTrohies1 < nrOfCupTrohies2 ? 1 : -1;
-      }
-      const nrOfSuperCupTrohies1 = item1.leagueNrOfTrophies.get(LeagueName.SuperCup) ?? 0;
-      const nrOfSuperCupTrohies2 = item2.leagueNrOfTrophies.get(LeagueName.SuperCup) ?? 0;
-      if (nrOfSuperCupTrohies1 !== nrOfSuperCupTrohies2) {
-        return nrOfSuperCupTrohies1 < nrOfSuperCupTrohies2 ? 1 : -1;
-      }
-      if( item1.nrOfBadges !== item2.nrOfBadges) {
-        return (item1.nrOfBadges < item2.nrOfBadges ? 1 : -1);
-      }
-      return (item1.name > item2.name ? 1 : -1);
+      return item1.goatTotalPoints < item2.goatTotalPoints ? 1 : -1;
     });
+    list[0].isGoat = true;
     return list;
+  }
+
+  getLeagueGoatPoints(leagueName: string): number {
+    if (LeagueName.Competition == leagueName ) {
+      return this.goatPoints.competitionTrophy;
+    } else if (LeagueName.Cup == leagueName) {
+      return this.goatPoints.cupTrophy;
+    } if (LeagueName.SuperCup == leagueName) {
+      return this.goatPoints.supercupTrophy;
+    }
+    return 0;
   }
 
   openUnviewedModal(achievements: (Trophy|Badge)[]) {
@@ -156,6 +163,31 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
       
     });
   }
+  
+  openUserTrophySeasonsInfoModal() {
+    // const modalRef = this.modalService.open(UnviewedAchievementsModalComponent, { backdrop: 'static' });
+    // modalRef.componentInstance.achievements = achievements;
+    // modalRef.result.then((result) => {
+
+    // }, (reason) => {
+
+    // });
+  } 
+
+  openUserBadgeInfoModal() {
+    // const modalRef = this.modalService.open(UnviewedAchievementsModalComponent, { backdrop: 'static' });
+    // modalRef.componentInstance.achievements = achievements;
+    // modalRef.result.then((result) => {
+
+    // }, (reason) => {
+
+    // });
+  } 
+
+
+  toggleGoat() {
+    this.goatToggle = !this.goatToggle;
+  }
  
 
   navigateBack() {
@@ -164,7 +196,16 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
 }
 
 interface AchievementListItem {
-  name: string,
-  leagueNrOfTrophies: Map<string, number>;
+  name: string
+  leagueNrOfTrophies: Map<string, number>
   nrOfBadges: number
+  isGoat: boolean
+  goatTotalPoints: number
+}
+
+interface GoatPoints {
+  competitionTrophy: number
+  cupTrophy: number
+  supercupTrophy: number
+  badge: number
 }

@@ -1,11 +1,27 @@
 <div class="row justify-content-center g-0">
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
         
-        <h2>
-            <app-superelf-icon [name]="'trophy'"></app-superelf-icon>
-            <span class="ms-1">prijzenkasten</span>
+        <div class="d-flex justify-content-between mx-2 my-2">
+            <h2>
+                <app-superelf-icon [name]="'trophy'"></app-superelf-icon>
+                <span class="ms-1">prijzenkasten</span>
+            </h2>
+
+            <div class="form-check form-switch pointer">
+                <input type="checkbox" class="form-check-input pointer" id="goat-switch" (change)="toggleGoat()">
+                <label class="form-check-label pointer" for="goat-switch"><img height="40rem" src="assets/images/goat-small.png" /></label>
+            </div>            
+
+            <!-- <div class="form-check form-switch">
+                <input class="form-check-input pointer" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                <label class="form-check-label pointer" for="flexSwitchCheckDefault">details</label>
+            </div> -->
             
-        </h2>
+        </div>
+        
+
+            
+
 
         <h2 *ngIf="processing" class="text-center">
             <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
@@ -16,38 +32,47 @@
                 <thead>                  
                     <tr>
                         <th>
-                        naam
+                        </th>
+                        <td *ngIf="goatToggle" class="text-end">
+                            <img height="25rem" src="assets/images/goat-small.png" />
+                        </td>
+                        <th class="text-center">
+                            <div><app-superelf-trophy-icon size="2x" [leagueName]="Competition"></app-superelf-trophy-icon></div>
+                            <div *ngIf="goatToggle">{{goatPoints.competitionTrophy}}p</div>                            
                         </th>
                         <th class="text-center">
-                            <app-superelf-trophy-icon size="2x" [leagueName]="Competition"></app-superelf-trophy-icon>
+                            <div><app-superelf-trophy-icon size="2x" [leagueName]="Cup"></app-superelf-trophy-icon></div>
+                            <div *ngIf="goatToggle">{{goatPoints.cupTrophy}}p</div>
                         </th>
                         <th class="text-center">
-                            <app-superelf-trophy-icon size="2x" [leagueName]="Cup"></app-superelf-trophy-icon>
+                            <div><app-superelf-trophy-icon size="2x" [leagueName]="SuperCup"></app-superelf-trophy-icon></div>
+                            <div *ngIf="goatToggle">{{goatPoints.supercupTrophy}}p</div>
                         </th>
                         <th class="text-center">
-                            <app-superelf-trophy-icon size="2x" [leagueName]="SuperCup"></app-superelf-trophy-icon>
-                        </th>
-                        <th class="text-center">
-                        <app-superelf-badge-icon></app-superelf-badge-icon>
+                            <div><app-superelf-badge-icon></app-superelf-badge-icon></div>
+                            <div *ngIf="goatToggle">{{goatPoints.badge}}p</div>
                         </th>
                     </tr>
                 </thead>
                 <tbody>                  
                   <tr *ngFor="let achievementListItem of achievementListItems">
                     <td>
-                      {{achievementListItem.name}}
+                      {{achievementListItem.name}} <img *ngIf="achievementListItem.isGoat" height="20rem" src="assets/images/goat-small.png" />
+                    </td>
+                    <td *ngIf="goatToggle" class="text-end">
+                        {{achievementListItem.goatTotalPoints}}
                     </td>
                     <td class="text-nowrap text-center">
-                      {{achievementListItem.leagueNrOfTrophies.get(Competition)}}
+                      {{achievementListItem.leagueNrOfTrophies.get(Competition)}}x
                     </td>
                     <td class="text-nowrap text-center">
-                        {{achievementListItem.leagueNrOfTrophies.get(Cup)}}
+                        {{achievementListItem.leagueNrOfTrophies.get(Cup)}}x
                     </td>
                     <td class="text-nowrap text-center">
-                        {{achievementListItem.leagueNrOfTrophies.get(SuperCup)}}
+                        {{achievementListItem.leagueNrOfTrophies.get(SuperCup)}}x
                     </td>
                     <td class="text-nowrap text-center">
-                        {{achievementListItem.nrOfBadges}}
+                        {{achievementListItem.nrOfBadges}}x
                     </td>
                   </tr>
                 </tbody>
