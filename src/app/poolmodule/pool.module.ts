@@ -75,10 +75,10 @@ import { FormationActionOverviewComponent } from './formation/actionoverview.com
 import { PoolPouleAgainstGamesComponent } from './poule/againstgames.component';
 import { PouleTitleComponent } from './poule/title.component';
 import { PoolAllInOneGameScheduleComponent } from './schedule/allinonegame.component';
-import { PoolUserAchievementsComponent } from './achievements/pooluser-achievements.component';
 import { UnviewedAchievementsModalComponent } from './achievements/unviewed-modal.component';
 import { NgParticlesModule } from 'ng-particles';
 import { ChooseBadgeCategoryModalComponent } from './badge/choosecategory-modal.component';
+import { UserBadgesModalComponent } from './achievements/userbadges-modal.component';
 
 @NgModule({
   imports: [
@@ -122,7 +122,6 @@ import { ChooseBadgeCategoryModalComponent } from './badge/choosecategory-modal.
     PoolCupComponent,
     PoolCupRoundComponent,
     PoolPouleAgainstGamesComponent,
-    PoolUserAchievementsComponent,
     PoolUserComponent,
     PoolUserRemoveModalComponent,    
     PoolUsersComponent,
@@ -140,6 +139,7 @@ import { ChooseBadgeCategoryModalComponent } from './badge/choosecategory-modal.
     TeamNameComponent,
     TogetherRankingComponent,
     UnviewedAchievementsModalComponent,
+    UserBadgesModalComponent,
     WorldCupComponent
   ],
   providers: [

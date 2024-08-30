@@ -30,13 +30,11 @@ import { FormationSubstituteComponent } from './formation/substitute.component';
 import { FormationActionOverviewComponent } from './formation/actionoverview.component';
 import { PoolPouleAgainstGamesComponent } from './poule/againstgames.component';
 import { PoolAllInOneGameScheduleComponent } from './schedule/allinonegame.component';
-import { PoolUserAchievementsComponent } from './achievements/pooluser-achievements.component';
 
 const routes: Routes = [
   { path: 'new', component: NewComponent, canActivate: [AuthUserGuardService] },
   { path: 'prenew', component: PreNewComponent },
   { path: 'achievements/:id', component: AchievementsComponent },  
-  { path: 'achievements/:id/:poolUserId', component: PoolUserAchievementsComponent },  
   { path: 'allinonegame/:id', component: PoolAllInOneGameScheduleComponent },
   { path: 'chat/:id/:leagueName/:pouleId', component: PoolChatComponent },
   { path: 'competition/:id', component: PoolCompetitionComponent, canActivate: [AuthUserGuardService] },

@@ -15,7 +15,8 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { UnviewedAchievementsModalComponent } from './unviewed-modal.component';
 import { LeagueName } from '../../lib/leagueName';
-import { Competition } from 'ngx-sport';
+import { Competition, Season } from 'ngx-sport';
+import { UserBadgesModalComponent } from './userbadges-modal.component';
 @Component({
   selector: 'app-pool-achievements',
   templateUrl: './achievements.component.html',
@@ -105,14 +106,14 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
       if( item === undefined) {
         item = {
           name: achievement.poolUser.user.name ?? '',
-          leagueNrOfTrophies: new Map(),
-          nrOfBadges: 0,
+          leagueTrophies: new Map(),
+          badges: [],
           isGoat: false,
           goatTotalPoints: 0
         };
-        item.leagueNrOfTrophies.set(LeagueName.Competition, 0);
-        item.leagueNrOfTrophies.set(LeagueName.Cup, 0);
-        item.leagueNrOfTrophies.set(LeagueName.SuperCup, 0);
+        item.leagueTrophies.set(LeagueName.Competition, []);
+        item.leagueTrophies.set(LeagueName.Cup, []);
+        item.leagueTrophies.set(LeagueName.SuperCup, []);
         
         map.set(achievement.poolUser.user.id, item);        
       }       
@@ -120,13 +121,14 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
         const leagueName = achievement.getCompetition().getLeague().getName();
         item.goatTotalPoints += this.getLeagueGoatPoints(leagueName);
 
-        const nrOfTropthies = item.leagueNrOfTrophies.get(leagueName);
-        if (nrOfTropthies !== undefined) {
-          item.leagueNrOfTrophies.set(leagueName, nrOfTropthies + 1);          
+        const trophies = item.leagueTrophies.get(leagueName);
+        if (trophies !== undefined) {
+          trophies.push(achievement.getCompetition().getSeason());
+          item.leagueTrophies.set(leagueName, trophies);          
         }
       }
       else {        
-        item.nrOfBadges++;
+        item.badges.push(achievement);
         item.goatTotalPoints++;
       }
     })
@@ -141,6 +143,11 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     });
     list[0].isGoat = true;
     return list;
+  }
+
+  getShortName(season: Season): string {
+    return season.getStartDateTime().getFullYear().toString().substring(2,4)
+      + '/' + season.getEndDateTime().getFullYear().toString().substring(2,4);
   }
 
   getLeagueGoatPoints(leagueName: string): number {
@@ -174,14 +181,15 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     // });
   } 
 
-  openUserBadgeInfoModal() {
-    // const modalRef = this.modalService.open(UnviewedAchievementsModalComponent, { backdrop: 'static' });
-    // modalRef.componentInstance.achievements = achievements;
-    // modalRef.result.then((result) => {
+  openUserBadgesInfoModal(achievementListItem: AchievementListItem) {
+    const modalRef = this.modalService.open(UserBadgesModalComponent, { backdrop: 'static' });
+    modalRef.componentInstance.userName = achievementListItem.name;
+    modalRef.componentInstance.badges = achievementListItem.badges;
+    modalRef.result.then((result) => {
 
-    // }, (reason) => {
+    }, (reason) => {
 
-    // });
+    });
   } 
 
 
@@ -197,8 +205,8 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
 
 interface AchievementListItem {
   name: string
-  leagueNrOfTrophies: Map<string, number>
-  nrOfBadges: number
+  leagueTrophies: Map<string, Season[]>
+  badges: Badge[]
   isGoat: boolean
   goatTotalPoints: number
 }

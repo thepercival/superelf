@@ -20,7 +20,7 @@
         </div>
         
 
-            
+        <ngb-alert type="info">missende jaartallen worden binnenkort toegevoegd</ngb-alert>
 
 
         <h2 *ngIf="processing" class="text-center">
@@ -33,23 +33,27 @@
                     <tr>
                         <th>
                         </th>
-                        <td *ngIf="goatToggle" class="text-end">
+                        <th *ngIf="goatToggle" class="text-end">
                             <img height="25rem" src="assets/images/goat-small.png" />
-                        </td>
+                        </th>
                         <th class="text-center">
                             <div><app-superelf-trophy-icon size="2x" [leagueName]="Competition"></app-superelf-trophy-icon></div>
+                            <div *ngIf="!goatToggle" class="fw-lighter">comp.</div>
                             <div *ngIf="goatToggle">{{goatPoints.competitionTrophy}}p</div>                            
                         </th>
                         <th class="text-center">
                             <div><app-superelf-trophy-icon size="2x" [leagueName]="Cup"></app-superelf-trophy-icon></div>
+                            <div *ngIf="!goatToggle" class="fw-lighter">beker.</div>
                             <div *ngIf="goatToggle">{{goatPoints.cupTrophy}}p</div>
                         </th>
                         <th class="text-center">
                             <div><app-superelf-trophy-icon size="2x" [leagueName]="SuperCup"></app-superelf-trophy-icon></div>
+                            <div *ngIf="!goatToggle" class="fw-lighter">s. cup</div>
                             <div *ngIf="goatToggle">{{goatPoints.supercupTrophy}}p</div>
                         </th>
                         <th class="text-center">
                             <div><app-superelf-badge-icon></app-superelf-badge-icon></div>
+                            <div *ngIf="!goatToggle" class="fw-lighter">badge</div>
                             <div *ngIf="goatToggle">{{goatPoints.badge}}p</div>
                         </th>
                     </tr>
@@ -57,22 +61,41 @@
                 <tbody>                  
                   <tr *ngFor="let achievementListItem of achievementListItems">
                     <td>
-                      {{achievementListItem.name}} <img *ngIf="achievementListItem.isGoat" height="20rem" src="assets/images/goat-small.png" />
+                        {{achievementListItem.name}} <img *ngIf="achievementListItem.isGoat" height="20rem" src="assets/images/goat-small.png" />
                     </td>
                     <td *ngIf="goatToggle" class="text-end">
                         {{achievementListItem.goatTotalPoints}}
                     </td>
-                    <td class="text-nowrap text-center">
-                      {{achievementListItem.leagueNrOfTrophies.get(Competition)}}x
+                    
+                    <td *ngIf="goatToggle" class="text-nowrap text-center">                        
+                      {{achievementListItem.leagueTrophies.get(Competition)?.length}}x
                     </td>
-                    <td class="text-nowrap text-center">
-                        {{achievementListItem.leagueNrOfTrophies.get(Cup)}}x
+                    <td *ngIf="!goatToggle" class="text-center">                        
+                        <div *ngFor="let season of achievementListItem.leagueTrophies.get(Competition)" 
+                            class="badge bg-secondary mb-1 ms-1 px-1">{{getShortName(season)}}</div>                        
                     </td>
-                    <td class="text-nowrap text-center">
-                        {{achievementListItem.leagueNrOfTrophies.get(SuperCup)}}x
+
+                    <td *ngIf="goatToggle" class="text-nowrap text-center">
+                        {{achievementListItem.leagueTrophies.get(Cup)?.length}}x
                     </td>
-                    <td class="text-nowrap text-center">
-                        {{achievementListItem.nrOfBadges}}x
+                    <td *ngIf="!goatToggle" class="text-center">
+                        <div *ngFor="let season of achievementListItem.leagueTrophies.get(Cup)"
+                            class="badge bg-secondary mb-1 ms-1 px-1">{{getShortName(season)}}</div>                        
+                    </td>
+
+                    <td *ngIf="goatToggle" class="text-nowrap text-center">
+                        {{achievementListItem.leagueTrophies.get(SuperCup)?.length}}x
+                    </td>
+                    <td *ngIf="!goatToggle" class="text-center">                        
+                        <div *ngFor="let season of achievementListItem.leagueTrophies.get(SuperCup)"
+                            class="badge bg-secondary mb-1 ms-1 px-1">{{getShortName(season)}}</div>
+                        
+                    </td>
+
+                    <td class="text-center">
+                        <div *ngIf="goatToggle">{{achievementListItem.badges.length}}x</div>
+                        <button *ngIf="!goatToggle" type="button" class="btn btn-sm btn-secondary"
+                        (click)="openUserBadgesInfoModal(achievementListItem)">{{achievementListItem.badges.length}}x</button>                        
                     </td>
                   </tr>
                 </tbody>

@@ -8,7 +8,7 @@ export class Badge extends Achievement {
         private category: BadgeCategory, 
         protected scopeDescription: string,
         protected poolId: number|undefined,
-        poolUser: JsonPoolUser,         
+        poolUser: JsonPoolUser,
         created: Date) {
         super(poolUser, created);
     }
