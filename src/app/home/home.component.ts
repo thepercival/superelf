@@ -74,7 +74,8 @@ export class HomeComponent implements OnInit {
             this.poolShellRepos.getObjects(filter)
               .subscribe({
                 next: (shells: PoolShell[]) => {
-                  this.myShells = this.sortShellsByDateDesc(shells);
+                  this.myShells = this.sortShellsByDateDesc(
+                    shells.filter(shell => shell.seasonName > '2021'));
                 },
                 error: (e) => {
                   this.setAlert('danger', e); this.processingMyShells = false;

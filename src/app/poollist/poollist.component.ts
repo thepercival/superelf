@@ -51,7 +51,7 @@ export class PoolListComponent implements OnInit {
         {
           next: (seasons: Season[]) => {
             
-            this.selectableSeasons = seasons.sort((seasonA: Season, seasonB: Season): number => {
+            this.selectableSeasons = seasons.filter(season => season.getName() > '2021').sort((seasonA: Season, seasonB: Season): number => {
               return seasonB.getStartDateTime().getTime() - seasonA.getStartDateTime().getTime();
             }).slice();
             this.typedForm.controls.season.setValue(this.selectableSeasons[0]);
@@ -82,7 +82,7 @@ export class PoolListComponent implements OnInit {
     this.poolShellRepos.getObjects(filter)
       .subscribe({
         next: (shells: PoolShell[]) => {
-          this.poolShells = shells;
+          this.poolShells = shells.filter(shell => shell.seasonName > '2021');
         },
         error: (e) => {
           this.setAlert('danger', e); this.searching = false;
