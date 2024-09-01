@@ -23,12 +23,12 @@ import { UserBadgesModalComponent } from './userbadges-modal.component';
   styleUrls: ['./achievements.component.scss']
 })
 export class AchievementsComponent extends PoolComponent implements OnInit {
-  public achievementListItems: AchievementListItem[]|undefined;
+  public achievementListItems: AchievementListItem[] | undefined;
   public processing = true;
   public leagueName!: LeagueName;
   public goatToggle = false;
   public goatPoints: GoatPoints;
-  
+
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -39,7 +39,7 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     private myNavigation: MyNavigation,
     private achievementRepository: AchievementRepository,
     private s11Storage: S11Storage
-    ) {
+  ) {
     super(route, router, poolRepository, globalEventsManager);
     this.goatPoints = {
       competitionTrophy: 15,
@@ -58,7 +58,10 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
       this.setLeagueName(pool.getCompetitions());
 
       this.achievementRepository.getPoolCollection(pool.getCollection()).subscribe({
-        next: (achievements: (Trophy|Badge)[]) => {
+        next: (achievements: (Trophy | Badge)[]) => {
+          achievements.sort((achievement1: Trophy | Badge, achievement2: Trophy | Badge) => {
+            return achievement1.seasonShortName >= achievement2.seasonShortName ? 1 : -1;
+          });
           this.achievementListItems = this.mapToAchievementListItems(achievements);
           this.processing = false;
         },
@@ -68,10 +71,10 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
         next: ((poolUser: PoolUser) => {
           this.poolUserFromSession = poolUser;
           this.achievementRepository.getUnviewedObjects(poolUser.getPool()).subscribe({
-            next: (achievements: (Trophy|Badge)[]) => {
-              if( achievements.length > 0 ) {
+            next: (achievements: (Trophy | Badge)[]) => {
+              if (achievements.length > 0) {
                 this.achievementRepository.removeUnviewedObjects(poolUser).subscribe({});
-                this.openUnviewedModal(achievements);                
+                this.openUnviewedModal(achievements);
                 this.s11Storage.setLatest(pool, new Date(), false);
               }
             },
@@ -85,7 +88,7 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     });
   }
 
-  
+
   get Achievements(): NavBarItem { return NavBarItem.Achievements }
   get Competition(): LeagueName { return LeagueName.Competition; }
   get Cup(): LeagueName { return LeagueName.Cup; }
@@ -98,12 +101,12 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     })*/;
     this.leagueName = hasWorldCup ? LeagueName.WorldCup : LeagueName.Competition;
   }
-  
-  private mapToAchievementListItems(achievements: (Badge|Trophy)[]): AchievementListItem[] {
-    const map = new Map<string|number, AchievementListItem>();
-    achievements.forEach((achievement: Badge|Trophy) => {
+
+  private mapToAchievementListItems(achievements: (Badge | Trophy)[]): AchievementListItem[] {
+    const map = new Map<string | number, AchievementListItem>();
+    achievements.forEach((achievement: Badge | Trophy) => {
       let item = map.get(achievement.poolUser.user.id);
-      if( item === undefined) {
+      if (item === undefined) {
         item = {
           name: achievement.poolUser.user.name ?? '',
           leagueTrophies: new Map(),
@@ -114,20 +117,21 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
         item.leagueTrophies.set(LeagueName.Competition, []);
         item.leagueTrophies.set(LeagueName.Cup, []);
         item.leagueTrophies.set(LeagueName.SuperCup, []);
-        
-        map.set(achievement.poolUser.user.id, item);        
-      }       
-      if (achievement instanceof Trophy ) {
+
+        map.set(achievement.poolUser.user.id, item);
+      }
+      
+      if (achievement instanceof Trophy) {
         const leagueName = achievement.getCompetition().getLeague().getName();
         item.goatTotalPoints += this.getLeagueGoatPoints(leagueName);
 
         const trophies = item.leagueTrophies.get(leagueName);
         if (trophies !== undefined) {
-          trophies.push(achievement.getCompetition().getSeason());
-          item.leagueTrophies.set(leagueName, trophies);          
+          trophies.push(achievement);
+          item.leagueTrophies.set(leagueName, trophies);
         }
       }
-      else {        
+      else {
         item.badges.push(achievement);
         item.goatTotalPoints++;
       }
@@ -145,13 +149,8 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     return list;
   }
 
-  getShortName(season: Season): string {
-    return season.getStartDateTime().getFullYear().toString().substring(2,4)
-      + '/' + season.getEndDateTime().getFullYear().toString().substring(2,4);
-  }
-
   getLeagueGoatPoints(leagueName: string): number {
-    if (LeagueName.Competition == leagueName ) {
+    if (LeagueName.Competition == leagueName) {
       return this.goatPoints.competitionTrophy;
     } else if (LeagueName.Cup == leagueName) {
       return this.goatPoints.cupTrophy;
@@ -161,28 +160,84 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     return 0;
   }
 
-  openUnviewedModal(achievements: (Trophy|Badge)[]) {
-    const modalRef = this.modalService.open(UnviewedAchievementsModalComponent, { backdrop: 'static'});
+  openUnviewedModal(achievements: (Trophy | Badge)[]) {
+    const modalRef = this.modalService.open(UnviewedAchievementsModalComponent, { backdrop: 'static' });
     modalRef.componentInstance.achievements = achievements;
     modalRef.result.then((result) => {
-      
+
     }, (reason) => {
-      
+
     });
   }
-  
-  openUserTrophySeasonsInfoModal() {
-    // const modalRef = this.modalService.open(UnviewedAchievementsModalComponent, { backdrop: 'static' });
-    // modalRef.componentInstance.achievements = achievements;
-    // modalRef.result.then((result) => {
 
-    // }, (reason) => {
+  openLinkNewTab(trophy: Trophy, leagueName: string) {
 
-    // });
-  } 
+    const season = trophy.getCompetition().getSeason();
+    if (season.getStartDateTime().getTime() < new Date('2022-01-01').getTime()) {
+      // old env
+      let suffix
+      const oldPoolId = this.convertToOldPoolId(season.getStartDateTime());
+      if( oldPoolId === undefined ) {
+        return;
+      }      
+      if (leagueName === LeagueName.Competition) {        
+        suffix = 'pool/stand/poolid/' + oldPoolId + '/';
+      } else if (leagueName === LeagueName.Cup) {
+        suffix = 'pool/beker/poolid/' + oldPoolId + '/';
+      } else if (leagueName === LeagueName.SuperCup) {
+        suffix = 'pool/supercup/poolid/' + oldPoolId + '/';
+      }
+      // window.open('//localhost:8000/' + suffix, '_blank');
+      window.open('//old.superelf-eredivisie.nl/' + suffix, '_blank');
+    } else {
+      let url      
+      if (leagueName === LeagueName.Competition) {
+        url = 'pool/competition/' + trophy.poolId + '';
+      } else if (leagueName === LeagueName.Cup) {
+        url = 'pool/cup/' + trophy.poolId + '';
+      } else if (leagueName === LeagueName.SuperCup) {
+        url = 'pool/poule-againstgames/' + trophy.poolId + '/SuperCup/0';
+      }
+      window.open(url, '_blank');
+    }
+  }
+
+  private convertToOldPoolId(seasonStartDateTime: Date): number|undefined {
+    console.log(this.pool.getName());
+    if( this.pool.getName() === 'kamp duim') {
+      if (seasonStartDateTime.getFullYear() === 2014) {
+        return 1;
+      } else if (seasonStartDateTime.getFullYear() === 2015) {
+        return 2;
+      } else if (seasonStartDateTime.getFullYear() === 2016) {
+        return 3;
+      } else if (seasonStartDateTime.getFullYear() === 2017) {
+        return 8;
+      } else if (seasonStartDateTime.getFullYear() === 2018) {
+        return 10;
+      } else if (seasonStartDateTime.getFullYear() === 2020) {
+        return 37;
+      } else if (seasonStartDateTime.getFullYear() === 2021) {
+        return 44;
+      }
+    } else if (this.pool.getName() === 'Deerns') {
+      if (seasonStartDateTime.getFullYear() === 2020) {
+        return 39;
+      } else if (seasonStartDateTime.getFullYear() === 2021) {
+        return 50;
+      }
+    } else if (this.pool.getName() === 'Arriva') {
+      if (seasonStartDateTime.getFullYear() === 2020) {
+        return 40;
+      } else if (seasonStartDateTime.getFullYear() === 2021) {
+        return 45;
+      }
+    }
+    return undefined;
+  }
 
   openUserBadgesInfoModal(achievementListItem: AchievementListItem) {
-    const modalRef = this.modalService.open(UserBadgesModalComponent, { backdrop: 'static' });
+    const modalRef = this.modalService.open(UserBadgesModalComponent);
     modalRef.componentInstance.userName = achievementListItem.name;
     modalRef.componentInstance.badges = achievementListItem.badges;
     modalRef.result.then((result) => {
@@ -190,13 +245,13 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     }, (reason) => {
 
     });
-  } 
+  }
 
 
   toggleGoat() {
     this.goatToggle = !this.goatToggle;
   }
- 
+
 
   navigateBack() {
     this.myNavigation.back();
@@ -205,7 +260,7 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
 
 interface AchievementListItem {
   name: string
-  leagueTrophies: Map<string, Season[]>
+  leagueTrophies: Map<string, Trophy[]>
   badges: Badge[]
   isGoat: boolean
   goatTotalPoints: number

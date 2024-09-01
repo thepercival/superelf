@@ -18,10 +18,10 @@ export class AchievementMapper {
             if( json.competition !== undefined) {
                 competition = this.competitinMapper.toObject(json.competition);
             }
-            return new Badge(json.category, json.scopeDescription, json.poolId, json.poolUser, new Date(json.created));
+            return new Badge(json.category, json.poolId, json.poolName, json.seasonShortName, json.poolUser, new Date(json.created));
         }
         const competition = this.competitinMapper.toObject(json.competition);
-        return new Trophy(json.poolUser, competition, new Date(json.created));
+        return new Trophy(json.poolUser, json.poolId, competition, new Date(json.created));
     }
 }
 

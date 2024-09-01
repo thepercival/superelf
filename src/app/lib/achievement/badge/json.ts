@@ -5,7 +5,7 @@ import { BadgeCategory } from './category';
 export interface JsonBadge extends JsonAchievement {
     category: BadgeCategory,
     competition: JsonCompetition|undefined
-    scopeDescription: string;
-    poolId: number|undefined;
+    poolName: string
+    seasonShortName: string
 }
 

@@ -20,9 +20,6 @@
         </div>
         
 
-        <ngb-alert type="info">missende jaartallen worden binnenkort toegevoegd</ngb-alert>
-
-
         <h2 *ngIf="processing" class="text-center">
             <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
         </h2>
@@ -68,32 +65,43 @@
                     </td>
                     
                     <td *ngIf="goatToggle" class="text-nowrap text-center">                        
-                      {{achievementListItem.leagueTrophies.get(Competition)?.length}}x
+                        <span *ngIf="achievementListItem.leagueTrophies.get(Competition)?.length">
+                            {{achievementListItem.leagueTrophies.get(Competition)?.length}}x
+                        </span>
                     </td>
                     <td *ngIf="!goatToggle" class="text-center">                        
-                        <div *ngFor="let season of achievementListItem.leagueTrophies.get(Competition)" 
-                            class="badge bg-secondary mb-1 ms-1 px-1">{{getShortName(season)}}</div>                        
+                        <div *ngFor="let trophy of achievementListItem.leagueTrophies.get(Competition)" 
+                            class="badge bg-secondary mb-1 ms-1 px-1 pointer"
+                            (click)="openLinkNewTab(trophy, Competition)">{{trophy.seasonShortName}}</div>                        
                     </td>
 
                     <td *ngIf="goatToggle" class="text-nowrap text-center">
-                        {{achievementListItem.leagueTrophies.get(Cup)?.length}}x
+                        <span *ngIf="achievementListItem.leagueTrophies.get(Cup)?.length">
+                            {{achievementListItem.leagueTrophies.get(Cup)?.length}}x
+                        </span>
                     </td>
                     <td *ngIf="!goatToggle" class="text-center">
-                        <div *ngFor="let season of achievementListItem.leagueTrophies.get(Cup)"
-                            class="badge bg-secondary mb-1 ms-1 px-1">{{getShortName(season)}}</div>                        
+                        <div *ngFor="let trophy of achievementListItem.leagueTrophies.get(Cup)"
+                            class="badge bg-secondary mb-1 ms-1 px-1 pointer"
+                            (click)="openLinkNewTab(trophy, Cup)">{{trophy.seasonShortName}}</div>                        
                     </td>
 
                     <td *ngIf="goatToggle" class="text-nowrap text-center">
-                        {{achievementListItem.leagueTrophies.get(SuperCup)?.length}}x
+                        <span *ngIf="achievementListItem.leagueTrophies.get(SuperCup)?.length">
+                            {{achievementListItem.leagueTrophies.get(SuperCup)?.length}}x
+                        </span>
                     </td>
                     <td *ngIf="!goatToggle" class="text-center">                        
-                        <div *ngFor="let season of achievementListItem.leagueTrophies.get(SuperCup)"
-                            class="badge bg-secondary mb-1 ms-1 px-1">{{getShortName(season)}}</div>
+                        <div *ngFor="let trophy of achievementListItem.leagueTrophies.get(SuperCup)"
+                            class="badge bg-secondary mb-1 ms-1 px-1 pointer"
+                            (click)="openLinkNewTab(trophy, SuperCup)">{{trophy.seasonShortName}}</div>
                         
                     </td>
 
                     <td class="text-center">
-                        <div *ngIf="goatToggle">{{achievementListItem.badges.length}}x</div>
+                        <div *ngIf="goatToggle && achievementListItem.badges.length">
+                            {{achievementListItem.badges.length}}x                            
+                        </div>
                         <button *ngIf="!goatToggle" type="button" class="btn btn-sm btn-secondary"
                         (click)="openUserBadgesInfoModal(achievementListItem)">{{achievementListItem.badges.length}}x</button>                        
                     </td>

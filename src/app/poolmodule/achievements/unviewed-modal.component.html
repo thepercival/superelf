@@ -21,7 +21,7 @@
         <div><h2 class="fw-bold">{{currentTrophy.poolUser.user.name}}</h2></div>
     </div>
     <div *ngIf="currentBadge" class="text-center">    
-        <div><h4>{{currentBadge.getScopeDescription()}}</h4></div>
+        <div><h4>{{currentBadge.poolName}} {{currentBadge.seasonShortName}}</h4></div>
         <div><h4>{{nameService.getBadgeCategoryName(currentBadge.getCategory())}}-badge</h4></div>
         <div>
             <app-superelf-badge-icon size="5x" [badgeCategory]="currentBadge.getCategory()"></app-superelf-badge-icon>
