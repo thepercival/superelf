@@ -1,5 +1,9 @@
 <ng-container *ngIf="homeCompetitor && awayCompetitor">
-  <span [ngClass]="{'bg-success': hasQualified(Home)}">{{homeCompetitor.getName()}}</span>
+  <a href="javascript:void(0)" (click)="emitLinkToPoolUser(homeCompetitor.getPoolUser())">
+    <span [ngClass]="{'bg-success': hasQualified(Home)}">{{homeCompetitor.getName()}}</span>
+  </a>  
   <span class="px-2">{{getScore(homeCompetitor, awayCompetitor)}}</span>
-  <span [ngClass]="{'bg-success': hasQualified(Away)}">{{awayCompetitor.getName()}}</span>
+  <a href="javascript:void(0)" (click)="emitLinkToPoolUser(awayCompetitor.getPoolUser())">
+    <span [ngClass]="{'bg-success': hasQualified(Away)}">{{awayCompetitor.getName()}}</span>
+  </a>  
 </ng-container>

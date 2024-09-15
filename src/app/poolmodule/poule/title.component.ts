@@ -1,7 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AgainstSide, AgainstSportRoundRankingCalculator, GameState, Poule, SportRoundRankingItem, StartLocationMap } from 'ngx-sport';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AgainstSide, GameState, Poule, StartLocationMap } from 'ngx-sport';
 import { AgainstPoule } from '../../lib/againstPoule';
 import { PoolCompetitor } from '../../lib/pool/competitor';
+import { Router } from '@angular/router';
+import { PoolUser } from '../../lib/pool/user';
 
 @Component({
   selector: 'app-poule-title',
@@ -10,11 +12,12 @@ import { PoolCompetitor } from '../../lib/pool/competitor';
 export class PouleTitleComponent implements OnInit {
   @Input() poule!: Poule;
   @Input() poolCompetitors!: PoolCompetitor[];
+  @Output() linkToPoolUser = new EventEmitter<PoolUser>();
   
   public homeCompetitor: PoolCompetitor | undefined;
   public awayCompetitor: PoolCompetitor | undefined;
 
-  constructor() {    
+  constructor(private router: Router) {    
   }
 
   ngOnInit() {
@@ -60,6 +63,8 @@ export class PouleTitleComponent implements OnInit {
     return new AgainstPoule(this.poule, new StartLocationMap(this.poolCompetitors));
   }
 
-
+  emitLinkToPoolUser(poolUser: PoolUser): void {
+    this.linkToPoolUser.emit(poolUser);
+  }
 }
 

@@ -106,7 +106,8 @@ export class PoolCupRoundComponent implements OnInit {
   }
 
   emitNavigateToPoule(poule: Poule): void {
-    if(this.hasCompetitors) {
+    const bye = poule.getPlaces().length === 1;
+    if (!bye && this.hasCompetitors) {
       this.navigateToPoule.emit(poule);
     }
   }

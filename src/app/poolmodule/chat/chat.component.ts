@@ -134,6 +134,10 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
     });
   }
 
+  linkToPoolUser(poolUser: PoolUser): void {
+    this.router.navigate(['/pool/user', poolUser.getPool().getId(), poolUser.getId(), 0]);
+  }
+
   navigateBack() {
     this.myNavigation.back();
   }

@@ -490,6 +490,11 @@ export class PoolPouleAgainstGamesComponent extends PoolComponent implements OnI
     
   }
 
+  linkToPoolUser(poolUser: PoolUser): void {    
+    const gameRound = this.currentGameRound;
+    this.router.navigate(['/pool/user', poolUser.getPool().getId(), poolUser.getId(), gameRound ? gameRound.getNumber() : 0]);    
+  }
+
   navigateToStructure() {
     if( this.pool === undefined) {
       return;
