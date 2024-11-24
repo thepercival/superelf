@@ -151,33 +151,30 @@ export class PoolAllInOneGameScheduleComponent extends PoolComponent implements 
   
   getCurrentSourceGameRoundNumber(poule: Poule): number {
     
-    const firstInPogress = poule.getTogetherGames().find((game: TogetherGame) => game.getState() === GameState.InProgress);
-    let grInProgress = undefined;
-    if (firstInPogress !== undefined) {
-      grInProgress = firstInPogress.getTogetherPlaces()[0].getGameRoundNumber();
-    }
-
     const lastFinished = poule.getTogetherGames().slice().reverse().find((game: TogetherGame) => game.getState() === GameState.Finished);
-    let grLastFinished = undefined;
-    if (lastFinished !== undefined) {
-      grLastFinished = lastFinished.getTogetherPlaces()[0].getGameRoundNumber();
-    }
-    const firstCreated = poule.getTogetherGames().find((game: TogetherGame) => game.getState() === GameState.Created);
-    let grFirstCreated = undefined;
-    if( firstCreated !== undefined) {
-      grFirstCreated = firstCreated.getTogetherPlaces()[0].getGameRoundNumber();
-    }
+    let grLastFinished: number|undefined = lastFinished?.getTogetherPlaces()[0].getGameRoundNumber();
 
-    if (grInProgress !== undefined ) {
-      if( grLastFinished === undefined || grInProgress > grLastFinished ) {
-        return grInProgress;
+    const lastInPogress = poule.getTogetherGames().reverse().find((game: TogetherGame) => game.getState() === GameState.InProgress);
+    let grLastInPogress: number|undefined = lastInPogress?.getTogetherPlaces()[0].getGameRoundNumber();
+
+    const lastCreated = poule.getTogetherGames().reverse().find((game: TogetherGame) => game.getState() === GameState.Created);
+    let grLastCreated: number|undefined = lastCreated?.getTogetherPlaces()[0].getGameRoundNumber();
+
+    // wanneer een gr in progress
+    if( grLastInPogress !== undefined) 
+    {
+      // wanneer er een recentere finished na komt
+      if( grLastFinished !== undefined && grLastFinished > grLastInPogress ) {
+          return grLastFinished;
       }
+      return grLastInPogress;
+    }    
+    // pak de meest recente finish
+    if( grLastFinished !== undefined ) {
+        return grLastFinished;
     }
-    if (grLastFinished !== undefined) {
-      return grLastFinished;
-    }
-    if (grFirstCreated !== undefined) {
-      return grFirstCreated;
+    if( grLastCreated !== undefined ) {
+        return grLastCreated;
     }
     throw new Error('should be a gameroundnumber');
   }
