@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { StartSessionService } from '../../shared/commonmodule/startSessionService';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-pool-prenew',
+  standalone: true,
+  imports: [FontAwesomeModule],
   templateUrl: './prenew.component.html',
   styleUrls: ['./prenew.component.scss']
 })

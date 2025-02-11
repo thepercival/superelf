@@ -1,32 +1,34 @@
-<table class="table table-striped mb-2 mt-3" *ngIf="rankingItems">   
+<table class="table table-striped mb-2 mt-3" ngIf="rankingItems">   
     <tbody>
-        <tr *ngFor="let rankingItem of rankingItems" class="pointer"
-            (click)="linkToPoolUser(rankingItem.poolUser, gameRound)">
+    @for(rankingItem of rankingItems; track rankingItem.rank){
+      <tr class="pointer"
+          (click)="linkToPoolUser(rankingItem.poolUser, gameRound())">
 
-            <ng-container *ngIf="!hasAchievement(rankingItem);else worldcupQualify">
-                <td class="rankingnr text-end ps-0"><!-- badge text-black -->
-                    <span class="">{{rankingItem.rank}}</span>
-                </td>
-            </ng-container>
-            <ng-template #worldcupQualify>
-                <td class="rankingnr text-end ps-0 pointer" (click)="openModal(worldcupModal, badgeCategoryModal); $event.stopPropagation()">
-                    <span class="badge text-bg-success text-decoration-underline">{{rankingItem.rank}}</span>
-                </td>
-            </ng-template>
+          <ng-container ngIf="!hasAchievement(rankingItem);else worldcupQualify">
+              <td class="rankingnr text-end ps-0"><!-- badge text-black -->
+                  <span class="">{{rankingItem.rank}}</span>
+              </td>
+          </ng-container>
+          <ng-template #worldcupQualify>
+              <td class="rankingnr text-end ps-0 pointer" (click)="openModal(worldcupModal, badgeCategoryModal); $event.stopPropagation()">
+                  <span class="badge text-bg-success text-decoration-underline">{{rankingItem.rank}}</span>
+              </td>
+          </ng-template>
 
-            <td class="text-break ps-0" [ngClass]="{ 'favitem': false}">
-                <span>{{rankingItem.poolUser.getUser().getName()}}</span>
-                <!-- <app-superelf-icon *ngIf="rankingItem.poolUser.getUser().getName() === 'storm'" 
-                class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon> -->
-            </td>
-            <td *ngIf="gameRound" class="text-end ps-0 pointer">
-                <span class="badge {{getPointsBadgeClass(rankingItem)}}">
-                    {{getGameRoundPoints(rankingItem.poolUser)}}</span>
-            </td>
-            <td class="text-end ps-0">
-                <span class="badge bg-totals">{{getTotalPoints(rankingItem.poolUser)}}</span>
-            </td>
-        </tr>
+          <td class="text-break ps-0" ngClass="{ 'favitem': false}">
+              <span>{{rankingItem.poolUser.getUser().getName()}}</span>
+              <!-- <app-superelf-icon *ngIf="rankingItem.poolUser.getUser().getName() === 'storm'" 
+              class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon> -->
+          </td>
+          <td *ngIf="gameRound()" class="text-end ps-0 pointer">
+              <span class="badge {{getPointsBadgeClass(rankingItem)}}">
+                  {{getGameRoundPoints(rankingItem.poolUser)}}</span>
+          </td>
+          <td class="text-end ps-0">
+              <span class="badge bg-totals">{{getTotalPoints(rankingItem.poolUser)}}</span>
+          </td>
+      </tr>
+    }
     </tbody>
 </table>
 
@@ -47,15 +49,17 @@
 </ng-template>
 
 <ng-template #badgeCategoryModal let-modal>
-    <div *ngIf="badgeCategory" class="modal-header">
-      <h4 class="modal-title">
-        <span>
-            <app-superelf-badge-icon [badgeCategory]="badgeCategory"></app-superelf-badge-icon>
-            <span class="ms-1">{{nameService.getBadgeCategoryName(badgeCategory)}}-badge</span>
-        </span>
-      </h4>
-      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
-    </div>
+    @if(badgeCategory()){
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>
+              <app-superelf-badge-icon [badgeCategory]="badgeCategory()"></app-superelf-badge-icon>
+              <span class="ms-1">{{nameService.getBadgeCategoryName(badgeCategory())}}-badge</span>
+          </span>
+        </h4>
+        <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
+      </div>
+    }
     <div class="modal-body">
       <p>De nummer 1 van de pool krijgt een zilveren badge. De nummer 1 van alle pools krijgt een gouden badge</p>
     </div>

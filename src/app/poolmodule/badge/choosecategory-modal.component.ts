@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { BadgeCategory } from '../../lib/achievement/badge/category';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -10,7 +10,7 @@ import { LeagueName } from '../../lib/leagueName';
     styleUrls: ['./choosecategory-modal.component.scss']
 })
 export class ChooseBadgeCategoryModalComponent implements OnInit {
-    @Input() currentBadgeCategory: BadgeCategory|undefined;
+    readonly currentBadgeCategory = input<BadgeCategory>();
     
     public choosableBadgeCategories: BadgeCategory[];
     public leagueName = LeagueName.Competition;

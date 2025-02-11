@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase, ScoreConfigService, GameState, Team, TeamCompetitor, StartLocationMap } from 'ngx-sport';
 import { DateFormatter } from '../../../lib/dateFormatter';
 import { SuperElfNameService } from '../../../lib/nameservice';
@@ -9,9 +9,9 @@ import { SuperElfNameService } from '../../../lib/nameservice';
   styleUrls: ['./title.component.scss']
 })
 export class AgainstGameTitleComponent implements OnInit {
-  @Input() againstGame!: AgainstGame;
-  @Input() showDate: boolean = true;
-  @Input() showFinishedDate: boolean = true;
+  readonly againstGame = input.required<AgainstGame>();
+  readonly showDate = input<boolean>(true);
+  readonly showFinishedDate = input<boolean>(true);
   private startLocationMap!: StartLocationMap;
 
   constructor(
@@ -22,7 +22,7 @@ export class AgainstGameTitleComponent implements OnInit {
   }
 
   ngOnInit() {
-    const competitors = this.againstGame.getPoule().getCompetition().getTeamCompetitors();
+    const competitors = this.againstGame().getPoule().getCompetition().getTeamCompetitors();
     this.startLocationMap = new StartLocationMap(competitors);
   }
 
@@ -44,7 +44,7 @@ export class AgainstGameTitleComponent implements OnInit {
   getCompetitors(side: AgainstSide): (Competitor | undefined)[] {
     // console.log(this.againstGame.getAgainstPlaces());
     // console.log(this.againstGame.getAgainstPlaces().map(ap => ap.getSide()), side);
-    return this.againstGame.getSidePlaces(side).map((gamePlace: AgainstGamePlace): Competitor | undefined => {
+    return this.againstGame().getSidePlaces(side).map((gamePlace: AgainstGamePlace): Competitor | undefined => {
       if (gamePlace === undefined) {
         return undefined;
       }

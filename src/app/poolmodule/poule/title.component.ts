@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
 import { AgainstSide, GameState, Poule, StartLocationMap } from 'ngx-sport';
 import { AgainstPoule } from '../../lib/againstPoule';
 import { PoolCompetitor } from '../../lib/pool/competitor';
@@ -10,8 +10,8 @@ import { PoolUser } from '../../lib/pool/user';
   templateUrl: './title.component.html'
 })
 export class PouleTitleComponent implements OnInit {
-  @Input() poule!: Poule;
-  @Input() poolCompetitors!: PoolCompetitor[];
+  readonly poule = input.required<Poule>();
+  readonly poolCompetitors = input.required<PoolCompetitor[]>();
   @Output() linkToPoolUser = new EventEmitter<PoolUser>();
   
   public homeCompetitor: PoolCompetitor | undefined;
@@ -21,23 +21,24 @@ export class PouleTitleComponent implements OnInit {
   }
 
   ngOnInit() {
-    const homeStartLocation = this.poule.getPlace(1).getStartLocation();
+    const homeStartLocation = this.poule().getPlace(1).getStartLocation();
     if (homeStartLocation) {
-      this.homeCompetitor =this.poolCompetitors.find((competitor: PoolCompetitor) => competitor.getStartLocation().equals(homeStartLocation));
+      this.homeCompetitor =this.poolCompetitors().find((competitor: PoolCompetitor) => competitor.getStartLocation().equals(homeStartLocation));
     }
-    const awayStartLocation = this.poule.getPlace(2).getStartLocation();
+    const awayStartLocation = this.poule().getPlace(2).getStartLocation();
     if (awayStartLocation) {
-      this.awayCompetitor = this.poolCompetitors.find((competitor: PoolCompetitor) => competitor.getStartLocation().equals(awayStartLocation));
+      this.awayCompetitor = this.poolCompetitors().find((competitor: PoolCompetitor) => competitor.getStartLocation().equals(awayStartLocation));
     }
   }
   
 
   getScore(homeCompetitor: PoolCompetitor, awayCompetitor: PoolCompetitor): string {
-    if (this.poule.getGamesState() === GameState.Created) {
+    const poule = this.poule();
+    if (poule.getGamesState() === GameState.Created) {
       return ' - ';
     }
     const startLocationMap = new StartLocationMap([homeCompetitor, awayCompetitor]);
-    const againstPoule = new AgainstPoule(this.poule, startLocationMap);
+    const againstPoule = new AgainstPoule(poule, startLocationMap);
     return againstPoule.getScore(AgainstSide.Home) + ' - ' + againstPoule.getScore(AgainstSide.Away)
   }
 
@@ -45,7 +46,7 @@ export class PouleTitleComponent implements OnInit {
   get Away(): AgainstSide { return AgainstSide.Away; }
 
   hasQualified(side: AgainstSide): boolean {
-    if ( this.poule.getPlaces().length == 1 ) {
+    if ( this.poule().getPlaces().length == 1 ) {
       return true;
     }
     const againstPoule = this.getAgainstPoule();
@@ -60,7 +61,7 @@ export class PouleTitleComponent implements OnInit {
     // if (startLocationMap === undefined) {
     //   return undefined;
     // }
-    return new AgainstPoule(this.poule, new StartLocationMap(this.poolCompetitors));
+    return new AgainstPoule(this.poule(), new StartLocationMap(this.poolCompetitors()));
   }
 
   emitLinkToPoolUser(poolUser: PoolUser): void {

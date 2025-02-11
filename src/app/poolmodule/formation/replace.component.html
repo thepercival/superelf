@@ -1,36 +1,42 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
 
-    <div *ngIf="!processing && pool" class="d-flex justify-content-between mt-3 mb-1">
+    <div ngIf="!processing && pool" class="d-flex justify-content-between mt-3 mb-1">
       <h2 class="me-2 text-truncate">
         <span>1. gestopte spelers vervangen</span>
       </h2>
-      <div *ngIf="poolUser && assembleFormation && calcFormation">
-        <button *ngIf="calculator.areAllPlacesWithoutTeamReplaced(assembleFormation, poolUser.getTransferPeriodActionList().replacements)" class="btn btn-outline-primary"
-          (click)="linkToTransfers()">
-          <span>ga naar transfers</span>
-        </button>
-        <button *ngIf="!calculator.areAllPlacesWithoutTeamReplaced(assembleFormation, poolUser.getTransferPeriodActionList().replacements)" class="btn btn-secondary ms-1" disabled>
-          {{calcFormation.getName()}}
-        </button>        
-      </div>
+      @if(poolUser && assembleFormation && calcFormation){      
+        @if(calculator.areAllPlacesWithoutTeamReplaced(assembleFormation, poolUser.getTransferPeriodActionList().replacements)) {
+          @if(pool){
+            <button class="btn btn-outline-primary"
+              (click)="linkToTransfers(pool)">
+              <span>ga naar transfers</span>
+            </button>
+          }
+        } @else {
+          <button            
+            class="btn btn-secondary ms-1" disabled>
+            {{calcFormation.getName()}}
+          </button>
+        }
+      }
     </div>
-    
-    <ngb-alert class="mt-5" *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+    @if(alert){
+    <ngb-alert class="mt-5" [type]="alert.type">{{ alert.message }}</ngb-alert>
+    }
 
-    <div *ngIf="!processing && pool && poolUser && calcFormation && assembleFormation">
-      <div *ngIf="!selectedPlace">
+    @if(!processing && pool && poolUser && calcFormation && assembleFormation) {
+      <div ngIf="!selectedPlace">
         <!-- lines-->
         <app-pool-formationline-replacements *ngFor="let line of calcFormation.getLines()" [line]="line"
           [replacements]="poolUser.getTransferPeriodActionList().replacements"
-          (replace)="linkToReplace(assembleFormation,$event)" (linkToPlayer)="linkToPlayer($event)"
+          (replace)="linkToReplace(pool,assembleFormation,$event)" (linkToPlayer)="linkToPlayer(pool,$event)"
           (remove)="remove(assembleFormation,$event)">
         </app-pool-formationline-replacements>
       </div>
-    </div>
+    }
   </div>
 </div>
-
-<app-pool-navbar *ngIf="pool" [pool]="pool"
-  [poolUser]="poolUser">
-</app-pool-navbar>
+@if(pool){
+<app-pool-navbar [current]="NavBarTransfers" [pool]="pool" [poolUser]="poolUser"></app-pool-navbar>
+}

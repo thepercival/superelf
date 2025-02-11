@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Container, Engine } from 'tsparticles-engine';
 import { Badge } from '../../lib/achievement/badge';
@@ -13,7 +13,7 @@ import { LeagueName } from '../../lib/leagueName';
     styleUrls: ['./unviewed-modal.component.scss']
 })
 export class UnviewedAchievementsModalComponent implements OnInit {
-    @Input() achievements!: (Trophy|Badge)[];
+    readonly achievements = input.required<(Trophy | Badge)[]>();
     
     public previousAchievements: (Trophy|Badge)[] = [];
     public current: Trophy|Badge|undefined;
@@ -29,7 +29,7 @@ export class UnviewedAchievementsModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        const achievements = this.achievements.slice().reverse();
+        const achievements = this.achievements().slice().reverse();
 
         // console.log(achievements);
         const current = achievements.pop(); 
@@ -116,10 +116,11 @@ export class UnviewedAchievementsModalComponent implements OnInit {
     }
     
     getHeader(): string {
-        if( this.achievements.length === 1 ) {
+        const achievements = this.achievements();
+        if( achievements.length === 1 ) {
             return '1 nieuwe prijs';
         }
-        return this.achievements.length + ' nieuwe prijzen';
+        return achievements.length + ' nieuwe prijzen';
     }
 }
 

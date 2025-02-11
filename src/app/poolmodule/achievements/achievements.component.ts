@@ -17,8 +17,23 @@ import { UnviewedAchievementsModalComponent } from './unviewed-modal.component';
 import { LeagueName } from '../../lib/leagueName';
 import { Competition, Season } from 'ngx-sport';
 import { UserBadgesModalComponent } from './userbadges-modal.component';
+import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
+import { WorldCupComponent } from '../worldcup/worldcup.component';
+import { WorldCupNavBarComponent } from '../../shared/poolmodule/poolNavBar/worldcupNavBar.component';
+import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SuperElfTrophyIconComponent } from '../../shared/poolmodule/icon/trophy.component';
+import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.component';
 @Component({
   selector: 'app-pool-achievements',
+  standalone: true,
+  imports: [
+    PoolNavBarComponent
+    ,WorldCupNavBarComponent,
+    SuperElfIconComponent,
+    FontAwesomeModule,
+    SuperElfTrophyIconComponent,
+    SuperElfBadgeIconComponent],
   templateUrl: './achievements.component.html',
   styleUrls: ['./achievements.component.scss']
 })
@@ -170,13 +185,13 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     });
   }
 
-  openLinkNewTab(trophy: Trophy, leagueName: string) {
+  openLinkNewTab(pool: Pool, trophy: Trophy, leagueName: string) {
 
     const season = trophy.getCompetition().getSeason();
     if (season.getStartDateTime().getTime() < new Date('2022-01-01').getTime()) {
       // old env
       let suffix
-      const oldPoolId = this.convertToOldPoolId(season.getStartDateTime());
+      const oldPoolId = this.convertToOldPoolId(pool, season.getStartDateTime());
       if( oldPoolId === undefined ) {
         return;
       }      
@@ -202,9 +217,8 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     }
   }
 
-  private convertToOldPoolId(seasonStartDateTime: Date): number|undefined {
-    console.log(this.pool.getName());
-    if( this.pool.getName() === 'kamp duim') {
+  private convertToOldPoolId(pool: Pool, seasonStartDateTime: Date): number|undefined {
+    if( pool.getName() === 'kamp duim') {
       if (seasonStartDateTime.getFullYear() === 2014) {
         return 1;
       } else if (seasonStartDateTime.getFullYear() === 2015) {
@@ -220,13 +234,13 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
       } else if (seasonStartDateTime.getFullYear() === 2021) {
         return 44;
       }
-    } else if (this.pool.getName() === 'Deerns') {
+    } else if (pool.getName() === 'Deerns') {
       if (seasonStartDateTime.getFullYear() === 2020) {
         return 39;
       } else if (seasonStartDateTime.getFullYear() === 2021) {
         return 50;
       }
-    } else if (this.pool.getName() === 'Arriva') {
+    } else if (pool.getName() === 'Arriva') {
       if (seasonStartDateTime.getFullYear() === 2020) {
         return 40;
       } else if (seasonStartDateTime.getFullYear() === 2021) {

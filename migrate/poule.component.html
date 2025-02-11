@@ -1,10 +1,10 @@
-<div *ngIf="poule && structureNameService" class="card border-1">
-    <div *ngIf="header" class="card-header">
-        {{structureNameService.getPouleName(poule, true)}}
+<div ngIf="poule && structureNameService" class="card border-1">
+    <div ngIf="header" class="card-header">
+        {{structureNameService.getPouleName(poule(), true)}}
     </div>
     <div class="card-body p-0">
-        <h2 *ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        <h2 ngIf="processing" class="text-center">
+            <fa-icon [icon]="['fas', 'spinner']" spin=true></fa-icon>
         </h2>
         <div *ngIf="!processing" class="card-text">
             <table class="table fixed mb-0">

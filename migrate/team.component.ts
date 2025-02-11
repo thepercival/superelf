@@ -2,22 +2,26 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { PoolRepository } from '../../lib/pool/repository';
-import { PoolComponent } from '../../shared/poolmodule/component';
+import { PoolRepository } from '../src/app/lib/pool/repository';
+import { PoolComponent } from '../src/app/shared/poolmodule/component';
 import { NameService, Person, Player, Team, FootballLine } from 'ngx-sport';
-import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
-import { ScoutedPlayer } from '../../lib/scoutedPlayer';
-import { Pool } from '../../lib/pool';
+import { PlayerRepository } from '../src/app/lib/ngx-sport/player/repository';
+import { NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ScoutedPlayerRepository } from '../src/app/lib/scoutedPlayer/repository';
+import { ScoutedPlayer } from '../src/app/lib/scoutedPlayer';
+import { Pool } from '../src/app/lib/pool';
 import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
 import { ConfirmS11PlayerChoiceModalComponent } from '../chooseplayers/confirmchoicemodal.component';
-import { S11Player } from '../../lib/player';
-import { ViewPeriod } from '../../lib/period/view';
+import { S11Player } from '../src/app/lib/player';
+import { ViewPeriod } from '../src/app/lib/period/view';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TitleComponent } from '../src/app/shared/commonmodule/title/title.component';
 
 
 @Component({
   selector: 'app-pool-team',
+  standalone: true,
+  imports: [FontAwesomeModule,NgbAlertModule,TitleComponent],
   templateUrl: './team.component.html',
   styleUrls: ['./team.component.scss']
 })

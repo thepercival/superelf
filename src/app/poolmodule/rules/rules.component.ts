@@ -13,9 +13,14 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 
 @Component({
   selector: 'app-pool-rules',
+  standalone: true,
+  imports: [FontAwesomeModule,NgbAlertModule,PoolNavBarComponent],
   templateUrl: './rules.component.html',
   styleUrls: ['./rules.component.scss'],
   encapsulation: ViewEncapsulation.None
@@ -81,8 +86,8 @@ export class RulesComponent extends PoolComponent implements OnInit {
     return this.cssService.getLine(footballLine, prefix ? prefix + '-' : prefix);
   }
 
-  getPointsItems(): PointsItem[] {
-    const scorePointsMap = this.pool.getCompetitionConfig().getScorePointsMap();
+  getPointsItems(pool: Pool): PointsItem[] {
+    const scorePointsMap = pool.getCompetitionConfig().getScorePointsMap();
     return scorePointsMap.getScorePoints().map((score: FootballScore): PointsItem => {
       return {
         name: this.nameService.getScoreName(score), points: scorePointsMap.get(score)
@@ -90,13 +95,13 @@ export class RulesComponent extends PoolComponent implements OnInit {
     });
   }
 
-  getLinePointsItems(line: FootballLine): PointsItem[] {
+  getLinePointsItems(pool: Pool, line: FootballLine): PointsItem[] {
     const scores: FootballScoreLine[] = [FootballGoal.Normal, FootballGoal.Assist];
     if (line === FootballLine.GoalKeeper || line === FootballLine.Defense) {
       scores.push(FootballSheet.Clean);
       scores.push(FootballSheet.Spotty);
     }
-    const scorePointsMap = this.pool.getCompetitionConfig().getScorePointsMap();
+    const scorePointsMap = pool.getCompetitionConfig().getScorePointsMap();
     return scores.map((score: FootballScoreLine): PointsItem => {
       return {
         name: this.nameService.getScoreName(score), points: scorePointsMap.getLine({ line, score })

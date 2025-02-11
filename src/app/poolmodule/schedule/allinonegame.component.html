@@ -3,85 +3,96 @@
         <ngb-alert *ngIf="!processing && !currentSourceGame" type="danger">de wedstrijd kan niet gevonden worden
         </ngb-alert>
 
-        <div *ngIf="!processing && gameRounds" class="d-flex mt-2 ms-1">
-            
-            <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
-                (update)="updateGameRound($event)">
-            </app-gameround-scroller>
-            
-            <button *ngIf="poule" (click)="navigateToChat(poule)" type="button" class="btn btn-outline-dark ms-3 position-relative">
-                <fa-icon [icon]="['fas', 'message']"></fa-icon>
-                <span class="ms-1"> chat</span>
-                <span *ngIf="nrOfUnreadMessages > 0"
-                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    {{nrOfUnreadMessages}}
-                    <span class="visually-hidden">ongelezen berichten</span>
-                </span>
-            </button>
-        </div>
-
-        <h2 *ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-        </h2>
-        <div *ngIf="!processing">
-
-            <h2 *ngIf="processingGames" class="text-center">
-                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-            </h2>
-
-            <div *ngIf="!processingGames && sourceGameRoundGames.length > 0 && currentSourceGame" class="d-flex my-3 ms-1">
-                <app-game-scroller [games]="sourceGameRoundGames" [current]="currentSourceGame"
-                    (update)="updateSourceGame($event)" (navigate)="navigateToSourceGame($event)">
-                </app-game-scroller>
+        @if(!processing && pool && gameRounds) {
+            <div class="d-flex mt-2 ms-1">
+                
+                <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
+                    [currentViewPeriod]="getCurrentViewPeriod(pool)" (update)="updateGameRound($event)">
+                </app-gameround-scroller>
+                @if(poule){
+                    <button  (click)="navigateToChat(pool, poule)" type="button" class="btn btn-outline-dark ms-3 position-relative">
+                        <fa-icon [icon]="['fas', 'message']"></fa-icon>
+                        <span class="ms-1"> chat</span>
+                        <span ngIf="nrOfUnreadMessages > 0"
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{nrOfUnreadMessages}}
+                            <span class="visually-hidden">ongelezen berichten</span>
+                        </span>
+                    </button>
+                }
             </div>
+        }
 
-            <table class="table" *ngIf="!processingGames && formationMap && currentSourceGame && sportRankingItems.length > 0">
-                <tbody>
-                    <tr *ngFor="let sportRankingItem of sportRankingItems">
-                        <td>
-                            <a [routerLink]="getRouterLink(sportRankingItem, currentGameRound)">
-                                {{structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(),true)}}
-                            </a>
-                        </td>
-                        <td>
-                            <ng-container [ngTemplateOutlet]="contentSideForamtionPlaces"
-                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(currentSourceGame, HomeSide, formationMap, sportRankingItem)}">
-                            </ng-container>
-                        </td>
-                        <td>
-                            <ng-container [ngTemplateOutlet]="contentSideForamtionPlaces"
-                                [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(currentSourceGame, AwaySide, formationMap, sportRankingItem)}">
-                            </ng-container>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <h2 ngIf="processing" class="text-center">
+            <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
+        </h2>
+        @if(!processing && pool){
+            <div>
+                <h2 ngIf="processingGames" class="text-center">
+                    <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
+                </h2>
 
-            <ng-template #contentSideForamtionPlaces let-formationPlaces="formationPlaces">
-                <div *ngFor="let formationPlace of formationPlaces" class="d-flex justify-content-between">
-                    <ng-container *ngIf="formationPlace.getPlayer()" [ngTemplateOutlet]="contentSidePlayer"
-                        [ngTemplateOutletContext]="{s11Player:formationPlace.getPlayer()}">
-                    </ng-container>
-                    <span *ngIf="formationPlace.isSubstitute()" class="badge badge-reserve ms-1">r</span>
+                <div ngIf="!processingGames && sourceGameRoundGames.length > 0 && currentSourceGame" class="d-flex my-3 ms-1">
+                    <app-game-scroller [games]="sourceGameRoundGames" [current]="currentSourceGame"
+                        (update)="updateSourceGame($event)" (navigate)="navigateToSourceGame(pool, $event)"
+                        >
+                    </app-game-scroller>
                 </div>
-            </ng-template>
 
-            <ng-template #contentSidePlayer let-s11Player="s11Player">
-                <div>
-                    <app-lineicon [line]="s11Player.getLine()"></app-lineicon>
-                    <a href="javascript:void(0)" (click)="linkToPlayer(s11Player)">
-                        <span class="ps-1 text-break">{{s11Player.getPerson().getName()}}</span>
-                    </a>
-                </div>
-            </ng-template>
+                <table class="table" ngIf="!processingGames && formationMap && currentSourceGame && sportRankingItems.length > 0">
+                    <tbody>
+                    @for(sportRankingItem of sportRankingItems; track sportRankingItem.getPlaceLocation()) {
+                        <tr>
+                            <td>
+                                <a routerLink="getRouterLink(sportRankingItem, currentGameRound)">
+                                    {{structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(),true)}}
+                                </a>
+                            </td>
+                            <td>
+                                <ng-container [ngTemplateOutlet]="contentSideForamtionPlaces"
+                                    [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(currentSourceGame, HomeSide, formationMap, sportRankingItem)}">
+                                </ng-container>
+                            </td>
+                            <td>
+                                <ng-container [ngTemplateOutlet]="contentSideForamtionPlaces"
+                                    [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(currentSourceGame, AwaySide, formationMap, sportRankingItem)}">
+                                </ng-container>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
 
-        </div>
+                <ng-template #contentSideForamtionPlaces let-formationPlaces="formationPlaces">
+                    <div ngFor="let formationPlace of formationPlaces" class="d-flex justify-content-between">
+                        <ng-container ngIf="formationPlace.getPlayer()" [ngTemplateOutlet]="contentSidePlayer"
+                            [ngTemplateOutletContext]="{s11Player:formationPlace.getPlayer()}">
+                        </ng-container>
+                        <span ngIf="formationPlace.isSubstitute()" class="badge badge-reserve ms-1">r</span>
+                    </div>
+                </ng-template>
+
+                <ng-template #contentSidePlayer let-s11Player="s11Player">
+                    <div>
+                        <app-lineicon [line]="s11Player.getLine()"></app-lineicon>
+                        <a href="javascript:void(0)" (click)="linkToPlayer(pool, s11Player)">
+                            <span class="ps-1 text-break">{{s11Player.getPerson().getName()}}</span>
+                        </a>
+                    </div>
+                </ng-template>
+
+            </div>
+        }
     </div>
 </div>
 
-<app-pool-navbar *ngIf="pool && leagueName !== WorldCupLeagueName" [current]="Schedule" [pool]="pool"
-    [poolUser]="poolUserFromSession" >
-</app-pool-navbar>
-<app-worldcup-navbar *ngIf="pool && leagueName === WorldCupLeagueName" [current]="Schedule" [pool]="pool"
-    [poolUser]="poolUserFromSession">
-</app-worldcup-navbar>
+@if(pool){
+    @if(leagueName === WorldCupLeagueName){
+        <app-worldcup-navbar [current]="Schedule" [pool]="pool"
+            [poolUser]="poolUserFromSession">
+        </app-worldcup-navbar>
+    } @else {
+        <app-pool-navbar [current]="Schedule" [pool]="pool" [poolUser]="poolUserFromSession">
+        </app-pool-navbar>
+    }
+}

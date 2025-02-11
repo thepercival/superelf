@@ -1,28 +1,29 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { Poule, Place, StructureNameService } from 'ngx-sport';
-import { AuthService } from '../../../lib/auth/auth.service';
+import { AuthService } from '../src/app/lib/auth/auth.service';
+import { NgIf } from '@angular/common';
 
-import { CSSService } from '../../commonmodule/cssservice';
+import { CSSService } from '../src/app/shared/commonmodule/cssservice';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
-  selector: 'app-pouleranking',
-  templateUrl: './poule.component.html',
-  styleUrls: ['./poule.component.scss']
+  selector: "app-pouleranking",
+  standalone: true,
+  imports: [NgIf,FontAwesomeModule],
+  templateUrl: "./poule.component.html",
+  styleUrls: ["./poule.component.scss"],
 })
 export class PouleRankingComponent implements OnInit {
   // public rankingItems: RankedRoundItem[] = [];
-  @Input() poule: Poule | undefined;
+  readonly poule = input<Poule>();
   // @Input() placeLocationMap: PlaceLocationMap | undefined;
-  @Input() header: boolean | undefined;
+  readonly header = input<boolean>();
   // public placeLocationMap: PlaceLocationMap;
   public structureNameService: StructureNameService | undefined;
   public showDifferenceDetail = false;
   public processing = true;
 
-  constructor(
-    public authService: AuthService,
-    public cssService: CSSService) {
-  }
+  constructor(public authService: AuthService, public cssService: CSSService) {}
 
   ngOnInit() {
     this.processing = true;
@@ -50,6 +51,5 @@ export class PouleRankingComponent implements OnInit {
     return false;
     // const poolCompetitor = <PoolCompetitor>this.placeLocationMap?.getCompetitor(place);
     // return poolCompetitor?.getUser() === this.authService.getUser();
-
   }
 }

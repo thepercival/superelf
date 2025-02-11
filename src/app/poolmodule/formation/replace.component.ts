@@ -6,7 +6,7 @@ import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { NameService, PersonMap, TeamMap, FootballLine } from 'ngx-sport';
 import { PlayerRepository } from '../../lib/ngx-sport/player/repository';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
 import { Pool } from '../../lib/pool';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
@@ -19,11 +19,20 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { S11Formation } from '../../lib/formation';
 import { S11FormationCalculator } from '../../lib/formation/calculator';
 import { Replacement } from '../../lib/editAction/replacement';
+import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
+import { FormationLineReplacementsComponent } from './line/replacements.component';
 
 @Component({
-  selector: 'app-pool-replace',
-  templateUrl: './replace.component.html',
-  styleUrls: ['./replace.component.scss']
+  selector: "app-pool-replace",
+  standalone: true,
+  imports: [
+    NgbAlertModule,
+    PoolNavBarComponent,
+    FormationLineReplacementsComponent,
+  ],
+  templateUrl: "./replace.component.html",
+  styleUrls: ["./replace.component.scss"],
 })
 export class FormationReplaceComponent extends PoolComponent implements OnInit {
   poolUser!: PoolUser;
@@ -32,11 +41,10 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
   selectedPlace: S11FormationPlace | undefined;
   selectedSearchLine: FootballLine | undefined;
   selectedTeamMap: TeamMap = new TeamMap();
-  public calcFormation: S11Formation|undefined;
-  public assembleFormation: S11Formation|undefined;
+  public calcFormation: S11Formation | undefined;
+  public assembleFormation: S11Formation | undefined;
   public calculator = new S11FormationCalculator();
   public oneTeamSimultaneous = new OneTeamSimultaneous();
-
 
   constructor(
     route: ActivatedRoute,
@@ -54,80 +62,113 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
-    super.parentNgOnInit()
-      .subscribe({
-        next: (pool: Pool) => {
-          this.setPool(pool);
-          this.poolUserRepository.getObjectFromSession(pool).subscribe({
-            next: (poolUser: PoolUser) => {
-              this.poolUser = poolUser;
-              if( this.hasNoNextEditAction(poolUser) ) {
-                this.router.navigate(['/pool/formation/substitutions/', this.pool.getId()]);
-              } else {
-                this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
-                  next: (assembleFormation: S11Formation) => {                    
+    super.parentNgOnInit().subscribe({
+      next: (pool: Pool) => {
+        this.setPool(pool);
+        this.poolUserRepository.getObjectFromSession(pool).subscribe({
+          next: (poolUser: PoolUser) => {
+            this.poolUser = poolUser;
+            if (this.hasNoNextEditAction(poolUser)) {
+              this.router.navigate([
+                "/pool/formation/substitutions/",
+                pool.getId(),
+              ]);
+            } else {
+              this.formationRepository
+                .getObject(poolUser, pool.getAssembleViewPeriod())
+                .subscribe({
+                  next: (assembleFormation: S11Formation) => {
                     const calculator = new S11FormationCalculator();
                     this.assembleFormation = assembleFormation;
-                    this.calcFormation = calculator.getCurrentFormation(assembleFormation, poolUser.getTransferPeriodActionList());
+                    this.calcFormation = calculator.getCurrentFormation(
+                      assembleFormation,
+                      poolUser.getTransferPeriodActionList()
+                    );
                   },
                   error: (e: string) => {
-                    this.setAlert('danger', e); this.processing = false;
+                    this.setAlert("danger", e);
+                    this.processing = false;
                   },
-                  complete: () => this.processing = false
+                  complete: () => (this.processing = false),
                 });
-              }
-            },
-            error: (e: string) => {
-              this.setAlert('danger', e); this.processing = false;
             }
-          });
-        },
-        error: (e) => {
-          this.setAlert('danger', e); this.processing = false;
-        }
-      });
+          },
+          error: (e: string) => {
+            this.setAlert("danger", e);
+            this.processing = false;
+          },
+        });
+      },
+      error: (e) => {
+        this.setAlert("danger", e);
+        this.processing = false;
+      },
+    });
+  }
+
+  get NavBarTransfers(): NavBarItem {
+    return NavBarItem.Transfers;
   }
 
   hasNoNextEditAction(poolUser: PoolUser): boolean {
-    return poolUser.getTransferPeriodActionList().transfers.length > 0 || poolUser.getTransferPeriodActionList().substitutions.length > 0
+    return (
+      poolUser.getTransferPeriodActionList().transfers.length > 0 ||
+      poolUser.getTransferPeriodActionList().substitutions.length > 0
+    );
   }
 
-  linkToReplace(assembleFormation: S11Formation, place: S11FormationPlace) {
+  linkToReplace(
+    pool: Pool,
+    assembleFormation: S11Formation,
+    place: S11FormationPlace
+  ) {
     const navigationExtras: NavigationExtras = {
       queryParams: {
         line: place.getFormationLine().getNumber(),
-        teamId: this.getTeamId(place)
-      }
+        teamId: this.getTeamId(place),
+      },
     };
-    const placeId = assembleFormation.getPlace(place.getLine(), place.getNumber()).getId();
-    this.router.navigate(['/pool/formation/place/replace/', this.pool.getId(), placeId], navigationExtras);
+    const placeId = assembleFormation
+      .getPlace(place.getLine(), place.getNumber())
+      .getId();
+    this.router.navigate(
+      ["/pool/formation/place/replace/", pool.getId(), placeId],
+      navigationExtras
+    );
   }
 
   getTeamId(place: S11FormationPlace): number | undefined {
     return place.getPlayer()?.getLine() ?? undefined;
   }
 
-  linkToTransfers(): void {
-    this.router.navigate(['/pool/formation/transfers', this.pool.getId()]);
+  linkToTransfers(pool: Pool): void {
+    this.router.navigate(["/pool/formation/transfers", pool.getId()]);
   }
 
-  linkToPlayer(s11Player: S11Player): void {
-    this.router.navigate(['/pool/player/', this.pool.getId(), s11Player.getId(), 0]/*, {
+  linkToPlayer(pool: Pool, s11Player: S11Player): void {
+    this.router.navigate(
+      ["/pool/player/", pool.getId(), s11Player.getId(), 0] /*, {
       state: { s11Player, "pool": this.pool, currentGameRound: undefined }
-    }*/);
+    }*/
+    );
   }
-  
+
   remove(assembleFormation: S11Formation, replacement: Replacement) {
-    this.processing = true;   
-    this.formationRepository.removeReplacement(replacement, replacement.getPoolUser()).subscribe({
-      next: () => {
-        const calculator = new S11FormationCalculator();
-        this.calcFormation = calculator.getCurrentFormation(assembleFormation, replacement.getPoolUser().getTransferPeriodActionList());
-        this.processing = false;   
-      },
-      error: (e) => {
-        console.log(e);
-      }
-    });
+    this.processing = true;
+    this.formationRepository
+      .removeReplacement(replacement, replacement.getPoolUser())
+      .subscribe({
+        next: () => {
+          const calculator = new S11FormationCalculator();
+          this.calcFormation = calculator.getCurrentFormation(
+            assembleFormation,
+            replacement.getPoolUser().getTransferPeriodActionList()
+          );
+          this.processing = false;
+        },
+        error: (e) => {
+          console.log(e);
+        },
+      });
   }
 }

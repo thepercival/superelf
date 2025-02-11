@@ -1,53 +1,54 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-6">
 
-    <h2 *ngIf="processing" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    <h2 ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
     </h2>
 
-    <div *ngIf="!processing && pool">
-      <div class="d-flex flex-nowrap justify-content-between mt-2">
-        <app-gameround-scroller *ngIf="currentViewPeriod" [gameRounds]="gameRounds" [current]="currentGameRound"
-          (update)="updateGameRoundFromScroller($event)" [currentViewPeriod]="currentViewPeriod"
-          (updateViewPeriod)="updateViewPeriodFromScroller(pool.getCompetitionConfig(), $event)"
-          [assembleViewPeriod]="pool.getAssembleViewPeriod()" [transferViewPeriod]="pool.getTransferViewPeriod()">
-        </app-gameround-scroller>
-        <div>
-          <button *ngIf="pouleId" (click)="navigateToChat(pouleId)" type="button"
-            class="btn btn-outline-dark me-1 position-relative">
-            <fa-icon [icon]="['fas', 'message']"></fa-icon>
-            <span class="ms-1 d-none d-sm-inline"> chat</span>
-            <span *ngIf="nrOfUnreadMessages > 0"
-              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              {{nrOfUnreadMessages}}
-              <span class="visually-hidden">ongelezen berichten</span>
-            </span>
-          </button>
-          <button (click)="openChooseBadgeCategoryModal()" type="button"
-            class="btn {{badgeCategory !== undefined ? 'btn-success' : 'btn-outline-dark'}} me-0 position-relative">
-            <app-superelf-icon [name]="'trophy'"></app-superelf-icon>
-          </button>          
+    @if(!processing && pool){
+      <div>
+        <div class="d-flex flex-nowrap justify-content-between mt-2">
+          <app-gameround-scroller *ngIf="currentViewPeriod" [gameRounds]="gameRounds" [current]="currentGameRound"
+            (update)="updateGameRoundFromScroller($event)" [currentViewPeriod]="currentViewPeriod"
+            (updateViewPeriod)="updateViewPeriodFromScroller(pool.getCompetitionConfig(), $event)"
+            [assembleViewPeriod]="pool.getAssembleViewPeriod()" [transferViewPeriod]="pool.getTransferViewPeriod()">
+          </app-gameround-scroller>
+          <div>
+            <button *ngIf="pouleId" (click)="navigateToChat(pouleId)" type="button"
+              class="btn btn-outline-dark me-1 position-relative">
+              <fa-icon [icon]="['fas', 'message']"></fa-icon>
+              <span class="ms-1 d-none d-sm-inline"> chat</span>
+              <span *ngIf="nrOfUnreadMessages > 0"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{nrOfUnreadMessages}}
+                <span class="visually-hidden">ongelezen berichten</span>
+              </span>
+            </button>
+            <button (click)="openChooseBadgeCategoryModal()" type="button"
+              class="btn {{badgeCategory !== undefined ? 'btn-success' : 'btn-outline-dark'}} me-0 position-relative">
+              <app-superelf-icon [name]="'trophy'"></app-superelf-icon>
+            </button>          
+          </div>
         </div>
+
+        <div *ngIf="badgeCategory" class="text-center mt-3">
+          <span class="">
+            <app-superelf-badge-icon [badgeCategory]="badgeCategory"></app-superelf-badge-icon>
+            <span class="ms-1">{{nameService.getBadgeCategoryName(badgeCategory)}}-badge</span>
+          </span>
+          
+        </div>
+    
+        <app-together-ranking *ngIf="poolUsersTotalsMap" [poolUsers]="poolUsers" 
+          [poolUsersTotalsMap]="poolUsersTotalsMap" 
+          [gameRoundPoolUserTotalsMap]="currentGameRoundPoolUsersTotalsMap" 
+          [gameRound]="currentGameRound" [badgeCategory]="badgeCategory" 
+          [scorePointsMap]="pool.getCompetitionConfig().getScorePointsMap()"
+          [header]="true" >
+        </app-together-ranking>
+
       </div>
-
-      <div *ngIf="badgeCategory" class="text-center mt-3">
-        <span class="">
-          <app-superelf-badge-icon [badgeCategory]="badgeCategory"></app-superelf-badge-icon>
-          <span class="ms-1">{{nameService.getBadgeCategoryName(badgeCategory)}}-badge</span>
-        </span>
-        
-      </div>
-  
-      <app-together-ranking *ngIf="poolUsersTotalsMap" [poolUsers]="poolUsers" 
-        [poolUsersTotalsMap]="poolUsersTotalsMap" 
-        [gameRoundPoolUserTotalsMap]="currentGameRoundPoolUsersTotalsMap" 
-        [gameRound]="currentGameRound" [badgeCategory]="badgeCategory" 
-        [scorePointsMap]="pool.getCompetitionConfig().getScorePointsMap()"
-        [header]="true" >
-      </app-together-ranking>
-
-    </div>
-
+    }
   </div>
 </div>
 

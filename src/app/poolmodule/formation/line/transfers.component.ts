@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Person, Team } from 'ngx-sport';
 import { Transfer } from '../../../lib/editAction/transfer';
@@ -19,13 +19,13 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
   styleUrls: ['./transfers.component.scss']
 })
 export class FormationLineTransfersComponent implements OnInit {
-  @Input() line!: S11FormationLine;
-  @Input() selectedPlace: S11FormationPlace | undefined;
-  @Input() viewGameRound: GameRound | undefined;
-  @Input() processing: boolean = true;
-  @Input() transfers: Transfer[] = [];
-  @Input() maxNrOfTransfers!: number;
-  @Input() canRemoveTransfer: boolean = false;
+  readonly line = input.required<S11FormationLine>();
+  readonly selectedPlace = input<S11FormationPlace>();
+  readonly viewGameRound = input<GameRound>();
+  readonly processing = input<boolean>(true);
+  readonly transfers = input<Transfer[]>([]);
+  readonly maxNrOfTransfers = input.required<number>();
+  readonly canRemoveTransfer = input<boolean>(false);
   @Output() transfer = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
   @Output() remove = new EventEmitter<Transfer[]>();
@@ -44,12 +44,12 @@ export class FormationLineTransfersComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.hasTransferLeft = this.transfers.length < this.maxNrOfTransfers;
+    this.hasTransferLeft = this.transfers().length < this.maxNrOfTransfers();
     this.processing = false;
   }
 
   completed() {
-    return this.line.getPlaces().every((place: S11FormationPlace) => place.getPlayer());
+    return this.line().getPlaces().every((place: S11FormationPlace) => place.getPlayer());
   }
 
   getTeamImageUrl(s11Player: S11Player): string {
@@ -85,11 +85,11 @@ export class FormationLineTransfersComponent implements OnInit {
   // }
 
   getLineClass(prefix: string): string {
-    return this.cssService.getLine(this.line.getNumber(), prefix + '-');
+    return this.cssService.getLine(this.line().getNumber(), prefix + '-');
   }
 
   getPointsTotalsClass() {
-    return this.viewGameRound === undefined ? 'bg-totals' : 'bg-points';
+    return this.viewGameRound() === undefined ? 'bg-totals' : 'bg-points';
   }
 
   maybeLinkToPlayer(place: S11FormationPlace): void {
@@ -128,7 +128,7 @@ export class FormationLineTransfersComponent implements OnInit {
 
   getTransfer(place: S11FormationPlace): Transfer|undefined {
     
-    return this.transfers.find((transfer: Transfer): boolean => {
+    return this.transfers().find((transfer: Transfer): boolean => {
       const player = place.getPlayer()?.getPlayersDescendingStart().shift();
       return player !== undefined && player === transfer.getPlayerIn();
     });

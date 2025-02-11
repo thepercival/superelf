@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, input } from '@angular/core';
 import { EndRankingItem, Structure, Competitor } from 'ngx-sport';
 import { VoetbalRange } from 'ngx-sport';
 
@@ -9,9 +9,9 @@ import { VoetbalRange } from 'ngx-sport';
 })
 export class EndRankingComponent implements OnInit, OnChanges {
 
-  @Input() structure: Structure | undefined;
-  @Input() favorites: Competitor[] | undefined;
-  @Input() range: VoetbalRange | undefined;
+  readonly structure = input<Structure>();
+  readonly favorites = input<Competitor[]>();
+  readonly range = input<VoetbalRange>();
 
   public items: EndRankingItem[] | undefined;
 
@@ -33,7 +33,7 @@ export class EndRankingComponent implements OnInit, OnChanges {
   }
 
   protected updateItems() {
-    if (!this.structure) {
+    if (!this.structure()) {
       return;
     }
     // const endRankingService = new EndRankingService(this.structure, RankingService.RULESSET_WC);
@@ -53,6 +53,7 @@ export class EndRankingComponent implements OnInit, OnChanges {
   }
 
   isFavorite(competitorName: string) {
-    return this.favorites && this.favorites.some(competitor => competitor.getName() === competitorName);
+    const favorites = this.favorites();
+    return favorites && favorites.some(competitor => competitor.getName() === competitorName);
   }
 }

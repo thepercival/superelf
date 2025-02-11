@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { Badge } from '../../lib/achievement/badge';
@@ -10,8 +10,8 @@ import { BadgeCategory } from '../../lib/achievement/badge/category';
     styleUrls: ['./userbadges-modal.component.scss']
 })
 export class UserBadgesModalComponent implements OnInit {
-    @Input() userName!: string;
-    @Input() badges!: Badge[];
+    readonly userName = input.required<string>();
+    readonly badges = input.required<Badge[]>();
     private badgeCategoryMap: Map<string, string[]>;
     public processing = true;
 
@@ -30,7 +30,7 @@ export class UserBadgesModalComponent implements OnInit {
 
     ngOnInit() {
         const badgeCategoryMap = new Map();
-        this.badges.forEach((badge: Badge) => {
+        this.badges().forEach((badge: Badge) => {
             const seasonShortNames = badgeCategoryMap.get(badge.getCategory()) ?? [];            
             seasonShortNames.push(badge.seasonShortName);
             seasonShortNames.sort((seasonShortName1: string, seasonShortName2: string) => {

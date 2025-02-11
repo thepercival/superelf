@@ -1,30 +1,24 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { Team } from 'ngx-sport';
 import { ImageRepository } from '../../lib/image/repository';
 
 @Component({
-  selector: 'app-team-name',
-  templateUrl: './name.component.html',
-  styleUrls: ['./name.component.scss']
+  selector: "app-team-name",
+  templateUrl: "./name.component.html",
+  styleUrls: ["./name.component.scss"],
 })
 export class TeamNameComponent implements OnInit {
-  @Input() team: Team | undefined;
-  @Input() fullName: boolean = false;
-  @Input() underline: boolean = false;
-  @Input() reverse: boolean = false;
+  readonly team = input.required<Team>();
+  readonly fullName = input<boolean>(false);
+  readonly underline = input<boolean>(false);
+  readonly reverse = input<boolean>(false);
 
-  constructor(
-    public imageRepository: ImageRepository
-  ) {
+  constructor(public imageRepository: ImageRepository) {}
 
-  }
-
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   getName(team: Team): string {
-    return this.fullName ? team.getName() : team.getAbbreviation() ?? '';
+    return this.fullName() ? team.getName() : team.getAbbreviation() ?? "";
   }
 
   getImageUrl(team: Team): string {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Person, Team } from 'ngx-sport';
 import { Replacement } from '../../../lib/editAction/replacement';
@@ -19,11 +19,11 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
   styleUrls: ['./replacements.component.scss']
 })
 export class FormationLineReplacementsComponent implements OnInit {
-  @Input() line!: S11FormationLine;
-  @Input() selectedPlace: S11FormationPlace | undefined;
-  @Input() viewGameRound: GameRound | undefined;
-  @Input() replacements: Replacement[] = [];
-  @Input() processing: boolean = true;
+  readonly line = input.required<S11FormationLine>();
+  readonly selectedPlace = input<S11FormationPlace>();
+  readonly viewGameRound = input<GameRound>();
+  readonly replacements = input<Replacement[]>([]);
+  readonly processing = model<boolean>(true);
   @Output() replace = new EventEmitter<S11FormationPlace>();
   @Output() remove = new EventEmitter<Replacement>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
@@ -41,11 +41,11 @@ export class FormationLineReplacementsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = false;
+    this.processing.set(false);
   }
 
   completed() {
-    return this.line.getPlaces().every((place: S11FormationPlace) => place.getPlayer());
+    return this.line().getPlaces().every((place: S11FormationPlace) => place.getPlayer());
   }
 
   getTeamImageUrl(s11Player: S11Player): string {
@@ -65,10 +65,10 @@ export class FormationLineReplacementsComponent implements OnInit {
   }
 
   emptyPlace(place: S11FormationPlace) {
-    this.processing = true;
+    this.processing.set(true);
     this.formationRepository.editPlace(place, undefined).subscribe({
-      next: () => { },
-      complete: () => this.processing = false
+      next: () => {},
+      complete: () => this.processing.set(false),
     });
   }
 
@@ -81,11 +81,11 @@ export class FormationLineReplacementsComponent implements OnInit {
   // }
 
   getLineClass(prefix: string): string {
-    return this.cssService.getLine(this.line.getNumber(), prefix + '-');
+    return this.cssService.getLine(this.line().getNumber(), prefix + '-');
   }
 
   getPointsTotalsClass() {
-    return this.viewGameRound === undefined ? 'bg-totals' : 'bg-points';
+    return this.viewGameRound() === undefined ? 'bg-totals' : 'bg-points';
   }
 
   maybeLinkToPlayer(place: S11FormationPlace): void {
@@ -110,7 +110,7 @@ export class FormationLineReplacementsComponent implements OnInit {
   }
 
   getReplacement(place: S11FormationPlace): Replacement|undefined {
-    return this.replacements.find((replacement: Replacement): boolean => {
+    return this.replacements().find((replacement: Replacement): boolean => {
       const player = place.getPlayer()?.getPlayersDescendingStart().shift();
       return player !== undefined && player === replacement.getPlayerIn();
     });

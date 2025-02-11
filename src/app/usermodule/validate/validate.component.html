@@ -5,13 +5,13 @@
         <app-user-title title="valideren" icon="user-circle">
         </app-user-title>
         <h2 *ngIf="processing" class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+          <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
         </h2>
         <div *ngIf="!processing" class="card-body card-body-auth">
-          <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+          <ngb-alert *ngIf="alert !== undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
           <div *ngIf="!processing && validated" class="card card-body text-center mx-auto bg-faded form-validate mt-3">
             <p>
-              <button [routerLink]="['']" type="button" class="btn btn-primary">
+              <button routerLink="['']" type="button" class="btn btn-primary">
                 naar de home-pagina
               </button>
             </p>

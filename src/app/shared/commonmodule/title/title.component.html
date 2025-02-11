@@ -1,11 +1,14 @@
 <div class="d-flex justify-content-between mb-4">
-  <span *ngIf="center"></span>
+  <span ngIf="center()"></span>
   <h2 class="text-truncate">
-    <fa-icon *ngIf="iconName" [icon]="['fas', iconName]"></fa-icon> {{title}}
+    @let iconName2 = iconName();
+    @if (iconName2) {
+      <fa-icon [icon]="['fas', iconName2]"></fa-icon> {{title()}}
+    }
   </h2>
   <div class="ms-3 me-1">
     <button (click)="navigateBack()" type="button" class="btn btn-outline-dark">
-      <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
+      <fa-icon icon="['fas', 'level-up-alt']" rotate="270"></fa-icon>
       <span class="ms-1 d-none d-md-inline"> terug</span>
     </button>
   </div>

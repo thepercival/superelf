@@ -7,11 +7,17 @@ import { User } from '../../lib/user';
 import { AuthComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { StartSessionService } from '../../shared/commonmodule/startSessionService';
+import { NgIf } from '@angular/common';
+import { UserTitleComponent } from '../title/title.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  standalone: true,
+  selector: "app-login",
+  imports: [NgIf, UserTitleComponent, FontAwesomeModule, NgbAlertModule],
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent extends AuthComponent implements OnInit {
   registered = false;
@@ -21,7 +27,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
     maxlengthemailaddress: User.MAX_LENGTH_EMAIL,
     minlengthpassword: User.MIN_LENGTH_PASSWORD,
-    maxlengthpassword: User.MAX_LENGTH_PASSWORD
+    maxlengthpassword: User.MAX_LENGTH_PASSWORD,
   };
 
   constructor(
@@ -33,17 +39,22 @@ export class LoginComponent extends AuthComponent implements OnInit {
   ) {
     super(authService, eventsManager);
     this.form = fb.group({
-      emailaddress: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthemailaddress),
-        Validators.maxLength(this.validations.maxlengthemailaddress)
-      ])],
-      password: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthpassword),
-        Validators.maxLength(this.validations.maxlengthpassword)
-      ])],
-
+      emailaddress: [
+        "",
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(this.validations.minlengthemailaddress),
+          Validators.maxLength(this.validations.maxlengthemailaddress),
+        ]),
+      ],
+      password: [
+        "",
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(this.validations.minlengthpassword),
+          Validators.maxLength(this.validations.maxlengthpassword),
+        ]),
+      ],
     });
   }
 
@@ -52,20 +63,19 @@ export class LoginComponent extends AuthComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(
-      (param: any) => {
-        if (param.message !== undefined) {
-          this.setAlert('info', param.message);
-        }
-      });
+    this.route.queryParams.subscribe((param: any) => {
+      if (param.message !== undefined) {
+        this.setAlert("info", param.message);
+      }
+    });
     if (this.isLoggedIn()) {
-      this.setAlert('danger', 'je bent al ingelogd');
+      this.setAlert("danger", "je bent al ingelogd");
     }
     this.processing = false;
   }
 
   protected setAlert(type: string, message: string) {
-    this.alert = { 'type': type, 'message': message };
+    this.alert = { type: type, message: message };
   }
 
   protected resetAlert() {
@@ -74,7 +84,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
 
   login(): boolean {
     this.processing = true;
-    this.setAlert('info', 'je wordt ingelogd');
+    this.setAlert("info", "je wordt ingelogd");
 
     const emailaddress = this.form.controls.emailaddress.value;
     const password = this.form.controls.password.value;
@@ -84,9 +94,10 @@ export class LoginComponent extends AuthComponent implements OnInit {
         this.startSessionService.navigate();
       },
       error: (e) => {
-        this.setAlert('danger', e); this.processing = false;
+        this.setAlert("danger", e);
+        this.processing = false;
       },
-      complete: () => this.processing = false
+      complete: () => (this.processing = false),
     });
     return false;
   }

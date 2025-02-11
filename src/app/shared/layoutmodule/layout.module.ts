@@ -9,19 +9,17 @@ import { FooterComponent } from './footer/footer.component';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [
-    NavComponent,
-    FooterComponent
-  ],
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    RouterModule
-  ],
-  exports: [
-    NavComponent,
-    FooterComponent
-  ]
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        RouterModule,
+        NavComponent,
+        FooterComponent
+    ],
+    exports: [
+        NavComponent,
+        FooterComponent
+    ]
 })
 export class LayoutSharedModule {
   constructor(library: FaIconLibrary) {

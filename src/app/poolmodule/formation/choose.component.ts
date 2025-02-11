@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { concatMap } from 'rxjs/operators';
 import { PoolUser } from '../../lib/pool/user';
 import { FormationRepository } from '../../lib/formation/repository';
@@ -13,9 +13,14 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { CompetitionConfigRepository } from '../../lib/competitionConfig/repository';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TitleComponent } from '../../shared/commonmodule/title/title.component';
+import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 
 @Component({
   selector: 'app-pool-chooseformation',
+  standalone: true,
+  imports: [NgbAlertModule,FontAwesomeModule,TitleComponent,LineIconComponent],
   templateUrl: './choose.component.html',
   styleUrls: ['./choose.component.scss']
 })
@@ -78,11 +83,11 @@ export class FormationChooseComponent extends PoolComponent implements OnInit {
       });
   }
 
-  editFormation(newFormation: Formation) {
+  editFormation(pool: Pool, newFormation: Formation) {
     this.formationRepository.editObject(this.poolUser, newFormation)
       .subscribe({
         next: () => {
-          this.router.navigate(['/pool/formation/assemble', this.pool.getId()]);
+          this.router.navigate(['/pool/formation/assemble', pool.getId()]);
         },
         error: (e) => {
           this.processing = false; this.setAlert('danger', e);

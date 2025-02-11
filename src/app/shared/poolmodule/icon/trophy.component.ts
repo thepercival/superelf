@@ -1,22 +1,25 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { IconName, IconPrefix, SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { LeagueName } from '../../../lib/leagueName';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
+    standalone: true,
+    imports: [FontAwesomeModule],
     selector: 'app-superelf-trophy-icon',
     templateUrl: './trophy.component.html',
     styleUrls: ['./trophy.component.scss']
 })
 export class SuperElfTrophyIconComponent {
-    @Input() leagueName!: LeagueName;
-    @Input() size: SizeProp|undefined;    
+    readonly leagueName = input.required<LeagueName>();
+    readonly size = input<SizeProp>();    
 
     get prefix(): IconPrefix { 
         return <IconPrefix>'fac'; 
     }    
 
     get iconName(): IconName {
-        switch (this.leagueName) {
+        switch (this.leagueName()) {
             case LeagueName.Competition:
               return <IconName>'plate';
             case LeagueName.Cup:

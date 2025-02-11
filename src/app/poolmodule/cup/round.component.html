@@ -1,18 +1,18 @@
-<div *ngIf="round" class="width-100">
+<div *ngIf="round()" class="width-100">
   <div class="card border-secondary round mb-3 user-select-none">
     <div class="card-header border-bottom-0 px-1 text-center">
-      <span class="" [innerHTML]="this.structureNameService.getRoundName(round, true) | keepHtml"></span>
-      <span class="small"> ({{getGameRoundNumbers(round)}})</span>
+      <span class="" [innerHTML]="this.structureNameService().getRoundName(round(), true) | keepHtml"></span>
+      <span class="small"> ({{getGameRoundNumbers(round())}})</span>
     </div>
     <div class="card-body px-1">
       <div class="d-flex flex-wrap gap-2 justify-content-around">
 
-        <div *ngFor="let poule of round.getPoules();" class="btn-group mb-3" role="group" (click)="emitNavigateToPoule(poule)">
+        <div *ngFor="let poule of round().getPoules();" class="btn-group mb-3" role="group" (click)="emitNavigateToPoule(poule)">
 
           <ng-container *ngIf="hasCompetitors;else hasNoCompetitors">
 
             <button type="button" class="btn btn-outline-primary ps-1">
-              {{structureNameService.getPouleName(poule,false)}}</button>
+              {{structureNameService().getPouleName(poule,false)}}</button>
             <button type="button" class="btn btn-outline-primary px-1 text-start">
               <ng-container [ngTemplateOutlet]="place" [ngTemplateOutletContext]="{poule, side: Home}"></ng-container>
               <div *ngIf="poule.getPlaces().length === 1">bye</div>
@@ -36,8 +36,8 @@
   </div>
 
 
-  <app-superelf-cup-round *ngFor="let qualifyGroup of round.getQualifyGroupsLosersReversed();" class="mb-2"
-    [round]="qualifyGroup.getChildRound()" [poolUser]="poolUser" [structureNameService]="structureNameService"
+  <app-superelf-cup-round *ngFor="let qualifyGroup of round().getQualifyGroupsLosersReversed();" class="mb-2"
+    [round]="qualifyGroup.getChildRound()" [poolUser]="poolUser()" [structureNameService]="structureNameService()"
     (navigateToPoule)="emitNavigateToPoule($event)">
   </app-superelf-cup-round>
 

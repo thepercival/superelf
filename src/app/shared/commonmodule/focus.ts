@@ -1,14 +1,14 @@
-import { OnInit, ElementRef, Input, Directive } from '@angular/core';
+import { OnInit, ElementRef, Directive, input } from '@angular/core';
 
 @Directive({ selector: '[focuMe]' })
 export class FocusDirective implements OnInit {
 
-    @Input('focuMe') isFocused: boolean = false;
+    readonly isFocused = input<boolean>(false, { alias: "focuMe" });
 
     constructor(private hostElement: ElementRef) { }
 
     ngOnInit() {
-        if (this.isFocused) {
+        if (this.isFocused()) {
             this.hostElement.nativeElement.focus();
         }
     }

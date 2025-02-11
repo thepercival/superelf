@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { FootballLine } from 'ngx-sport';
 import { BadgeCategory } from '../../lib/achievement/badge/category';
 import { ImageRepository } from '../../lib/image/repository';
@@ -13,28 +13,55 @@ import { S11PlayerStatisticsComponent } from './base.component';
   styleUrls: ['./viewperiod.component.scss']
 })
 export class S11PlayerViewPeriodStatisticsComponent extends S11PlayerStatisticsComponent implements OnInit {
-  @Input() totals!: Totals;
-  @Input() line!: FootballLine;
-  @Input() scorePointsMap!: ScorePointsMap;
+  readonly totals = input.required<Totals>();
+  readonly line = input.required<FootballLine>();
+  readonly scorePointsMap = input.required<ScorePointsMap>();
 
   constructor(
     public imageRepository: ImageRepository,
     public cssService: CSSService) {
-    super(imageRepository, cssService);
+      super(imageRepository, cssService);
+      const sheetLines: number =
+        (this.line() & FootballLine.GoalKeeper) +
+        (this.line() & FootballLine.Defense);
+      this.sheetActive = sheetLines > 0;
+
+      const sheetPoints =
+        sheetLines > 0
+          ? this.totals().getPoints(
+              this.line(),
+              this.scorePointsMap(),
+              BadgeCategory.Sheet
+            )
+          : 0;
+      this.categoryPoints = {
+        result: this.totals().getPoints(
+          this.line(),
+          this.scorePointsMap(),
+          BadgeCategory.Result
+        ),
+        goal:
+          this.totals().getPoints(
+            this.line(),
+            this.scorePointsMap(),
+            BadgeCategory.Goal
+          ) +
+          this.totals().getPoints(
+            this.line(),
+            this.scorePointsMap(),
+            BadgeCategory.Assist
+          ),
+        sheet: sheetPoints,
+        card: this.totals().getPoints(
+          this.line(),
+          this.scorePointsMap(),
+          BadgeCategory.Card
+        ),
+      };    
   }
 
   ngOnInit() {
-    const sheetLines: number = (this.line & FootballLine.GoalKeeper) + (this.line & FootballLine.Defense);
-    this.sheetActive = sheetLines > 0;
-
-    const sheetPoints = sheetLines > 0 ? this.totals.getPoints(this.line, this.scorePointsMap, BadgeCategory.Sheet) : 0
-    this.categoryPoints = {
-      result: this.totals.getPoints(this.line, this.scorePointsMap, BadgeCategory.Result),
-      goal: this.totals.getPoints(this.line, this.scorePointsMap, BadgeCategory.Goal) 
-        + this.totals.getPoints(this.line, this.scorePointsMap, BadgeCategory.Assist),
-      sheet: sheetPoints,
-      card: this.totals.getPoints(this.line, this.scorePointsMap, BadgeCategory.Card),
-    }
+    
     this.processing = false;
   }
 }

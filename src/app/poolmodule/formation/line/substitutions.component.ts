@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FootballLine, Person, Team } from 'ngx-sport';
 import { Substitution } from '../../../lib/editAction/substitution';
@@ -19,11 +19,11 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
   styleUrls: ['./substitutions.component.scss']
 })
 export class FormationLineSubstitutionsComponent implements OnInit {
-  @Input() line!: S11FormationLine;
-  @Input() selectedPlace: S11FormationPlace | undefined;
-  @Input() viewGameRound: GameRound | undefined;
-  @Input() processing: boolean = true;
-  @Input() substitutions: Substitution[] = [];
+  readonly line = input.required<S11FormationLine>();
+  readonly selectedPlace = input<S11FormationPlace>();
+  readonly viewGameRound = input<GameRound>();
+  readonly processing = input<boolean>(true);
+  readonly substitutions = input<Substitution[]>([]);
   @Output() substitute = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
   @Output() remove = new EventEmitter<Substitution[]>();
@@ -45,7 +45,7 @@ export class FormationLineSubstitutionsComponent implements OnInit {
   }
 
   completed() {
-    return this.line.getPlaces().every((place: S11FormationPlace) => place.getPlayer());
+    return this.line().getPlaces().every((place: S11FormationPlace) => place.getPlayer());
   }
 
   getTeamImageUrl(s11Player: S11Player): string {
@@ -81,11 +81,11 @@ export class FormationLineSubstitutionsComponent implements OnInit {
   // }
 
   getLineClass(prefix: string): string {
-    return this.cssService.getLine(this.line.getNumber(), prefix + '-');
+    return this.cssService.getLine(this.line().getNumber(), prefix + '-');
   }
 
   getPointsTotalsClass() {
-    return this.viewGameRound === undefined ? 'bg-totals' : 'bg-points';
+    return this.viewGameRound() === undefined ? 'bg-totals' : 'bg-points';
   }
 
   maybeLinkToPlayer(place: S11FormationPlace): void {
@@ -101,13 +101,13 @@ export class FormationLineSubstitutionsComponent implements OnInit {
   }
 
   getSubstitution(line: FootballLine): Substitution|undefined {
-    return this.substitutions.find((substitution: Substitution): boolean => {
+    return this.substitutions().find((substitution: Substitution): boolean => {
       return line === substitution.getLineNumberOut();
     });
   }
 
   hasLineSubstitution(footballLine: FootballLine): boolean {
-    return this.substitutions.some((substitution: Substitution): boolean => {
+    return this.substitutions().some((substitution: Substitution): boolean => {
       return footballLine === substitution.getLineNumberOut();
     });
   }

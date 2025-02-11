@@ -6,8 +6,11 @@ import { DateFormatter } from '../../../lib/dateFormatter';
 import { User } from '../../../lib/user';
 import { GlobalEventsManager } from '../../commonmodule/eventmanager';
 import { MyNavigation } from '../../commonmodule/navigation';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
+  standalone: true,
+  imports: [FontAwesomeModule],
   selector: 'app-nav',
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css']

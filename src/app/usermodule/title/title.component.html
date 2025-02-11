@@ -1,8 +1,8 @@
 <div class="card-header text-center">
   <h1>
-    <fa-icon *ngIf="icon" [icon]="['fas', icon]"></fa-icon>
+    <fa-icon ngIf="icon" icon="['fas', icon]"></fa-icon>
     <br />
-    <small>{{title}}</small>
+    <small>{{title()}}</small>
   </h1>
 
 

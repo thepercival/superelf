@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { Player } from 'ngx-sport';
 import { ImageRepository } from '../../lib/image/repository';
 
@@ -8,9 +8,9 @@ import { ImageRepository } from '../../lib/image/repository';
   styleUrls: ['./basics.component.scss']
 })
 export class PlayerBasicsComponent implements OnInit {
-  @Input() player: Player | undefined;
+  readonly player = input<Player>();
   // @Input() pool!: Pool;
-  @Input() points: number | undefined;
+  readonly points = input<number>();
 
   constructor(
     public imageRepository: ImageRepository) {

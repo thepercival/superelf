@@ -10,22 +10,20 @@ import { TitleComponent } from './title/title.component';
 import { ViewPortManager } from './viewPortManager';
 
 @NgModule({
-  declarations: [
-    EscapeHtmlPipe,
-    FocusDirective,
-    TitleComponent,
-    LineIconComponent
-  ],
-  imports: [
-    CommonModule,
-    FontAwesomeModule
-  ],
-  exports: [
-    EscapeHtmlPipe,
-    FocusDirective,
-    TitleComponent,
-    LineIconComponent
-  ]
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        EscapeHtmlPipe,
+        FocusDirective,
+        TitleComponent,
+        LineIconComponent
+    ],
+    exports: [
+        EscapeHtmlPipe,
+        FocusDirective,
+        TitleComponent,
+        LineIconComponent
+    ]
 })
 
 export class CommonSharedModule {

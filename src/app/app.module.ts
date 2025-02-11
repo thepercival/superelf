@@ -31,37 +31,35 @@ import { PoolListComponent } from './poollist/poollist.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { WorldCupPreviousService } from './shared/commonmodule/worldCupPreviousService';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    PoolListComponent
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    RoutingModule,
-    ReactiveFormsModule,
-    CommonSharedModule,
-    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
-    FontAwesomeModule,
-    LayoutSharedModule
-  ],
-  providers: [
-    AuthService,
-    AuthUserGuardService,
-    PoolShellRepository,
-    UserMapper,
-    MyNavigation,
-    GlobalEventsManager,
-    StartSessionService,
-    WorldCupPreviousService
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule(/* TODO(standalone-migration): clean up removed NgModule class manually. 
+{
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        RoutingModule,
+        ReactiveFormsModule,
+        CommonSharedModule,
+        ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
+        FontAwesomeModule,
+        LayoutSharedModule,
+        AppComponent,
+        HomeComponent,
+        PoolListComponent
+    ],
+    providers: [
+        AuthService,
+        AuthUserGuardService,
+        PoolShellRepository,
+        UserMapper,
+        MyNavigation,
+        GlobalEventsManager,
+        StartSessionService,
+        WorldCupPreviousService
+    ],
+    bootstrap: [AppComponent]
+} */)
 export class AppModule {
-  constructor(library: FaIconLibrary) {
-    library.addIcons(faPlusCircle, faSpinner, faAngleDoubleDown, faUserShield, faUserFriends, faSave, faUserCircle, faLevelUpAlt
-    );
+  constructor(/*library: FaIconLibrary*/) {
+    // library.addIcons(faPlusCircle, faSpinner, faAngleDoubleDown, faUserShield, faUserFriends, faSave, faUserCircle, faLevelUpAlt);
   }
 }

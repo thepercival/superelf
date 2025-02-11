@@ -1,11 +1,13 @@
-<div *ngIf="pool" class="ps-3">
+@if(pool){
+<div class="ps-3">
 
   <h2 class="mb-3">
     <fa-icon [icon]="['fas', 'info-circle']"></fa-icon> spelregels
   </h2>
 
-  <ngb-alert *ngIf="alert" [type]="alert.type">
-    {{ alert.message }}</ngb-alert>
+  @if(alert){
+    <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+  }
 
   <h5 class="text-primary">teambeheer</h5>
   <p class="card-text">Het samenstellen van je team kan van
@@ -65,30 +67,32 @@
       <div class="card-body">
         <h5 class="card-title">alle spelers</h5>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item d-flex justify-content-between align-items-center ps-0"
-            *ngFor="let pointsItem of getPointsItems()">
-            <span>{{pointsItem.name}}</span>
-            <span class="badge rounded-pill bg-primary ms-2">{{pointsItem.points}}</span>
-          </li>
+          @for(pointsItem of getPointsItems(pool); track pointsItem.name){
+            <li class="list-group-item d-flex justify-content-between align-items-center ps-0">
+              <span>{{pointsItem.name}}</span>
+              <span class="badge rounded-pill bg-primary ms-2">{{pointsItem.points}}</span>
+            </li>
+          }
         </ul>
       </div>
     </div>
 
-    <div class="card mb-3 mx-2 {{getLineClass(line, 'border')}}" *ngFor="let line of getPossibleLines()">
-      <div class="card-body">
-        <h5 class="card-title">{{nameService.getLineName(line)}}</h5>
-        <ul class="list-group list-group-flush">
-          <li
-            class="list-group-item d-flex justify-content-between align-items-center ps-0 {{getLineClass(line, 'border')}}"
-            *ngFor="let pointsItem of getLinePointsItems(line)">
-            <span>{{pointsItem.name}}</span>
-            <span class="badge rounded-pill {{getLineClass(line)}} ms-2">{{pointsItem.points}}</span>
-          </li>
-        </ul>
+    @for(line of getPossibleLines(); track line){
+      <div class="card mb-3 mx-2 {{getLineClass(line, 'border')}}">
+        <div class="card-body">
+          <h5 class="card-title">{{nameService.getLineName(line)}}</h5>
+          <ul class="list-group list-group-flush">
+            @for(pointsItem of getLinePointsItems(pool,line); track pointsItem.name){
+              <li class="list-group-item d-flex justify-content-between align-items-center ps-0 {{getLineClass(line, 'border')}}">
+                <span>{{pointsItem.name}}</span>
+                <span class="badge rounded-pill {{getLineClass(line)}} ms-2">{{pointsItem.points}}</span>
+              </li>
+            }
+          </ul>
+        </div>
       </div>
-    </div>
+    }
   </div>
 </div>
-
-<app-pool-navbar [current]="Rules" *ngIf="pool" [pool]="pool" [poolUser]="poolUserFromSession">
-</app-pool-navbar>
+<app-pool-navbar [current]="Rules" [pool]="pool" [poolUser]="poolUserFromSession"></app-pool-navbar>
+}

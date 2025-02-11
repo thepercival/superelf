@@ -1,19 +1,19 @@
-import { Component, Input } from '@angular/core';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { Component, input } from '@angular/core';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-user-title',
-  templateUrl: './title.component.html'
+  standalone: true,
+  imports: [NgIf],
+  selector: "app-user-title",
+  templateUrl: "./title.component.html",
 })
 export class UserTitleComponent {
+  readonly title = input<string>("");
+  readonly icon = input<IconName>();
 
-  @Input() title: string = '';
-  @Input() icon: IconName | undefined;
-
-  constructor(private myNavigation: MyNavigation) {
-  }
+  constructor(private myNavigation: MyNavigation) {}
 
   navigateBack() {
     this.myNavigation.back();

@@ -1,32 +1,32 @@
-<tr *ngIf="line" class="mt-3">
+<tr *ngIf="line()" class="mt-3">
   <td colspan="2" class="table-no-bottom-border">
     <h5 class="card-title">
-      <app-lineicon [line]="line.getNumber()" [abbreviate]="false"></app-lineicon>
+      <app-lineicon [line]="line().getNumber()" [abbreviate]="false"></app-lineicon>
     </h5>
   </td>
   <td class="table-no-bottom-border text-end">
-    <span *ngIf="totalGameRoundPoints" class="badge bg-totals">{{totalGameRoundPoints}}</span>    
+    <span *ngIf="totalGameRoundPoints()" class="badge bg-totals">{{totalGameRoundPoints()}}</span>    
   </td>
   <td class="table-no-bottom-border text-end">
-    <span *ngIf="totalPoints" class="badge bg-totals">{{totalPoints}}</span>    
+    <span *ngIf="totalPoints()" class="badge bg-totals">{{totalPoints()}}</span>    
   </td>
 </tr>
   
-<ng-container *ngFor="let place of line.getStartingPlaces()" [ngTemplateOutlet]="placeRow"
+<ng-container *ngFor="let place of line().getStartingPlaces()" [ngTemplateOutlet]="placeRow"
   [ngTemplateOutletContext]="{place:place, s11Player: place.getPlayer(), currentTeam: getCurrentTeam(place.getPlayer())}">
 </ng-container>
 <ng-container [ngTemplateOutlet]="placeRow"
-  [ngTemplateOutletContext]="{place:line.getSubstitute(), s11Player: line.getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line.getSubstitute().getPlayer())}">
+  [ngTemplateOutletContext]="{place:line().getSubstitute(), s11Player: line().getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line().getSubstitute().getPlayer())}">
 </ng-container>
   
 
 <ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentTeam="currentTeam">
-  <tr *ngIf="processing">
+  <tr *ngIf="processing()">
     <td class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </td>
   </tr>
-  <tr *ngIf="!processing" (click)="maybeLinkToPlayer(place)" [ngClass]="{'pointer': s11Player}">   
+  <tr *ngIf="!processing()" (click)="maybeLinkToPlayer(place)" [ngClass]="{'pointer': s11Player}">   
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
       <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
       <!-- <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="editPlace.emit(place)">
@@ -39,12 +39,12 @@
     </td>
     
     <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
-      <ng-container *ngIf="statisticsGetter.placeHasStatistics(place,gameRound)">
+      <ng-container *ngIf="statisticsGetter().placeHasStatistics(place,gameRound())">
         <ng-container *ngIf="!place.isSubstitute();else substitute">
           <!-- {{statisticsGetter.hasAppeared(place, gameRound)}} -->
-          <ng-container *ngIf="statisticsGetter.hasAppeared(place, gameRound);else startingNotAppeared">
+          <ng-container *ngIf="statisticsGetter().hasAppeared(place, gameRound());else startingNotAppeared">
             <span class="badge bg-points">
-              {{statisticsGetter.getFormationPlaceGameRoundPoints(place,gameRound, undefined)}}</span>
+              {{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound(), undefined)}}</span>
           </ng-container>
           <ng-template #startingNotAppeared>
             <span class="badge bg-nopoints">x</span>
@@ -52,10 +52,10 @@
 
         </ng-container>
         <ng-template #substitute>
-          <div *ngIf="place.getFormationLine().hasSubstituteAppareance(gameRound)">
-            <ng-container *ngIf="statisticsGetter.hasAppeared(place,gameRound);else substituteNotAppeared">
+          <div *ngIf="place.getFormationLine().hasSubstituteAppareance(gameRound())">
+            <ng-container *ngIf="statisticsGetter().hasAppeared(place,gameRound());else substituteNotAppeared">
               <span class="badge bg-points">
-                {{statisticsGetter.getFormationPlaceGameRoundPoints(place,gameRound, undefined)}}</span>
+                {{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound(), undefined)}}</span>
             </ng-container>
             <ng-template #substituteNotAppeared>
               <span class="badge bg-nopoints">x</span>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgainstGame, Competition, Poule, Round, Structure, TogetherGame, TogetherGamePlace } from 'ngx-sport';
 
@@ -9,16 +9,20 @@ import { Pool } from '../../../lib/pool';
 import { PoolUser } from '../../../lib/pool/user';
 import { Role } from '../../../lib/role';
 import { CompetitionsNavBarItem } from './items';
+import { SuperElfIconComponent } from '../icon/icon.component';
+import { SuperElfTrophyIconComponent } from '../icon/trophy.component';
 
 @Component({
+  standalone: true,
+  imports: [SuperElfTrophyIconComponent],
   selector: 'app-competitions-navbar',
   templateUrl: './competitionsNavBar.component.html',
   styleUrls: ['./competitionsNavBar.component.scss']
 })
 export class PoolCompetitionsNavBarComponent implements OnInit{
-  @Input() pool!: Pool;
-  @Input() poolUser: PoolUser|undefined;
-  @Input() current: CompetitionsNavBarItem|undefined;
+  readonly pool = input.required<Pool>();
+  readonly poolUser = input<PoolUser>();
+  readonly current = input<CompetitionsNavBarItem>();
 
   public hasSuperCup = true;
   public hasWorldCup = false;
@@ -34,7 +38,7 @@ export class PoolCompetitionsNavBarComponent implements OnInit{
   }
 
   ngOnInit(){
-    this.hasSuperCup = this.pool.getCompetition(LeagueName.SuperCup) !== undefined;
+    this.hasSuperCup = this.pool().getCompetition(LeagueName.SuperCup) !== undefined;
   }
 
   get Competition(): LeagueName { return LeagueName.Competition };
@@ -48,22 +52,22 @@ export class PoolCompetitionsNavBarComponent implements OnInit{
   get WorldCupStructure(): CompetitionsNavBarItem { return CompetitionsNavBarItem.WorldCupStructure }
   
   getTextColorClass(item: CompetitionsNavBarItem): string {
-    return this.current !== item ? 'text-success' : 'text-white';
+    return this.current() !== item ? 'text-success' : 'text-white';
   }
 
   linkTo(navBarItem: CompetitionsNavBarItem): void {
     switch (navBarItem) {
       case CompetitionsNavBarItem.PouleRankingTogetherSport:
-        this.router.navigate(['/pool/competition', this.pool.getId()]);
+        this.router.navigate(['/pool/competition', this.pool().getId()]);
         return;
       case CompetitionsNavBarItem.CupStructure:
-        this.router.navigate(['/pool/cup', this.pool.getId()]);
+        this.router.navigate(['/pool/cup', this.pool().getId()]);
         return;       
       case CompetitionsNavBarItem.SuperCupGame:
-        this.router.navigate(['/pool/poule-againstgames', this.pool.getId(), LeagueName.SuperCup, 0]);
+        this.router.navigate(['/pool/poule-againstgames', this.pool().getId(), LeagueName.SuperCup, 0]);
         return;      
       case CompetitionsNavBarItem.WorldCupStructure:
-        this.router.navigate(['/pool/worldcup', this.pool.getSeason().getId(), this.pool.getId()]);
+        this.router.navigate(['/pool/worldcup', this.pool().getSeason().getId(), this.pool().getId()]);
         return;
     }
   }

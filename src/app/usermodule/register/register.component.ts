@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -6,11 +6,17 @@ import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 import { AuthComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIf } from '@angular/common';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { UserTitleComponent } from '../title/title.component';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  standalone: true,
+  selector: "app-register",
+  imports: [NgIf, NgbAlertModule, UserTitleComponent,FontAwesomeModule],
+  templateUrl: "./register.component.html",
+  styleUrls: ["./register.component.css"],
 })
 export class RegisterComponent extends AuthComponent implements OnInit {
   registered = false;
@@ -22,39 +28,54 @@ export class RegisterComponent extends AuthComponent implements OnInit {
     minlengthname: User.MIN_LENGTH_NAME,
     maxlengthname: User.MAX_LENGTH_NAME,
     minlengthpassword: User.MIN_LENGTH_PASSWORD,
-    maxlengthpassword: User.MAX_LENGTH_PASSWORD
+    maxlengthpassword: User.MAX_LENGTH_PASSWORD,
   };
 
   constructor(
     authService: AuthService,
     eventsManager: GlobalEventsManager,
-    fb: UntypedFormBuilder
+    @Inject("fb") fb: UntypedFormBuilder
   ) {
     super(authService, eventsManager);
-    this.form = fb.group({
-      emailaddress: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthemailaddress),
-        Validators.maxLength(this.validations.maxlengthemailaddress)
-      ])],
-      name: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthname),
-        Validators.maxLength(this.validations.maxlengthname)
-      ])],
-      password: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthpassword),
-        Validators.maxLength(this.validations.maxlengthpassword)
-      ])],
-      passwordRepeat: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(this.validations.minlengthpassword),
-        Validators.maxLength(this.validations.maxlengthpassword)
-      ])],
-    }, {
-      validator: PasswordValidation.MatchPassword // your validation method
-    });
+    this.form = fb.group(
+      {
+        emailaddress: [
+          "",
+          Validators.compose([
+            Validators.required,
+            Validators.minLength(this.validations.minlengthemailaddress),
+            Validators.maxLength(this.validations.maxlengthemailaddress),
+          ]),
+        ],
+        name: [
+          "",
+          Validators.compose([
+            Validators.required,
+            Validators.minLength(this.validations.minlengthname),
+            Validators.maxLength(this.validations.maxlengthname),
+          ]),
+        ],
+        password: [
+          "",
+          Validators.compose([
+            Validators.required,
+            Validators.minLength(this.validations.minlengthpassword),
+            Validators.maxLength(this.validations.maxlengthpassword),
+          ]),
+        ],
+        passwordRepeat: [
+          "",
+          Validators.compose([
+            Validators.required,
+            Validators.minLength(this.validations.minlengthpassword),
+            Validators.maxLength(this.validations.maxlengthpassword),
+          ]),
+        ],
+      },
+      {
+        validator: PasswordValidation.MatchPassword, // your validation method
+      }
+    );
   }
 
   ngOnInit() {
@@ -68,23 +89,26 @@ export class RegisterComponent extends AuthComponent implements OnInit {
   register(): boolean {
     this.registered = false;
     this.processing = true;
-    this.setAlert('info', 'je wordt geregistreerd');
+    this.setAlert("info", "je wordt geregistreerd");
 
     // this.activationmessage = undefined;
-    this.authService.register(
-      this.form.controls.emailaddress.value,
-      this.form.controls.name.value,
-      this.form.controls.password.value
-    ).subscribe({
-      next: () => {
-        this.registered = true;
-        this.resetAlert();
-      },
-      error: (e) => {
-        this.setAlert('danger', 'het registreren is niet gelukt: ' + e); this.processing = false;
-      },
-      complete: () => this.processing = false
-    });
+    this.authService
+      .register(
+        this.form.controls.emailaddress.value,
+        this.form.controls.name.value,
+        this.form.controls.password.value
+      )
+      .subscribe({
+        next: () => {
+          this.registered = true;
+          this.resetAlert();
+        },
+        error: (e) => {
+          this.setAlert("danger", "het registreren is niet gelukt: " + e);
+          this.processing = false;
+        },
+        complete: () => (this.processing = false),
+      });
     return false;
   }
 }

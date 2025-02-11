@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { VoetbalRange } from 'ngx-sport';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
@@ -9,12 +9,12 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
     styleUrls: ['./namemodal.component.scss']
 })
 export class NameModalComponent implements OnInit {
-    @Input() header: string | undefined;
-    @Input() range: VoetbalRange | undefined;
-    @Input() initialName: string | undefined;
-    @Input() labelName: string | undefined;
-    @Input() buttonName: string | undefined;
-    @Input() buttonOutline: boolean | undefined;
+    readonly header = input<string>();
+    readonly range = input<VoetbalRange>();
+    readonly initialName = input<string>();
+    readonly labelName = input<string>();
+    readonly buttonName = input<string>();
+    readonly buttonOutline = input<boolean>();
     form: UntypedFormGroup;
 
     constructor(public activeModal: NgbActiveModal, private fb: UntypedFormBuilder) {
@@ -24,7 +24,8 @@ export class NameModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        const range = this.range ? this.range : undefined;
+        const rangeValue = this.range();
+        const range = rangeValue ? rangeValue : undefined;
         if (range === undefined) {
             return;
         }
@@ -34,6 +35,6 @@ export class NameModalComponent implements OnInit {
                 Validators.minLength(range.min),
                 Validators.maxLength(range.max)
             ]));
-        this.form.controls.name.setValue(this.initialName);
+        this.form.controls.name.setValue(this.initialName());
     }
 }

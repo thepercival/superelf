@@ -1,21 +1,24 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 
 import { MyNavigation } from '../../commonmodule/navigation';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-title',
-  templateUrl: './title.component.html'
+  standalone: true,
+  imports: [NgIf, FontAwesomeModule],
+  selector: "app-title",
+  templateUrl: "./title.component.html",
 })
 export class TitleComponent {
-  @Input() iconName: IconName | undefined;
-  @Input() center: boolean = false;
-  @Input() title: string = '';
-  @Input() poolId: number | undefined;
+  readonly iconName = input<IconName>();
+  readonly center = input<boolean>(false);
+  readonly title = input<string>("");
+  readonly poolId = input<number>();
 
-  constructor(private router: Router, private myNavigation: MyNavigation) {
-  }
+  constructor(private router: Router, private myNavigation: MyNavigation) {}
 
   navigateBack() {
     // if (this.poolId) {

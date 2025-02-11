@@ -1,28 +1,30 @@
 <nav class="navbar navbar-dark bg-primary py-1 ps-1 text-light">
   <div>
-    <a class="navbar-brand text-light" tabindex="-1" [routerLink]="['/']">
+    <a class="navbar-brand text-light" tabindex="-1" routerLink="['/']">
       {{nameInfo ? 'S11' : 'SuperElf'}}
     </a>
   </div>
 
-  <div *ngIf="nameInfo">
-    <h1 class="h3 text-truncate me-1 d-flex mb-0 pointer" (click)="navigateToPoolHome(nameInfo.id)">
-      <span class="me-1">{{nameInfo.name}}</span>
+  @if(nameInfo) {
+    <div>
+      <h1 class="h3 text-truncate me-1 d-flex mb-0 pointer" (click)="navigateToPoolHome(nameInfo.id)">
+        <span class="me-1">{{nameInfo.name}}</span>
+    
+        <small class="d-flex flex-column p-0" style="font-size: 11px;">
+          <span>{{getSeasonStart(nameInfo.start)}}</span>
+          <span>{{getSeasonEnd(nameInfo.start)}}</span>
+        </small>
+    
+      </h1>
+    </div>
+  }
 
-      <small class="d-flex flex-column p-0" style="font-size: 11px;">
-        <span>{{getSeasonStart(nameInfo.start)}}</span>
-        <span>{{getSeasonEnd(nameInfo.start)}}</span>
-      </small>
-
-    </h1>
-  </div>
-
-  <button *ngIf="!authService.isLoggedIn()" routerLink="/user/login" routerLinkActive="active" class="btn text-light"
+  <button ngIf="!authService.isLoggedIn()" routerLink="/user/login" routerLinkActive="active" class="btn text-light"
     role="button" aria-label="inloggen " tabindex="-1">
     <fa-icon [icon]=" [ 'fas', 'sign-in-alt'] "></fa-icon>
     <span class="ms-1">inloggen</span>
   </button>
-  <button *ngIf="authService.isLoggedIn()" [routerLink]="['/user/profile', authService.getUser()?.getId()]"
+  <button ngIf="authService.isLoggedIn()" routerLink="['/user/profile', authService.getUser()?.getId()]"
     class="btn text-light border-0 p-0 pt-1" role="button" tabindex="-1" aria-label="account">
     <fa-icon [icon]="[ 'fas', 'user-circle']" size="3x"></fa-icon>
   </button>

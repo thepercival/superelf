@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -7,8 +7,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['./removemodal.component.scss']
 })
 export class PoolUserRemoveModalComponent implements OnInit {
-    @Input() entityName: string = '';
-    @Input() name: string = '';
+    readonly entityName = input<string>('');
+    readonly name = input<string>('');
 
     constructor(public modal: NgbActiveModal) {
     }

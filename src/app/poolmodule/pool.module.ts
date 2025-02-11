@@ -46,10 +46,8 @@ import { ScoutedPlayerAddComponent } from './scoutedPlayer/add.component';
 import { PoolUserRemoveModalComponent } from './poolusers/removemodal.component';
 import { FormationChooseComponent } from './formation/choose.component';
 import { FormationPlaceEditComponent } from './formation/place/edit.component';
-import { FormationLineAssembleComponent } from './formation/line/assemble.component';
 import { FormationLineViewComponent } from './formation/line/view.component';
 import { FormationAssembleComponent } from './formation/assemble.component';
-import { S11PlayerChooseComponent } from './player/choose.component';
 import { WorldCupComponent } from './worldcup/worldcup.component';
 import { PoolUserComponent } from './poolusers/pooluser.component';
 import { AgainstGameTitleComponent } from './game/source/title.component';
@@ -81,69 +79,64 @@ import { ChooseBadgeCategoryModalComponent } from './badge/choosecategory-modal.
 import { UserBadgesModalComponent } from './achievements/userbadges-modal.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RoutingModule,
-    ReactiveFormsModule,
-    FontAwesomeModule,
-    PoolSharedModule,
-    CommonSharedModule,
-    ClipboardModule,
-    NgbPaginationModule,
-    NgParticlesModule
-  ],
-  declarations: [
-    AchievementsComponent,
-    AgainstGameTitleComponent,
-    ChooseBadgeCategoryModalComponent,
-    FormationActionOverviewComponent,
-    FormationAssembleComponent,
-    FormationChooseComponent,
-    FormationLineAssembleComponent,
-    FormationLineReplacementsComponent,
-    FormationLineTransfersComponent,
-    FormationLineSubstitutionsComponent,
-    FormationLineViewComponent,
-    FormationPlaceEditComponent,
-    FormationPlaceReplaceComponent,
-    FormationPlaceTransferComponent,
-    FormationReplaceComponent,
-    FormationSubstituteComponent,
-    FormationTransferComponent,
-    GameRoundScrollerComponent,
-    GameScrollerComponent,
-    InviteComponent,
-    JoinComponent,
-    NewComponent,
-    PlayerBasicsComponent,
-    PoolAllInOneGameScheduleComponent,
-    PoolChatComponent,
-    PoolCompetitionComponent,
-    PoolCupComponent,
-    PoolCupRoundComponent,
-    PoolPouleAgainstGamesComponent,
-    PoolUserComponent,
-    PoolUserRemoveModalComponent,    
-    PoolUsersComponent,
-    PouleTitleComponent,
-    PreNewComponent,
-    RulesComponent,
-    S11PlayerComponent,
-    S11PlayerChooseComponent,
-    S11PlayerAddRemoveModalComponent,
-    S11PlayerGameRoundStatisticsComponent,
-    S11PlayerViewPeriodStatisticsComponent,    
-    ScoutedPlayerListComponent,
-    ScoutedPlayerAddComponent,
-    SourceGameComponent,
-    TeamNameComponent,
-    TogetherRankingComponent,
-    UnviewedAchievementsModalComponent,
-    UserBadgesModalComponent,
-    WorldCupComponent
-  ],
-  providers: [
-  ]
+    imports: [
+        // CommonModule,
+        // RoutingModule,
+        // ReactiveFormsModule,
+        // FontAwesomeModule,
+        // PoolSharedModule,
+        // CommonSharedModule,
+        // ClipboardModule,
+        // NgbPaginationModule,
+        // NgParticlesModule,
+        // AchievementsComponent,
+        // AgainstGameTitleComponent,
+        // ChooseBadgeCategoryModalComponent,
+        // FormationActionOverviewComponent,
+        // FormationAssembleComponent,
+        // FormationChooseComponent,
+        // FormationLineReplacementsComponent,
+        // FormationLineTransfersComponent,
+        // FormationLineSubstitutionsComponent,
+        // FormationLineViewComponent,
+        // FormationPlaceEditComponent,
+        // FormationPlaceReplaceComponent,
+        // FormationPlaceTransferComponent,
+        // FormationReplaceComponent,
+        // FormationSubstituteComponent,
+        // FormationTransferComponent,
+        // GameRoundScrollerComponent,
+        // GameScrollerComponent,
+        // InviteComponent,
+        // JoinComponent,
+        // NewComponent,
+        // PlayerBasicsComponent,
+        // PoolAllInOneGameScheduleComponent,
+        // PoolChatComponent,
+        // PoolCompetitionComponent,
+        // PoolCupComponent,
+        // PoolCupRoundComponent,
+        // PoolPouleAgainstGamesComponent,
+        // PoolUserComponent,
+        // PoolUserRemoveModalComponent,
+        // PoolUsersComponent,
+        // PouleTitleComponent,
+        // PreNewComponent,
+        // RulesComponent,
+        // S11PlayerComponent,
+        // S11PlayerAddRemoveModalComponent,
+        // S11PlayerGameRoundStatisticsComponent,
+        // S11PlayerViewPeriodStatisticsComponent,
+        // ScoutedPlayerListComponent,
+        // ScoutedPlayerAddComponent,
+        // SourceGameComponent,
+        // TeamNameComponent,
+        // TogetherRankingComponent,
+        // UnviewedAchievementsModalComponent,
+        // UserBadgesModalComponent,
+        // WorldCupComponent
+    ],
+    providers: []
 })
 export class PoolModule {
   constructor(library: FaIconLibrary) {

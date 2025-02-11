@@ -1,15 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt, faMedal, faSpinner,
   faMinus, faPlus, faRectangleXmark, faFutbol, faCircle, faHandshakeAngle
 } from '@fortawesome/free-solid-svg-icons';
 import { EndRankingComponent } from './ranking/end.component';
-import { PouleRankingComponent } from './ranking/poule.component';
 import { NgbNavModule, NgbAlertModule, NgbPopoverModule, NgbDatepickerModule, NgbTimepickerModule, NgbCollapseModule, NgbModalModule, NgbModalConfig, NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CommonSharedModule } from '../commonmodule/common.module';
-import { NameModalComponent } from './namemodal/namemodal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RankingRulesComponent } from './rankingrules/rankingrules.component';
@@ -22,43 +20,36 @@ import { SuperElfTrophyIconComponent } from './icon/trophy.component';
 import { WorldCupNavBarComponent } from './poolNavBar/worldcupNavBar.component';
 
 @NgModule({
-  declarations: [
-    NameModalComponent,
-    EndRankingComponent,
-    PouleRankingComponent,
-    RankingRulesComponent,
-    SuperElfIconComponent,
-    SuperElfBadgeIconComponent,
-    SuperElfTrophyIconComponent,
-    PoolNavBarComponent,
-    WorldCupNavBarComponent,
-    PoolCompetitionsNavBarComponent
-  ],
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    ReactiveFormsModule,
-    CommonSharedModule,
-    RouterModule,
-    NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
-    NgbNavModule,
-  ],
-  providers: [
-  ],
-  exports: [
-    NameModalComponent,
-    EndRankingComponent,
-    PouleRankingComponent,
-    RankingRulesComponent,
-    NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
-    NgbNavModule,
-    SuperElfIconComponent,
-    SuperElfBadgeIconComponent,
-    SuperElfTrophyIconComponent,
-    PoolNavBarComponent,
-    WorldCupNavBarComponent,
-    PoolCompetitionsNavBarComponent
-  ]
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        ReactiveFormsModule,
+        CommonSharedModule,
+        RouterModule,
+        NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
+        NgbNavModule,
+        EndRankingComponent,
+        RankingRulesComponent,
+        SuperElfIconComponent,
+        SuperElfBadgeIconComponent,
+        SuperElfTrophyIconComponent,
+        PoolNavBarComponent,
+        WorldCupNavBarComponent,
+        PoolCompetitionsNavBarComponent,
+    ],
+    providers: [],
+    exports: [
+        EndRankingComponent,
+        RankingRulesComponent,
+        NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
+        NgbNavModule,
+        SuperElfIconComponent,
+        SuperElfBadgeIconComponent,
+        SuperElfTrophyIconComponent,
+        PoolNavBarComponent,
+        WorldCupNavBarComponent,
+        PoolCompetitionsNavBarComponent
+    ]
 })
 export class PoolSharedModule {
   constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, alertConfig: NgbAlertConfig) {

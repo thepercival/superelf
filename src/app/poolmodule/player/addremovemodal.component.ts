@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Player } from 'ngx-sport';
 import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
@@ -12,9 +12,9 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
     styleUrls: ['./addremovemodal.component.scss']
 })
 export class S11PlayerAddRemoveModalComponent implements OnInit {
-    @Input() s11Player!: S11Player;
-    @Input() action!: PlayerAction;
-    @Input() scorePointsMap!: ScorePointsMap;
+    readonly s11Player = input.required<S11Player>();
+    readonly action = input.required<PlayerAction>();
+    readonly scorePointsMap = input.required<ScorePointsMap>();
 
     public player: Player | undefined;
 
@@ -25,18 +25,18 @@ export class S11PlayerAddRemoveModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.player = (new OneTeamSimultaneous()).getCurrentPlayer(this.s11Player);
+        this.player = (new OneTeamSimultaneous()).getCurrentPlayer(this.s11Player());
     }
 
     get Add(): PlayerAction { return PlayerAction.Add }
     get Remove(): PlayerAction { return PlayerAction.Remove }
 
     getLineClass(): string {
-        return this.cssService.getLine(this.s11Player.getLine());
+        return this.cssService.getLine(this.s11Player().getLine());
     }
 
     getTotalPoints(): number {
-        return this.s11Player.getTotalPoints(this.scorePointsMap, undefined);
+        return this.s11Player().getTotalPoints(this.scorePointsMap(), undefined);
     }
 }
 

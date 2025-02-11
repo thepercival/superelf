@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, input } from '@angular/core';
 import { Round, Competitor, PlaceRanges, Place, StructureNameService, StartLocation, AgainstGame, Poule, GameState, AgainstSide } from 'ngx-sport';
 import { AgainstPoule } from '../../lib/againstPoule';
 import { PoolCompetitor } from '../../lib/pool/competitor';
@@ -11,9 +11,9 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
   styleUrls: ['./round.component.scss']
 })
 export class PoolCupRoundComponent implements OnInit {
-  @Input() round!: Round;
-  @Input() structureNameService!: StructureNameService;
-  @Input() poolUser: PoolUser | undefined;
+  readonly round = input.required<Round>();
+  readonly structureNameService = input.required<StructureNameService>();
+  readonly poolUser = input<PoolUser>();
   @Output() navigateToPoule = new EventEmitter<Poule>();
 
   popoverPlace: Place | undefined;
@@ -34,7 +34,7 @@ export class PoolCupRoundComponent implements OnInit {
 
   allPlacesHaveCompetitors(): boolean {
     
-    return this.round.getPlaces().every((place: Place): boolean => {
+    return this.round().getPlaces().every((place: Place): boolean => {
       const startLocation = place.getStartLocation();
       if (startLocation === undefined) {
         return false;
@@ -51,7 +51,7 @@ export class PoolCupRoundComponent implements OnInit {
     }
     const poolCompetitor = <PoolCompetitor>this.getCompetitor(startLocation);
 
-    return poolCompetitor && poolCompetitor.getPoolUser() === this.poolUser;
+    return poolCompetitor && poolCompetitor.getPoolUser() === this.poolUser();
   }
 
   getNrOfPoulesChildren(round: Round): number {
@@ -94,7 +94,7 @@ export class PoolCupRoundComponent implements OnInit {
   getPreviousPouleName(poule: Poule, side: AgainstSide): string {
     const place = this.getSidePlace(poule, side);
     const previousPlace = this.getPreviousPlace(place);
-    return previousPlace ? this.structureNameService.getPouleName(previousPlace.getPoule(), false) : '?'
+    return previousPlace ? this.structureNameService().getPouleName(previousPlace.getPoule(), false) : '?'
   }
 
   protected getPreviousPlace(place: Place): Place | undefined {
@@ -113,7 +113,7 @@ export class PoolCupRoundComponent implements OnInit {
   }
   
   getCompetitor(startLocation: StartLocation): Competitor | undefined {
-    return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
+    return this.structureNameService().getStartLocationMap()?.getCompetitor(startLocation);
   }
 
   getScore(poule: Poule, side: AgainstSide): string {
@@ -139,7 +139,7 @@ export class PoolCupRoundComponent implements OnInit {
   }
 
   getAgainstPoule(poule: Poule, side: AgainstSide): AgainstPoule|undefined {
-    const startLocationMap = this.structureNameService.getStartLocationMap();
+    const startLocationMap = this.structureNameService().getStartLocationMap();
     if (startLocationMap === undefined) {
       return undefined;
     }

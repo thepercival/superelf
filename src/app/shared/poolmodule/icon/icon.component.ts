@@ -1,32 +1,34 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { IconName, IconPrefix, SizeProp } from '@fortawesome/fontawesome-svg-core';
-import { BadgeCategory } from '../../../lib/achievement/badge/category';
-import { LeagueName } from '../../../lib/leagueName';
 import { FootballCard, FootballEvent, FootballGoal } from '../../../lib/score';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
+    standalone: true,
+    imports: [FontAwesomeModule],
     selector: 'app-superelf-icon',
     templateUrl: './icon.component.html',
     styleUrls: ['./icon.component.scss']
 })
 export class SuperElfIconComponent {
-    @Input() name: CustomIconName | undefined;
-    @Input() gameEvent: FootballEvent | undefined;
-    @Input() large: boolean = false;
-    @Input() size: SizeProp|undefined;
+    readonly name = input<CustomIconName>();
+    readonly gameEvent = input<FootballEvent>();
+    readonly large = input<boolean>(false);
+    readonly size = input<SizeProp>();
 
     get color(): string { 
-        if( this.gameEvent === undefined ) {
+        const gameEvent = this.gameEvent();
+        if( gameEvent === undefined ) {
             return ''; 
         }
-        return this.getColorFromFootballEvent(this.gameEvent);
+        return this.getColorFromFootballEvent(gameEvent);
     }
 
     get prefix(): IconPrefix { 
-        if( this.name ) {
+        if( this.name() ) {
             return <IconPrefix>'fac'; 
         }
-        switch (this.gameEvent) {
+        switch (this.gameEvent()) {
             case FootballCard.Yellow:                
             case FootballCard.Red:
                 return <IconPrefix>'fac';
@@ -43,10 +45,11 @@ export class SuperElfIconComponent {
     }
 
     get iconName(): IconName { 
-        if( this.gameEvent !== undefined) {
-            return <IconName>this.getNameFromFootballEvent(this.gameEvent);
+        const gameEvent = this.gameEvent();
+        if( gameEvent !== undefined) {
+            return <IconName>this.getNameFromFootballEvent(gameEvent);
         }
-        return <IconName>this.name; 
+        return <IconName>this.name(); 
     }
 
     private getNameFromFootballEvent(event: FootballEvent): CustomIconName | IconName {

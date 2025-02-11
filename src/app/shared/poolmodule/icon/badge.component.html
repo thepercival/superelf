@@ -5,7 +5,7 @@
     <i class="fa-solid fa-lock fa-stack-1x fa-inverse"></i>
 </span> -->
 
-<fa-stack [size]="size">
+<fa-stack [size]="size()">
     <fa-icon class="{{color}}" [icon]="['fas', 'circle']" stackItemSize="2x"></fa-icon>
-    <fa-icon *ngIf="badgeCategory" [icon]="[getPrefix(badgeCategory), getIconName(badgeCategory)]" stackItemSize="1x"></fa-icon>
+    <fa-icon ngIf="badgeCategory()" [icon]="[getPrefix(), getIconName()]" stackItemSize="1x"></fa-icon>
 </fa-stack>

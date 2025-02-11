@@ -3,41 +3,50 @@
 
     <app-title *ngIf="pool" title="formatie kiezen"></app-title>
 
-    <h2 *ngIf="processing" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    <h2 ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
     </h2>
-
-    <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-
-    <div *ngIf="!processing && pool" class="d-flex flex-wrap justify-content-center">
-      <div *ngFor="let formation of formations" class="card border-secondary pointer mt-3 mx-2"
-        (click)="editFormation(formation)">
-        <div class="text-center card-header">
-          <span>{{formation.getName()}}</span>
-          <fa-icon *ngIf="currentFormation === formation" class="ms-1" [icon]="['fas', 'check-circle']">
-          </fa-icon>
-        </div>
-        <div class="card-body p-1">
-          <div *ngFor="let formationLine of formation.getLines()" class="d-flex justify-content-around">
-            <div *ngFor="let position of formationLine.getNumbers()">
-              <div class="m-1">
-                <app-lineicon [line]="formationLine.getNumber()"></app-lineicon>
-              </div>
+    @if(alert){
+    <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+    }
+    @if(!processing && pool) {
+      <div class="d-flex flex-wrap justify-content-center">
+        @for(formation of formations; track formation.getName()){
+          <div class="card border-secondary pointer mt-3 mx-2"(click)="editFormation(pool,formation)">
+            <div class="text-center card-header">
+              <span>{{formation.getName()}}</span>
+              <fa-icon *ngIf="currentFormation === formation" class="ms-1" [icon]="['fas', 'check-circle']">
+              </fa-icon>
             </div>
+            <div class="card-body p-1">
+              @for(formationLine of formation.getLines(); track formationLine){
+                <div class="d-flex justify-content-around">
+                  <div ngFor="let position of formationLine.getNumbers()">
+                    <div class="m-1">
+                      <app-lineicon [line]="formationLine.getNumber()"></app-lineicon>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+
+
+            <!-- 
+            <div class="d-flex flex-wrap justify-content-center mb-3">
+              <select class="form-control max-width" formControlName="formation">
+                <option [ngValue]="undefined" selected>
+                  kies formatie
+                </option>
+                <option *ngFor="let formation of availableFormations" [ngValue]="formation">
+                  {{formation.getName()}}</option>
+              </select>
+            </div>
+            -->
+
           </div>
-        </div>
-
-
-        <!-- 
-  <div class="d-flex flex-wrap justify-content-center mb-3">
-    <select class="form-control max-width" formControlName="formation">
-      <option [ngValue]="undefined" selected>
-        kies formatie
-      </option>
-      <option *ngFor="let formation of availableFormations" [ngValue]="formation">
-        {{formation.getName()}}</option>
-    </select>
-  </div> -->
-
+        }
       </div>
-    </div>
+    }
+  </div>
+</div>
+    

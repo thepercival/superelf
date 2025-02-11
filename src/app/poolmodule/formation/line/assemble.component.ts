@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Person, Team } from 'ngx-sport';
 import { S11FormationLine } from '../../../lib/formation/line';
@@ -13,14 +13,16 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 
 @Component({
   selector: 'app-pool-formationline-assemble',
+  standalone: true,
+  imports[],
   templateUrl: './assemble.component.html',
   styleUrls: ['./assemble.component.scss']
 })
 export class FormationLineAssembleComponent implements OnInit {
-  @Input() line!: S11FormationLine;
-  @Input() selectedPlace: S11FormationPlace | undefined;
-  @Input() viewGameRound: GameRound | undefined;  
-  @Input() processing: boolean = true;
+  readonly line = input.required<S11FormationLine>();
+  readonly selectedPlace = input<S11FormationPlace>();
+  readonly viewGameRound = input<GameRound>();  
+  readonly processing = model<boolean>(true);
   @Output() editPlace = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
 
@@ -37,11 +39,11 @@ export class FormationLineAssembleComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = false;
+    this.processing.set(false);
   }
 
   completed() {
-    return this.line.getPlaces().every((place: S11FormationPlace) => place.getPlayer());
+    return this.line().getPlaces().every((place: S11FormationPlace) => place.getPlayer());
   }
 
   getTeamImageUrl(s11Player: S11Player): string {
@@ -61,10 +63,10 @@ export class FormationLineAssembleComponent implements OnInit {
   }
 
   emptyPlace(place: S11FormationPlace) {
-    this.processing = true;
+    this.processing.set(true);
     this.formationRepository.editPlace(place, undefined).subscribe({
       next: () => { },
-      complete: () => this.processing = false
+      complete: () => this.processing.set(false)
     });
   }
 
@@ -77,11 +79,11 @@ export class FormationLineAssembleComponent implements OnInit {
   // }
 
   getLineClass(prefix: string): string {
-    return this.cssService.getLine(this.line.getNumber(), prefix + '-');
+    return this.cssService.getLine(this.line().getNumber(), prefix + '-');
   }
 
   getPointsTotalsClass() {
-    return this.viewGameRound === undefined ? 'bg-totals' : 'bg-points';
+    return this.viewGameRound() === undefined ? 'bg-totals' : 'bg-points';
   }
 
   maybeLinkToPlayer(place: S11FormationPlace): void {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FootballLine, Person, Team } from 'ngx-sport';
 import { S11FormationLine } from '../../../lib/formation/line';
@@ -18,12 +18,12 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
   styleUrls: ['./view.component.scss']
 })
 export class FormationLineViewComponent implements OnInit {
-  @Input() line!: S11FormationLine;
-  @Input() gameRound!: GameRound;
-  @Input() statisticsGetter!: StatisticsGetter;
-  @Input() processing: boolean = true;
-  @Input() totalPoints: number|undefined;
-  @Input() totalGameRoundPoints: number|undefined;
+  readonly line = input.required<S11FormationLine>();
+  readonly gameRound = input.required<GameRound>();
+  readonly statisticsGetter = input.required<StatisticsGetter>();
+  readonly processing = input<boolean>(true);
+  readonly totalPoints = input<number>();
+  readonly totalGameRoundPoints = input<number>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
@@ -45,7 +45,7 @@ export class FormationLineViewComponent implements OnInit {
   get GoalKeeper(): FootballLine { return FootballLine.GoalKeeper; }
   
   completed() {
-    return this.line.getPlaces().every((place: S11FormationPlace) => place.getPlayer());
+    return this.line().getPlaces().every((place: S11FormationPlace) => place.getPlayer());
   }
 
   getTeamImageUrl(s11Player: S11Player): string {
@@ -58,8 +58,9 @@ export class FormationLineViewComponent implements OnInit {
       return undefined;
     }
     let date;
-    if( this.gameRound !== undefined ) {
-      const stats = this.statisticsGetter.getStatistics(s11Player, this.gameRound);
+    const gameRound = this.gameRound();
+    if( gameRound !== undefined ) {
+      const stats = this.statisticsGetter().getStatistics(s11Player, gameRound);
       date = stats?.getGameStartDate();
     }
     const player = this.oneTeamSimultaneous.getPlayer(s11Player, date ?? new Date());
@@ -86,7 +87,7 @@ export class FormationLineViewComponent implements OnInit {
   // }
 
   getLineClass(prefix: string): string {
-    return this.cssService.getLine(this.line.getNumber(), prefix + '-');
+    return this.cssService.getLine(this.line().getNumber(), prefix + '-');
   }
 
   maybeLinkToPlayer(place: S11FormationPlace): void {

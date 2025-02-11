@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 import { Competition, FootballLine, NameService, Person, PersonMap, Player, Team, TeamMap } from 'ngx-sport';
@@ -11,27 +11,32 @@ import { S11PlayerRepository } from '../../lib/player/repository';
 import { ImageRepository } from '../../lib/image/repository';
 import { ViewPeriodType } from '../../lib/period/view/json';
 import { CompetitionConfig } from '../../lib/competitionConfig';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
+import { TeamNameComponent } from '../team/name.component';
 
 @Component({
-  selector: 'app-pool-player-choose',
-  templateUrl: './choose.component.html',
-  styleUrls: ['./choose.component.scss']
+  selector: "app-pool-player-choose",
+  standalone: true,
+  imports: [FontAwesomeModule,LineIconComponent,TeamNameComponent],
+  templateUrl: "./choose.component.html",
+  styleUrls: ["./choose.component.scss"],
 })
 export class S11PlayerChooseComponent implements OnInit {
-  @Input() competitionConfig!: CompetitionConfig;
-  @Input() viewPeriod!: ViewPeriod;
-  @Input() alreadyChosenPersons: Person[] | undefined;
-  @Input() alreadyChosenTeams: Team[] | undefined;
-  @Input() selectableTeams!: Team[];
-  @Input() selectableLines!: (FootballLine|undefined)[];
-  @Input() filter: ChoosePlayersFilter;
-  @Input() showAll: boolean = false;
-  @Input() viewPeriodType!: ViewPeriodType;
+  readonly competitionConfig = input.required<CompetitionConfig>();
+  readonly viewPeriod = input.required<ViewPeriod>();
+  readonly alreadyChosenPersons = input<Person[]>();
+  readonly alreadyChosenTeams = input<Team[]>();
+  readonly selectableTeams = input.required<Team[]>();
+  readonly selectableLines = input.required<(FootballLine)[]>();
+  readonly filter = model.required<ChoosePlayersFilter>();
+  readonly showAll = input<boolean>(false);
+  readonly viewPeriodType = input.required<ViewPeriodType>();
 
   @Output() selectS11Player = new EventEmitter<S11Player>();
   @Output() selectPlayer = new EventEmitter<Player>();
   @Output() linkToS11Player = new EventEmitter<S11Player>();
-  @Output() filterUpdate = new EventEmitter<ChoosePlayersFilter>();  
+  @Output() filterUpdate = new EventEmitter<ChoosePlayersFilter>();
   form: UntypedFormGroup;
   choosePersonItems: ChoosePersonItem[] = [];
   nameService = new NameService();
@@ -47,10 +52,10 @@ export class S11PlayerChooseComponent implements OnInit {
     public imageRepository: ImageRepository,
     fb: UntypedFormBuilder
   ) {
-    this.filter = {
+    this.filter.set({
       line: undefined,
-      team: undefined
-    };
+      team: undefined,
+    });
 
     this.form = fb.group({
       searchTeam: [],
@@ -60,32 +65,23 @@ export class S11PlayerChooseComponent implements OnInit {
 
   ngOnInit() {
     // initTeams
-    this.form.controls.searchTeam.setValue(this.filter.team);
-    if (this.selectableTeams.length <= 1) {
+    const filter = this.filter();
+    this.form.controls.searchTeam.setValue(filter.team);
+    if (this.selectableTeams().length <= 1) {
       this.form.controls.searchTeam.disable();
     }
 
-    // initFormationLines
-    if( this.selectableLines === undefined) {
-      this.selectableLines = [undefined];
-      for (const [propertyKey, propertyValue] of Object.entries(FootballLine)) {
-        if ((typeof propertyValue === 'string')) {
-          continue;
-        }
-        this.selectableLines.push(propertyValue);
-      }
-    }
-    this.form.controls.searchLine.setValue(this.filter.line);
-    if (this.selectableLines.length <= 1) {
+    this.form.controls.searchLine.setValue(filter.line);
+    if (this.selectableLines().length <= 1) {
       this.form.controls.searchLine.disable();
     }
 
     this.alreadyChosenPersonsMap = new PersonMap();
-    this.alreadyChosenPersons?.forEach((person: Person) => {
+    this.alreadyChosenPersons()?.forEach((person: Person) => {
       this.alreadyChosenPersonsMap.set(+person.getId(), person);
     });
     this.alreadyChosenTeamsMap = new TeamMap();
-    this.alreadyChosenTeams?.forEach((team: Team) => {
+    this.alreadyChosenTeams()?.forEach((team: Team) => {
       this.alreadyChosenTeamsMap.set(+team.getId(), team);
     });
     // console.log(this.showAll)
@@ -104,15 +100,22 @@ export class S11PlayerChooseComponent implements OnInit {
   // }
 
   searchPersons() {
-    this.playerRepository.getObjects(this.competitionConfig.getSourceCompetition(), this.viewPeriod, this.filter.team, this.filter.line)
+    this.playerRepository
+      .getObjects(
+        this.competitionConfig().getSourceCompetition(),
+        this.viewPeriod(),
+        this.filter().team,
+        this.filter().line
+      )
       .subscribe({
         next: (players: S11Player[]) => {
           this.setChoosePersonItems(players);
         },
         error: (e) => {
-          this.setAlert('danger', e); this.processing = false;
+          this.setAlert("danger", e);
+          this.processing = false;
         },
-        complete: () => this.processing = false
+        complete: () => (this.processing = false),
       });
   }
 
@@ -129,24 +132,39 @@ export class S11PlayerChooseComponent implements OnInit {
         choosePersonItems.push({ player: currentPlayer, s11Player: player });
       }
     });
-    choosePersonItems.sort((itemA, itemB) => 
-      this.getTotalPoints(itemA.s11Player) < this.getTotalPoints(itemB.s11Player) ? 1 : -1);
+    choosePersonItems.sort((itemA, itemB) =>
+      this.getTotalPoints(itemA.s11Player) <
+      this.getTotalPoints(itemB.s11Player)
+        ? 1
+        : -1
+    );
     this.choosePersonItems = choosePersonItems;
   }
 
   getTotalPoints(s11Player: S11Player): number {
-    return s11Player.getTotalPoints(this.competitionConfig.getScorePointsMap(), undefined);
+    return s11Player.getTotalPoints(
+      this.competitionConfig().getScorePointsMap(),
+      undefined
+    );
   }
 
   isChoosable(player: Player): boolean {
     // console.log('pac' + player.getPerson().getName(), this.personAlreadyChosen(player.getPerson()));
     // console.log('tac' + player.getPerson().getName(), this.teamAlreadyChosen(player.getTeam()));
-    return !this.personAlreadyChosen(player.getPerson()) && !this.teamAlreadyChosen(player.getTeam())
-      && (this.selectableLines.length === 0 || this.inSelectableLines(player.getLine()));
+    return (
+      !this.personAlreadyChosen(player.getPerson()) &&
+      !this.teamAlreadyChosen(player.getTeam()) &&
+      (this.selectableLines().length === 0 ||
+        this.inSelectableLines(player.getLine()))
+    );
   }
 
   inSelectableLines(footballLine: FootballLine): boolean {
-    return this.selectableLines.find((lineIt: FootballLine|undefined): boolean => lineIt === footballLine) !== undefined;
+    return (
+      this.selectableLines().find(
+        (lineIt: FootballLine | undefined): boolean => lineIt === footballLine
+      ) !== undefined
+    );
   }
 
   personAlreadyChosen(person: Person): boolean {
@@ -162,15 +180,17 @@ export class S11PlayerChooseComponent implements OnInit {
   }
 
   protected setAlert(type: string, message: string) {
-    this.alert = { 'type': type, 'message': message };
+    this.alert = { type: type, message: message };
   }
 
-  get TransferViewPeriod(): ViewPeriodType { return ViewPeriodType.Transfer; }
+  get TransferViewPeriod(): ViewPeriodType {
+    return ViewPeriodType.Transfer;
+  }
 
   linkToPlayer(choosePersonItem: ChoosePersonItem): void {
-    if( this.viewPeriodType === ViewPeriodType.Transfer ) {
-      if( this.isChoosable(choosePersonItem.player) ) {
-        this.select(choosePersonItem.s11Player,choosePersonItem.player)
+    if (this.viewPeriodType() === ViewPeriodType.Transfer) {
+      if (this.isChoosable(choosePersonItem.player)) {
+        this.select(choosePersonItem.s11Player, choosePersonItem.player);
       }
     } else {
       this.linkToS11Player.emit(choosePersonItem.s11Player);
@@ -178,12 +198,12 @@ export class S11PlayerChooseComponent implements OnInit {
   }
 
   updateFilter() {
-    this.filter = {
+    this.filter.set({
       line: this.form.controls.searchLine.value,
-      team: this.form.controls.searchTeam.value
-    };
+      team: this.form.controls.searchTeam.value,
+    });
     this.searchPersons();
-    this.filterUpdate.emit(this.filter);
+    this.filterUpdate.emit(this.filter());
   }
 }
 

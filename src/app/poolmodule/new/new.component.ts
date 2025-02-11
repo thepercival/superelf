@@ -10,10 +10,15 @@ import { CompetitionRepository } from '../../lib/ngx-sport/competition/repositor
 import { Competition } from 'ngx-sport';
 import { CompetitionConfigRepository } from '../../lib/competitionConfig/repository';
 import { CompetitionConfig } from '../../lib/competitionConfig';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { TitleComponent } from '../../shared/commonmodule/title/title.component';
 
 
 @Component({
   selector: 'app-pool-new',
+  standalone: true,
+  imports: [FontAwesomeModule,NgbAlertModule,TitleComponent],
   templateUrl: './new.component.html',
   styleUrls: ['./new.component.scss']
 })

@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { StartSessionService } from '../../shared/commonmodule/startSessionService';
 import { AuthComponent } from '../component';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { UserTitleComponent } from '../title/title.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-validate',
-  templateUrl: './validate.component.html',
-  styleUrls: ['./validate.component.css']
+  standalone: true,
+  imports: [NgIf,NgbAlertModule, UserTitleComponent, FontAwesomeModule],
+  selector: "app-validate",
+  templateUrl: "./validate.component.html",
+  styleUrls: ["./validate.component.css"],
 })
 export class ValidateComponent extends AuthComponent implements OnInit {
   protected emailaddress: string | undefined;
@@ -17,22 +23,22 @@ export class ValidateComponent extends AuthComponent implements OnInit {
   public validated = false;
 
   constructor(
-    protected route: ActivatedRoute,
-    private router: Router,
+    @Inject("route") protected route: ActivatedRoute,
+    @Inject("router") private router: Router,
     private startSessionService: StartSessionService,
     authService: AuthService,
-    eventsManager: GlobalEventsManager,
+    eventsManager: GlobalEventsManager
   ) {
     super(authService, eventsManager);
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.emailaddress = params['emailaddress'];
-      this.key = params['key'];
+    this.route.params.subscribe((params) => {
+      this.emailaddress = params["emailaddress"];
+      this.key = params["key"];
     });
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/', 'warning', 'je bent al ingelogd']);
+      this.router.navigate(["/", "warning", "je bent al ingelogd"]);
     }
     this.validate();
   }
@@ -42,7 +48,7 @@ export class ValidateComponent extends AuthComponent implements OnInit {
   }
 
   validate(): boolean {
-    this.setAlert('info', 'je emailadres wordt gevalideerd');
+    this.setAlert("info", "je emailadres wordt gevalideerd");
     if (this.emailaddress === undefined || this.key === undefined) {
       return false;
     }
@@ -52,9 +58,10 @@ export class ValidateComponent extends AuthComponent implements OnInit {
         this.startSessionService.navigate();
       },
       error: (e) => {
-        this.setAlert('danger', 'het valideren is niet gelukt: ' + e); this.processing = false;
+        this.setAlert("danger", "het valideren is niet gelukt: " + e);
+        this.processing = false;
       },
-      complete: () => this.processing = false
+      complete: () => (this.processing = false),
     });
     return false;
   }

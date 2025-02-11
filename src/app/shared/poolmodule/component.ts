@@ -13,8 +13,8 @@ import { ViewPeriod } from '../../lib/period/view';
 
 export class PoolComponent {
 
-    public pool!: Pool;
-    public currentViewPeriod!: ViewPeriod;
+    public pool: Pool|undefined;
+    public currentViewPeriod: ViewPeriod|undefined;
     public poolUserFromSession: PoolUser | undefined;
     public poolUserFromId: PoolUser | undefined;
     public alert: IAlert | undefined;

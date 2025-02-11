@@ -24,10 +24,13 @@ import { ChooseBadgeCategoryModalComponent } from '../badge/choosecategory-modal
 import { GameRoundTotalsMap, PoolTotalsRepository, PoolUsersTotalsMap } from '../../lib/totals/repository';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { DefaultGameRoundCalculator } from '../../lib/gameRound/defaultCalculator';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @Component({
   selector: 'app-pool-leagues-competition',
+  standalone: true,
+  imports: [FontAwesomeModule],
   templateUrl: './competition.component.html',
   styleUrls: ['./competition.component.scss']
 })
