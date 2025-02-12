@@ -15,11 +15,11 @@ const routes: Routes = [
   // otherwise redirect to home
   { path: '**', redirectTo: '' }
 ];
-@NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    scrollPositionRestoration: 'enabled'/*, anchorScrolling: 'enabled', preloadingStrategy: PreloadAllModules*/
-  })],
-  exports: [RouterModule]
-})
-export class RoutingModule { }
+// @NgModule({
+//   imports: [RouterModule.forRoot(routes, {
+//     scrollPositionRestoration: 'enabled'/*, anchorScrolling: 'enabled', preloadingStrategy: PreloadAllModules*/
+//   })],
+//   exports: [RouterModule]
+// })
+// export class RoutingModule { }
 

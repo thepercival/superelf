@@ -65,8 +65,8 @@ const routes: Routes = [
   { path: ':id', redirectTo: 'competition/:id', pathMatch: 'full' },
 ];
 
-@NgModule({
-  imports: [RouterModule.forChild(routes), ReactiveFormsModule],
-  exports: [RouterModule]
-})
-export class RoutingModule { }
+// @NgModule({
+//   imports: [RouterModule.forChild(routes), ReactiveFormsModule],
+//   exports: [RouterModule]
+// })
+// export class RoutingModule { }

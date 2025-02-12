@@ -19,47 +19,47 @@ import { SuperElfBadgeIconComponent } from './icon/badge.component';
 import { SuperElfTrophyIconComponent } from './icon/trophy.component';
 import { WorldCupNavBarComponent } from './poolNavBar/worldcupNavBar.component';
 
-@NgModule({
-    imports: [
-        CommonModule,
-        FontAwesomeModule,
-        ReactiveFormsModule,
-        CommonSharedModule,
-        RouterModule,
-        NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
-        NgbNavModule,
-        EndRankingComponent,
-        RankingRulesComponent,
-        SuperElfIconComponent,
-        SuperElfBadgeIconComponent,
-        SuperElfTrophyIconComponent,
-        PoolNavBarComponent,
-        WorldCupNavBarComponent,
-        PoolCompetitionsNavBarComponent,
-    ],
-    providers: [],
-    exports: [
-        EndRankingComponent,
-        RankingRulesComponent,
-        NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
-        NgbNavModule,
-        SuperElfIconComponent,
-        SuperElfBadgeIconComponent,
-        SuperElfTrophyIconComponent,
-        PoolNavBarComponent,
-        WorldCupNavBarComponent,
-        PoolCompetitionsNavBarComponent
-    ]
-})
-export class PoolSharedModule {
-  constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, alertConfig: NgbAlertConfig) {
-    library.addIcons(faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
-      faMedal, faSpinner, faMinus, faPlus, faRectangleXmark, faFutbol,
-      facCup, facStructure, facSuperCup, facTrophy, facPlate, facWorldCup, facCleanSheet,
-      facCrown, facSpottySheet, facCard, facPenalty, facScoreboard, faCircle, faHandshakeAngle, facCornerFlag, facCleanSheet);
-    modalConfig.centered = true;
-    modalConfig.scrollable = true;
-    modalConfig.size = 'lg';
-    alertConfig.dismissible = false;
-  }
-}
+// @NgModule({
+//     imports: [
+//         CommonModule,
+//         FontAwesomeModule,
+//         ReactiveFormsModule,
+//         CommonSharedModule,
+//         RouterModule,
+//         NgbDatepickerModule, NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
+//         NgbNavModule,
+//         EndRankingComponent,
+//         RankingRulesComponent,
+//         SuperElfIconComponent,
+//         SuperElfBadgeIconComponent,
+//         SuperElfTrophyIconComponent,
+//         PoolNavBarComponent,
+//         WorldCupNavBarComponent,
+//         PoolCompetitionsNavBarComponent,
+//     ],
+//     providers: [],
+//     exports: [
+//         EndRankingComponent,
+//         RankingRulesComponent,
+//         NgbTimepickerModule, NgbAlertModule, NgbPopoverModule, NgbCollapseModule, NgbModalModule,
+//         NgbNavModule,
+//         SuperElfIconComponent,
+//         SuperElfBadgeIconComponent,
+//         SuperElfTrophyIconComponent,
+//         PoolNavBarComponent,
+//         WorldCupNavBarComponent,
+//         PoolCompetitionsNavBarComponent
+//     ]
+// })
+// export class PoolSharedModule {
+//   constructor(library: FaIconLibrary, modalConfig: NgbModalConfig, alertConfig: NgbAlertConfig) {
+//     library.addIcons(faSync, faCogs, faFilter, faInfoCircle, faListUl, faPencilAlt, faCalendarAlt,
+//       faMedal, faSpinner, faMinus, faPlus, faRectangleXmark, faFutbol,
+//       facCup, facStructure, facSuperCup, facTrophy, facPlate, facWorldCup, facCleanSheet,
+//       facCrown, facSpottySheet, facCard, facPenalty, facScoreboard, faCircle, faHandshakeAngle, facCornerFlag, facCleanSheet);
+//     modalConfig.centered = true;
+//     modalConfig.scrollable = true;
+//     modalConfig.size = 'lg';
+//     alertConfig.dismissible = false;
+//   }
+// }

@@ -30,11 +30,10 @@
             "aot": true,
             "outputPath": "dist",
             "index": "src/index.html",
-            "main": "src/main.ts",
             "namedChunks": true,
             "sourceMap": true,
             "tsConfig": "src/tsconfig.app.json",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [],
             "assets": [
               {
                 "glob": "**/*",
@@ -56,7 +55,8 @@
                 "silenceDeprecations": ["mixed-decls", "color-functions", "global-builtin", "import"]
               }
             },
-            "scripts": []
+            "scripts": [],
+            "browser": "src/main.ts"
           },
           "configurations": {
             "prod": {
@@ -136,8 +136,7 @@
               "outputHashing": "all",
               "sourceMap": false,
               "extractLicenses": true,
-              "vendorChunk": true,
-              "buildOptimizer": true,
+              "namedChunks": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -147,12 +146,10 @@
               "serviceWorker": true
             },
             "dev": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
+              "namedChunks": true,
               "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             },
             "defaultConfiguration": "prod"
           }
@@ -183,7 +180,7 @@
           "options": {
             "main": "src/test.ts",
             "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [],
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [],
             "styles": [

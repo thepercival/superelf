@@ -7,18 +7,21 @@ import { User } from '../../../lib/user';
 import { GlobalEventsManager } from '../../commonmodule/eventmanager';
 import { MyNavigation } from '../../commonmodule/navigation';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   standalone: true,
   imports: [FontAwesomeModule],
-  selector: 'app-nav',
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css']
+  selector: "app-nav",
+  templateUrl: "./nav.component.html",
+  styleUrls: ["./nav.component.css"],
 })
 export class NavComponent implements OnInit {
-
+  faSignInAlt = faSignInAlt
+  faUserCircle = faUserCircle
   navbarCollapsed = true;
-  user: User | undefined
+  user: User | undefined;
   public nameInfo: NavHeaderInfo | undefined;
 
   constructor(
@@ -28,9 +31,11 @@ export class NavComponent implements OnInit {
     public navigation: MyNavigation,
     private router: Router
   ) {
-    this.globalEventsManager.navHeaderInfo.subscribe((headerInfo: NavHeaderInfo | undefined) => {
-      this.nameInfo = headerInfo;
-    });
+    this.globalEventsManager.navHeaderInfo.subscribe(
+      (headerInfo: NavHeaderInfo | undefined) => {
+        this.nameInfo = headerInfo;
+      }
+    );
   }
 
   ngOnInit() {
@@ -43,17 +48,17 @@ export class NavComponent implements OnInit {
   }
 
   getSeasonEnd(startDate: Date): string {
-    const endDate = (new Date(startDate));
+    const endDate = new Date(startDate);
     endDate.setFullYear(startDate.getFullYear() + 1);
     return this.convertDateToYear(endDate);
   }
 
   private convertDateToYear(dDate: Date): string {
-    return this.dateFormatter.toString(dDate, { year: '2-digit' });
+    return this.dateFormatter.toString(dDate, { year: "2-digit" });
   }
 
   navigateToPoolHome(id: number): void {
-    this.router.navigate(['/pool', id]);
+    this.router.navigate(["/pool", id]);
   }
 }
 

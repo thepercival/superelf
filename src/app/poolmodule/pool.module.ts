@@ -78,77 +78,77 @@ import { NgParticlesModule } from 'ng-particles';
 import { ChooseBadgeCategoryModalComponent } from './badge/choosecategory-modal.component';
 import { UserBadgesModalComponent } from './achievements/userbadges-modal.component';
 
-@NgModule({
-    imports: [
-        // CommonModule,
-        // RoutingModule,
-        // ReactiveFormsModule,
-        // FontAwesomeModule,
-        // PoolSharedModule,
-        // CommonSharedModule,
-        // ClipboardModule,
-        // NgbPaginationModule,
-        // NgParticlesModule,
-        // AchievementsComponent,
-        // AgainstGameTitleComponent,
-        // ChooseBadgeCategoryModalComponent,
-        // FormationActionOverviewComponent,
-        // FormationAssembleComponent,
-        // FormationChooseComponent,
-        // FormationLineReplacementsComponent,
-        // FormationLineTransfersComponent,
-        // FormationLineSubstitutionsComponent,
-        // FormationLineViewComponent,
-        // FormationPlaceEditComponent,
-        // FormationPlaceReplaceComponent,
-        // FormationPlaceTransferComponent,
-        // FormationReplaceComponent,
-        // FormationSubstituteComponent,
-        // FormationTransferComponent,
-        // GameRoundScrollerComponent,
-        // GameScrollerComponent,
-        // InviteComponent,
-        // JoinComponent,
-        // NewComponent,
-        // PlayerBasicsComponent,
-        // PoolAllInOneGameScheduleComponent,
-        // PoolChatComponent,
-        // PoolCompetitionComponent,
-        // PoolCupComponent,
-        // PoolCupRoundComponent,
-        // PoolPouleAgainstGamesComponent,
-        // PoolUserComponent,
-        // PoolUserRemoveModalComponent,
-        // PoolUsersComponent,
-        // PouleTitleComponent,
-        // PreNewComponent,
-        // RulesComponent,
-        // S11PlayerComponent,
-        // S11PlayerAddRemoveModalComponent,
-        // S11PlayerGameRoundStatisticsComponent,
-        // S11PlayerViewPeriodStatisticsComponent,
-        // ScoutedPlayerListComponent,
-        // ScoutedPlayerAddComponent,
-        // SourceGameComponent,
-        // TeamNameComponent,
-        // TogetherRankingComponent,
-        // UnviewedAchievementsModalComponent,
-        // UserBadgesModalComponent,
-        // WorldCupComponent
-    ],
-    providers: []
-})
-export class PoolModule {
-  constructor(library: FaIconLibrary) {
-    library.addIcons(
-      faListOl, faChevronLeft, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
-      , faInfoCircle, faSearch, faPlusCircle, faPencilAlt, faUserSecret, faMessage, faPaperPlane, faFilter,
-      faRightLeft, faSignOutAlt
-    );
-    /*library.addIcons(
-      faProductHunt
-    );*/
-  }
-}
+// @NgModule({
+//     imports: [
+//         // CommonModule,
+//         // RoutingModule,
+//         // ReactiveFormsModule,
+//         // FontAwesomeModule,
+//         // PoolSharedModule,
+//         // CommonSharedModule,
+//         // ClipboardModule,
+//         // NgbPaginationModule,
+//         // NgParticlesModule,
+//         // AchievementsComponent,
+//         // AgainstGameTitleComponent,
+//         // ChooseBadgeCategoryModalComponent,
+//         // FormationActionOverviewComponent,
+//         // FormationAssembleComponent,
+//         // FormationChooseComponent,
+//         // FormationLineReplacementsComponent,
+//         // FormationLineTransfersComponent,
+//         // FormationLineSubstitutionsComponent,
+//         // FormationLineViewComponent,
+//         // FormationPlaceEditComponent,
+//         // FormationPlaceReplaceComponent,
+//         // FormationPlaceTransferComponent,
+//         // FormationReplaceComponent,
+//         // FormationSubstituteComponent,
+//         // FormationTransferComponent,
+//         // GameRoundScrollerComponent,
+//         // GameScrollerComponent,
+//         // InviteComponent,
+//         // JoinComponent,
+//         // NewComponent,
+//         // PlayerBasicsComponent,
+//         // PoolAllInOneGameScheduleComponent,
+//         // PoolChatComponent,
+//         // PoolCompetitionComponent,
+//         // PoolCupComponent,
+//         // PoolCupRoundComponent,
+//         // PoolPouleAgainstGamesComponent,
+//         // PoolUserComponent,
+//         // PoolUserRemoveModalComponent,
+//         // PoolUsersComponent,
+//         // PouleTitleComponent,
+//         // PreNewComponent,
+//         // RulesComponent,
+//         // S11PlayerComponent,
+//         // S11PlayerAddRemoveModalComponent,
+//         // S11PlayerGameRoundStatisticsComponent,
+//         // S11PlayerViewPeriodStatisticsComponent,
+//         // ScoutedPlayerListComponent,
+//         // ScoutedPlayerAddComponent,
+//         // SourceGameComponent,
+//         // TeamNameComponent,
+//         // TogetherRankingComponent,
+//         // UnviewedAchievementsModalComponent,
+//         // UserBadgesModalComponent,
+//         // WorldCupComponent
+//     ],
+//     providers: []
+// })
+// export class PoolModule {
+//   constructor(library: FaIconLibrary) {
+//     library.addIcons(
+//       faListOl, faChevronLeft, faChevronRight, faEnvelope, faClipboardCheck, faUsers, faTimesCircle, faCheckCircle, faTrashAlt
+//       , faInfoCircle, faSearch, faPlusCircle, faPencilAlt, faUserSecret, faMessage, faPaperPlane, faFilter,
+//       faRightLeft, faSignOutAlt
+//     );
+//     /*library.addIcons(
+//       faProductHunt
+//     );*/
+//   }
+// }
 
 

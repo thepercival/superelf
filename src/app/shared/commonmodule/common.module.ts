@@ -9,28 +9,28 @@ import { LineIconComponent } from './lineicon/lineicon.component';
 import { TitleComponent } from './title/title.component';
 import { ViewPortManager } from './viewPortManager';
 
-@NgModule({
-    imports: [
-        CommonModule,
-        FontAwesomeModule,
-        EscapeHtmlPipe,
-        FocusDirective,
-        TitleComponent,
-        LineIconComponent
-    ],
-    exports: [
-        EscapeHtmlPipe,
-        FocusDirective,
-        TitleComponent,
-        LineIconComponent
-    ]
-})
+// @NgModule({
+//     imports: [
+//         CommonModule,
+//         FontAwesomeModule,
+//         EscapeHtmlPipe,
+//         FocusDirective,
+//         TitleComponent,
+//         LineIconComponent
+//     ],
+//     exports: [
+//         EscapeHtmlPipe,
+//         FocusDirective,
+//         TitleComponent,
+//         LineIconComponent
+//     ]
+// })
 
-export class CommonSharedModule {
-  constructor(library: FaIconLibrary/*, modalConfig: NgbModalConfig,*/) {
-    library.addIcons(faUsers);
-    /*modalConfig.centered = true;
-    modalConfig.scrollable = true;
-    modalConfig.size = 'lg';*/
-  }
-}
+// export class CommonSharedModule {
+//   constructor(library: FaIconLibrary/*, modalConfig: NgbModalConfig,*/) {
+//     library.addIcons(faUsers);
+//     /*modalConfig.centered = true;
+//     modalConfig.scrollable = true;
+//     modalConfig.size = 'lg';*/
+//   }
+// }

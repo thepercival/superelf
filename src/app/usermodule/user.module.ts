@@ -16,30 +16,30 @@ import { UserRepository } from '../lib/user/repository';
 import { UserTitleComponent } from './title/title.component';
 import { faKey } from '@fortawesome/free-solid-svg-icons';
 
-@NgModule({
-    // imports: [
-    //     CommonModule,
-    //     ReactiveFormsModule,
-    //     UserRoutingModule,
-    //     NgbAlertModule,
-    //     FontAwesomeModule,
-    //     LoginComponent,
-    //     LogoutComponent,
-    //     RegisterComponent,
-    //     ValidateComponent,
-    //     PasswordresetComponent,
-    //     PasswordchangeComponent,
-    //     ProfileComponent,
-    //     UserTitleComponent
-    // ],
-    // providers: [UserRepository],
-    // exports: [
-    //     UserTitleComponent
-    // ]
-})
-export class UserModule {
-  // constructor(library: FaIconLibrary, alertConfig: NgbAlertConfig) {
-  //   library.addIcons(faKey);
-  //   alertConfig.dismissible = false;
-  // }
-}
+// @NgModule({
+//     // imports: [
+//     //     CommonModule,
+//     //     ReactiveFormsModule,
+//     //     UserRoutingModule,
+//     //     NgbAlertModule,
+//     //     FontAwesomeModule,
+//     //     LoginComponent,
+//     //     LogoutComponent,
+//     //     RegisterComponent,
+//     //     ValidateComponent,
+//     //     PasswordresetComponent,
+//     //     PasswordchangeComponent,
+//     //     ProfileComponent,
+//     //     UserTitleComponent
+//     // ],
+//     // providers: [UserRepository],
+//     // exports: [
+//     //     UserTitleComponent
+//     // ]
+// })
+// export class UserModule {
+//   // constructor(library: FaIconLibrary, alertConfig: NgbAlertConfig) {
+//   //   library.addIcons(faKey);
+//   //   alertConfig.dismissible = false;
+//   // }
+// }

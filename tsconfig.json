@@ -4,7 +4,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "downlevelIteration": true,
+    "esModuleInterop": true,
     "importHelpers": true,
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

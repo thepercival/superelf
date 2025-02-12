@@ -9,7 +9,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 @Component({
   selector: "app-pouleranking",
   standalone: true,
-  imports: [NgIf,FontAwesomeModule],
+  imports: [FontAwesomeModule],
   templateUrl: "./poule.component.html",
   styleUrls: ["./poule.component.scss"],
 })
