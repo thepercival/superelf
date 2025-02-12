@@ -6,17 +6,20 @@
       <h2 class="me-2 text-truncate">
         2. transfer
       </h2>
-      <div *ngIf="!processing && pool && calcFormation">
+      @if(!processing && pool && calcFormation){
+      <div>
         <button class="btn btn-secondary" disabled>
           {{calcFormation.getName()}}
         </button>
       </div>
+      }
     </div>
 
     <!-- start header --> 
-    <div *ngIf="!processing && poolUser && assembleFormation" class="d-flex justify-content-between mt-3 mb-1">
+    @if(!processing && poolUser && assembleFormation){
+    <div class="d-flex justify-content-between mt-3 mb-1">
       <!-- left -->      
-        <button *ngIf="hasPlayersWithoutCurrentTeam(assembleFormation)" class="btn btn-outline-primary btn-sm"
+        <button ngIf="hasPlayersWithoutCurrentTeam(assembleFormation)" class="btn btn-outline-primary btn-sm"
           (click)="linkToReplacements(poolUser, assembleFormation, contentRemove)">
           <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
           <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
@@ -24,49 +27,54 @@
       
       <!-- center/right -->
       <div class="d-flex">        
-        <button *ngIf="transferEditMode === SingleEditMode 
+        <button ngIf="transferEditMode === SingleEditMode 
         && poolUser.getTransferPeriodActionList().transfers.length < transferPeriod.getMaxNrOfTransfers()" class="btn btn-outline-primary ms-1"
           (click)="toggleTransferEditMode(contentInfo)">
           <fa-icon [icon]="['fas', 'users']"></fa-icon>
           </button>
-        <button *ngIf="transferEditMode === DoubleEditMode && (poolUser.getTransferPeriodActionList().transfers.length + 1) < transferPeriod.getMaxNrOfTransfers()" class="btn btn-secondary ms-1"
+        <button ngIf="transferEditMode === DoubleEditMode && (poolUser.getTransferPeriodActionList().transfers.length + 1) < transferPeriod.getMaxNrOfTransfers()" class="btn btn-secondary ms-1"
         (click)="toggleTransferEditMode(contentInfo)">
         <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
         </button>
-        <button *ngIf="poolUser.getTransferPeriodActionList().transfers.length" type="button" class="btn btn-primary ms-1" (click)="remove(assembleFormation, poolUser.getTransferPeriodActionList().transfers, false)">
+        <button ngIf="poolUser.getTransferPeriodActionList().transfers.length" type="button" class="btn btn-primary ms-1" (click)="remove(poolUser.getPool(),assembleFormation, poolUser.getTransferPeriodActionList().transfers, false)">
           <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
         </button>
       </div>
 
       <!-- right -->    
       <button class="btn btn-outline-primary ms-1"
-        (click)="linkToSubstitutions()">
+        (click)="linkToSubstitutions(poolUser.getPool())">
         <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
         <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
       </button>
       
     </div> <!-- end header --> 
+    }
 
     
+    @if(alert){
+    <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+    }
 
-    <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-
-    <div *ngIf="!processing && pool && poolUser && assembleFormation && calcFormation">
-      <div *ngIf="!selectedPlace">
+    @if(!processing && pool && poolUser && assembleFormation && calcFormation){
+    <div>
+      <div ngIf="!selectedPlace">
         <!-- lines-->
         <app-pool-formationline-transfers *ngFor="let line of calcFormation.getLines()" [line]="line"
           [transfers]="poolUser.getTransferPeriodActionList().transfers" [maxNrOfTransfers]="transferPeriod.getMaxNrOfTransfers()"
           [canRemoveTransfer]="canRemoveTransfer(calcFormation,line)"
-          (transfer)="linkToTransfer($event)" (linkToPlayer)="linkToPlayer($event)"
-          (remove)="remove(assembleFormation, $event, false)">
+          (transfer)="linkToTransfer(pool,$event)" (linkToPlayer)="linkToPlayer(pool,$event)"
+          (remove)="remove(pool, assembleFormation, $event, false)">
         </app-pool-formationline-transfers>
       </div>
     </div>
+    }
   </div>
 </div>
 
-<app-pool-navbar *ngIf="pool" [pool]="pool" [poolUser]="poolUser">
-</app-pool-navbar>
+@if(pool){
+<app-pool-navbar [pool]="pool" [poolUser]="poolUser"></app-pool-navbar>
+}
 
 <ng-template #contentRemove let-modal>
   <div class="modal-header">

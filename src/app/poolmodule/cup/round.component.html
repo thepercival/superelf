@@ -1,4 +1,4 @@
-<div *ngIf="round()" class="width-100">
+<div class="width-100">
   <div class="card border-secondary round mb-3 user-select-none">
     <div class="card-header border-bottom-0 px-1 text-center">
       <span class="" [innerHTML]="this.structureNameService().getRoundName(round(), true) | keepHtml"></span>
@@ -6,31 +6,25 @@
     </div>
     <div class="card-body px-1">
       <div class="d-flex flex-wrap gap-2 justify-content-around">
+        @for(poule of round().getPoules(); track poule.getId()){
+          <div class="btn-group mb-3" role="group" (click)="emitNavigateToPoule(poule)">
 
-        <div *ngFor="let poule of round().getPoules();" class="btn-group mb-3" role="group" (click)="emitNavigateToPoule(poule)">
-
-          <ng-container *ngIf="hasCompetitors;else hasNoCompetitors">
-
-            <button type="button" class="btn btn-outline-primary ps-1">
-              {{structureNameService().getPouleName(poule,false)}}</button>
-            <button type="button" class="btn btn-outline-primary px-1 text-start">
-              <ng-container [ngTemplateOutlet]="place" [ngTemplateOutletContext]="{poule, side: Home}"></ng-container>
-              <div *ngIf="poule.getPlaces().length === 1">bye</div>
-              <ng-container *ngIf="poule.getPlaces().length === 2"
-              [ngTemplateOutlet]="place" [ngTemplateOutletContext]="{poule, side: Away}"></ng-container>
-            </button>
-
-          </ng-container>
-
-          <ng-template #hasNoCompetitors>
-
-            <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Home)}}</button>
-            <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Away)}}</button>
-
-          </ng-template>
-        </div>
-
-
+            @if(hasCompetitors){
+              <button type="button" class="btn btn-outline-primary ps-1">
+                {{structureNameService().getPouleName(poule,false)}}</button>
+              <button type="button" class="btn btn-outline-primary px-1 text-start">
+                <ng-container ngTemplateOutlet="place" ngTemplateOutletContext="{poule, side: Home}"></ng-container>
+                <div ngIf="poule.getPlaces().length === 1">bye</div>
+                <ng-container ngIf="poule.getPlaces().length === 2"
+                ngTemplateOutlet="place" ngTemplateOutletContext="{poule, side: Away}"></ng-container>
+              </button>
+            }
+            @else {
+              <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Home)}}</button>
+              <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Away)}}</button>
+            }
+          </div>
+        }
       </div>
     </div>
   </div>
@@ -46,8 +40,8 @@
 
 <ng-template #place let-poule="poule" let-side="side">
   <div class="d-flex flex-wrap justify-content-between" 
-  [ngClass]="{'favitem': isCurrentUser(poule, side), 'bg-success': hasQualified(poule, side) }">
+  ngClass="{'favitem': isCurrentUser(poule, side), 'bg-success': hasQualified(poule, side) }">
     <span>{{getCompetitorName(poule, side)}}</span>
-    <span *ngIf="showScore(poule)" class="ms-1">{{getScore(poule, side)}}</span>
+    <span ngIf="showScore(poule)" class="ms-1">{{getScore(poule, side)}}</span>
   </div>       
   </ng-template>

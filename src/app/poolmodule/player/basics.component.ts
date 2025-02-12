@@ -1,9 +1,14 @@
 import { Component, OnInit, input } from '@angular/core';
 import { Player } from 'ngx-sport';
 import { ImageRepository } from '../../lib/image/repository';
+import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
+import { TeamNameComponent } from '../team/name.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-player-basics',
+  standalone: true,
+  imports: [LineIconComponent,TeamNameComponent,FontAwesomeModule],
   templateUrl: './basics.component.html',
   styleUrls: ['./basics.component.scss']
 })

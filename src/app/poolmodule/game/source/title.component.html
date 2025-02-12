@@ -1,25 +1,35 @@
 <div class="d-flex justify-content-center">
     <div>
-        <span *ngFor="let sideCompetitor of getCompetitors(HomeSide)">
-            <app-team-name *ngIf="isTeamCompetitor(sideCompetitor)" [team]="getTeam(sideCompetitor)" [reverse]="true">
-            </app-team-name>
-            <span *ngIf="!isTeamCompetitor(sideCompetitor) && isCompetitor(sideCompetitor)"></span>
-        </span>
+        @for(sideCompetitor of getCompetitors(HomeSide); track sideCompetitor){
+            @let team = getTeam(sideCompetitor);
+            @if(team){
+                <span>
+                    <app-team-name *ngIf="isTeamCompetitor(sideCompetitor)" [team]="team" [reverse]="true">
+                    </app-team-name>
+                    <span ngIf="!isTeamCompetitor(sideCompetitor) && isCompetitor(sideCompetitor)"></span>
+                </span>
+            }
+        }
     </div>
 
     <div class="px-2" title="{{dateFormatter.toString(againstGame().getStartDateTime(),dateFormatter.date())}} {{dateFormatter.toString(againstGame().getStartDateTime(),dateFormatter.time())}}">{{nameService.getAgainstScore(againstGame())}}</div>
 
     <div>
-        <span *ngFor="let sideCompetitor of getCompetitors(AwaySide)">
-            <app-team-name *ngIf="isTeamCompetitor(sideCompetitor)" [team]="getTeam(sideCompetitor)"></app-team-name>
-            <span *ngIf="!isTeamCompetitor(sideCompetitor) && isCompetitor(sideCompetitor)"></span>
-        </span>
+        @for(sideCompetitor of getCompetitors(AwaySide); track sideCompetitor){
+            @let team = getTeam(sideCompetitor);
+            @if(team){
+                <span>
+                    <app-team-name *ngIf="isTeamCompetitor(sideCompetitor)" [team]="team"></app-team-name>
+                    <span ngIf="!isTeamCompetitor(sideCompetitor) && isCompetitor(sideCompetitor)"></span>
+                </span>
+            }
+        }
     </div>
 
-    <div *ngIf="showDate() && showFinishedDate()" class="ps-3 "
-        [ngClass]="{'text-decoration-line-through': againstGame().getState() === Finished}">
+    <div ngIf="showDate() && showFinishedDate()" class="ps-3 "
+        ngClass="{'text-decoration-line-through': againstGame().getState() === Finished}">
         {{dateFormatter.toString(againstGame().getStartDateTime(),dateFormatter.date())}}
-        <span *ngIf="againstGame().getState() !== Finished">{{dateFormatter.toString(againstGame().getStartDateTime(),
+        <span ngIf="againstGame().getState() !== Finished">{{dateFormatter.toString(againstGame().getStartDateTime(),
             dateFormatter.time())}}</span>
     </div>
 

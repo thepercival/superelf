@@ -7,9 +7,12 @@ import { PoolShell, PoolShellFilter, PoolShellRepository } from '../lib/pool/she
 import { Role } from '../lib/role';
 import { PoolRepository } from '../lib/pool/repository';
 import { GlobalEventsManager } from '../shared/commonmodule/eventmanager';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
+  imports: [FontAwesomeModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })

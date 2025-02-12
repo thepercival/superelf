@@ -10,11 +10,14 @@ import { SuperElfNameService } from '../../../lib/nameservice';
 import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../../lib/player';
 import { CSSService } from '../../../shared/commonmodule/cssservice';
+import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TeamNameComponent } from '../../team/name.component';
 
 @Component({
   selector: 'app-pool-formationline-assemble',
   standalone: true,
-  imports[],
+  imports: [LineIconComponent,FontAwesomeModule,TeamNameComponent],
   templateUrl: './assemble.component.html',
   styleUrls: ['./assemble.component.scss']
 })

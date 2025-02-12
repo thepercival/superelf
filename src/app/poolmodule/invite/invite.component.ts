@@ -11,10 +11,15 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { PoolUser } from '../../lib/pool/user';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
   selector: 'app-pool-invite',
+  standalone: true,
+  imports: [FontAwesomeModule,PoolNavBarComponent,NgbAlertModule],
   templateUrl: './invite.component.html',
   styleUrls: ['./invite.component.scss']
 })

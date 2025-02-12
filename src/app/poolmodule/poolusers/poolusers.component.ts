@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
@@ -12,10 +12,14 @@ import { PoolUserRemoveModalComponent } from './removemodal.component';
 import { Period } from 'ngx-sport';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 
 
 @Component({
   selector: 'app-pool-users',
+  standalone: true,
+  imports: [FontAwesomeModule, NgbAlertModule,PoolNavBarComponent],
   templateUrl: './poolusers.component.html',
   styleUrls: ['./poolusers.component.scss']
 })

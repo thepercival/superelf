@@ -5,7 +5,7 @@
     </button>
 </div>
 
-<div *ngIf="current" class="modal-body">    
+<div ngIf="current" class="modal-body">    
 
     <ng-particles
         [id]="tsparticlesId"
@@ -13,26 +13,29 @@
         [particlesInit]="particlesInit"            
         (particlesLoaded)="particlesLoaded($event)"
     ></ng-particles>
-    <div *ngIf="currentTrophy" class="text-center">    
-        <div><h4>{{getTrophyTitle(currentTrophy)}}</h4></div>
-        <div>
-            <app-superelf-trophy-icon size="10x" [leagueName]="nameService.convertToLeagueName(currentTrophy.getCompetition())"></app-superelf-trophy-icon>
+    @if(currentTrophy){
+        <div class="text-center">    
+            <div><h4>{{getTrophyTitle(currentTrophy)}}</h4></div>
+            <div>
+                <app-superelf-trophy-icon size="10x" [leagueName]="nameService.convertToLeagueName(currentTrophy.getCompetition())"></app-superelf-trophy-icon>
+            </div>
+            <div><h2 class="fw-bold">{{currentTrophy.poolUser.user.name}}</h2></div>
         </div>
-        <div><h2 class="fw-bold">{{currentTrophy.poolUser.user.name}}</h2></div>
-    </div>
-    <div *ngIf="currentBadge" class="text-center">    
-        <div><h4>{{currentBadge.poolName}} {{currentBadge.seasonShortName}}</h4></div>
-        <div><h4>{{nameService.getBadgeCategoryName(currentBadge.getCategory())}}-badge</h4></div>
-        <div>
-            <app-superelf-badge-icon size="5x" [badgeCategory]="currentBadge.getCategory()"></app-superelf-badge-icon>
+    }
+    @if(currentBadge){
+        <div class="text-center">    
+            <div><h4>{{currentBadge.poolName}} {{currentBadge.seasonShortName}}</h4></div>
+            <div><h4>{{nameService.getBadgeCategoryName(currentBadge.getCategory())}}-badge</h4></div>
+            <div>
+                <app-superelf-badge-icon size="5x" [badgeCategory]="currentBadge.getCategory()"></app-superelf-badge-icon>
+            </div>
+            <div><h2 class="fw-bold">{{currentBadge.poolUser.user.name}}</h2></div>
         </div>
-        <div><h2 class="fw-bold">{{currentBadge.poolUser.user.name}}</h2></div>
-    </div>
-    
+    }    
 </div>
 <div class="modal-footer d-flex justify-content-around border-top-0">
     <button type="button" class="btn btn-secondary" [attr.disabled]="previousAchievements.length === 0 ? true : null" (click)="previous()">vorige</button>
-    <button *ngIf="nextAchievements.length > 0" type="button" class="btn btn-secondary" (click)="next()">volgende</button>
-    <button *ngIf="nextAchievements.length === 0" type="button" class="btn btn-secondary" (click)="modal.dismiss('close')">sluiten</button>
+    <button ngIf="nextAchievements.length > 0" type="button" class="btn btn-secondary" (click)="next()">volgende</button>
+    <button ngIf="nextAchievements.length === 0" type="button" class="btn btn-secondary" (click)="modal.dismiss('close')">sluiten</button>
 </div>
 

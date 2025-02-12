@@ -25,7 +25,7 @@ export class PoolNavBarComponent implements OnInit, OnChanges {
   readonly upperNavBar = input<TemplateRef<any>>();
   readonly pool = input.required<Pool>();
   readonly poolUser = input<PoolUser>();
-  readonly current = input.required<NavBarItem>();
+  readonly current = input<NavBarItem>();
 
   public structureMap = new Map<number, Structure>();
   public hasUnviewedAchievements: boolean = false;

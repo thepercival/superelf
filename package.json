@@ -31,7 +31,6 @@
     "@fortawesome/free-solid-svg-icons": "^6.0.0",
     "@ng-bootstrap/ng-bootstrap": "^18.0.0",
     "bootstrap": "^5.0.0",
-    "lodash.clonedeep": "^4.5.0",
     "ng-particles": "^3.9.3",
     "ngx-clipboard": "^16.0.0",
     "ngx-sport": "^1.0.23",
@@ -39,8 +38,7 @@
     "tslib": "^2.4",
     "tsparticles": "^2.9.3",
     "tsparticles-engine": "^2.9.3",
-    "tsparticles-preset-confetti": "^2.9.3",
-    "zone.js": "^0.15.0"
+    "tsparticles-preset-confetti": "^2.9.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.1.5",

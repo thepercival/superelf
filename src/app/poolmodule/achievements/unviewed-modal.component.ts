@@ -6,9 +6,14 @@ import { Trophy } from '../../lib/achievement/trophy';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { loadConfettiPreset } from 'tsparticles-preset-confetti';
 import { LeagueName } from '../../lib/leagueName';
+import { SuperElfTrophyIconComponent } from '../../shared/poolmodule/icon/trophy.component';
+import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.component';
+import { NgParticlesModule } from 'ng-particles';
 
 @Component({
     selector: 'app-ngbd-modal-unviewed',
+    standalone: true,
+    imports: [SuperElfTrophyIconComponent,SuperElfBadgeIconComponent,NgParticlesModule],
     templateUrl: './unviewed-modal.component.html',
     styleUrls: ['./unviewed-modal.component.scss']
 })

@@ -2,9 +2,12 @@ import { Component, OnInit, input } from '@angular/core';
 import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase, ScoreConfigService, GameState, Team, TeamCompetitor, StartLocationMap } from 'ngx-sport';
 import { DateFormatter } from '../../../lib/dateFormatter';
 import { SuperElfNameService } from '../../../lib/nameservice';
+import { TeamNameComponent } from '../../team/name.component';
 
 @Component({
   selector: 'app-againstgame-title',
+  standalone: true,
+  imports: [TeamNameComponent],
   templateUrl: './title.component.html',
   styleUrls: ['./title.component.scss']
 })

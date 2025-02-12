@@ -3,31 +3,34 @@
 
     <div class="d-flex justify-content-between mt-3 mb-1">
 
-      <h1 *ngIf="!processing && poolUser" class="me-2 text-truncate">
+      <h1 ngIf="!processing && poolUser" class="me-2 text-truncate">
         <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> {{poolUser.getName()}}
         <small>transferacties</small>
       </h1>
     
-      <div *ngIf="!processing && pool">
-        <button *ngIf="inTransfer()" class="btn btn-outline-info ms-1" [routerLink]="['/pool/formation/substitutions', pool.getId()]">
+      <div ngIf="!processing && pool">
+        <button ngIf="inTransfer()" class="btn btn-outline-info ms-1" routerLink="['/pool/formation/substitutions', pool.getId()]">
           <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
         </button>
-        <button *ngIf="inAfterTransfer()" class="btn btn-outline-info ms-1" [routerLink]="['/pool/user', pool.getId(), poolUser.getId(), 0]">
+        <button ngIf="inAfterTransfer()" class="btn btn-outline-info ms-1" routerLink="['/pool/user', pool.getId(), poolUser.getId(), 0]">
           <fa-icon [icon]="['fas', 'users']"></fa-icon>
         </button>
       </div>
     </div>
 
-    <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+    @if(alert){
+    <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+    }
 
     <!-- replacements-->
-    <div *ngIf="!processing && list && list.replacements.length > 0" class="mt-5">
+    <div ngIf="!processing && list && list.replacements.length > 0" class="mt-5">
       <h2>
         vervangingen
       </h2>
       <table class="table">
         <tbody>
-          <tr *ngFor="let replacement of list.replacements">
+          @for(replacement of list.replacements; track replacement.getId()) {
+          <tr>
             <td>
               <app-team-name [team]="replacement.getPlayerIn().getTeam()" [fullName]="false"></app-team-name>
             </td>
@@ -43,18 +46,20 @@
               <span>{{replacement.getPlayerIn().getPerson().getName()}}</span>
             </td>
           </tr>
+          }
         </tbody>
       </table>
     </div>
 
     <!-- transfers-->
-    <div *ngIf="!processing && list && list.transfers.length > 0" class="mt-5">
+    <div ngIf="!processing && list && list.transfers.length > 0" class="mt-5">
       <h2>
         transfers
       </h2>
       <table class="table">
         <tbody>
-          <tr *ngFor="let transfer of list.transfers">
+          @for(transfer of list.transfers; track transfer.getId()) {
+          <tr>
             <td class="text-nowrap">
               <app-team-name [team]="transfer.getPlayerOut().getTeam()" [fullName]="false"></app-team-name>
             </td>
@@ -73,19 +78,21 @@
               <span>{{transfer.getPlayerIn().getPerson().getName()}}</span>
             </td>
           </tr>
+          }
         </tbody>
       </table>
     </div>
 
     <!-- wissels-->
-    <div *ngIf="!processing && calcFormation && list && list.substitutions.length > 0" class="mt-5">
+    @if(!processing && calcFormation && list && list.substitutions.length > 0){
+    <div class="mt-5">
       <h2>
         wissels
       </h2>
       <table class="table">
         <tbody>
-          
-          <tr *ngFor="let substitution of list.substitutions">
+          @for(substitution of list.substitutions; track substitution.getId()) {
+          <tr>
             <td>
               <app-lineicon [line]="substitution.getLineNumberOut()"></app-lineicon>
             </td>
@@ -105,9 +112,10 @@
               <span class="text-break">{{getPlayerOut(calcFormation, substitution).getPerson().getName()}}</span>
             </td>
           </tr>
+          }
         </tbody>
       </table>
     </div>
-
-  </div>
+    }
+  </div>  
 </div>

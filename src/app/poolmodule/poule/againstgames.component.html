@@ -2,29 +2,32 @@
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
 
         <div class="d-flex justify-content-{{poolPoule && poolUserFromSession ? 'between' : 'center'}} mt-2">
-            <h2 class="ms-3" [ngClass]="{'pointer': pool}" (click)="navigateToStructure()">
+            <h2 class="ms-3" ngClass="{'pointer': pool}" (click)="navigateToStructure()">
                 <app-superelf-icon [name]="cssService.getIconName(leagueName)"></app-superelf-icon>
                 <span class="ms-1">{{nameService.getLeagueName(leagueName)}}</span>
             </h2>
             <div>
-                <button *ngIf="poolPoule && poolUserFromSession" (click)="navigateToChat(poolPoule)" type="button"
+                @if(pool && poolPoule && poolUserFromSession){
+                <button (click)="navigateToChat(pool,poolPoule)" type="button"
                     class="btn btn-outline-dark me-3 position-relative">
                     <fa-icon [icon]="['fas', 'message']"></fa-icon>
                     <span class="ms-1"> chat</span>
-                    <span *ngIf="nrOfUnreadMessages > 0"
+                    <span ngIf="nrOfUnreadMessages > 0"
                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         {{nrOfUnreadMessages}}
                         <span class="visually-hidden">ongelezen berichten</span>
                     </span>
                 </button>
+                }
             </div>
         </div>
 
-        <h2 *ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        <h2 ngIf="processing" class="text-center">
+            <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
         </h2>
 
-        <div *ngIf="!processing && poolPoule">
+        @if(!processing && pool && currentViewPeriod && poolPoule){
+        <div>
             <h2 class="d-flex justify-content-center mt-3">
                 <app-poule-title [poule]="poolPoule" [poolCompetitors]="pool.getCompetitors(leagueName)"
                 (linkToPoolUser)="linkToPoolUser($event)">
@@ -33,97 +36,104 @@
 
             <div class="d-flex justify-content-center mt-2">
                 <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
-                    (update)="setGameRoundAndGetStatistics($event)">
+                    [currentViewPeriod]="currentViewPeriod"
+                    (update)="setGameRoundAndGetStatistics(pool,$event)">
                 </app-gameround-scroller>
             </div>
 
-            <h2 *ngIf="processingGameRound" class="text-center">
-                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+            <h2 ngIf="processingGameRound" class="text-center">
+                <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
             </h2>            
-            <table class="table" *ngIf="!processingGameRound && homeCompetitor && awayCompetitor && currentGameRound">
+            @if(!processing && homeCompetitor && awayCompetitor && currentGameRound){
+            <table class="table">
                 <tbody>
                     <!-- GameRoundPoints -->
                     <tr class="fs-5">
                         <td class="border-bottom-0"></td>
                         <td class="border-bottom-0 text-end pt-3 pb-0 ps-0"> <!-- Home -->
-                            <a [routerLink]="['/pool/user', homeCompetitor.getPoolUser().getPool().getId(), homeCompetitor.getPoolUser().getId(), currentGameRound.getNumber()]"
-                                *ngIf="getCurrentPoolGame(currentGameRound)?.getState() !== Created"
+                            <a routerLink="['/pool/user', homeCompetitor.getPoolUser().getPool().getId(), homeCompetitor.getPoolUser().getId(), currentGameRound.getNumber()]"
+                                ngIf="getCurrentPoolGame(currentGameRound)?.getState() !== Created"
                                 class="badge bg-totals">
                                 {{getPoolGamePoints(currentGameRound, homeCompetitor)}}</a>
                         </td>
                         <td class="border-bottom-0"></td>
                         <td class="border-bottom-0 pt-3 pb-0 pe-0"> <!-- Away -->
-                            <a [routerLink]="['/pool/user', awayCompetitor.getPoolUser().getPool().getId(), awayCompetitor.getPoolUser().getId(), currentGameRound.getNumber()]"
-                                *ngIf="getCurrentPoolGame(currentGameRound)?.getState() !== Created"
+                            <a routerLink="['/pool/user', awayCompetitor.getPoolUser().getPool().getId(), awayCompetitor.getPoolUser().getId(), currentGameRound.getNumber()]"
+                                ngIf="getCurrentPoolGame(currentGameRound)?.getState() !== Created"
                                 class="badge bg-totals">
                                 {{getPoolGamePoints(currentGameRound, awayCompetitor)}}</a>
                         </td>
                         <td class="border-bottom-0"></td>
                     </tr>
                 </tbody>
-                <!-- Source Against Games -->
-                <tbody *ngFor="let sourceGame of sourceGames">
-                    
+                <!-- Source Against Games -->                
+                @for(sourceGame of sourceGames; track sourceGame.getId()){
+                <tbody>                                        
                     <tr class="sourceGameHome"> <!-- Home Team Row -->
                         <td class="">                            
                         </td>
-                        <td colspan="3" class="text-center py-1 rounded sourceGame" (click)="navigateToSourceGame(sourceGame)">
-                            <span *ngFor="let sideCompetitor of getCompetitors(sourceGame, HomeSide)">
-                                <app-team-name *ngIf="isTeamCompetitor(sideCompetitor)"
-                                    [team]="getTeam(sideCompetitor)" [underline]="true"></app-team-name>
+                        <td colspan="3" class="text-center py-1 rounded sourceGame" (click)="navigateToSourceGame(pool,sourceGame)">
+                            @for(sideCompetitor of getCompetitors(sourceGame, HomeSide); track sideCompetitor?.getId() ?? ''){
+                            <span>
+                                @let team = getTeam(sideCompetitor);
+                                @if(team && isTeamCompetitor(sideCompetitor)) {
+                                <app-team-name [team]="team" [underline]="true"></app-team-name>
+                                }
                             </span>
+                            }
                         </td>
                         <td class="">                            
                         </td>
-                    </tr>
+                    </tr>                    
                     
-                    <ng-container *ngFor="let team of getTeams(sourceGame)">
-                        <tr *ngFor="let formationPlacesLine of getFormationPlacesLines(sourceGame, team)">
+                    @for(team of getTeams(sourceGame); track team.getId()){
+                        @for(formationPlacesLine of getFormationPlacesLines(sourceGame, team); track formationPlacesLine){
+                        <tr>
                             <td class="text-end">
-                                <ng-container [ngTemplateOutlet]="contentForamtionPlace"
-                                    [ngTemplateOutletContext]="{formationPlace: formationPlacesLine.home, away: true}">
+                                <ng-container ngTemplateOutlet="contentForamtionPlace"
+                                    ngTemplateOutletContext="{formationPlace: formationPlacesLine.home, away: true}">
                                 </ng-container>
                             </td>
 
-                            <ng-container *ngIf="sourceGame.getState() === Finished;else notFinished">
+                            <ng-container ngIf="sourceGame.getState() === Finished;else notFinished">
                                 <td class="text-end">
-                                    <ng-container [ngTemplateOutlet]="contentForamtionPlaceScore"
-                                        [ngTemplateOutletContext]="{formationPlace: formationPlacesLine.home, sourceGame}">
+                                    <ng-container ngTemplateOutlet="contentForamtionPlaceScore"
+                                        ngTemplateOutletContext="{formationPlace: formationPlacesLine.home, sourceGame}">
                                     </ng-container>
                                 </td>
-                                <td class="text-center sourceGame underline" (click)="navigateToSourceGame(sourceGame)">
+                                <td class="text-center sourceGame underline" (click)="navigateToSourceGame(pool,sourceGame)">
                                     {{nameService.getAgainstScore(sourceGame, getAgainstSide(sourceGame, team))}}
                                 </td>
                                 <td>
-                                    <ng-container [ngTemplateOutlet]="contentForamtionPlaceScore"
-                                        [ngTemplateOutletContext]="{formationPlace: formationPlacesLine.away, sourceGame}">
+                                    <ng-container ngTemplateOutlet="contentForamtionPlaceScore"
+                                        ngTemplateOutletContext="{formationPlace: formationPlacesLine.away, sourceGame}">
                                     </ng-container>
                                 </td>        
                             </ng-container>
                             <ng-template #notFinished>
-                                <td colspan="3" (click)="navigateToSourceGame(sourceGame)" class="text-center sourceGame underline">
-                                    <span *ngIf="getAgainstSide(sourceGame, team) === HomeSide">
+                                <td colspan="3" (click)="navigateToSourceGame(pool,sourceGame)" class="text-center sourceGame underline">
+                                    <span ngIf="getAgainstSide(sourceGame, team) === HomeSide">
                                         {{dateFormatter.toString(sourceGame.getStartDateTime(),dateFormatter.time())}}
                                     </span>
-                                    <span *ngIf="getAgainstSide(sourceGame, team) === AwaySide">
+                                    <span ngIf="getAgainstSide(sourceGame, team) === AwaySide">
                                         {{dateFormatter.toString(sourceGame.getStartDateTime(),dateFormatter.date())}}
                                     </span>
                                 </td>
                             </ng-template>
                             
                             <td>
-                                <ng-container [ngTemplateOutlet]="contentForamtionPlace"
-                                    [ngTemplateOutletContext]="{formationPlace: formationPlacesLine.away}">
+                                <ng-container ngTemplateOutlet="contentForamtionPlace"
+                                    ngTemplateOutletContext="{formationPlace: formationPlacesLine.away}">
                                 </ng-container>
                             </td>
                         </tr>
-                    </ng-container>
+                        }
+                    }
                     <ng-template #notFinished> <!-- Not Finished -->
-                        <tr (click)="navigateToSourceGame(sourceGame)"> 
+                        <tr (click)="navigateToSourceGame(pool,sourceGame)"> 
                             <td></td>
                             <td colspan="3" class="text-center sourceGame underline">
-                                <span *ngIf="!isToday(sourceGame.getStartDateTime())">
-                                    
+                                <span ngIf="!isToday(sourceGame.getStartDateTime())">                                    
                                 </span>
                                 <span class="ms-1">
                                     
@@ -136,103 +146,109 @@
                     <tr> <!-- Away Team Row -->
                         <td>                            
                         </td>
-                        <td colspan="3" class="text-center py-1 rounded sourceGame" (click)="navigateToSourceGame(sourceGame)">
-                            <span *ngFor="let sideCompetitor of getCompetitors(sourceGame, AwaySide)">
-                                <app-team-name *ngIf="isTeamCompetitor(sideCompetitor)"
-                                    [team]="getTeam(sideCompetitor)" [underline]="true"></app-team-name>
+                        <td colspan="3" class="text-center py-1 rounded sourceGame" (click)="navigateToSourceGame(pool,sourceGame)">
+                            @for(sideCompetitor of getCompetitors(sourceGame, AwaySide); track sideCompetitor){
+                            <span>
+                                @let team = getTeam(sideCompetitor);
+                                @if(team && isTeamCompetitor(sideCompetitor)) {
+                                    <app-team-name [team]="team" [underline]="true"></app-team-name>
+                                }                                
                             </span>
+                            }
                         </td>
                         <td class="">                            
                         </td>
                     </tr>
 
                 </tbody>
-
+                }
             </table>
+            }
 
             <!-- Start      PlayerName, Team And Line -->
             <ng-template #contentForamtionPlace let-formationPlace="formationPlace" let-away="away">
-                <ng-container *ngIf="formationPlace">
-                    <div class="d-flex align-items-start" [ngClass]="{'flex-row-reverse': away}">
+                <ng-container ngIf="formationPlace">
+                    <div class="d-flex align-items-start" ngClass="{'flex-row-reverse': away}">
 
                         <app-lineicon *ngIf="formationPlace.getPlayer()" [line]="formationPlace.getPlayer().getLine()">
                         </app-lineicon>
-                        <ng-container [ngTemplateOutlet]="contentPlayer"
-                            [ngTemplateOutletContext]="{s11Player:formationPlace.getPlayer()}">
+                        <ng-container ngTemplateOutlet="contentPlayer"
+                            ngTemplateOutletContext="{s11Player:formationPlace.getPlayer()}">
                         </ng-container>
-                        <span *ngIf="formationPlace.isSubstitute()" class="badge badge-reserve">r</span>
+                        <span ngIf="formationPlace.isSubstitute()" class="badge badge-reserve">r</span>
                     </div>
                 </ng-container>
             </ng-template> <!-- End      PlayerName, Team And Line -->
 
             <!-- Start      PlayerScore -->
-            <ng-template #contentForamtionPlaceScore let-formationPlace="formationPlace" let-sourceGame="sourceGame">
-                <ng-container *ngIf="formationPlace">
+            <ng-template #contentForamtionPlaceScore let-formationPlace="formationPlace" let-sourceGame="sourceGame" let-gameRound="gameRound">
+                <ng-container ngIf="formationPlace">
 
-                    <ng-container *ngIf="!formationPlace.isSubstitute();else substituteScore">
+                    @if(!formationPlace.isSubstitute()){
 
-                        <ng-container *ngIf="sourceGame.getState() === Finished" [ngTemplateOutlet]="lineupScore"
-                            [ngTemplateOutletContext]="{formationPlace, sourceGame}">
+                        <ng-container ngIf="sourceGame.getState() === Finished" ngTemplateOutlet="lineupScore"
+                            ngTemplateOutletContext="{formationPlace, sourceGame, gameRound: gameRound}">
                         </ng-container>
-
-                    </ng-container>
-                    <ng-template #substituteScore>
-
-                        <ng-container
-                            *ngIf="currentGameRound && statisticsGetter.getStartingPlacesState(formationPlace.getFormationLine(),currentGameRound) === Finished">
-
-                            <ng-container
-                                *ngIf="formationPlace.getFormationLine().hasSubstituteAppareance(currentGameRound);else subDoesNotAppear">
-                                <ng-container *ngIf="sourceGame.getState() === Finished"
-                                    [ngTemplateOutlet]="lineupScore"
-                                    [ngTemplateOutletContext]="{formationPlace, sourceGame}">
+                    } @else {
+                        @if(currentGameRound && statisticsGetter.getStartingPlacesState(formationPlace.getFormationLine(),currentGameRound) === Finished){
+                        
+                            @if(formationPlace.getFormationLine().hasSubstituteAppareance(currentGameRound)){
+                                @if(sourceGame.getState() === Finished){
+                                <ng-container ngTemplateOutlet="lineupScore"
+                                    ngTemplateOutletContext="{formationPlace, sourceGame, gameRound: currentGameRound}">
                                 </ng-container>
-                            </ng-container>
-                            <ng-template #subDoesNotAppear>
+                                }
+                        
+                            }@else {
                                 <span class="badge text-bg-danger">
-                                    <a
-                                        [routerLink]="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
+                                    <a routerLink="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
                                         &nbsp;
-                                    </a></span>
-                            </ng-template>
-
-                        </ng-container>
-
-                    </ng-template>
-
+                                    </a>
+                                </span>
+                            }
+                        }
+                    }
                 </ng-container>
             </ng-template> <!-- End      PlayerScore -->
 
             <ng-template #contentPlayer let-s11Player="s11Player">
-                <span class="mx-1 text-break" *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
+                <span class="mx-1 text-break" ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
             </ng-template>
         </div>
+        }
     </div>
 </div>
 
 <div class="competitionsNavBarHeight"></div>
+
 <ng-template #competitionsNavBar>
-    <app-competitions-navbar *ngIf="pool" [pool]="pool" [current]="getCompetitionNavBarItem()">
+    @if(pool){
+    <app-competitions-navbar [pool]="pool" [current]="getCompetitionNavBarItem()">
     </app-competitions-navbar>
+    }
 </ng-template>
 
-<app-pool-navbar [current]="Competitions" *ngIf="pool" [pool]="pool" [poolUser]="poolUserFromSession"
+@if(pool){
+<app-pool-navbar [current]="Competitions" [pool]="pool" [poolUser]="poolUserFromSession"
 [upperNavBar]="competitionsNavBar">
 </app-pool-navbar>
+}
 
-<ng-template #lineupScore let-formationPlace="formationPlace" let-sourceGame="sourceGame">
-    <ng-container *ngIf="statisticsGetter.hasAppeared(formationPlace,currentGameRound);else startingNotAppeared">
+<ng-template #lineupScore let-formationPlace="formationPlace" let-sourceGame="sourceGame" let-gameRound="gameRound">
+    <ng-container ngIf="statisticsGetter.hasAppeared(formationPlace,currentGameRound);else startingNotAppeared">
         <span class="badge bg-points">
-            <a [routerLink]="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
-                <span *ngIf="currentGameRound">
-                    {{statisticsGetter.getFormationPlaceGameRoundPoints(formationPlace,currentGameRound, undefined)}}
+            <a routerLink="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
+                @if(gameRound){
+                <span>
+                    {{statisticsGetter.getFormationPlaceGameRoundPoints(formationPlace,gameRound, undefined)}}
                 </span>
+                }
             </a>
         </span>
     </ng-container>
     <ng-template #startingNotAppeared>
         <span class="badge bg-nopoints">
-            <a [routerLink]="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
+            <a routerLink="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
                 x
             </a></span>
     </ng-template>

@@ -20,7 +20,7 @@
               <!-- <app-superelf-icon *ngIf="rankingItem.poolUser.getUser().getName() === 'storm'" 
               class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon> -->
           </td>
-          <td *ngIf="gameRound()" class="text-end ps-0 pointer">
+          <td ngIf="gameRound()" class="text-end ps-0 pointer">
               <span class="badge {{getPointsBadgeClass(rankingItem)}}">
                   {{getGameRoundPoints(rankingItem.poolUser)}}</span>
           </td>
@@ -49,12 +49,13 @@
 </ng-template>
 
 <ng-template #badgeCategoryModal let-modal>
-    @if(badgeCategory()){
+    @let tmpBadgeCategory = badgeCategory();
+    @if(tmpBadgeCategory){
       <div class="modal-header">
         <h4 class="modal-title">
           <span>
-              <app-superelf-badge-icon [badgeCategory]="badgeCategory()"></app-superelf-badge-icon>
-              <span class="ms-1">{{nameService.getBadgeCategoryName(badgeCategory())}}-badge</span>
+              <app-superelf-badge-icon [badgeCategory]="tmpBadgeCategory"></app-superelf-badge-icon>
+              <span class="ms-1">{{nameService.getBadgeCategoryName(tmpBadgeCategory)}}-badge</span>
           </span>
         </h4>
         <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>

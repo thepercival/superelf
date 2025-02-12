@@ -7,10 +7,14 @@ import { PoolRepository } from '../../lib/pool/repository';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { StartSessionService } from '../../shared/commonmodule/startSessionService';
 import { PoolComponent } from '../../shared/poolmodule/component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
   selector: 'app-pool-join',
+  standalone: true,
+  imports: [FontAwesomeModule,NgbAlertModule],
   templateUrl: './join.component.html',
   styleUrls: ['./join.component.scss']
 })

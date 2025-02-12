@@ -1,5 +1,5 @@
-import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
+import { NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FootballLine, Person, Team } from 'ngx-sport';
 import { S11FormationLine } from '../../../lib/formation/line';
 import { S11FormationPlace } from '../../../lib/formation/place';
@@ -11,9 +11,14 @@ import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../../lib/player';
 import { StatisticsGetter } from '../../../lib/statistics/getter';
 import { CSSService } from '../../../shared/commonmodule/cssservice';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TeamNameComponent } from '../../team/name.component';
+import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
 
 @Component({
   selector: '[app-pool-formationline-view]',
+  standalone: true,
+  imports: [FontAwesomeModule,TeamNameComponent, LineIconComponent],
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss']
 })
@@ -21,7 +26,7 @@ export class FormationLineViewComponent implements OnInit {
   readonly line = input.required<S11FormationLine>();
   readonly gameRound = input.required<GameRound>();
   readonly statisticsGetter = input.required<StatisticsGetter>();
-  readonly processing = input<boolean>(true);
+  readonly processing = model<boolean>(true);
   readonly totalPoints = input<number>();
   readonly totalGameRoundPoints = input<number>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
@@ -39,7 +44,7 @@ export class FormationLineViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = false;
+    this.processing.set(false);
   }
 
   get GoalKeeper(): FootballLine { return FootballLine.GoalKeeper; }
@@ -71,10 +76,10 @@ export class FormationLineViewComponent implements OnInit {
   }
 
   emptyPlace(place: S11FormationPlace) {
-    this.processing = true;
+    this.processing.set(true);
     this.formationRepository.editPlace(place, undefined).subscribe({
-      next: () => { },
-      complete: () => this.processing = false
+      next: () => {},
+      complete: () => this.processing.set(false),
     });
   }
 

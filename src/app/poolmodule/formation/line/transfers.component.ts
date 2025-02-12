@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Person, Team } from 'ngx-sport';
 import { Transfer } from '../../../lib/editAction/transfer';
@@ -12,9 +12,14 @@ import { GameRepository } from '../../../lib/ngx-sport/game/repository';
 import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../../lib/player';
 import { CSSService } from '../../../shared/commonmodule/cssservice';
+import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
+import { TeamNameComponent } from '../../team/name.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-pool-formationline-transfers',
+  standalone: true,
+  imports: [LineIconComponent,TeamNameComponent,FontAwesomeModule],
   templateUrl: './transfers.component.html',
   styleUrls: ['./transfers.component.scss']
 })
@@ -22,7 +27,7 @@ export class FormationLineTransfersComponent implements OnInit {
   readonly line = input.required<S11FormationLine>();
   readonly selectedPlace = input<S11FormationPlace>();
   readonly viewGameRound = input<GameRound>();
-  readonly processing = input<boolean>(true);
+  readonly processing = model<boolean>(true);
   readonly transfers = input<Transfer[]>([]);
   readonly maxNrOfTransfers = input.required<number>();
   readonly canRemoveTransfer = input<boolean>(false);
@@ -45,7 +50,7 @@ export class FormationLineTransfersComponent implements OnInit {
 
   ngOnInit() {
     this.hasTransferLeft = this.transfers().length < this.maxNrOfTransfers();
-    this.processing = false;
+    this.processing.set(false);
   }
 
   completed() {
@@ -69,10 +74,10 @@ export class FormationLineTransfersComponent implements OnInit {
   }
 
   emptyPlace(place: S11FormationPlace) {
-    this.processing = true;
+    this.processing.set(true);
     this.formationRepository.editPlace(place, undefined).subscribe({
-      next: () => { },
-      complete: () => this.processing = false
+      next: () => {},
+      complete: () => this.processing.set(false),
     });
   }
 

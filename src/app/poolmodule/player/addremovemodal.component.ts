@@ -5,9 +5,12 @@ import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
 import { ScorePointsMap } from '../../lib/score/points';
 import { CSSService } from '../../shared/commonmodule/cssservice';
+import { PlayerBasicsComponent } from './basics.component';
 
 @Component({
     selector: 'app-modal-s11player-addremove',
+    standalone: true,
+    imports: [PlayerBasicsComponent],
     templateUrl: './addremovemodal.component.html',
     styleUrls: ['./addremovemodal.component.scss']
 })

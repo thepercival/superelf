@@ -4,11 +4,14 @@ import { AgainstPoule } from '../../lib/againstPoule';
 import { PoolCompetitor } from '../../lib/pool/competitor';
 import { PoolUser } from '../../lib/pool/user';
 import { CSSService } from '../../shared/commonmodule/cssservice';
+import { EscapeHtmlPipe } from '../../shared/commonmodule/escapehtmlpipe';
 
 @Component({
-  selector: 'app-superelf-cup-round',
-  templateUrl: './round.component.html',
-  styleUrls: ['./round.component.scss']
+  selector: "app-superelf-cup-round",
+  standalone: true,
+  imports: [EscapeHtmlPipe],
+  templateUrl: "./round.component.html",
+  styleUrls: ["./round.component.scss"],
 })
 export class PoolCupRoundComponent implements OnInit {
   readonly round = input.required<Round>();
@@ -19,32 +22,35 @@ export class PoolCupRoundComponent implements OnInit {
   popoverPlace: Place | undefined;
   public hasCompetitors: boolean = false;
 
+  constructor(public cssService: CSSService) {}
 
-  constructor(public cssService: CSSService) {
-
+  get Finished(): GameState {
+    return GameState.Finished;
+  }
+  get Home(): AgainstSide {
+    return AgainstSide.Home;
+  }
+  get Away(): AgainstSide {
+    return AgainstSide.Away;
   }
 
-  get Finished(): GameState { return GameState.Finished };
-  get Home(): AgainstSide { return AgainstSide.Home };
-  get Away(): AgainstSide { return AgainstSide.Away };
-  
   ngOnInit() {
     this.hasCompetitors = this.allPlacesHaveCompetitors();
   }
 
   allPlacesHaveCompetitors(): boolean {
-    
-    return this.round().getPlaces().every((place: Place): boolean => {
-      const startLocation = place.getStartLocation();
-      if (startLocation === undefined) {
-        return false;
-      }
-      return this.getCompetitor(startLocation) !== undefined;
-    });
+    return this.round()
+      .getPlaces()
+      .every((place: Place): boolean => {
+        const startLocation = place.getStartLocation();
+        if (startLocation === undefined) {
+          return false;
+        }
+        return this.getCompetitor(startLocation) !== undefined;
+      });
   }
 
   isCurrentUser(poule: Poule, side: AgainstSide): boolean {
-
     const startLocation = this.getSidePlace(poule, side).getStartLocation();
     if (startLocation === undefined) {
       return false;
@@ -56,23 +62,22 @@ export class PoolCupRoundComponent implements OnInit {
 
   getNrOfPoulesChildren(round: Round): number {
     let nrOfChildPoules = 0;
-    round.getQualifyGroups().forEach(qualifyGroup => {
+    round.getQualifyGroups().forEach((qualifyGroup) => {
       nrOfChildPoules += qualifyGroup.getChildRound().getPoules().length;
     });
     return nrOfChildPoules;
   }
 
-
   getCompetitorName(poule: Poule, side: AgainstSide): string {
     const againstPoule = this.getAgainstPoule(poule, side);
     if (againstPoule === undefined) {
-      return '';
-    }    
+      return "";
+    }
     const competitor = againstPoule.getCompetitor(side);
     if (competitor === undefined) {
-      return '';
+      return "";
     }
-    return competitor.getName(); 
+    return competitor.getName();
   }
 
   // getCompetitor(startLocation: StartLocation): Competitor | undefined {
@@ -81,7 +86,7 @@ export class PoolCupRoundComponent implements OnInit {
 
   get AbsoluteMinPlacesPerPoule(): number {
     return PlaceRanges.MinNrOfPlacesPerPoule;
-  }  
+  }
 
   setPopoverPlace(place: Place) {
     this.popoverPlace = place;
@@ -94,7 +99,12 @@ export class PoolCupRoundComponent implements OnInit {
   getPreviousPouleName(poule: Poule, side: AgainstSide): string {
     const place = this.getSidePlace(poule, side);
     const previousPlace = this.getPreviousPlace(place);
-    return previousPlace ? this.structureNameService().getPouleName(previousPlace.getPoule(), false) : '?'
+    return previousPlace
+      ? this.structureNameService().getPouleName(
+          previousPlace.getPoule(),
+          false
+        )
+      : "?";
   }
 
   protected getPreviousPlace(place: Place): Place | undefined {
@@ -102,7 +112,11 @@ export class PoolCupRoundComponent implements OnInit {
   }
 
   getGameRoundNumbers(round: Round): string {
-    return round.getPoule(1).getAgainstGames().map((game: AgainstGame): number => game.getGameRoundNumber()).join(', ');
+    return round
+      .getPoule(1)
+      .getAgainstGames()
+      .map((game: AgainstGame): number => game.getGameRoundNumber())
+      .join(", ");
   }
 
   emitNavigateToPoule(poule: Poule): void {
@@ -111,34 +125,36 @@ export class PoolCupRoundComponent implements OnInit {
       this.navigateToPoule.emit(poule);
     }
   }
-  
+
   getCompetitor(startLocation: StartLocation): Competitor | undefined {
-    return this.structureNameService().getStartLocationMap()?.getCompetitor(startLocation);
+    return this.structureNameService()
+      .getStartLocationMap()
+      ?.getCompetitor(startLocation);
   }
 
   getScore(poule: Poule, side: AgainstSide): string {
     if (poule.getGamesState() === GameState.Created) {
-      return '';
+      return "";
     }
     const againstPoule = this.getAgainstPoule(poule, side);
     if (againstPoule === undefined) {
-      return '';
+      return "";
     }
     return againstPoule.getScore(side);
   }
 
   hasQualified(poule: Poule, side: AgainstSide): boolean {
-    if ( poule.getPlaces().length == 1 ) {
+    if (poule.getPlaces().length == 1) {
       return true;
     }
     const againstPoule = this.getAgainstPoule(poule, side);
     if (againstPoule === undefined) {
       return false;
-    }    
+    }
     return againstPoule.hasQualified(side);
   }
 
-  getAgainstPoule(poule: Poule, side: AgainstSide): AgainstPoule|undefined {
+  getAgainstPoule(poule: Poule, side: AgainstSide): AgainstPoule | undefined {
     const startLocationMap = this.structureNameService().getStartLocationMap();
     if (startLocationMap === undefined) {
       return undefined;
@@ -147,6 +163,9 @@ export class PoolCupRoundComponent implements OnInit {
   }
 
   showScore(poule: Poule): boolean {
-    return poule.getGamesState() === GameState.InProgress || poule.getGamesState() === GameState.Finished;
+    return (
+      poule.getGamesState() === GameState.InProgress ||
+      poule.getGamesState() === GameState.Finished
+    );
   }
 }

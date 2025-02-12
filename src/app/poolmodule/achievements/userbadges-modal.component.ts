@@ -3,9 +3,12 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { Badge } from '../../lib/achievement/badge';
 import { BadgeCategory } from '../../lib/achievement/badge/category';
+import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.component';
 
 @Component({
     selector: 'app-ngbd-modal-userbadges',
+    standalone: true,
+    imports: [SuperElfBadgeIconComponent],
     templateUrl: './userbadges-modal.component.html',
     styleUrls: ['./userbadges-modal.component.scss']
 })

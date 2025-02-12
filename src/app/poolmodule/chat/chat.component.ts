@@ -20,9 +20,15 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
+import { PouleTitleComponent } from '../poule/title.component';
+import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 
 @Component({
   selector: 'app-pool-chat',
+  standalone: true,
+  imports: [FontAwesomeModule,SuperElfIconComponent,PouleTitleComponent,PoolNavBarComponent],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
@@ -76,7 +82,7 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
           this.leagueName = params.leagueName;
 
           // begin met het ophalen van de wedstrijden van de poolcompetitie 
-          const competition = this.pool.getCompetition(this.leagueName);
+          const competition = pool.getCompetition(this.leagueName);
           if (competition === undefined) {
             this.processing = false;
             throw Error('competition not found');
@@ -92,7 +98,7 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
               // const gameRoundNumbers: number[] = poule.getAgainstGames().map((game: AgainstGame) => game.getGameRoundNumber());
               // const currentGameRoundNumber = this.getCurrentSourceGameRoundNumber(poule);
 
-              const competitionSport = this.pool.getCompetitionSport(this.leagueName);
+              const competitionSport = pool.getCompetitionSport(this.leagueName);
               const rankingCalculator = new AgainstSportRoundRankingCalculator(competitionSport, [GameState.Finished]);
               this.sportRankingItems = rankingCalculator.getItemsForPoule(poule);
 
@@ -121,10 +127,10 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
     return this.dateFormatter.toString(date, this.dateFormatter.niceDateTime()) + ' uur';
   }
 
-  sendMessage(poule: Poule): void {
+  sendMessage(pool: Pool, poule: Poule): void {
     this.processingMessage = true;
     const message = this.form.controls.message.value;
-    this.chatMessageRepository.createObject(message, poule, this.pool).subscribe({
+    this.chatMessageRepository.createObject(message, poule, pool).subscribe({
       next: (chatMessage: ChatMessage) => {
         this.chatMessages?.unshift(chatMessage);
         this.form.controls.message.reset();

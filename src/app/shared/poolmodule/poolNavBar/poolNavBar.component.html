@@ -14,7 +14,7 @@ competities  | programma | prijzenkast | spelregels | beheer
 <nav class="fixed-bottom navbar-dark bg-dark border-top ">
 
   
-  <div ngIf="Competitions === current && upperNavBar">
+  <div ngIf="Competitions === current() && upperNavBar">
     <ng-container *ngTemplateOutlet="upperNavBar()"></ng-container>    
   </div>
 

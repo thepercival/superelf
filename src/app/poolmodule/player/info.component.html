@@ -1,13 +1,15 @@
-<h2 *ngIf="processing" class="text-center">
-    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+<h2 ngIf="processing" class="text-center">
+    <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
 </h2>
 <div class="row justify-content-center g-0">
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-        <div *ngIf="!processing">
+        <div ngIf="!processing">
 
-            <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-
-            <div *ngIf="pool && s11Player" class="card card-person border-0">
+            @if(alert){
+            <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+            }
+            @if(currentViewPeriod && pool && s11Player){
+            <div class="card card-person border-0">
                 <div class="card-body py-1 px-2">
                     <div class="d-flex flex-column">
 
@@ -27,33 +29,42 @@
                         <app-player-basics [player]="player" [points]="getCurrentGameRoundPoints()" class="text-center">
                         </app-player-basics>
 
-                        <app-gameround-scroller [gameRounds]="sliderGameRounds" [current]="currentGameRound"
+                        <app-gameround-scroller [gameRounds]="sliderGameRounds" [current]="currentGameRound" 
+                            [currentViewPeriod]="currentViewPeriod"
                             (update)="updateGameRound($event)"></app-gameround-scroller>
 
                         <div class="text-center mt-3 mb-2">
-                            <h2 *ngIf="processingGames" class="text-center">
-                                <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+                            <h2 ngIf="processingGames" class="text-center">
+                                <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
                             </h2>
-                            <button *ngIf="!processingGames && currentGame && currentGameRound" type="button"
+                            @if(!processingGames && currentGame && currentGameRound){
+                            <button type="button"
                                 class="btn btn-outline-primary"
-                                [routerLink]="['/pool/sourcegame', pool.getId(), currentGameRound.getNumber(), currentGame.getId()]">
+                                routerLink="['/pool/sourcegame', pool.getId(), currentGameRound.getNumber(), currentGame.getId()]">
                                 <app-againstgame-title [againstGame]="currentGame"></app-againstgame-title>
                             </button>
+                            }
+                        </div>                        
+                        <div>
+                            @if(currentGameRound){
+                                @let statistics = statisticsGetter.getStatistics(s11Player,currentGameRound);
+                                @if(statistics){
+                                <app-s11player-gameround-statistics 
+                                    [gameRound]="currentGameRound"
+                                    [statistics]="statistics"
+                                    [line]="s11Player.getLine()" [scorePointsMap]="pool.getCompetitionConfig().getScorePointsMap()">
+                                </app-s11player-gameround-statistics>
+                                }
+                            } @else {
+                                <app-s11player-viewperiod-statistics [totals]="s11Player.getTotals()"
+                                    [line]="s11Player.getLine()" [scorePointsMap]="pool.getCompetitionConfig().getScorePointsMap()">
+                                </app-s11player-viewperiod-statistics>
+                            }                            
                         </div>
-                        <div class="">
-                            <app-s11player-viewperiod-statistics *ngIf="!currentGameRound"
-                                [totals]="s11Player.getTotals()" [line]="s11Player.getLine()"
-                                [scorePointsMap]="pool.getCompetitionConfig().getScorePointsMap()">
-                            </app-s11player-viewperiod-statistics>
-                            <app-s11player-gameround-statistics *ngIf="pool && currentGameRound"
-                                [statistics]="statisticsGetter.getStatistics(s11Player,currentGameRound)"
-                                [line]="s11Player.getLine()" [scorePointsMap]="pool.getCompetitionConfig().getScorePointsMap()">
-                            </app-s11player-gameround-statistics>
-                        </div>
-
                     </div>
                 </div>
             </div>
+            }
         </div>
     </div>
 </div>

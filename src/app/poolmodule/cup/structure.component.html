@@ -1,26 +1,27 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10">    
 
-    <h2 *ngIf="processing" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    <h2 ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" spin=true></fa-icon>
     </h2>
 
-    <div *ngIf="!processing && pool && poule">
-
+    @if(!processing && pool && poule){
       <app-superelf-cup-round [poolUser]="poolUserFromSession" [round]="poule.getRound()" class="px-0"
-        [structureNameService]="structureNameService" (navigateToPoule)="navigateToPoule($event)">
+        [structureNameService]="structureNameService" (navigateToPoule)="navigateToPoule(pool, $event)">
       </app-superelf-cup-round>
-
-    </div>
-
+    }
   </div>
 </div>
 
 <div class="competitionsNavBarHeight"></div>
 <ng-template #competitionsNavBar>
-  <app-competitions-navbar *ngIf="pool" [pool]="pool" [current]="CupStructure">
+  @if(pool){
+  <app-competitions-navbar [pool]="pool" [current]="CupStructure">
   </app-competitions-navbar>
+  }  
 </ng-template>
 
-<app-pool-navbar [current]="Competitions" *ngIf="pool" [pool]="pool" [poolUser]="poolUserFromSession" [upperNavBar]="competitionsNavBar">
+@if(pool){
+<app-pool-navbar [current]="Competitions" [pool]="pool" [poolUser]="poolUserFromSession" [upperNavBar]="competitionsNavBar">
 </app-pool-navbar>
+}

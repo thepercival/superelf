@@ -8,22 +8,26 @@
     @if(!processing && pool){
       <div>
         <div class="d-flex flex-nowrap justify-content-between mt-2">
-          <app-gameround-scroller *ngIf="currentViewPeriod" [gameRounds]="gameRounds" [current]="currentGameRound"
-            (update)="updateGameRoundFromScroller($event)" [currentViewPeriod]="currentViewPeriod"
-            (updateViewPeriod)="updateViewPeriodFromScroller(pool.getCompetitionConfig(), $event)"
+          @if(currentViewPeriod){
+          <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
+            (update)="updateGameRoundFromScroller(pool,$event)" [currentViewPeriod]="currentViewPeriod"
+            (updateViewPeriod)="updateViewPeriodFromScroller(pool, $event)"
             [assembleViewPeriod]="pool.getAssembleViewPeriod()" [transferViewPeriod]="pool.getTransferViewPeriod()">
           </app-gameround-scroller>
+          }
           <div>
-            <button *ngIf="pouleId" (click)="navigateToChat(pouleId)" type="button"
+            @if(pouleId){
+            <button (click)="navigateToChat(pool,pouleId)" type="button"
               class="btn btn-outline-dark me-1 position-relative">
               <fa-icon [icon]="['fas', 'message']"></fa-icon>
               <span class="ms-1 d-none d-sm-inline"> chat</span>
-              <span *ngIf="nrOfUnreadMessages > 0"
+              <span ngIf="nrOfUnreadMessages > 0"
                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 {{nrOfUnreadMessages}}
                 <span class="visually-hidden">ongelezen berichten</span>
               </span>
             </button>
+            }
             <button (click)="openChooseBadgeCategoryModal()" type="button"
               class="btn {{badgeCategory !== undefined ? 'btn-success' : 'btn-outline-dark'}} me-0 position-relative">
               <app-superelf-icon [name]="'trophy'"></app-superelf-icon>
@@ -31,22 +35,24 @@
           </div>
         </div>
 
-        <div *ngIf="badgeCategory" class="text-center mt-3">
+        @if(badgeCategory){
+        <div class="text-center mt-3">
           <span class="">
             <app-superelf-badge-icon [badgeCategory]="badgeCategory"></app-superelf-badge-icon>
             <span class="ms-1">{{nameService.getBadgeCategoryName(badgeCategory)}}-badge</span>
-          </span>
-          
+          </span>          
         </div>
+        }
     
-        <app-together-ranking *ngIf="poolUsersTotalsMap" [poolUsers]="poolUsers" 
+        @if(poolUsersTotalsMap){
+        <app-together-ranking [poolUsers]="poolUsers" 
           [poolUsersTotalsMap]="poolUsersTotalsMap" 
           [gameRoundPoolUserTotalsMap]="currentGameRoundPoolUsersTotalsMap" 
           [gameRound]="currentGameRound" [badgeCategory]="badgeCategory" 
           [scorePointsMap]="pool.getCompetitionConfig().getScorePointsMap()"
           [header]="true" >
         </app-together-ranking>
-
+        }
       </div>
     }
   </div>
@@ -54,12 +60,19 @@
 
 <div class="competitionsNavBarHeight"></div>
 <ng-template #competitionsNavBar>
-  <app-competitions-navbar *ngIf="pool && leagueName !== WorldCupLeagueName" [pool]="pool" [current]="PouleRankingTogetherSport">
+  @if(pool && leagueName !== WorldCupLeagueName){
+  <app-competitions-navbar [pool]="pool" [current]="PouleRankingTogetherSport">
   </app-competitions-navbar>
+  }
 </ng-template>
 
-<app-pool-navbar *ngIf="pool && leagueName !== WorldCupLeagueName" [current]="Competitions" [pool]="pool" [poolUser]="poolUserFromSession" [upperNavBar]="competitionsNavBar">
-</app-pool-navbar>
-<app-worldcup-navbar *ngIf="pool && leagueName === WorldCupLeagueName" [current]="Competitions" [pool]="pool"
-  [poolUser]="poolUserFromSession">
-</app-worldcup-navbar>
+@if(pool){
+  @if(leagueName === WorldCupLeagueName){
+    <app-worldcup-navbar [current]="Competitions" [pool]="pool" [poolUser]="poolUserFromSession">
+    </app-worldcup-navbar>
+  } @else {
+    <app-pool-navbar [current]="Competitions" [pool]="pool" [poolUser]="poolUserFromSession"
+      [upperNavBar]="competitionsNavBar">
+    </app-pool-navbar>
+  }
+}

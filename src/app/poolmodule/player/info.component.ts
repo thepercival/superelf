@@ -22,11 +22,29 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
+import { GameRoundScrollerComponent } from '../gameRound/gameRoundScroller.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { PlayerBasicsComponent } from './basics.component';
+import { AgainstGameTitleComponent } from '../game/source/title.component';
+import { S11PlayerViewPeriodStatisticsComponent } from '../statistics/viewperiod.component';
+import { S11PlayerGameRoundStatisticsComponent } from '../statistics/gameround.component';
 
 @Component({
-  selector: 'app-s11player-info',
-  templateUrl: './info.component.html',
-  styleUrls: ['./info.component.scss']
+  selector: "app-s11player-info",
+  standalone: true,
+  imports: [
+    GameRoundScrollerComponent,
+    FontAwesomeModule,
+    NgbAlertModule,
+    PlayerBasicsComponent,
+    GameRoundScrollerComponent,
+    AgainstGameTitleComponent,
+    S11PlayerViewPeriodStatisticsComponent,
+    S11PlayerGameRoundStatisticsComponent
+  ],
+  templateUrl: "./info.component.html",
+  styleUrls: ["./info.component.scss"],
 })
 export class S11PlayerComponent extends PoolComponent implements OnInit {
   public s11Player!: S11Player;
@@ -58,7 +76,7 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
     private gameRepository: GameRepository,
     public imageRepository: ImageRepository,
     public cssService: CSSService,
-    private myNavigation: MyNavigation,
+    private myNavigation: MyNavigation
   ) {
     super(route, router, poolRepository, globalEventsManager);
     // const state = this.router.getCurrentNavigation()?.extras.state ?? undefined;
@@ -71,56 +89,64 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
 
   ngOnInit() {
     super.parentNgOnInit().subscribe((pool: Pool) => {
-
       this.setPool(pool);
 
       const competitionConfig = this.pool.getCompetitionConfig();
-      
-      this.route.params.subscribe(params => {
-        let viewPeriod: ViewPeriod|undefined = undefined
+
+      this.route.params.subscribe((params) => {
+        let viewPeriod: ViewPeriod | undefined = undefined;
         let currentGameRound: GameRound | undefined;
         const gameRoundNumber = +params.gameRound;
         if (gameRoundNumber > 1) {
-          viewPeriod = pool.getViewPeriodByRoundNumber(gameRoundNumber);          
+          viewPeriod = pool.getViewPeriodByRoundNumber(gameRoundNumber);
           if (viewPeriod !== undefined) {
-            currentGameRound = viewPeriod.getGameRound(gameRoundNumber)
+            currentGameRound = viewPeriod.getGameRound(gameRoundNumber);
           }
         } else {
-          viewPeriod = this.getCurrentViewPeriod(pool)
+          viewPeriod = this.getCurrentViewPeriod(pool);
         }
-        this.playerRepository.getObject(
-          +params.playerId,
-          competitionConfig.getSourceCompetition(),
-          viewPeriod
-        ).subscribe({
-          next: (s11Player: S11Player) => {
-            this.s11Player = s11Player;
-            this.statisticsRepository.getPlayerObjects(this.s11Player, this.statisticsGetter).subscribe({
-              next: () => {
-                this.startLocationMap = new StartLocationMap(this.pool.getSourceCompetition().getTeamCompetitors());
-                this.initSliderGameRounds(currentGameRound);
-                this.updateGameRound(currentGameRound, true);
-              }
-            });
-          },
-          error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
-        });
+        this.playerRepository
+          .getObject(
+            +params.playerId,
+            competitionConfig.getSourceCompetition(),
+            viewPeriod
+          )
+          .subscribe({
+            next: (s11Player: S11Player) => {
+              this.s11Player = s11Player;
+              this.statisticsRepository
+                .getPlayerObjects(this.s11Player, this.statisticsGetter)
+                .subscribe({
+                  next: () => {
+                    this.startLocationMap = new StartLocationMap(
+                      this.pool.getSourceCompetition().getTeamCompetitors()
+                    );
+                    this.initSliderGameRounds(currentGameRound);
+                    this.updateGameRound(currentGameRound, true);
+                  },
+                });
+            },
+            error: (e: string) => {
+              this.setAlert("danger", e);
+              this.processing = false;
+            },
+          });
       });
-
-
     });
   }
 
   private initSliderGameRounds(currentGameRound: GameRound | undefined): void {
-    this.sliderGameRounds = this.s11Player.getViewPeriod().getGameRounds().slice();
+    this.sliderGameRounds = this.s11Player
+      .getViewPeriod()
+      .getGameRounds()
+      .slice();
     if (currentGameRound !== undefined) {
       const idx = this.sliderGameRounds.indexOf(currentGameRound);
       if (idx >= 0) {
-        const secondPart = this.sliderGameRounds.splice(idx); 
+        const secondPart = this.sliderGameRounds.splice(idx);
         secondPart.push(undefined);
         this.sliderGameRounds = secondPart.concat(this.sliderGameRounds);
       }
-      
     } else {
       this.sliderGameRounds.unshift(undefined);
     }
@@ -134,23 +160,32 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
     return this.imageRepository.getPlayerUrl(player);
   }
 
-  updateGameRound(currentGameRound: GameRound | undefined, disableProcessing?: boolean): void {
+  updateGameRound(
+    currentGameRound: GameRound | undefined,
+    disableProcessing?: boolean
+  ): void {
     this.currentGameRound = currentGameRound;
     if (currentGameRound === undefined) {
       this.player = this.oneTeamSimultaneous.getCurrentPlayer(this.s11Player);
       this.currentStatistics = undefined;
       this.currentGame = undefined;
       if (disableProcessing) {
-        this.processing = false
+        this.processing = false;
       }
       return;
     }
-    this.currentStatistics = this.statisticsGetter.getStatistics(this.s11Player, currentGameRound);
+    this.currentStatistics = this.statisticsGetter.getStatistics(
+      this.s11Player,
+      currentGameRound
+    );
 
     if (currentGameRound.hasAgainstGames()) {
-      this.currentGame = (new GamePicker(this.pool.getSourceCompetition(), currentGameRound)).getGame(this.s11Player);
+      this.currentGame = new GamePicker(
+        this.pool.getSourceCompetition(),
+        currentGameRound
+      ).getGame(this.s11Player);
       if (disableProcessing) {
-        this.processing = false
+        this.processing = false;
       }
       return;
     }
@@ -158,24 +193,32 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
     this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
       next: (structure: Structure) => {
         this.sourceStructure = structure;
-        const sourcePoule = structure.getSingleCategory().getRootRound().getFirstPoule();
+        const sourcePoule = structure
+          .getSingleCategory()
+          .getRootRound()
+          .getFirstPoule();
 
-        this.gameRepository.getSourceObjects(sourcePoule, currentGameRound).subscribe({
-          next: (againstGames: AgainstGame[]) => {
-            this.currentGame = (new GamePicker(this.pool.getSourceCompetition(), currentGameRound)).getGame(this.s11Player);
-            // const out = this.currentGame?.getAgainstPlaces().map((gp: AgainstGamePlace) => {
-            //   return '' + gp.getPlace().getPlaceNr();
-            // }).join('&');
-            // console.log(out);
-          },
-          complete: () => {
-            if (disableProcessing) {
-              this.processing = false
-            }
-            this.processingGames = false
-          }
-        });
-      }
+        this.gameRepository
+          .getSourceObjects(sourcePoule, currentGameRound)
+          .subscribe({
+            next: (againstGames: AgainstGame[]) => {
+              this.currentGame = new GamePicker(
+                this.pool.getSourceCompetition(),
+                currentGameRound
+              ).getGame(this.s11Player);
+              // const out = this.currentGame?.getAgainstPlaces().map((gp: AgainstGamePlace) => {
+              //   return '' + gp.getPlace().getPlaceNr();
+              // }).join('&');
+              // console.log(out);
+            },
+            complete: () => {
+              if (disableProcessing) {
+                this.processing = false;
+              }
+              this.processingGames = false;
+            },
+          });
+      },
     });
   }
 
@@ -188,13 +231,20 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
 
   getCurrentGameRoundPoints(): number {
     if (this.currentGameRound === undefined) {
-      return this.s11Player.getTotalPoints(this.pool.getCompetitionConfig().getScorePointsMap(), undefined);
+      return this.s11Player.getTotalPoints(
+        this.pool.getCompetitionConfig().getScorePointsMap(),
+        undefined
+      );
     }
     if (this.currentStatistics === undefined) {
       return 0;
     }
     const map = this.pool.getCompetitionConfig().getScorePointsMap();
-    return this.currentStatistics.getPoints(this.s11Player.getLine(), map, undefined)
+    return this.currentStatistics.getPoints(
+      this.s11Player.getLine(),
+      map,
+      undefined
+    );
   }
 
   navigateBack() {

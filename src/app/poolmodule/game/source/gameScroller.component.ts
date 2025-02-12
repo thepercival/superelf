@@ -1,14 +1,18 @@
-import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AgainstGame, GameState } from 'ngx-sport';
+import { AgainstGameTitleComponent } from './title.component';
 
 @Component({
   selector: 'app-game-scroller',
+  standalone: true,
+  imports: [FontAwesomeModule,AgainstGameTitleComponent],
   templateUrl: './gameScroller.component.html',
   styleUrls: ['./gameScroller.component.scss']
 })
 export class GameScrollerComponent implements OnInit {
   readonly games = input<AgainstGame[]>([]);
-  readonly current = input.required<AgainstGame>();
+  readonly current = model.required<AgainstGame>();
   @Output() update = new EventEmitter<AgainstGame>();
   @Output() navigate = new EventEmitter<AgainstGame>();
 
@@ -30,7 +34,7 @@ export class GameScrollerComponent implements OnInit {
     //console.log('gamescroller->previous pre', this.games.slice());
     const current = this.games().pop();
     if (current) {
-      this.current = current;
+      this.current.set(current);
       const currentValue = this.current();
       this.games().unshift(currentValue);
       //console.log('gamescroller->previous post', this.games.slice());
@@ -48,7 +52,7 @@ export class GameScrollerComponent implements OnInit {
     const current = this.games().shift();
     if (current) {
       this.games().unshift(current);
-      this.current = current;
+      this.current.set(current);
       //console.log('gamescroller->next post', this.games.slice());
       this.update.emit(this.current());
     }

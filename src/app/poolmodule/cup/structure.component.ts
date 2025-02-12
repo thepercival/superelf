@@ -19,10 +19,16 @@ import { ViewPeriod } from '../../lib/period/view';
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PoolCupRoundComponent } from './round.component';
+import { PoolCompetitionsNavBarComponent } from '../../shared/poolmodule/competitionsNavBar/competitionsNavBar.component';
+import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 
 
 @Component({
   selector: 'app-pool-cup',
+  standalone: true,
+  imports: [FontAwesomeModule,PoolCupRoundComponent,PoolCompetitionsNavBarComponent,PoolNavBarComponent],
   templateUrl: './structure.component.html',
   styleUrls: ['./structure.component.scss']
 })
@@ -59,7 +65,7 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
-        const competitionConfig = this.pool.getCompetitionConfig();        
+        const competitionConfig = pool.getCompetitionConfig();        
         const currentViewPeriod = this.getCurrentViewPeriod(pool);
         if (currentViewPeriod === undefined) {
           return;
@@ -71,7 +77,7 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
             this.poolUsers = poolUsers;
             this.poolUserFromSession = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
 
-            const competition = this.pool.getCompetition(this.leagueName);
+            const competition = pool.getCompetition(this.leagueName);
             if (competition === undefined) {
               this.processing = false;
               throw Error('competitionSport not found');
@@ -82,10 +88,10 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
 
                 // -----------  JE TOONT VOOR EEN BEPAALDE VIEWPERIODE -------------- //
                 // DE GAMEROUNDS ZIJN DAN DE WEDSTRIJDEN EN DE POOLUSERS MET HUN PUNTEN PER GAMEROUND ZIJN DAN DE GAMEROUND-SCORE
-                const poolCompetitors = this.pool.getCompetitors(this.leagueName);
+                const poolCompetitors = pool.getCompetitors(this.leagueName);
                 const round = structure.getSingleCategory().getRootRound();
                 this.poule = round.getFirstPoule(); // ?? GET FROM BACKEND ?? this.pool.getCompetition(PoolCollection.League_Default).get;
-                this.competitionSport = this.pool.getCompetitionSport(this.leagueName);
+                this.competitionSport = pool.getCompetitionSport(this.leagueName);
                 this.startLocationMap = new StartLocationMap(poolCompetitors);
                 this.structureNameService = new StructureNameService(this.startLocationMap);
 
@@ -141,7 +147,7 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
     this.myNavigation.back();
   }
 
-  navigateToPoule(poule: Poule): void {
-    this.router.navigate(['/pool/poule-againstgames', this.pool.getId(), this.leagueName, poule.getId()]);
+  navigateToPoule(pool: Pool, poule: Poule): void {
+    this.router.navigate(['/pool/poule-againstgames', pool.getId(), this.leagueName, poule.getId()]);
   }
 }

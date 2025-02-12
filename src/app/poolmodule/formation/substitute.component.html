@@ -6,49 +6,56 @@
       <h2 class="me-2 text-truncate">
         <span>3. wisselen</span>
       </h2>
-      <div *ngIf="!processing && pool && calcFormation">
+      @if(!processing && pool && calcFormation){
+      <div>
         <button class="btn btn-secondary" disabled>
           {{calcFormation.getName()}}
         </button>
       </div>
+      }
     </div>
 
     <!-- start header --> 
-    <div *ngIf="!processing && poolUser && assembleFormation" class="d-flex justify-content-between mt-3 mb-1">
-      <!-- left -->      
-        <button class="btn btn-outline-primary btn-sm"
-          (click)="linkToTransfers(poolUser, assembleFormation, contentRemove)">
-          <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
-          <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
-        </button>                
-      
-      <!-- center -->
-      <div></div>
+    @if(!processing && poolUser && assembleFormation){
+      <div class="d-flex justify-content-between mt-3 mb-1">
+        <!-- left -->      
+          <button class="btn btn-outline-primary btn-sm"
+            (click)="linkToTransfers(poolUser, assembleFormation, contentRemove)">
+            <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+            <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+          </button>                
+        
+        <!-- center -->
+        <div></div>
 
-      <!-- right -->    
-      <button class="btn btn-outline-info ms-1" [routerLink]="['/pool/formation/actions', pool.getId(), poolUser.getId()]">
-        <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
-      </button>
-      
-    </div> <!-- end header -->
+        <!-- right -->    
+        <button class="btn btn-outline-info ms-1" routerLink="['/pool/formation/actions', pool.getId(), poolUser.getId()]">
+          <fa-icon [icon]="['fas', 'info-circle']"></fa-icon>
+        </button>
+        
+      </div> <!-- end header -->
+    }
 
-    <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+    @if(alert){
+    <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+    }
 
-    <div *ngIf="!processing && pool && poolUser && assembleFormation && calcFormation">
-      <div *ngIf="!selectedPlace">
+    <div>      
+      @if(!processing && pool && poolUser && assembleFormation && calcFormation && !selectedPlace){
         <!-- lines-->
         <app-pool-formationline-substitutions *ngFor="let line of calcFormation.getLines()" [line]="line"
           [substitutions]="poolUser.getTransferPeriodActionList().substitutions"
-          (substitute)="substitute(assembleFormation, $event)" (linkToPlayer)="linkToPlayer($event)"
-          (remove)="remove(assembleFormation, $event, false)">
+          (substitute)="substitute(assembleFormation, $event)" (linkToPlayer)="linkToPlayer(pool, $event)"
+          (remove)="remove(pool, assembleFormation, $event, false)">
         </app-pool-formationline-substitutions>
-      </div>
+      }
     </div>
   </div>
 </div>
 
-<app-pool-navbar *ngIf="pool" [pool]="pool" [poolUser]="poolUser">
-</app-pool-navbar>
+@if(pool){
+<app-pool-navbar [pool]="pool" [poolUser]="poolUser"></app-pool-navbar>
+}
 
 <ng-template #contentRemove let-modal>
   <div class="modal-header">

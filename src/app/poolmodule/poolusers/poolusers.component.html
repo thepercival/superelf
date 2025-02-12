@@ -4,42 +4,44 @@
       <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
     </h2>
 
-    <h2 *ngIf="processing" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    <h2 ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" spin=true></fa-icon>
     </h2>
 
-    <ngb-alert *ngIf="alert" [type]="alert.type">
-      {{ alert.message }}</ngb-alert>
-
+    @if(alert) {
+    <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+    }
     <ngb-alert *ngIf="pool && pool.getAssemblePeriod().isIn()" type="warning">Let op: wanneer je team incompleet is, doet het
       NIET mee</ngb-alert>
 
-    <table *ngIf="!processing && pool" class="table">
+    @if(!processing && pool) {
+    <table class="table">
       <thead>
         <tr>
           <th>naam</th>
-          <th *ngIf="pool.transferPeriodNotStarted()">
+          <th ngIf="pool.transferPeriodNotStarted()">
             gekozen spelers
           </th>
-          <th *ngIf="pool.getTransferPeriod().isIn()">
+          <th ngIf="pool.getTransferPeriod().isIn()">
             transfers
           </th>
           <!-- <th></th> -->
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let poolUser of poolUsers">
+        @for(poolUser of poolUsers;track poolUser.getId()) {
+        <tr>
           <td>
             {{poolUser.getName()}}
           </td>
-          <td *ngIf="pool.transferPeriodNotStarted()">
+          <td ngIf="pool.transferPeriodNotStarted()">
             <fa-icon *ngIf="poolUser.getNrOfAssembled() < 15" [icon]="['fas', 'times-circle']" class="text-danger">
             </fa-icon>
             <fa-icon *ngIf="poolUser.getNrOfAssembled() == 15" [icon]="['fas', 'check-circle']" class="text-success">
             </fa-icon>
             {{poolUser.getNrOfAssembled()}}/15
           </td>
-          <td *ngIf="pool.getTransferPeriod().isIn()">
+          <td ngIf="pool.getTransferPeriod().isIn()">
             {{poolUser.getNrOfTransfers()}}/{{pool.getTransferPeriod().getMaxNrOfTransfers()}}
           </td>
           <!-- <td class="text-end">
@@ -49,10 +51,13 @@
             </button>
           </td> -->
         </tr>
+        }
       </tbody>
     </table>
+    }
   </div>
 </div>
 
-<app-pool-navbar [current]="PoolUsers" *ngIf="pool" [pool]="pool" [poolUser]="poolUserFromSession">
-</app-pool-navbar>
+@if(pool) { 
+<app-pool-navbar [current]="PoolUsers" [pool]="pool" [poolUser]="poolUserFromSession"></app-pool-navbar>
+}

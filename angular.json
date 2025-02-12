@@ -51,7 +51,10 @@
             "stylePreprocessorOptions": {
               "includePaths": [
                 "./sass/bootstrap"
-              ]
+              ],
+              "sass": {
+                "silenceDeprecations": ["mixed-decls", "color-functions", "global-builtin", "import"]
+              }
             },
             "scripts": []
           },

@@ -32,12 +32,14 @@
                     <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
                 </h2>
 
-                <div ngIf="!processingGames && sourceGameRoundGames.length > 0 && currentSourceGame" class="d-flex my-3 ms-1">
+                @if(!processingGames && sourceGameRoundGames.length > 0 && currentSourceGame){
+                <div class="d-flex my-3 ms-1">
                     <app-game-scroller [games]="sourceGameRoundGames" [current]="currentSourceGame"
                         (update)="updateSourceGame($event)" (navigate)="navigateToSourceGame(pool, $event)"
                         >
                     </app-game-scroller>
                 </div>
+                }
 
                 <table class="table" ngIf="!processingGames && formationMap && currentSourceGame && sportRankingItems.length > 0">
                     <tbody>
@@ -49,13 +51,13 @@
                                 </a>
                             </td>
                             <td>
-                                <ng-container [ngTemplateOutlet]="contentSideForamtionPlaces"
-                                    [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(currentSourceGame, HomeSide, formationMap, sportRankingItem)}">
+                                <ng-container ngTemplateOutlet="contentSideForamtionPlaces"
+                                    ngTemplateOutletContext="{formationPlaces:getFormationPlaces(currentSourceGame, HomeSide, formationMap, sportRankingItem)}">
                                 </ng-container>
                             </td>
                             <td>
-                                <ng-container [ngTemplateOutlet]="contentSideForamtionPlaces"
-                                    [ngTemplateOutletContext]="{formationPlaces:getFormationPlaces(currentSourceGame, AwaySide, formationMap, sportRankingItem)}">
+                                <ng-container ngTemplateOutlet="contentSideForamtionPlaces"
+                                    ngTemplateOutletContext="{formationPlaces:getFormationPlaces(currentSourceGame, AwaySide, formationMap, sportRankingItem)}">
                                 </ng-container>
                             </td>
                         </tr>
@@ -65,8 +67,8 @@
 
                 <ng-template #contentSideForamtionPlaces let-formationPlaces="formationPlaces">
                     <div ngFor="let formationPlace of formationPlaces" class="d-flex justify-content-between">
-                        <ng-container ngIf="formationPlace.getPlayer()" [ngTemplateOutlet]="contentSidePlayer"
-                            [ngTemplateOutletContext]="{s11Player:formationPlace.getPlayer()}">
+                        <ng-container ngIf="formationPlace.getPlayer()" ngTemplateOutlet="contentSidePlayer"
+                            ngTemplateOutletContext="{s11Player:formationPlace.getPlayer()}">
                         </ng-container>
                         <span ngIf="formationPlace.isSubstitute()" class="badge badge-reserve ms-1">r</span>
                     </div>

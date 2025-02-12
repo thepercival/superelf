@@ -17,18 +17,34 @@ import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { AgainstGameCardEvent, AgainstGameEvent, AgainstGameGoalEvent, AgainstGameLineupItem } from '../../lib/ngx-sport/game/football';
 import { FootballCard, FootballEvent, FootballGoal } from '../../lib/score';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlert, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
+import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
+import { AgainstGameTitleComponent } from './source/title.component';
 
 @Component({
-  selector: 'app-game-source',
-  templateUrl: './source.component.html',
-  styleUrls: ['./source.component.scss']
+  selector: "app-game-source",
+  standalone: true,
+  imports: [
+    FontAwesomeModule,
+    NgbAlertModule,
+    LineIconComponent,
+    SuperElfIconComponent,
+    AgainstGameTitleComponent,
+  ],
+  templateUrl: "./source.component.html",
+  styleUrls: ["./source.component.scss"],
 })
 export class SourceGameComponent extends PoolComponent implements OnInit {
   public game: AgainstGame | undefined;
 
   private startLocationMap!: StartLocationMap;
   private lineupSidesMap: Map<AgainstSide, AgainstGameLineupItem[]> = new Map();
-  private eventsSidesMap: Map<AgainstSide, (AgainstGameGoalEvent | AgainstGameCardEvent)[]> = new Map();
+  private eventsSidesMap: Map<
+    AgainstSide,
+    (AgainstGameGoalEvent | AgainstGameCardEvent)[]
+  > = new Map();
 
   public processing = true;
   public processingLineups = true;
@@ -45,7 +61,8 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
     private gameRepository: GameRepository,
     public imageRepository: ImageRepository,
     public cssService: CSSService,
-    private myNavigation: MyNavigation) {
+    private myNavigation: MyNavigation
+  ) {
     super(route, router, poolRepository, globalEventsManager);
   }
 
@@ -53,47 +70,72 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.setPool(pool);
 
-      this.route.params.subscribe(params => {
-        const gameRound = this.getGameRoundByNumber(+params['gameRound']);
+      this.route.params.subscribe((params) => {
+        const gameRound = this.getGameRoundByNumber(pool,+params["gameRound"]);
 
-        this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
+        this.getSourceStructure(pool.getSourceCompetition()).subscribe({
           next: (structure: Structure) => {
-            const poule = structure.getSingleCategory().getRootRound().getFirstPoule();
+            const poule = structure
+              .getSingleCategory()
+              .getRootRound()
+              .getFirstPoule();
 
             this.gameRepository.getSourceObjects(poule, gameRound).subscribe({
               next: (games: AgainstGame[]) => {
-                const game = games.find((game: AgainstGame) => game.getId() === +params['gameId']);
+                const game = games.find(
+                  (game: AgainstGame) => game.getId() === +params["gameId"]
+                );
                 if (game) {
-                  const competitors = game.getPoule().getCompetition().getTeamCompetitors();
+                  const competitors = game
+                    .getPoule()
+                    .getCompetition()
+                    .getTeamCompetitors();
                   this.startLocationMap = new StartLocationMap(competitors);
 
                   // (AgainstGameGoalEvent | AgainstGameCardEvent)[]
                   // AgainstGameLineupItem[]
 
-                  const lineupRequests = [AgainstSide.Home, AgainstSide.Away].map((side: AgainstSide) => {
-                    return this.gameRepository.getSourceObjectLineup(game, side).pipe(
-                      map((lineupItems: AgainstGameLineupItem[]) => {
-                        this.lineupSidesMap.set(side, lineupItems);
-                      })
-                    );
+                  const lineupRequests = [
+                    AgainstSide.Home,
+                    AgainstSide.Away,
+                  ].map((side: AgainstSide) => {
+                    return this.gameRepository
+                      .getSourceObjectLineup(game, side)
+                      .pipe(
+                        map((lineupItems: AgainstGameLineupItem[]) => {
+                          this.lineupSidesMap.set(side, lineupItems);
+                        })
+                      );
                   });
                   forkJoin(lineupRequests).subscribe({
                     next: (results) => {
                       this.processingLineups = false;
-                    }
+                    },
                   });
 
-                  const eventsRequests = [AgainstSide.Home, AgainstSide.Away].map((side: AgainstSide) => {
-                    return this.gameRepository.getSourceObjectEvents(game, side).pipe(
-                      map((events: (AgainstGameGoalEvent | AgainstGameCardEvent)[]) => {
-                        this.eventsSidesMap.set(side, events);
-                      })
-                    );
+                  const eventsRequests = [
+                    AgainstSide.Home,
+                    AgainstSide.Away,
+                  ].map((side: AgainstSide) => {
+                    return this.gameRepository
+                      .getSourceObjectEvents(game, side)
+                      .pipe(
+                        map(
+                          (
+                            events: (
+                              | AgainstGameGoalEvent
+                              | AgainstGameCardEvent
+                            )[]
+                          ) => {
+                            this.eventsSidesMap.set(side, events);
+                          }
+                        )
+                      );
                   });
                   forkJoin(eventsRequests).subscribe({
                     next: (results) => {
                       this.processingEvents = false;
-                    }
+                    },
                   });
 
                   // this.gameRepository.getSourceObjectLineup(game, AgainstSide.Home).subscribe({
@@ -108,9 +150,9 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
                 }
                 this.game = game;
               },
-              complete: () => this.processing = false
+              complete: () => (this.processing = false),
             });
-          }
+          },
         });
       });
     });
@@ -127,22 +169,28 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
   }
 
   instanceOfGoalEvent(event: any): event is AgainstGameGoalEvent {
-    return 'score' in event;
+    return "score" in event;
   }
 
   instanceOfCardEvent(event: any): event is AgainstGameCardEvent {
-    return 'color' in event;
+    return "color" in event;
   }
 
-  getFootballEvent(eventItem: AgainstGameGoalEvent | AgainstGameCardEvent): FootballEvent {
+  getFootballEvent(
+    eventItem: AgainstGameGoalEvent | AgainstGameCardEvent
+  ): FootballEvent {
     if (this.instanceOfGoalEvent(eventItem)) {
       return eventItem.score;
     }
     return eventItem.color;
   }
 
-  get HomeSide(): AgainstSide { return AgainstSide.Home; }
-  get AwaySide(): AgainstSide { return AgainstSide.Away; }
+  get HomeSide(): AgainstSide {
+    return AgainstSide.Home;
+  }
+  get AwaySide(): AgainstSide {
+    return AgainstSide.Away;
+  }
 
   getSourceStructure(competition: Competition): Observable<Structure> {
     // if (this.sourceStructure !== undefined) {
@@ -151,32 +199,41 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
     return this.structureRepository.getObject(competition);
   }
 
-  getGameRoundByNumber(gameRoundNumber: number): GameRound {
-    const viewPeriods = this.pool.getCompetitionConfig().getViewPeriods();
+  getGameRoundByNumber(pool: Pool,gameRoundNumber: number): GameRound {
+    const viewPeriods = pool.getCompetitionConfig().getViewPeriods();
 
     let viewPeriod = viewPeriods.shift();
     while (viewPeriod !== undefined) {
       try {
         return viewPeriod.getGameRound(gameRoundNumber);
-      } catch (any) {
-
-      }
+      } catch (any) {}
       viewPeriod = viewPeriods.shift();
     }
-    throw new Error('gameRound could not be found for number "' + gameRoundNumber + '"');
+    throw new Error(
+      'gameRound could not be found for number "' + gameRoundNumber + '"'
+    );
   }
 
-  getCompetitors(game: AgainstGame, side: AgainstSide): (Competitor | undefined)[] {
-    return game.getSidePlaces(side).map((gamePlace: AgainstGamePlace): Competitor | undefined => {
-      if (gamePlace === undefined) {
-        return undefined;
-      }
-      const startLocation = gamePlace.getPlace().getStartLocation();
-      return startLocation ? this.startLocationMap.getCompetitor(startLocation) : undefined;
-    });
+  getCompetitors(
+    game: AgainstGame,
+    side: AgainstSide
+  ): (Competitor | undefined)[] {
+    return game
+      .getSidePlaces(side)
+      .map((gamePlace: AgainstGamePlace): Competitor | undefined => {
+        if (gamePlace === undefined) {
+          return undefined;
+        }
+        const startLocation = gamePlace.getPlace().getStartLocation();
+        return startLocation
+          ? this.startLocationMap.getCompetitor(startLocation)
+          : undefined;
+      });
   }
 
-  getTeamCompetitor(sideCompetitor: Competitor | undefined): TeamCompetitor | undefined {
+  getTeamCompetitor(
+    sideCompetitor: Competitor | undefined
+  ): TeamCompetitor | undefined {
     if (this.isTeamCompetitor(sideCompetitor)) {
       return <TeamCompetitor>sideCompetitor;
     }

@@ -8,9 +8,12 @@ import { GlobalEventsManager } from '../shared/commonmodule/eventmanager';
 import { Season } from 'ngx-sport';
 import { SeasonRepository } from '../lib/season/repository';
 import { FormControl, FormGroup } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-pools',
+  standalone: true,
+  imports: [FontAwesomeModule],
   templateUrl: './poollist.component.html',
   styleUrls: ['./poollist.component.scss']
 })

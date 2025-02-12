@@ -95,6 +95,11 @@ span.badge-rank {
   font-size: 100%;
 }
 
+tr>td.sourceGame {
+  @extend .table-active;
+  cursor: pointer;
+}
+
 .modal-content-info .modal-content {
   border: 5px;
   @extend .border-info;
