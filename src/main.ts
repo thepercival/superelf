@@ -1,5 +1,4 @@
 import { enableProdMode, provideExperimentalZonelessChangeDetection } from '@angular/core';
-
 // import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 // import { AuthService } from './app/lib/auth/auth.service';
@@ -29,7 +28,7 @@ import { GlobalEventsManager } from './app/shared/commonmodule/eventmanager';
 import { StartSessionService } from './app/shared/commonmodule/startSessionService';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { WorldCupPreviousService } from './app/shared/commonmodule/worldCupPreviousService';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router, RouterOutlet } from '@angular/router';
 import { routes } from './app/app.routes';
 
 if (environment.production) {
@@ -63,11 +62,12 @@ if (environment.production) {
 //   }).catch((err) => console.log(err));
 // });
 
-console.log(routes);
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
     provideExperimentalZonelessChangeDetection(),
+    RouterOutlet,
+    Router,
     AuthService,
     AuthUserGuardService,
     PoolShellRepository,

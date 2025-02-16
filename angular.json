@@ -3,18 +3,6 @@
   "newProjectRoot": "projects",
   "projects": {
     "superelf": {
-      "i18n": {
-        "locales": {
-          "fr": {
-            "translation": "src/locale/messages.fr.xlf",
-            "baseHref": ""
-          },
-          "nl": {
-            "translation": "src/locale/messages.nl.xlf",
-            "baseHref": ""
-          }
-        }
-      },
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -33,7 +21,7 @@
             "namedChunks": true,
             "sourceMap": true,
             "tsConfig": "src/tsconfig.app.json",
-            "polyfills": [],
+            "polyfills": ["@angular/localize/init"],
             "assets": [
               {
                 "glob": "**/*",
@@ -112,6 +100,16 @@
               "i18nLocale": "fr",
               "i18nMissingTranslation": "error"
             },
+            "dev-nl": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "localize": [
+                "nl"
+              ],
+              "i18nMissingTranslation": "warning"
+            },
             "nl": {
               "aot": true,
               "budgets": [
@@ -166,6 +164,9 @@
             "dev": {
               "port": 4201,
               "buildTarget": "superelf:build:dev"
+            },
+            "dev-nl": {
+              "buildTarget": "superelf:build:dev-nl"
             }
           }
         },
@@ -180,7 +181,7 @@
           "options": {
             "main": "src/test.ts",
             "karmaConfig": "./karma.conf.js",
-            "polyfills": [],
+            "polyfills": ["@angular/localize/init"],
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [],
             "styles": [

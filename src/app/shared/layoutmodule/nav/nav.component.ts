@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -12,7 +12,7 @@ import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   standalone: true,
-  imports: [FontAwesomeModule, RouterLink],
+  imports: [FontAwesomeModule],
   selector: "app-nav",
   templateUrl: "./nav.component.html",
   styleUrls: ["./nav.component.css"],
@@ -29,7 +29,7 @@ export class NavComponent implements OnInit {
     private dateFormatter: DateFormatter,
     private globalEventsManager: GlobalEventsManager,
     public navigation: MyNavigation,
-    private router: Router
+    @Inject(Router) private router: Router
   ) {
     this.globalEventsManager.navHeaderInfo.subscribe(
       (headerInfo: NavHeaderInfo | undefined) => {

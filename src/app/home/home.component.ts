@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
@@ -10,7 +10,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlusCircle, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
-
 @Component({
   selector: "app-home",
   standalone: true,
@@ -19,7 +18,7 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
-  public processingMyShells = true;
+  public processingMyShells: WritableSignal<boolean> = signal(true);
   public canCreateAndJoin = false;
   public canAssemble = false;
   public myShells: PoolShell[] = [];
@@ -61,7 +60,7 @@ export class HomeComponent implements OnInit {
         this.canAssemble =
           (poolActions & PoolActions.Assemble) === PoolActions.Assemble;
         if (!this.authService.isLoggedIn()) {
-          this.processingMyShells = false;
+          this.processingMyShells.set(false);
           return;
         }
 
@@ -76,16 +75,17 @@ export class HomeComponent implements OnInit {
             },
             error: (e) => {
               this.setAlert("danger", e);
-              this.processingMyShells = false;
+              this.processingMyShells.set(false);
             },
             complete: () => {
-              this.processingMyShells = false;
+              this.processingMyShells.set(false);
+              console.log(this.processingMyShells);
             },
           });
       },
       error: (e) => {
         this.setAlert("danger", e);
-        this.processingMyShells = false;
+        this.processingMyShells.set(false);
       },
     });
   }
