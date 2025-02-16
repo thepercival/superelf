@@ -31,6 +31,7 @@ import { WorldCupNavBarComponent } from '../../shared/poolmodule/poolNavBar/worl
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { GameScrollerComponent } from '../game/source/gameScroller.component';
+import { NgIf } from '@angular/common';
 
 
 @Component({
@@ -44,6 +45,7 @@ import { GameScrollerComponent } from '../game/source/gameScroller.component';
     PoolNavBarComponent,
     LineIconComponent,
     GameScrollerComponent,
+    NgIf
   ],
   templateUrl: "./allinonegame.component.html",
   styleUrls: ["./allinonegame.component.scss"],
@@ -65,7 +67,6 @@ export class PoolAllInOneGameScheduleComponent
   public leagueName!: LeagueName;
   public nrOfUnreadMessages = 0;
 
-  public processing = true;
   public processingPoolUsers = true;
   public processingGames = true;
   // public poolUsers: PoolUser[] = [];
@@ -104,13 +105,13 @@ export class PoolAllInOneGameScheduleComponent
           );
           const competition = pool.getCompetition(this.leagueName);
           if (competition === undefined) {
-            this.processing = false;
+            this.processing.set(false);
             throw Error("competitionSport not found");
           }
 
           const editPeriod = this.getMostRecentEndedEditPeriod(pool);
           if (editPeriod === undefined) {
-            this.processing = false;
+            this.processing.set(false);
             throw Error("geen competitie periode gevonden");
           }
           this.formationRepository.getObjectMap(pool, editPeriod).subscribe({
@@ -168,13 +169,13 @@ export class PoolAllInOneGameScheduleComponent
                 },
                 error: (e: string) => {
                   this.setAlert("danger", e);
-                  this.processing = false;
+                  this.processing.set(false);
                 },
               });
             },
             error: (e) => {
               this.setAlert("danger", e);
-              this.processing = false;
+              this.processing.set(false);
             },
           });
         });
@@ -301,7 +302,7 @@ export class PoolAllInOneGameScheduleComponent
 
     if (gameRound.hasAgainstGames()) {
       this.updateSourceGame(this.getDefaultGame(gameRound.getAgainstGames()));
-      this.processing = false;
+      this.processing.set(false);
       this.processingGames = false;
       return;
     }
@@ -323,7 +324,7 @@ export class PoolAllInOneGameScheduleComponent
           this.updateSourceGame(game);
         },
         complete: () => {
-          this.processing = false;
+          this.processing.set(false);
           this.processingGames = false;
         },
       });

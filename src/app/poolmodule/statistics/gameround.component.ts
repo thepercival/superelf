@@ -11,11 +11,12 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 import { S11PlayerStatisticsComponent } from './base.component';
 import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-s11player-gameround-statistics',
   standalone: true,
-  imports: [SuperElfIconComponent,FontAwesomeModule],
+  imports: [NgIf,SuperElfIconComponent,FontAwesomeModule],
   templateUrl: './gameround.component.html',
   styleUrls: ['./gameround.component.scss']
 })
@@ -45,7 +46,7 @@ export class S11PlayerGameRoundStatisticsComponent extends S11PlayerStatisticsCo
     // console.log('init pointsCaLCulator', this.pointsCalculator);
     const line = this.line();
     this.sheetActive = line === FootballLine.GoalKeeper || line === FootballLine.Defense;
-    this.processing = false;
+    this.processing.set(false);
   }
 
   get YellowCard(): FootballCard { return FootballCard.Yellow; }

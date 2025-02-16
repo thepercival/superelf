@@ -15,11 +15,12 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TeamNameComponent } from '../../team/name.component';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-pool-formationline-replacements',
   standalone: true,
-  imports: [FontAwesomeModule,TeamNameComponent,LineIconComponent],
+  imports: [NgIf,FontAwesomeModule,TeamNameComponent,LineIconComponent],
   templateUrl: './replacements.component.html',
   styleUrls: ['./replacements.component.scss']
 })

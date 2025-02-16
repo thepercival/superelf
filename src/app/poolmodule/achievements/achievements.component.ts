@@ -39,7 +39,6 @@ import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.c
 })
 export class AchievementsComponent extends PoolComponent implements OnInit {
   public achievementListItems: AchievementListItem[] | undefined;
-  public processing = true;
   public leagueName!: LeagueName;
   public goatToggle = false;
   public goatPoints: GoatPoints;
@@ -78,7 +77,7 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
             return achievement1.seasonShortName >= achievement2.seasonShortName ? 1 : -1;
           });
           this.achievementListItems = this.mapToAchievementListItems(achievements);
-          this.processing = false;
+          this.processing.set(false);
         },
       });
 
@@ -96,9 +95,9 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
           });
         }),
         error: (e: string) => {
-          this.setAlert('danger', e); this.processing = false;
+          this.setAlert('danger', e); this.processing.set(false);
         },
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       });
     });
   }

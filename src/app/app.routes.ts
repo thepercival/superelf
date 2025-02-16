@@ -2,9 +2,10 @@ import { Routes } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
 import { userRoutes } from "./usermodule/user.routes";
+import { poolRoutes } from "./poolmodule/pool.routes";
 
-export const routes: Routes = userRoutes.concat([
-  { path: "", component: HomeComponent },
+export const routes: Routes = userRoutes.concat(poolRoutes, [
+  { path: "", title: "overzicht (jouw) pools", component: HomeComponent },
 ]);
 
   // { path: 'user', loadChildren: () => import('../../migrate/modules/user.module').then(m => m.UserModule) },

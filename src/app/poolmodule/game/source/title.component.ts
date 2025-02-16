@@ -3,11 +3,12 @@ import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase,
 import { DateFormatter } from '../../../lib/dateFormatter';
 import { SuperElfNameService } from '../../../lib/nameservice';
 import { TeamNameComponent } from '../../team/name.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-againstgame-title',
   standalone: true,
-  imports: [TeamNameComponent],
+  imports: [TeamNameComponent,NgIf],
   templateUrl: './title.component.html',
   styleUrls: ['./title.component.scss']
 })

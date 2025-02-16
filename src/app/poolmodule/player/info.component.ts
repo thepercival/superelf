@@ -29,6 +29,7 @@ import { PlayerBasicsComponent } from './basics.component';
 import { AgainstGameTitleComponent } from '../game/source/title.component';
 import { S11PlayerViewPeriodStatisticsComponent } from '../statistics/viewperiod.component';
 import { S11PlayerGameRoundStatisticsComponent } from '../statistics/gameround.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: "app-s11player-info",
@@ -41,7 +42,8 @@ import { S11PlayerGameRoundStatisticsComponent } from '../statistics/gameround.c
     GameRoundScrollerComponent,
     AgainstGameTitleComponent,
     S11PlayerViewPeriodStatisticsComponent,
-    S11PlayerGameRoundStatisticsComponent
+    S11PlayerGameRoundStatisticsComponent,
+    NgIf
   ],
   templateUrl: "./info.component.html",
   styleUrls: ["./info.component.scss"],
@@ -52,7 +54,6 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
   public currentGameRound: GameRound | undefined;
 
   // @Input() team: Team | undefined;
-  public processing = true;
   public processingGames = false;
   public currentGame: AgainstGame | undefined;
   public currentStatistics: Statistics | undefined;
@@ -128,7 +129,7 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
             },
             error: (e: string) => {
               this.setAlert("danger", e);
-              this.processing = false;
+              this.processing.set(false);
             },
           });
       });
@@ -170,7 +171,7 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
       this.currentStatistics = undefined;
       this.currentGame = undefined;
       if (disableProcessing) {
-        this.processing = false;
+        this.processing.set(false);
       }
       return;
     }
@@ -185,7 +186,7 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
         currentGameRound
       ).getGame(this.s11Player);
       if (disableProcessing) {
-        this.processing = false;
+        this.processing.set(false);
       }
       return;
     }
@@ -213,7 +214,7 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
             },
             complete: () => {
               if (disableProcessing) {
-                this.processing = false;
+                this.processing.set(false);
               }
               this.processingGames = false;
             },

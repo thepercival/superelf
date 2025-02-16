@@ -68,7 +68,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
                 this.postNgOnInit(pool);
             },
             error: (e) => {
-                this.setAlert('danger', e); this.processing = false;
+                this.setAlert('danger', e); this.processing.set(false);
             }
         });
     }
@@ -91,12 +91,12 @@ export class HomeComponent extends PoolComponent implements OnInit {
                     this.currentGameRoundNumbers = currentGameRoundNumbers;
                     this.setStructureMap(this.getCompetitions());
                     if( !this.processingPoolUsers ) {
-                        this.processing = false;
+                        this.processing.set(false);
                     } else {
                         this.processingGameRoundNumbers = false;
                     }
                 },
-                error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
+                error: (e: string) => { this.setAlert('danger', e); this.processing.set(false); }
             });
         } else {
             this.processingGameRoundNumbers = false;
@@ -114,14 +114,14 @@ export class HomeComponent extends PoolComponent implements OnInit {
             this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
                 this.poolUsers = poolUsers;
                 if( !this.processingGameRoundNumbers ) {
-                    this.processing = false;
+                    this.processing.set(false);
                 } else {
                     this.processingPoolUsers = false;
                 }
             });
         } else {
             if( !this.processingGameRoundNumbers ) {
-                this.processing = false;
+                this.processing.set(false);
             } else {
                 this.processingPoolUsers = false;
             }
@@ -140,7 +140,7 @@ export class HomeComponent extends PoolComponent implements OnInit {
         //             // }
         //         },
         //         error: (e: string) => {
-        //             this.setAlert('danger', e); this.processing = false;
+        //             this.setAlert('danger', e); this.processing.set(false);
         //         }
         //     });
         // }

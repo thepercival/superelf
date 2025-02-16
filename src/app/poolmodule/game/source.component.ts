@@ -22,6 +22,7 @@ import { NgbAlert, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
 import { AgainstGameTitleComponent } from './source/title.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: "app-game-source",
@@ -32,6 +33,7 @@ import { AgainstGameTitleComponent } from './source/title.component';
     LineIconComponent,
     SuperElfIconComponent,
     AgainstGameTitleComponent,
+    NgIf
   ],
   templateUrl: "./source.component.html",
   styleUrls: ["./source.component.scss"],
@@ -46,7 +48,6 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
     (AgainstGameGoalEvent | AgainstGameCardEvent)[]
   > = new Map();
 
-  public processing = true;
   public processingLineups = true;
   public processingEvents = true;
 
@@ -143,14 +144,14 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
                   //     this.lineupSidesMap.set(AgainstSide.Home, lineupItems);
                   //   },
                   //   error: (e) => {
-                  //     this.setAlert('danger', e); this.processing = false;
+                  //     this.setAlert('danger', e); this.processing.set(false);
                   //   },
-                  //   complete: () => this.processing = false
+                  //   complete: () => this.processing.set(false)
                   // });
                 }
                 this.game = game;
               },
-              complete: () => (this.processing = false),
+              complete: () => (this.processing.set(false)),
             });
           },
         });

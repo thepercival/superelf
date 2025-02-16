@@ -5,11 +5,12 @@ import { PoolCompetitor } from '../../lib/pool/competitor';
 import { PoolUser } from '../../lib/pool/user';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { EscapeHtmlPipe } from '../../shared/commonmodule/escapehtmlpipe';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: "app-superelf-cup-round",
   standalone: true,
-  imports: [EscapeHtmlPipe],
+  imports: [EscapeHtmlPipe,NgIf],
   templateUrl: "./round.component.html",
   styleUrls: ["./round.component.scss"],
 })

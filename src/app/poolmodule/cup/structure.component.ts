@@ -23,12 +23,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolCupRoundComponent } from './round.component';
 import { PoolCompetitionsNavBarComponent } from '../../shared/poolmodule/competitionsNavBar/competitionsNavBar.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
+import { NgIf } from '@angular/common';
 
 
 @Component({
   selector: 'app-pool-cup',
   standalone: true,
-  imports: [FontAwesomeModule,PoolCupRoundComponent,PoolCompetitionsNavBarComponent,PoolNavBarComponent],
+  imports: [FontAwesomeModule,PoolCupRoundComponent,PoolCompetitionsNavBarComponent,PoolNavBarComponent,NgIf],
   templateUrl: './structure.component.html',
   styleUrls: ['./structure.component.scss']
 })
@@ -79,7 +80,7 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
 
             const competition = pool.getCompetition(this.leagueName);
             if (competition === undefined) {
-              this.processing = false;
+              this.processing.set(false);
               throw Error('competitionSport not found');
             }
 
@@ -100,14 +101,14 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
 
                 this.initCurrentGameRound(competitionConfig, currentViewPeriod);
               },
-              error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
+              error: (e: string) => { this.setAlert('danger', e); this.processing.set(false); }
             });
           },
-          error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
+          error: (e: string) => { this.setAlert('danger', e); this.processing.set(false); }
         });
       },
       error: (e) => {
-        this.setAlert('danger', e); this.processing = false;
+        this.setAlert('danger', e); this.processing.set(false);
       }
     });
   }
@@ -134,8 +135,8 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
         }
         this.updateGameRound(currentGameRound);
       },
-      error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
-      complete: () => this.processing = false
+      error: (e: string) => { this.setAlert('danger', e); this.processing.set(false); },
+      complete: () => this.processing.set(false)
     });
   }
 

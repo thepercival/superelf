@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import { Location, NgIf } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
@@ -25,7 +25,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 @Component({
   selector: "app-pool-scouted-player-edit",
   standalone: true,
-  imports: [FontAwesomeModule, NgbAlertModule, S11PlayerChooseComponent],
+  imports: [FontAwesomeModule, NgbAlertModule, S11PlayerChooseComponent,NgIf],
   templateUrl: "./edit.component.html",
   styleUrls: ["./edit.component.scss"],
 })
@@ -98,9 +98,9 @@ export class FormationPlaceEditComponent
                 },
                 error: (e: string) => {
                   this.setAlert("danger", e);
-                  this.processing = false;
+                  this.processing.set(false);
                 },
-                complete: () => (this.processing = false),
+                complete: () => (this.processing.set(false)),
               });
             this.selectableTeams = pool
               .getSourceCompetition()
@@ -112,9 +112,9 @@ export class FormationPlaceEditComponent
         },
         error: (e: string) => {
           this.setAlert("danger", e);
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => (this.processing = false),
+        complete: () => (this.processing.set(false)),
       });
     });
   }
@@ -222,7 +222,7 @@ export class FormationPlaceEditComponent
   // }
 
   editPlace(pool: Pool, s11Player: S11Player) {
-    this.processing = true;
+    this.processing.set(true);
     this.formationRepository
       .editPlace(this.place, s11Player.getPerson())
       .subscribe({
@@ -231,9 +231,9 @@ export class FormationPlaceEditComponent
         },
         error: (e: string) => {
           this.setAlert("danger", e);
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => (this.processing = false),
+        complete: () => (this.processing.set(false)),
       });
   }
 

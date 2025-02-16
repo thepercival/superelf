@@ -24,11 +24,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
 import { PouleTitleComponent } from '../poule/title.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-pool-chat',
   standalone: true,
-  imports: [FontAwesomeModule,SuperElfIconComponent,PouleTitleComponent,PoolNavBarComponent],
+  imports: [FontAwesomeModule,SuperElfIconComponent,PouleTitleComponent,PoolNavBarComponent,NgIf],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
@@ -40,7 +41,6 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
   // private startLocationMap!: StartLocationMap;
   form: UntypedFormGroup;
 
-  public processing = true;
   public leagueName!: LeagueName;
   public poolPoule: Poule | undefined;
   public processingMessage = false;
@@ -84,7 +84,7 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
           // begin met het ophalen van de wedstrijden van de poolcompetitie 
           const competition = pool.getCompetition(this.leagueName);
           if (competition === undefined) {
-            this.processing = false;
+            this.processing.set(false);
             throw Error('competition not found');
           }
 
@@ -105,13 +105,13 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
               this.chatMessageRepository.getObjects(poule, pool).subscribe({
                 next: (chatMessages: ChatMessage[]) => {
                   this.chatMessages = chatMessages;
-                  this.processing = false;
+                  this.processing.set(false);
                 }
               });
 
               // this.initCurrentGameRound(competitionConfig, currentViewPeriod);
             },
-            error: (e: string) => { this.setAlert('danger', e); this.processing = false; }
+            error: (e: string) => { this.setAlert('danger', e); this.processing.set(false); }
           });
         });
       });

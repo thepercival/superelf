@@ -2,11 +2,12 @@ import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges, inpu
 import { GameRound } from '../../lib/gameRound';
 import { ViewPeriod } from '../../lib/period/view';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-gameround-scroller',
   standalone: true,
-  imports: [FontAwesomeModule],
+  imports: [NgIf,FontAwesomeModule],
   templateUrl: './gameRoundScroller.component.html',
   styleUrls: ['./gameRoundScroller.component.scss']
 })

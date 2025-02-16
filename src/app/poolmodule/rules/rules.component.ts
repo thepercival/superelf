@@ -16,17 +16,20 @@ import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-pool-rules',
+  selector: "app-pool-rules",
   standalone: true,
-  imports: [FontAwesomeModule,NgbAlertModule,PoolNavBarComponent],
-  templateUrl: './rules.component.html',
-  styleUrls: ['./rules.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  imports: [FontAwesomeModule, NgbAlertModule, PoolNavBarComponent],
+  templateUrl: "./rules.component.html",
+  styleUrls: ["./rules.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class RulesComponent extends PoolComponent implements OnInit {
   availableFormations: Formation[] | undefined;
+  public faInfoCircle = faInfoCircle;
+  
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -44,37 +47,41 @@ export class RulesComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
-        this.competitionConfigRepository.getAvailableFormations(pool.getCompetitionConfig())
+        this.competitionConfigRepository
+          .getAvailableFormations(pool.getCompetitionConfig())
           .subscribe(
-            (formations: Formation[]) => this.availableFormations = formations
+            (formations: Formation[]) => (this.availableFormations = formations)
           );
         this.poolUserRepository.getObjectFromSession(pool).subscribe({
-          next: ((poolUser: PoolUser) => {
+          next: (poolUser: PoolUser) => {
             this.poolUserFromSession = poolUser;
-          })
+          },
         });
-        this.processing = false;
-      }
+        this.processing.set(false);
+      },
     });
   }
 
-  get Rules(): NavBarItem { return NavBarItem.Rules }
+  get Rules(): NavBarItem {
+    return NavBarItem.Rules;
+  }
 
   getFormationNames(): string | undefined {
-    return this.availableFormations?.map((formation: Formation) => {
-      return formation.getName();
-    }).join(", ");
+    return this.availableFormations
+      ?.map((formation: Formation) => {
+        return formation.getName();
+      })
+      .join(", ");
   }
 
   // get points(): Points {
   //   return this.pool.getCompetitionConfig().getPoints();
   // }
 
-
   getPossibleLines(): FootballLine[] {
     const lines = [];
     for (const [propertyKey, propertyValue] of Object.entries(FootballLine)) {
-      if ((typeof propertyValue === 'string')) {
+      if (typeof propertyValue === "string") {
         continue;
       }
       lines.push(propertyValue);
@@ -83,20 +90,29 @@ export class RulesComponent extends PoolComponent implements OnInit {
   }
 
   getLineClass(footballLine: FootballLine, prefix?: string): string {
-    return this.cssService.getLine(footballLine, prefix ? prefix + '-' : prefix);
+    return this.cssService.getLine(
+      footballLine,
+      prefix ? prefix + "-" : prefix
+    );
   }
 
   getPointsItems(pool: Pool): PointsItem[] {
     const scorePointsMap = pool.getCompetitionConfig().getScorePointsMap();
-    return scorePointsMap.getScorePoints().map((score: FootballScore): PointsItem => {
-      return {
-        name: this.nameService.getScoreName(score), points: scorePointsMap.get(score)
-      }
-    });
+    return scorePointsMap
+      .getScorePoints()
+      .map((score: FootballScore): PointsItem => {
+        return {
+          name: this.nameService.getScoreName(score),
+          points: scorePointsMap.get(score),
+        };
+      });
   }
 
   getLinePointsItems(pool: Pool, line: FootballLine): PointsItem[] {
-    const scores: FootballScoreLine[] = [FootballGoal.Normal, FootballGoal.Assist];
+    const scores: FootballScoreLine[] = [
+      FootballGoal.Normal,
+      FootballGoal.Assist,
+    ];
     if (line === FootballLine.GoalKeeper || line === FootballLine.Defense) {
       scores.push(FootballSheet.Clean);
       scores.push(FootballSheet.Spotty);
@@ -104,8 +120,9 @@ export class RulesComponent extends PoolComponent implements OnInit {
     const scorePointsMap = pool.getCompetitionConfig().getScorePointsMap();
     return scores.map((score: FootballScoreLine): PointsItem => {
       return {
-        name: this.nameService.getScoreName(score), points: scorePointsMap.getLine({ line, score })
-      }
+        name: this.nameService.getScoreName(score),
+        points: scorePointsMap.getLine({ line, score }),
+      };
     });
   }
 }

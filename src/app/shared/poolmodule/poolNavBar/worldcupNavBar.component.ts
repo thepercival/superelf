@@ -16,11 +16,13 @@ import { WorldCupPreviousService } from '../../commonmodule/worldCupPreviousServ
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SuperElfTrophyIconComponent } from '../icon/trophy.component';
 import { SuperElfIconComponent } from '../icon/icon.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   standalone: true,
   selector: "app-worldcup-navbar",
   imports: [
+    NgIf,
     FontAwesomeModule,
     SuperElfTrophyIconComponent,
     SuperElfIconComponent,

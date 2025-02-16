@@ -9,14 +9,14 @@
   </button>
 </div> -->
 
-<h2*ngIf="processing" class="text-center">
-  <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
+<h2 *ngIf="processing" class="text-center">
+  <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
 </h2>
 
 <!-- <ngb-alert *ngIf="alert" [type]="alert.type">
   {{ alert.message }}</ngb-alert> -->
 
-<form*ngIf="!processing && viewPeriod()" name="form" (ngSubmit)="false" formGroup="form" novalidate>
+<form *ngIf="!processing && viewPeriod()" name="form" (ngSubmit)="false" formGroup="form" novalidate>
   <div class="d-flex justify-content-around">
     <select class="form-control me-1" formControlName="searchTeam" (change)="updateFilter()">
       <option ngValue="undefined" selected>
@@ -34,10 +34,10 @@
   </div>
 </form>
 
-<table*ngIf="!processing && viewPeriod()" class="table">
+<table *ngIf="!processing && viewPeriod()" class="table">
   <tbody>
     @for (choosePersonItem of choosePersonItems; track choosePersonItem) {    
-      <tr*ngIf="showAll() || isChoosable(choosePersonItem.player)" (click)="linkToPlayer(choosePersonItem)" class="pointer">
+      <tr *ngIf="showAll() || isChoosable(choosePersonItem.player)" (click)="linkToPlayer(choosePersonItem)" class="pointer">
         <td>
           <app-lineicon [line]="choosePersonItem.player.getLine()"></app-lineicon>
         </td>
@@ -51,7 +51,7 @@
           <span class="badge bg-totals">{{getTotalPoints(choosePersonItem.s11Player)}}</span>
         </td>
         <td class="text-end" (click)="$event.stopPropagation()">
-          <button*ngIf="isChoosable(choosePersonItem.player)" type="button" class="btn btn-primary btn-sm"
+          <button *ngIf="isChoosable(choosePersonItem.player)" type="button" class="btn btn-primary btn-sm"
             (click)="select(choosePersonItem.s11Player,choosePersonItem.player)">
             <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
           </button>

@@ -14,12 +14,13 @@ import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgIf } from '@angular/common';
 
 
 @Component({
   selector: 'app-pool-invite',
   standalone: true,
-  imports: [FontAwesomeModule,PoolNavBarComponent,NgbAlertModule],
+  imports: [FontAwesomeModule,PoolNavBarComponent,NgbAlertModule,NgIf],
   templateUrl: './invite.component.html',
   styleUrls: ['./invite.component.scss']
 })
@@ -57,13 +58,13 @@ export class InviteComponent extends PoolComponent implements OnInit {
             this.poolUserFromSession = poolUser;
           }),
           error: (e: string) => {
-            this.setAlert('danger', e); this.processing = false;
+            this.setAlert('danger', e); this.processing.set(false);
           },
-          complete: () => this.processing = false
+          complete: () => this.processing.set(false)
         });
       },
       error: (e) => {
-        this.setAlert('danger', e); this.processing = false;
+        this.setAlert('danger', e); this.processing.set(false);
       }
     });
   }
@@ -78,9 +79,9 @@ export class InviteComponent extends PoolComponent implements OnInit {
 
       },
       error: (e) => {
-        this.setAlert('danger', e); this.processing = false;
+        this.setAlert('danger', e); this.processing.set(false);
       },
-      complete: () => this.processing = false
+      complete: () => this.processing.set(false)
     });
   }
 

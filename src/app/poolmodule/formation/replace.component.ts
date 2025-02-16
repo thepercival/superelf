@@ -22,6 +22,7 @@ import { Replacement } from '../../lib/editAction/replacement';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { FormationLineReplacementsComponent } from './line/replacements.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: "app-pool-replace",
@@ -30,6 +31,7 @@ import { FormationLineReplacementsComponent } from './line/replacements.componen
     NgbAlertModule,
     PoolNavBarComponent,
     FormationLineReplacementsComponent,
+    NgIf
   ],
   templateUrl: "./replace.component.html",
   styleUrls: ["./replace.component.scss"],
@@ -87,21 +89,21 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
                   },
                   error: (e: string) => {
                     this.setAlert("danger", e);
-                    this.processing = false;
+                    this.processing.set(false);
                   },
-                  complete: () => (this.processing = false),
+                  complete: () => (this.processing.set(false)),
                 });
             }
           },
           error: (e: string) => {
             this.setAlert("danger", e);
-            this.processing = false;
+            this.processing.set(false);
           },
         });
       },
       error: (e) => {
         this.setAlert("danger", e);
-        this.processing = false;
+        this.processing.set(false);
       },
     });
   }
@@ -154,7 +156,7 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
   }
 
   remove(assembleFormation: S11Formation, replacement: Replacement) {
-    this.processing = true;
+    this.processing.set(true);
     this.formationRepository
       .removeReplacement(replacement, replacement.getPoolUser())
       .subscribe({
@@ -164,7 +166,7 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
             assembleFormation,
             replacement.getPoolUser().getTransferPeriodActionList()
           );
-          this.processing = false;
+          this.processing.set(false);
         },
         error: (e) => {
           console.log(e);

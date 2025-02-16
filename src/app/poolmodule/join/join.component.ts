@@ -9,12 +9,13 @@ import { StartSessionService } from '../../shared/commonmodule/startSessionServi
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgIf } from '@angular/common';
 
 
 @Component({
   selector: 'app-pool-join',
   standalone: true,
-  imports: [FontAwesomeModule,NgbAlertModule],
+  imports: [NgIf,FontAwesomeModule,NgbAlertModule],
   templateUrl: './join.component.html',
   styleUrls: ['./join.component.scss']
 })
@@ -38,7 +39,7 @@ export class JoinComponent extends PoolComponent implements OnInit {
       this.route.params.subscribe(params => {
         this.startSessionService.setJoinAction(params['id'], params['key']);;
       });
-      this.processing = false;
+      this.processing.set(false);
     } else {
       super.parentNgOnInit().subscribe({
         next: (pool: Pool) => {
@@ -46,7 +47,7 @@ export class JoinComponent extends PoolComponent implements OnInit {
           this.join(pool);
         },
         error: (e) => {
-          this.setAlert('danger', e); this.processing = false;
+          this.setAlert('danger', e); this.processing.set(false);
         }
       });
     }
@@ -57,7 +58,7 @@ export class JoinComponent extends PoolComponent implements OnInit {
       this.key = params['key'];
     });
     if (!this.key) {
-      this.processing = false;
+      this.processing.set(false);
       return;
     }
     this.poolRepository.join(pool, this.key).subscribe({
@@ -66,9 +67,9 @@ export class JoinComponent extends PoolComponent implements OnInit {
         this.setAlert('success', 'je bent nu ingeschreven');
       },
       error: (e) => {
-        this.setAlert('danger', e); this.processing = false;
+        this.setAlert('danger', e); this.processing.set(false);
       },
-      complete: () => this.processing = false
+      complete: () => this.processing.set(false)
     });
   }
 }

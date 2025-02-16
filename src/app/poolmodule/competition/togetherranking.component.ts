@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges, TemplateRef, input } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, TemplateRef, WritableSignal, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Formation } from 'ngx-sport';
@@ -11,11 +11,12 @@ import { ScorePointsMap } from '../../lib/score/points';
 import { PoolUsersTotalsMap } from '../../lib/totals/repository';
 import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
 import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-together-ranking',
   standalone: true,
-  imports: [SuperElfIconComponent,SuperElfBadgeIconComponent],
+  imports: [SuperElfIconComponent,SuperElfBadgeIconComponent,NgIf],
   templateUrl: './togetherranking.component.html',
   styleUrls: ['./togetherranking.component.scss']
 })
@@ -31,7 +32,7 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
   public rankingItems: RankingItem[]|undefined;
   protected bestMapForGameRound = new Map<string|number, PoolUser>();
   protected worstMapForGameRound = new Map<string|number, PoolUser>();
-  public processing = true;
+  public processing: WritableSignal<boolean> = signal(true);
 
   constructor(
     private router: Router,
@@ -40,12 +41,12 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.processing = true;
+    this.processing.set(true);
   
     this.updateRankingItems();
     // console.log('init ranking');
     this.updateGameRoundBestAndWorstMap();
-    this.processing = false;
+    this.processing.set(false);
   }
 
   ngOnChanges(changes: SimpleChanges) {

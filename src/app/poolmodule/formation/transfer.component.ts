@@ -106,23 +106,23 @@ export class FormationTransferComponent
                       poolUser.getTransferPeriodActionList()
                     );
                   }
-                  this.processing = false;
+                  this.processing.set(false);
                 },
                 error: (e) => {
                   this.setAlert("danger", e);
-                  this.processing = false;
+                  this.processing.set(false);
                 },
               });
           },
           error: (e: string) => {
             this.setAlert("danger", e);
-            this.processing = false;
+            this.processing.set(false);
           },
         });
       },
       error: (e) => {
         this.setAlert("danger", e);
-        this.processing = false;
+        this.processing.set(false);
       },
     });
   }
@@ -244,7 +244,7 @@ export class FormationTransferComponent
     transfers: Transfer[],
     linkToReplacements: boolean
   ) {
-    this.processing = true;
+    this.processing.set(true);
     const removeTransferRequests: Observable<void>[] = transfers.map(
       (transfer: Transfer): Observable<void> => {
         return this.formationRepository.removeTransfer(
@@ -264,7 +264,7 @@ export class FormationTransferComponent
           assembleFormation,
           this.poolUser.getTransferPeriodActionList()
         );
-        this.processing = false;
+        this.processing.set(false);
       },
       error: (e) => {
         console.log(e);

@@ -32,6 +32,8 @@ import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.compone
 import { GameRoundScrollerComponent } from '../gameRound/gameRoundScroller.component';
 import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.component';
 import { TogetherRankingComponent } from './togetherranking.component';
+import { NgIf } from '@angular/common';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -46,6 +48,7 @@ import { TogetherRankingComponent } from './togetherranking.component';
     GameRoundScrollerComponent,
     SuperElfBadgeIconComponent,
     TogetherRankingComponent,
+    NgIf
   ],
   templateUrl: "./competition.component.html",
   styleUrls: ["./competition.component.scss"],
@@ -62,6 +65,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   public currentGameRound: GameRound | undefined;
   public gameRounds: (GameRound | undefined)[] = [];
   public nrOfUnreadMessages = 0;
+  public faSpinner = faSpinner;
 
   constructor(
     route: ActivatedRoute,
@@ -104,7 +108,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
             );
             const competition = pool.getCompetition(this.leagueName);
             if (competition === undefined) {
-              this.processing = false;
+              this.processing.set(false);
               throw Error("competitionSport not found");
             }
 
@@ -129,13 +133,13 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
           },
           error: (e: string) => {
             this.setAlert("danger", e);
-            this.processing = false;
+            this.processing.set(false);
           },
         });
       },
       error: (e) => {
         this.setAlert("danger", e);
-        this.processing = false;
+        this.processing.set(false);
       },
     });
   }
@@ -212,7 +216,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
           },
           error: (e: string) => {
             this.setAlert("danger", e);
-            this.processing = false;
+            this.processing.set(false);
           },
         });
   }
@@ -221,7 +225,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     pool: Pool,
     viewPeriod: ViewPeriod
   ): void {
-    this.processing = true;
+    this.processing.set(true);
     this.currentViewPeriod = viewPeriod;
     this.initPoolUsersTotals(pool,viewPeriod);
     this.initCurrentGameRound(pool, viewPeriod);
@@ -237,7 +241,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   }
 
   updateGameRound(pool: Pool, gameRound: GameRound): void {
-    this.processing = true;
+    this.processing.set(true);
     this.poolTotalsRepository
       .getGameRoundPoolUsersMap(pool, gameRound)
       .subscribe({
@@ -249,11 +253,11 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
             gameRoundPoolUsersTotals
           );
           this.currentGameRoundPoolUsersTotalsMap = gameRoundPoolUsersTotals;
-          this.processing = false;
+          this.processing.set(false);
         },
         error: (e: string) => {
           this.setAlert("danger", e);
-          this.processing = false;
+          this.processing.set(false);
         },
       });
   }

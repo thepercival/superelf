@@ -14,12 +14,13 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
+import { NgIf } from '@angular/common';
 
 
 @Component({
   selector: 'app-pool-users',
   standalone: true,
-  imports: [FontAwesomeModule, NgbAlertModule,PoolNavBarComponent],
+  imports: [FontAwesomeModule, NgbAlertModule,PoolNavBarComponent,NgIf],
   templateUrl: './poolusers.component.html',
   styleUrls: ['./poolusers.component.scss']
 })
@@ -44,24 +45,28 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
       next: (pool: Pool) => {
         this.setPool(pool);
         this.poolUserRepository.getObjects(pool).subscribe({
-          next: (poolUsers: PoolUser[]) => this.poolUsers = poolUsers,
-          error: (e: string) => { this.setAlert('danger', e); this.processing = false; },
-          complete: () => this.processing = false
+          next: (poolUsers: PoolUser[]) => (this.poolUsers = poolUsers),
+          error: (e: string) => {
+            this.setAlert("danger", e);
+            this.processing.set(false);
+          },
+          complete: () => this.processing.set(false),
         });
 
         this.poolUserRepository.getObjectFromSession(pool).subscribe({
-          next: ((poolUser: PoolUser) => {
+          next: (poolUser: PoolUser) => {
             this.poolUserFromSession = poolUser;
-          }),
-          error: (e: string) => {
-            this.setAlert('danger', e); this.processing = false;
           },
-          complete: () => this.processing = false
+          error: (e: string) => {
+            this.setAlert("danger", e);
+            this.processing.set(false);
+          },
+          complete: () => this.processing.set(false),
         });
 
       },
       error: (e) => {
-        this.setAlert('danger', e); this.processing = false;
+        this.setAlert('danger', e); this.processing.set(false);
       }
     });
   }
@@ -79,12 +84,12 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
   // }
 
   // remove(poolUser: PoolUser) {
-  //   this.processing = true;
+  //   this.processing.set(true);
   //   this.poolUserRepository.removeObject(poolUser).subscribe(
   //     {
   //       next: () => this.setAlert('success', 'deelnemer ' + poolUser.getName() + 'verwijderd'),
-  //       error: (e) => { this.setAlert('danger', e); this.processing = false; },
-  //       complete: () => this.processing = false
+  //       error: (e) => { this.setAlert('danger', e); this.processing.set(false); },
+  //       complete: () => this.processing.set(false)
   //     }
   //   );
   // }

@@ -80,7 +80,7 @@ export class RegisterComponent extends AuthComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = false;
+    this.processing.set(false);
   }
 
   isLoggedIn() {
@@ -89,7 +89,7 @@ export class RegisterComponent extends AuthComponent implements OnInit {
 
   register(): boolean {
     this.registered = false;
-    this.processing = true;
+    this.processing.set(true);
     this.setAlert("info", "je wordt geregistreerd");
 
     // this.activationmessage = undefined;
@@ -106,9 +106,9 @@ export class RegisterComponent extends AuthComponent implements OnInit {
         },
         error: (e) => {
           this.setAlert("danger", "het registreren is niet gelukt: " + e);
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => (this.processing = false),
+        complete: () => (this.processing.set(false)),
       });
     return false;
   }

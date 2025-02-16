@@ -24,6 +24,7 @@ import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.c
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TeamNameComponent } from '../team/name.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -33,6 +34,7 @@ import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavB
     FontAwesomeModule,
     TeamNameComponent,
     NgbAlertModule,
+    NgIf
   ],
   selector: "app-pool-scouting-list",
   templateUrl: "./list.component.html",
@@ -88,7 +90,7 @@ export class ScoutedPlayerListComponent
               },
               error: (e: string) => {
                 this.setAlert("danger", e);
-                this.processing = false;
+                this.processing.set(false);
               },
             });
         }
@@ -99,7 +101,7 @@ export class ScoutedPlayerListComponent
       },
       error: (e: string) => {
         this.setAlert("danger", e);
-        this.processing = false;
+        this.processing.set(false);
       },
     });
   }
@@ -115,9 +117,9 @@ export class ScoutedPlayerListComponent
         },
         error: (e) => {
           this.setAlert("danger", e);
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => (this.processing = false),
+        complete: () => (this.processing.set(false)),
       });
   }
 
@@ -167,7 +169,7 @@ export class ScoutedPlayerListComponent
   }
 
   remove(scoutedPlayer: ScoutedPlayer, viewPeriod: ViewPeriod) {
-    this.processing = true;
+    this.processing.set(true);
     this.scoutedPlayerRepository
       .removeObject(scoutedPlayer, viewPeriod)
       .subscribe({
@@ -177,9 +179,9 @@ export class ScoutedPlayerListComponent
         },
         error: (e) => {
           this.setAlert("danger", e);
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => (this.processing = false),
+        complete: () => (this.processing.set(false)),
       });
   }
 
@@ -205,7 +207,7 @@ export class ScoutedPlayerListComponent
       return;
     }
 
-    this.processing = true;
+    this.processing.set(true);
     this.formationRepository
       .editPlace(firstEmptyPlace, s11Player.getPerson())
       .subscribe({
@@ -215,9 +217,9 @@ export class ScoutedPlayerListComponent
         },
         error: (e: string) => {
           this.setAlert("danger", e);
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => (this.processing = false),
+        complete: () => (this.processing.set(false)),
       });
   }
 

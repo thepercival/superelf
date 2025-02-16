@@ -6,11 +6,12 @@ import { S11Player } from '../../lib/player';
 import { ScorePointsMap } from '../../lib/score/points';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { PlayerBasicsComponent } from './basics.component';
+import { NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-modal-s11player-addremove',
     standalone: true,
-    imports: [PlayerBasicsComponent],
+    imports: [NgIf,PlayerBasicsComponent],
     templateUrl: './addremovemodal.component.html',
     styleUrls: ['./addremovemodal.component.scss']
 })

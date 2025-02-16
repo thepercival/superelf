@@ -67,9 +67,9 @@ export class ProfileComponent extends AuthComponent implements OnInit {
         },
         error: (e) => {
           this.setAlert("danger", e);
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => (this.processing = false),
+        complete: () => (this.processing.set(false)),
       });
     });
   }
@@ -78,7 +78,7 @@ export class ProfileComponent extends AuthComponent implements OnInit {
     if (!this.user) {
       return false;
     }
-    this.processing = true;
+    this.processing.set(true);
     const emailaddress = this.form.controls.emailaddress.value;
     this.userRepository
       .editObject({ id: this.user.getId(), emailaddress: emailaddress })
@@ -86,13 +86,13 @@ export class ProfileComponent extends AuthComponent implements OnInit {
         next: () => {
           this.setAlert("success", "het emailadres is opgeslagen");
           this.form.controls.emailaddress.setValue(emailaddress);
-          // this.processing = false;
+          // this.processing.set(false);
         },
         error: (e) => {
           this.setAlert("danger", "het opslaan is niet gelukt: " + e);
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => (this.processing = false),
+        complete: () => (this.processing.set(false)),
       });
     return false;
   }
@@ -101,18 +101,18 @@ export class ProfileComponent extends AuthComponent implements OnInit {
     if (!this.user) {
       return false;
     }
-    this.processing = true;
+    this.processing.set(true);
     this.userRepository.removeObject(this.user.getId()).subscribe({
       next: () => {
         this.authService.logout();
         this.router.navigate([""]);
-        // this.processing = false;
+        // this.processing.set(false);
       },
       error: (e) => {
         this.setAlert("danger", "het opslaan is niet gelukt: " + e);
-        this.processing = false;
+        this.processing.set(false);
       },
-      complete: () => (this.processing = false),
+      complete: () => (this.processing.set(false)),
     });
   }
 }

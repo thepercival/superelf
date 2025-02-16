@@ -9,11 +9,12 @@ import { LeagueName } from '../../lib/leagueName';
 import { SuperElfTrophyIconComponent } from '../../shared/poolmodule/icon/trophy.component';
 import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.component';
 import { NgParticlesModule } from 'ng-particles';
+import { NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-ngbd-modal-unviewed',
     standalone: true,
-    imports: [SuperElfTrophyIconComponent,SuperElfBadgeIconComponent,NgParticlesModule],
+    imports: [SuperElfTrophyIconComponent,SuperElfBadgeIconComponent,NgParticlesModule,NgIf],
     templateUrl: './unviewed-modal.component.html',
     styleUrls: ['./unviewed-modal.component.scss']
 })

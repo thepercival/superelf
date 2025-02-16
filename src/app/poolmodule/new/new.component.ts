@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -13,18 +13,19 @@ import { CompetitionConfig } from '../../lib/competitionConfig';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TitleComponent } from '../../shared/commonmodule/title/title.component';
+import { NgIf } from '@angular/common';
 
 
 @Component({
   selector: 'app-pool-new',
   standalone: true,
-  imports: [FontAwesomeModule,NgbAlertModule,TitleComponent],
+  imports: [NgIf,FontAwesomeModule,NgbAlertModule,TitleComponent],
   templateUrl: './new.component.html',
   styleUrls: ['./new.component.scss']
 })
 export class NewComponent implements OnInit {
   public form: UntypedFormGroup;
-  public processing = true;
+  public processing: WritableSignal<boolean> = signal(true);
   public alert: IAlert | undefined;
   public validations: any = {
     minlengthname: PoolCollection.MIN_LENGTH_NAME,
@@ -64,15 +65,15 @@ export class NewComponent implements OnInit {
         this.competitionConfig = competitionConfig;
       },
       error: (e) => {
-        this.setAlert('danger', e); this.processing = false;
+        this.setAlert('danger', e); this.processing.set(false);
       },
-      complete: () => this.processing = false
+      complete: () => this.processing.set(false)
     });
   }
 
   create(competitionConfig: CompetitionConfig): boolean {
 
-    this.processing = true;
+    this.processing.set(true);
     this.setAlert('info', 'de pool wordt aangemaakt');
 
     const name = this.form.controls.name.value;
@@ -83,7 +84,7 @@ export class NewComponent implements OnInit {
         this.router.navigate(['/pool/invite', pool.getId()]);
       },
       error: (e) => {
-        this.setAlert('danger', 'de pool kon niet worden aangemaakt: ' + e); this.processing = false;
+        this.setAlert('danger', 'de pool kon niet worden aangemaakt: ' + e); this.processing.set(false);
       }
     });
     return false;

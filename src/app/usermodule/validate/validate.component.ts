@@ -60,9 +60,9 @@ export class ValidateComponent extends AuthComponent implements OnInit {
       },
       error: (e) => {
         this.setAlert("danger", "het valideren is niet gelukt: " + e);
-        this.processing = false;
+        this.processing.set(false);
       },
-      complete: () => (this.processing = false),
+      complete: () => (this.processing.set(false)),
     });
     return false;
   }

@@ -45,7 +45,7 @@ export class PasswordresetComponent extends AuthComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = false;
+    this.processing.set(false);
   }
 
   isLoggedIn() {
@@ -53,7 +53,7 @@ export class PasswordresetComponent extends AuthComponent implements OnInit {
   }
 
   sendCode(): boolean {
-    this.processing = true;
+    this.processing.set(true);
     this.setAlert('info', 'de code wordt verstuurd');
 
     const emailaddress = this.form.controls.emailaddress.value;
@@ -66,9 +66,9 @@ export class PasswordresetComponent extends AuthComponent implements OnInit {
       },
       error: (e) => {
         this.setAlert('danger', 'het verzenden van de code is niet gelukt: ' + e);
-        this.processing = false;
+        this.processing.set(false);
       },
-      complete: () => this.processing = false
+      complete: () => this.processing.set(false)
     });
     return false;
   }

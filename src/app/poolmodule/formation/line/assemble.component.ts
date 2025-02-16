@@ -13,11 +13,12 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TeamNameComponent } from '../../team/name.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-pool-formationline-assemble',
   standalone: true,
-  imports: [LineIconComponent,FontAwesomeModule,TeamNameComponent],
+  imports: [NgIf,LineIconComponent,FontAwesomeModule,TeamNameComponent],
   templateUrl: './assemble.component.html',
   styleUrls: ['./assemble.component.scss']
 })

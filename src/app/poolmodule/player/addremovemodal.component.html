@@ -7,8 +7,8 @@
     <app-player-basics [player]="player" [points]="getTotalPoints()"></app-player-basics>
 </div>
 <div class="modal-footer d-flex justify-content-center">
-    <button*ngIf="action() === Remove" type="button" class="btn btn-danger" data-dismiss="modal"
+    <button *ngIf="action() === Remove" type="button" class="btn btn-danger" data-dismiss="modal"
         (click)="activeModal.close(s11Player())">verwijderen</button>
-    <button*ngIf="action() === Add" type="button" class="btn btn-success" data-dismiss="modal"
+    <button *ngIf="action() === Add" type="button" class="btn btn-success" data-dismiss="modal"
         (click)="activeModal.close(s11Player())">toevoegen</button>
 </div>

@@ -7,7 +7,7 @@
       </h2>
       @if(pool) {
         <div>
-          <button*ngIf="!processing && pool.getAssemblePeriod().isIn()" class="btn btn-secondary mx-2"
+          <button *ngIf="!processing && pool.getAssemblePeriod().isIn()" class="btn btn-secondary mx-2"
             routerLink="['/pool/formation/assemble', pool.getId()]">
             <fa-icon [icon]="['fas', 'users']"></fa-icon> <span class="ms-1 d-none d-sm-inline">
               mijn team</span>
@@ -19,9 +19,9 @@
       }
     </div>
     
-    @if(processing){
+    @if(processing()){
     <h2 class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
+      <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
     </h2>
     }
     @if(alert){
@@ -38,7 +38,7 @@
           <!-- <ng-template let-player="scoutedPlayer.getPlayer()"> -->
           @if(assembleFormation){
           <td class="text-end" (click)="$event.stopPropagation()">
-            <button*ngIf="showCopyToTeam(assembleFormation, scoutedPlayer.getS11Player())"
+            <button *ngIf="showCopyToTeam(assembleFormation, scoutedPlayer.getS11Player())"
               (click)="copyToTeam(assembleFormation, scoutedPlayer.getS11Player())" type="button" class="btn btn-sm btn-secondary">
               <fa-icon [icon]=" [ 'fas', 'sign-in-alt'] "></fa-icon>
               <span class="d-none d-sm-inline ms-1">plaats in team</span>

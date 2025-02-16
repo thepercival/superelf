@@ -1,14 +1,15 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, OnInit, WritableSignal, input, signal } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { Badge } from '../../lib/achievement/badge';
 import { BadgeCategory } from '../../lib/achievement/badge/category';
 import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.component';
+import { NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-ngbd-modal-userbadges',
     standalone: true,
-    imports: [SuperElfBadgeIconComponent],
+    imports: [SuperElfBadgeIconComponent,NgIf],
     templateUrl: './userbadges-modal.component.html',
     styleUrls: ['./userbadges-modal.component.scss']
 })
@@ -16,7 +17,7 @@ export class UserBadgesModalComponent implements OnInit {
     readonly userName = input.required<string>();
     readonly badges = input.required<Badge[]>();
     private badgeCategoryMap: Map<string, string[]>;
-    public processing = true;
+    public processing: WritableSignal<boolean> = signal(true);
 
     constructor(
         public modal: NgbActiveModal,
@@ -42,7 +43,7 @@ export class UserBadgesModalComponent implements OnInit {
             badgeCategoryMap.set(badge.getCategory(), seasonShortNames);
         });
         this.badgeCategoryMap = badgeCategoryMap;
-        this.processing = false;
+        this.processing.set(false);
     }
 
     getMaxLineNumbers(): number[] {

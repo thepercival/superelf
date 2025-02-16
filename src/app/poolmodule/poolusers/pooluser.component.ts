@@ -29,11 +29,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { GameRoundScrollerComponent } from '../gameRound/gameRoundScroller.component';
 import { FormationLineViewComponent } from '../formation/line/view.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: "app-pool-user",
   standalone: true,
-  imports: [NgbAlertModule,FontAwesomeModule,GameRoundScrollerComponent,FormationLineViewComponent,PoolNavBarComponent],
+  imports: [NgIf,NgbAlertModule,FontAwesomeModule,GameRoundScrollerComponent,FormationLineViewComponent,PoolNavBarComponent],
   templateUrl: "./pooluser.component.html",
   styleUrls: ["./pooluser.component.scss"],
 })
@@ -99,15 +100,15 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
               },
               error: (e: string) => {
                 this.setAlert("danger", e);
-                this.processing = false;
+                this.processing.set(false);
               },
-              complete: () => (this.processing = false),
+              complete: () => (this.processing.set(false)),
             });
         });
       },
       error: (e) => {
         this.setAlert("danger", e);
-        this.processing = false;
+        this.processing.set(false);
       },
     });
   }
@@ -134,7 +135,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       },
       error: (e) => {
         this.setAlert("danger", e);
-        this.processing = false;
+        this.processing.set(false);
       },
     });
   }
@@ -195,9 +196,9 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       },
       error: (e: string) => {
         this.setAlert("danger", e);
-        this.processing = false;
+        this.processing.set(false);
       },
-      complete: () => (this.processing = false),
+      complete: () => (this.processing.set(false)),
     });
   }
 
@@ -241,7 +242,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
         },
         error: (e) => {
           this.setAlert("danger", e);
-          this.processing = false;
+          this.processing.set(false);
         },
       });
   }

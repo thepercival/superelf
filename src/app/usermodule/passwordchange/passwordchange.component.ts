@@ -66,7 +66,7 @@ export class PasswordchangeComponent extends AuthComponent implements OnInit {
       const emailaddress = params.get('emailaddress');
       this.emailaddress = emailaddress !== null ? emailaddress : undefined;
     });
-    this.processing = false;
+    this.processing.set(false);
   }
 
   isLoggedIn() {
@@ -74,7 +74,7 @@ export class PasswordchangeComponent extends AuthComponent implements OnInit {
   }
 
   changePassword(): boolean {
-    this.processing = true;
+    this.processing.set(true);
     this.setAlert('info', 'het wachtwoord wordt gewijzigd');
 
     const code = this.form.controls.code.value;
@@ -91,9 +91,9 @@ export class PasswordchangeComponent extends AuthComponent implements OnInit {
       },
       error: (e) => {
         this.setAlert('danger', 'het wijzigen van het wachtwoord is niet gelukt: ' + e);
-        this.processing = false;
+        this.processing.set(false);
       },
-      complete: () => this.processing = false
+      complete: () => this.processing.set(false)
     });
     return false;
   }

@@ -11,10 +11,11 @@ import { Role } from '../../../lib/role';
 import { CompetitionsNavBarItem } from './items';
 import { SuperElfIconComponent } from '../icon/icon.component';
 import { SuperElfTrophyIconComponent } from '../icon/trophy.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   standalone: true,
-  imports: [SuperElfTrophyIconComponent],
+  imports: [NgIf, SuperElfTrophyIconComponent],
   selector: 'app-competitions-navbar',
   templateUrl: './competitionsNavBar.component.html',
   styleUrls: ['./competitionsNavBar.component.scss']

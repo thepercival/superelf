@@ -12,7 +12,7 @@
                     class="btn btn-outline-dark me-3 position-relative">
                     <fa-icon [icon]="['fas', 'message']"></fa-icon>
                     <span class="ms-1"> chat</span>
-                    <span*ngIf="nrOfUnreadMessages > 0"
+                    <span *ngIf="nrOfUnreadMessages > 0"
                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         {{nrOfUnreadMessages}}
                         <span class="visually-hidden">ongelezen berichten</span>
@@ -22,8 +22,8 @@
             </div>
         </div>
 
-        <h2*ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
+        <h2 *ngIf="processing" class="text-center">
+            <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
         </h2>
 
         @if(!processing && pool && currentViewPeriod && poolPoule){
@@ -41,8 +41,8 @@
                 </app-gameround-scroller>
             </div>
 
-            <h2*ngIf="processingGameRound" class="text-center">
-                <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
+            <h2 *ngIf="processingGameRound" class="text-center">
+                <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
             </h2>            
             @if(!processing && homeCompetitor && awayCompetitor && currentGameRound){
             <table class="table">
@@ -95,7 +95,7 @@
                                 </ng-container>
                             </td>
 
-                            <ng-container*ngIf="sourceGame.getState() === Finished;else notFinished">
+                            <ng-container *ngIf="sourceGame.getState() === Finished;else notFinished">
                                 <td class="text-end">
                                     <ng-container ngTemplateOutlet="contentForamtionPlaceScore"
                                         ngTemplateOutletContext="{formationPlace: formationPlacesLine.home, sourceGame}">
@@ -112,10 +112,10 @@
                             </ng-container>
                             <ng-template #notFinished>
                                 <td colspan="3" (click)="navigateToSourceGame(pool,sourceGame)" class="text-center sourceGame underline">
-                                    <span*ngIf="getAgainstSide(sourceGame, team) === HomeSide">
+                                    <span *ngIf="getAgainstSide(sourceGame, team) === HomeSide">
                                         {{dateFormatter.toString(sourceGame.getStartDateTime(),dateFormatter.time())}}
                                     </span>
-                                    <span*ngIf="getAgainstSide(sourceGame, team) === AwaySide">
+                                    <span *ngIf="getAgainstSide(sourceGame, team) === AwaySide">
                                         {{dateFormatter.toString(sourceGame.getStartDateTime(),dateFormatter.date())}}
                                     </span>
                                 </td>
@@ -133,7 +133,7 @@
                         <tr (click)="navigateToSourceGame(pool,sourceGame)"> 
                             <td></td>
                             <td colspan="3" class="text-center sourceGame underline">
-                                <span*ngIf="!isToday(sourceGame.getStartDateTime())">                                    
+                                <span *ngIf="!isToday(sourceGame.getStartDateTime())">                                    
                                 </span>
                                 <span class="ms-1">
                                     
@@ -167,7 +167,7 @@
 
             <!-- Start      PlayerName, Team And Line -->
             <ng-template #contentForamtionPlace let-formationPlace="formationPlace" let-away="away">
-                <ng-container*ngIf="formationPlace">
+                <ng-container *ngIf="formationPlace">
                     <div class="d-flex align-items-start" ngClass="{'flex-row-reverse': away}">
 
                         <app-lineicon *ngIf="formationPlace.getPlayer()" [line]="formationPlace.getPlayer().getLine()">
@@ -175,18 +175,17 @@
                         <ng-container ngTemplateOutlet="contentPlayer"
                             ngTemplateOutletContext="{s11Player:formationPlace.getPlayer()}">
                         </ng-container>
-                        <span*ngIf="formationPlace.isSubstitute()" class="badge badge-reserve">r</span>
+                        <span *ngIf="formationPlace.isSubstitute()" class="badge badge-reserve">r</span>
                     </div>
                 </ng-container>
             </ng-template> <!-- End      PlayerName, Team And Line -->
 
             <!-- Start      PlayerScore -->
             <ng-template #contentForamtionPlaceScore let-formationPlace="formationPlace" let-sourceGame="sourceGame" let-gameRound="gameRound">
-                <ng-container*ngIf="formationPlace">
+                <ng-container *ngIf="formationPlace">
 
                     @if(!formationPlace.isSubstitute()){
-
-                        <ng-container*ngIf="sourceGame.getState() === Finished" ngTemplateOutlet="lineupScore"
+                        <ng-container *ngIf="sourceGame.getState() === Finished" ngTemplateOutlet="lineupScore"
                             ngTemplateOutletContext="{formationPlace, sourceGame, gameRound: gameRound}">
                         </ng-container>
                     } @else {
@@ -235,7 +234,7 @@
 }
 
 <ng-template #lineupScore let-formationPlace="formationPlace" let-sourceGame="sourceGame" let-gameRound="gameRound">
-    <ng-container*ngIf="statisticsGetter.hasAppeared(formationPlace,currentGameRound);else startingNotAppeared">
+    <ng-container *ngIf="statisticsGetter.hasAppeared(formationPlace,currentGameRound);else startingNotAppeared">
         <span class="badge bg-points">
             <a routerLink="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
                 @if(gameRound){

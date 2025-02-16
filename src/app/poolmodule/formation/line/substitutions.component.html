@@ -19,27 +19,27 @@
   </div>
 </div>
 <ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentTeam="currentTeam">
-  <tr*ngIf="processing()">
+  <tr *ngIf="processing()">
     <td colspan=3 class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
     </td>
   </tr>
-  <tr*ngIf="!processing()" (click)="substituteAction(place)" ngClass="{'pointer': s11Player}">
+  <tr *ngIf="!processing()" (click)="substituteAction(place)" ngClass="{'pointer': s11Player}">
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
-      <span*ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
-      <button*ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="substitute.emit(place)">
+      <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
+      <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="substitute.emit(place)">
         kies een {{place.isSubstitute() ? 'wissel' : 'speler'}}
       </button>
-      <span*ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
+      <span *ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
     </td>
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
     </td>
     <td class="text-end" class="{{getSubstituteClass(place.isSubstitute())}}">
-      <button*ngIf="!hasLineSubstitution(place.getLine()) && !place.isSubstitute()" type="button" class="btn btn-primary btn-sm">
+      <button *ngIf="!hasLineSubstitution(place.getLine()) && !place.isSubstitute()" type="button" class="btn btn-primary btn-sm">
         <fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon>
       </button>      
-      <button*ngIf="hasLineSubstitution(place.getLine()) && place.isSubstitute()" type="button" class="btn btn-primary btn-sm">
+      <button *ngIf="hasLineSubstitution(place.getLine()) && place.isSubstitute()" type="button" class="btn btn-primary btn-sm">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
       </button>
     </td>    

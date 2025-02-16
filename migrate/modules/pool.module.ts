@@ -28,7 +28,7 @@ import {
 
 import { CommonSharedModule } from '../../src/app/shared/commonmodule/common.module';
 import { PreNewComponent } from '../../src/app/poolmodule/prenew/prenew.component';
-import { RoutingModule } from '../../src/app/poolmodule/pool-routing.module';
+import { RoutingModule } from '../../src/app/poolmodule/pool.routes';
 import { PoolSharedModule } from '../shared/poolmodule/pool.module';
 import { NewComponent } from '../../src/app/poolmodule/new/new.component';
 import { RulesComponent } from '../../src/app/poolmodule/rules/rules.component';

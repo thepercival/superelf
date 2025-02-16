@@ -4,7 +4,7 @@
       <tr class="pointer"
           (click)="linkToPoolUser(rankingItem.poolUser, gameRound())">
 
-          <ng-container*ngIf="!hasAchievement(rankingItem);else worldcupQualify">
+          <ng-container *ngIf="!hasAchievement(rankingItem);else worldcupQualify">
               <td class="rankingnr text-end ps-0"><!-- badge text-black -->
                   <span class="">{{rankingItem.rank}}</span>
               </td>
@@ -20,7 +20,7 @@
               <!-- <app-superelf-icon *ngIf="rankingItem.poolUser.getUser().getName() === 'storm'" 
               class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon> -->
           </td>
-          <td*ngIf="gameRound()" class="text-end ps-0 pointer">
+          <td *ngIf="gameRound()" class="text-end ps-0 pointer">
               <span class="badge {{getPointsBadgeClass(rankingItem)}}">
                   {{getGameRoundPoints(rankingItem.poolUser)}}</span>
           </td>

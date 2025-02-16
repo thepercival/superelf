@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import { Location, NgIf } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { concatMap } from 'rxjs/operators';
@@ -36,6 +36,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FontAwesomeModule,
     NgbAlertModule,
     S11PlayerChooseComponent,
+    NgIf
   ],
   templateUrl: "./replace.component.html",
   styleUrls: ["./replace.component.scss"],
@@ -107,11 +108,11 @@ export class FormationPlaceReplaceComponent
                     next: (assembleFormation: S11Formation) => {
                       this.assembleFormation = assembleFormation;
                       this.initPlace(assembleFormation, +params.placeId);
-                      this.processing = false;
+                      this.processing.set(false);
                     },
                     error: (e) => {
                       this.setAlert("danger", e);
-                      this.processing = false;
+                      this.processing.set(false);
                     },
                   });
               }
@@ -119,7 +120,7 @@ export class FormationPlaceReplaceComponent
           },
           error: (e) => {
             this.setAlert("danger", e);
-            this.processing = false;
+            this.processing.set(false);
           },
         });
     });
@@ -206,7 +207,7 @@ export class FormationPlaceReplaceComponent
     if (playerOut === undefined) {
       throw new Error("player out can not be empty");
     }
-    this.processing = true;
+    this.processing.set(true);
     const jsonReplacement: JsonReplacement = {
       id: 0,
       lineNumberOut: this.place.getLine(),
@@ -240,9 +241,9 @@ export class FormationPlaceReplaceComponent
       },
       error: (e: string) => {
         this.setAlert("danger", e);
-        this.processing = false;
+        this.processing.set(false);
       },
-      complete: () => (this.processing = false),
+      complete: () => (this.processing.set(false)),
     });
   }
 

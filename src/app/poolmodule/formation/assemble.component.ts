@@ -22,6 +22,7 @@ import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormationLineAssembleComponent } from './line/assemble.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: "app-pool-assemble",
@@ -31,6 +32,7 @@ import { FormationLineAssembleComponent } from './line/assemble.component';
     NgbAlertModule,
     FontAwesomeModule,
     FormationLineAssembleComponent,
+    NgIf
   ],
   templateUrl: "./assemble.component.html",
   styleUrls: ["./assemble.component.scss"],
@@ -77,25 +79,25 @@ export class FormationAssembleComponent
                   (this.assembleFormation = formation),
                 error: (e: string) => {
                   this.setAlert("danger", e);
-                  this.processing = false;
+                  this.processing.set(false);
                   this.router.navigate([
                     "/pool/formation/choose",
                     pool.getId(),
                   ]);
                 },
-                complete: () => (this.processing = false),
+                complete: () => (this.processing.set(false)),
               });
           },
           error: (e: string) => {
             this.setAlert("danger", e);
-            this.processing = false;
+            this.processing.set(false);
           },
-          complete: () => (this.processing = false),
+          complete: () => (this.processing.set(false)),
         });
       },
       error: (e) => {
         this.setAlert("danger", e);
-        this.processing = false;
+        this.processing.set(false);
       },
     });
   }

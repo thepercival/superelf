@@ -12,7 +12,7 @@ import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
 import { FootballLine, Person, Team, TeamCompetitor } from 'ngx-sport';
 import { HttpParams } from '@angular/common/http';
-import { Location } from '@angular/common';
+import { Location, NgIf } from '@angular/common';
 import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addremovemodal.component';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { ChoosePlayersFilter, S11PlayerChooseComponent } from '../player/choose.component';
@@ -28,6 +28,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   selector: "app-pool-scouted-player-add",
   standalone: true,
   imports: [
+    NgIf,
     PoolNavBarComponent,
     NgbAlert,
     FontAwesomeModule,
@@ -122,13 +123,13 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
           scoutedPlayers.forEach((scoutedPlayer) =>
             this.addToScoutingList(scoutedPlayer)
           );
-          this.processing = false;
+          this.processing.set(false);
         },
         error: (e) => {
           this.setAlert("danger", e);
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => (this.processing = false),
+        complete: () => (this.processing.set(false)),
       });
   }
 
@@ -164,7 +165,7 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
     if (!this.pool) {
       return;
     }
-    this.processing = true;
+    this.processing.set(true);
     this.scoutedPlayerRepository
       .createObject(
         s11Player,
@@ -177,9 +178,9 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
         },
         error: (e) => {
           this.setAlert("danger", e);
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => (this.processing = false),
+        complete: () => (this.processing.set(false)),
       });
   }
 

@@ -6,9 +6,12 @@ import { ScorePointsMap } from '../../lib/score/points';
 import { Totals } from '../../lib/totals';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { S11PlayerStatisticsComponent } from './base.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-s11player-viewperiod-statistics',
+  standalone: true,
+  imports: [NgIf],
   templateUrl: './viewperiod.component.html',
   styleUrls: ['./viewperiod.component.scss']
 })
@@ -62,6 +65,6 @@ export class S11PlayerViewPeriodStatisticsComponent extends S11PlayerStatisticsC
 
   ngOnInit() {
     
-    this.processing = false;
+    this.processing.set(false);
   }
 }

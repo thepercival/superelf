@@ -73,22 +73,22 @@ export class FormationActionOverviewComponent
                     },
                     error: (e: string) => {
                       this.setAlert("danger", e);
-                      this.processing = false;
+                      this.processing.set(false);
                     },
-                    complete: () => (this.processing = false),
+                    complete: () => (this.processing.set(false)),
                   });
               },
               error: (e: string) => {
                 this.setAlert("danger", e);
-                this.processing = false;
+                this.processing.set(false);
               },
-              complete: () => (this.processing = false),
+              complete: () => (this.processing.set(false)),
             });
         });
       },
       error: (e) => {
         this.setAlert("danger", e);
-        this.processing = false;
+        this.processing.set(false);
       },
     });
   }

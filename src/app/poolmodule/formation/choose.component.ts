@@ -16,11 +16,12 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TitleComponent } from '../../shared/commonmodule/title/title.component';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-pool-chooseformation',
   standalone: true,
-  imports: [NgbAlertModule,FontAwesomeModule,TitleComponent,LineIconComponent],
+  imports: [NgbAlertModule,FontAwesomeModule,TitleComponent,LineIconComponent,NgIf],
   templateUrl: './choose.component.html',
   styleUrls: ['./choose.component.scss']
 })
@@ -61,24 +62,24 @@ export class FormationChooseComponent extends PoolComponent implements OnInit {
                 this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
                   next: (assembleFormation: S11Formation) => {
                     this.currentFormation = assembleFormation.getEqualFormation(this.formations);
-                    this.processing = false;
+                    this.processing.set(false);
                   },
                   error: (e) => {
-                    this.setAlert('danger', e); this.processing = false;
+                    this.setAlert('danger', e); this.processing.set(false);
                   }
                 });
               } else {
-                this.processing = false;
+                this.processing.set(false);
               }
             },
             error: (e) => {
-              this.setAlert('danger', e); this.processing = false;
+              this.setAlert('danger', e); this.processing.set(false);
             },
-            complete: () => this.processing = false
+            complete: () => this.processing.set(false)
           });
         },
         error: (e) => {
-          this.setAlert('danger', e); this.processing = false;
+          this.setAlert('danger', e); this.processing.set(false);
         }
       });
   }
@@ -90,9 +91,9 @@ export class FormationChooseComponent extends PoolComponent implements OnInit {
           this.router.navigate(['/pool/formation/assemble', pool.getId()]);
         },
         error: (e) => {
-          this.processing = false; this.setAlert('danger', e);
+          this.processing.set(false); this.setAlert('danger', e);
         },
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       });
   }
 }

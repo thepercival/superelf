@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, WritableSignal, input, model, signal } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 import { Competition, FootballLine, NameService, Person, PersonMap, Player, Team, TeamMap } from 'ngx-sport';
@@ -14,11 +14,12 @@ import { CompetitionConfig } from '../../lib/competitionConfig';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { TeamNameComponent } from '../team/name.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: "app-pool-player-choose",
   standalone: true,
-  imports: [FontAwesomeModule,LineIconComponent,TeamNameComponent],
+  imports: [FontAwesomeModule,LineIconComponent,TeamNameComponent,NgIf],
   templateUrl: "./choose.component.html",
   styleUrls: ["./choose.component.scss"],
 })
@@ -41,7 +42,7 @@ export class S11PlayerChooseComponent implements OnInit {
   choosePersonItems: ChoosePersonItem[] = [];
   nameService = new NameService();
   public alert: IAlert | undefined;
-  public processing = true;
+  public processing: WritableSignal<boolean> = signal(true);
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   private alreadyChosenPersonsMap!: PersonMap;
   private alreadyChosenTeamsMap!: TeamMap;
@@ -113,9 +114,9 @@ export class S11PlayerChooseComponent implements OnInit {
         },
         error: (e) => {
           this.setAlert("danger", e);
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => (this.processing = false),
+        complete: () => (this.processing.set(false)),
       });
   }
 

@@ -5,7 +5,7 @@
     </button>
 </div>
 
-<div*ngIf="current" class="modal-body">    
+<div *ngIf="current" class="modal-body">    
 
     <ng-particles
         [id]="tsparticlesId"
@@ -35,7 +35,7 @@
 </div>
 <div class="modal-footer d-flex justify-content-around border-top-0">
     <button type="button" class="btn btn-secondary" [attr.disabled]="previousAchievements.length === 0 ? true : null" (click)="previous()">vorige</button>
-    <button*ngIf="nextAchievements.length > 0" type="button" class="btn btn-secondary" (click)="next()">volgende</button>
-    <button*ngIf="nextAchievements.length === 0" type="button" class="btn btn-secondary" (click)="modal.dismiss('close')">sluiten</button>
+    <button *ngIf="nextAchievements.length > 0" type="button" class="btn btn-secondary" (click)="next()">volgende</button>
+    <button *ngIf="nextAchievements.length === 0" type="button" class="btn btn-secondary" (click)="modal.dismiss('close')">sluiten</button>
 </div>
 

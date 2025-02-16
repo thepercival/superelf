@@ -1,9 +1,10 @@
+import { signal, WritableSignal } from '@angular/core';
 import { ImageRepository } from '../../lib/image/repository';
 
 import { CSSService } from '../../shared/commonmodule/cssservice';
 
 export class S11PlayerStatisticsComponent {
-    public processing = true;
+    public processing: WritableSignal<boolean> = signal(true);
     public sheetActive!: boolean;
     public categoryPoints: CategoryPoints | undefined;
 

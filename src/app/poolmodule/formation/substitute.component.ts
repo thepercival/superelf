@@ -26,11 +26,17 @@ import { JsonSubstitution } from '../../lib/editAction/substitution/json';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { FormationLineSubstitutionsComponent } from './line/substitutions.component';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-substitute",
   standalone: true,
-  imports: [FontAwesomeModule,NgbAlertModule,PoolNavBarComponent,FormationLineSubstitutionsComponent],
+  imports: [
+    FontAwesomeModule,
+    NgbAlertModule,
+    PoolNavBarComponent,
+    FormationLineSubstitutionsComponent,
+  ],
   templateUrl: "./substitute.component.html",
   styleUrls: ["./substitute.component.scss"],
 })
@@ -48,6 +54,7 @@ export class FormationSubstituteComponent
   public assembleFormation: S11Formation | undefined;
   public calcFormation: S11Formation | undefined;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
+  public faInfoCircle = faInfoCircle;
 
   constructor(
     route: ActivatedRoute,
@@ -69,9 +76,7 @@ export class FormationSubstituteComponent
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
-        this.transferPeriod = pool
-          .getCompetitionConfig()
-          .getTransferPeriod();
+        this.transferPeriod = pool.getCompetitionConfig().getTransferPeriod();
         this.poolUserRepository.getObjectFromSession(pool).subscribe({
           next: (poolUser: PoolUser) => {
             this.poolUser = poolUser;
@@ -97,20 +102,20 @@ export class FormationSubstituteComponent
                 },
                 error: (e) => {
                   this.setAlert("danger", e);
-                  this.processing = false;
+                  this.processing.set(false);
                 },
               });
           },
           error: (e: string) => {
             this.setAlert("danger", e);
-            this.processing = false;
+            this.processing.set(false);
           },
-          complete: () => (this.processing = false),
+          complete: () => this.processing.set(false),
         });
       },
       error: (e) => {
         this.setAlert("danger", e);
-        this.processing = false;
+        this.processing.set(false);
       },
     });
   }
@@ -164,14 +169,14 @@ export class FormationSubstituteComponent
   }
 
   openRemoveModal(
-    pool: Pool, 
+    pool: Pool,
     assembleFormation: S11Formation,
     modalContent: TemplateRef<any>
   ) {
     const modalRef = this.modalService.open(modalContent);
     modalRef.result.then((poolUser: PoolUser) => {
       this.remove(
-        pool, 
+        pool,
         assembleFormation,
         poolUser.getTransferPeriodActionList().substitutions,
         true
@@ -180,7 +185,7 @@ export class FormationSubstituteComponent
   }
 
   substitute(assembleFormation: S11Formation, placeOut: S11FormationPlace) {
-    this.processing = true;
+    this.processing.set(true);
     const jsonSubstitution: JsonSubstitution = {
       id: 0,
       lineNumberOut: placeOut.getLine(),
@@ -196,13 +201,13 @@ export class FormationSubstituteComponent
             assembleFormation,
             this.poolUser.getTransferPeriodActionList()
           );
-          this.processing = false;
+          this.processing.set(false);
         },
         error: (e: string) => {
           this.setAlert("danger", e);
-          this.processing = false;
+          this.processing.set(false);
         },
-        complete: () => (this.processing = false),
+        complete: () => this.processing.set(false),
       });
   }
 
@@ -212,7 +217,7 @@ export class FormationSubstituteComponent
     substitutions: Substitution[],
     linkToTransfers: boolean
   ) {
-    this.processing = true;
+    this.processing.set(true);
     const removeSubstitutionRequests: Observable<void>[] = substitutions.map(
       (substitution: Substitution): Observable<void> => {
         return this.formationRepository.removeSubstitution(
@@ -232,7 +237,7 @@ export class FormationSubstituteComponent
           assembleFormation,
           this.poolUser.getTransferPeriodActionList()
         );
-        this.processing = false;
+        this.processing.set(false);
       },
       error: (e) => {
         console.log(e);

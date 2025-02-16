@@ -36,12 +36,13 @@ import { TeamNameComponent } from '../team/name.component';
 import { PoolCompetitionsNavBarComponent } from '../../shared/poolmodule/competitionsNavBar/competitionsNavBar.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: "app-pool-againstgames",
   standalone: true,
   imports: [SuperElfIconComponent,FontAwesomeModule,PouleTitleComponent,GameRoundScrollerComponent,
-    TeamNameComponent,PoolCompetitionsNavBarComponent,PoolNavBarComponent,LineIconComponent
+    TeamNameComponent,PoolCompetitionsNavBarComponent,PoolNavBarComponent,LineIconComponent, NgIf
   ],
   templateUrl: "./againstgames.component.html",
   styleUrls: ["./againstgames.component.scss"],
@@ -67,7 +68,6 @@ export class PoolPouleAgainstGamesComponent
   // public homeGameRoundStatistics: StatisticsMap|undefined;
   // public awayGameRoundStatistics: StatisticsMap|undefined;
 
-  public processing = true;
   public processingPoolUsers = true;
   public processingGameRound = true;
   public poolCompetitors: PoolCompetitor[] = [];
@@ -108,7 +108,7 @@ export class PoolPouleAgainstGamesComponent
 
         const poolCompetition = pool.getCompetition(this.leagueName);
         if (poolCompetition === undefined) {
-          this.processing = false;
+          this.processing.set(false);
           throw Error("competitionSport not found");
         }
         const user = this.authService.getUser();
@@ -231,7 +231,7 @@ export class PoolPouleAgainstGamesComponent
                           }
                           this.setGameRoundAndGetStatistics(pool,gameRound);
                         }
-                        this.processing = false;
+                        this.processing.set(false);
                       },
                     });
                   },
@@ -255,7 +255,7 @@ export class PoolPouleAgainstGamesComponent
           },
           error: (e: string) => {
             this.setAlert("danger", e);
-            this.processing = false;
+            this.processing.set(false);
           },
         });
       });

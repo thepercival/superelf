@@ -69,7 +69,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
         this.setAlert("info", param.message);
       }
     });
-    this.processing = false;
+    this.processing.set(false);
   }
 
   protected setAlert(type: string, message: string) {
@@ -81,7 +81,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
   }
 
   login(): boolean {
-    this.processing = true;
+    this.processing.set(true);
     this.setAlert("info", "je wordt ingelogd");
 
     const emailaddress = this.form.controls.emailaddress.value;
@@ -93,9 +93,9 @@ export class LoginComponent extends AuthComponent implements OnInit {
       },
       error: (e) => {
         this.setAlert("danger", e);
-        this.processing = false;
+        this.processing.set(false);
       },
-      complete: () => (this.processing = false),
+      complete: () => (this.processing.set(false)),
     });
     return false;
   }

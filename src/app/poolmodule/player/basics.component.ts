@@ -4,11 +4,12 @@ import { ImageRepository } from '../../lib/image/repository';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { TeamNameComponent } from '../team/name.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-player-basics',
   standalone: true,
-  imports: [LineIconComponent,TeamNameComponent,FontAwesomeModule],
+  imports: [NgIf,LineIconComponent,TeamNameComponent,FontAwesomeModule],
   templateUrl: './basics.component.html',
   styleUrls: ['./basics.component.scss']
 })

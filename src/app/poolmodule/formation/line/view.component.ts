@@ -14,11 +14,12 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TeamNameComponent } from '../../team/name.component';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: '[app-pool-formationline-view]',
   standalone: true,
-  imports: [FontAwesomeModule,TeamNameComponent, LineIconComponent],
+  imports: [FontAwesomeModule,TeamNameComponent, LineIconComponent,NgIf],
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss']
 })

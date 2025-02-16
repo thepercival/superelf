@@ -19,24 +19,24 @@
   </div>
 </div>
 <ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentTeam="currentTeam">
-  <tr*ngIf="processing()">
+  <tr *ngIf="processing()">
     <td colspan=3 class="text-center">
       <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
     </td>
   </tr>
-  <tr*ngIf="!processing()" (click)="replaceAction(place, currentTeam)" ngClass="{'pointer': !currentTeam || getReplacement(place)}">
+  <tr *ngIf="!processing()" (click)="replaceAction(place, currentTeam)" ngClass="{'pointer': !currentTeam || getReplacement(place)}">
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
-      <span*ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>      
-      <span*ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
+      <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>      
+      <span *ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
     </td>
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
     </td>
     <td class="text-end" class="{{getSubstituteClass(place.isSubstitute())}}">
-      <button*ngIf="!currentTeam" type="button" class="btn btn-primary btn-sm">
+      <button *ngIf="!currentTeam" type="button" class="btn btn-primary btn-sm">
         <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
       </button>
-      <button*ngIf="currentTeam && getReplacement(place)" type="button" class="btn btn-primary btn-sm">
+      <button *ngIf="currentTeam && getReplacement(place)" type="button" class="btn btn-primary btn-sm">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
       </button>
     </td>

@@ -4,7 +4,7 @@ import { IconName } from '@fortawesome/fontawesome-svg-core';
 
 import { MyNavigation } from '../../commonmodule/navigation';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {*ngIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 
 @Component({
   standalone: true,

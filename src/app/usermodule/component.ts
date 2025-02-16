@@ -2,10 +2,11 @@ import { IAlert } from '../shared/commonmodule/alert';
 import { AuthService } from '../lib/auth/auth.service';
 import { GlobalEventsManager } from '../shared/commonmodule/eventmanager';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { signal, WritableSignal } from '@angular/core';
 
 export class AuthComponent {
   public alert: IAlert | undefined;
-  public processing = true;
+  public processing: WritableSignal<boolean> = signal(true);
   public faSpinner = faSpinner;
 
   constructor(
