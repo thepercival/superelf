@@ -1,40 +1,31 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
 import { IAlert } from '../shared/commonmodule/alert';
-import { PoolShell, PoolShellFilter, PoolShellRepository } from '../lib/pool/shell/repository';
+import { PoolShell, PoolShellRepository } from '../lib/pool/shell/repository';
 import { Role } from '../lib/role';
-import { PoolRepository } from '../lib/pool/repository';
 import { GlobalEventsManager } from '../shared/commonmodule/eventmanager';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faPlusCircle, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
-  selector: 'app-home',
+  selector: "app-home",
   standalone: true,
-  imports: [FontAwesomeModule],
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  imports: [FontAwesomeModule, NgbAlertModule],
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
   public processingMyShells = true;
   public canCreateAndJoin = false;
   public canAssemble = false;
-  myShells: PoolShell[] = [];
-
-  // static readonly FUTURE: number = 1;
-  // static readonly PAST: number = 2;
-
-  // shellsWithRoleFromX: PoolShell[] = [];
-  // shellsWithRoleX = 5;
-  // // linethroughDate: Date;
-  // showingAllWithRole = false;
-  // publicShells: PoolShell[] = [];
-  // showingFuture = false;
-  alert: IAlert | undefined;
-  // processingWithRole = true;
-  // publicProcessing = true;
-  // private nrOfSeasonsBack: number = 3;
+  public myShells: PoolShell[] = [];
+  public alert: IAlert | undefined;
+  public faSpinner = faSpinner;
+  public faPlusCircle = faPlusCircle;
 
   constructor(
     private route: ActivatedRoute,
@@ -48,9 +39,9 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       if (params.type !== undefined && params.message !== undefined) {
-        this.alert = { type: params['type'], message: params['message'] };
+        this.alert = { type: params["type"], message: params["message"] };
       }
     });
     this.ngOnInitMyShells();
@@ -62,48 +53,53 @@ export class HomeComponent implements OnInit {
     //   return;
     // }
 
-    this.poolShellRepos.canCreateAndJoinPool()
-      .subscribe(
-        {
-          next: (poolActions: number) => {
-            this.canCreateAndJoin = (poolActions & PoolActions.CreateAndJoin) === PoolActions.CreateAndJoin;
-            this.canAssemble = (poolActions & PoolActions.Assemble) === PoolActions.Assemble;
-            if (!this.authService.isLoggedIn()) {
-              this.processingMyShells = false;
-              return;
-            }
-
-            const filter = { roles: Role.COMPETITOR + Role.ADMIN };
-            this.poolShellRepos.getObjects(filter)
-              .subscribe({
-                next: (shells: PoolShell[]) => {
-                  this.myShells = this.sortShellsByDateDesc(
-                    shells.filter(shell => shell.seasonName > '2021'));
-                },
-                error: (e) => {
-                  this.setAlert('danger', e); this.processingMyShells = false;
-                },
-                complete: () => this.processingMyShells = false
-              });
-          },
-          error: (e) => {
-            this.setAlert('danger', e); this.processingMyShells = false;
-          }
+    this.poolShellRepos.canCreateAndJoinPool().subscribe({
+      next: (poolActions: number) => {
+        this.canCreateAndJoin =
+          (poolActions & PoolActions.CreateAndJoin) ===
+          PoolActions.CreateAndJoin;
+        this.canAssemble =
+          (poolActions & PoolActions.Assemble) === PoolActions.Assemble;
+        if (!this.authService.isLoggedIn()) {
+          this.processingMyShells = false;
+          return;
         }
 
-
-      );
+        const filter = { roles: Role.COMPETITOR + Role.ADMIN };
+        this.poolShellRepos
+          .getObjects(this.authService.getUser(), filter)
+          .subscribe({
+            next: (shells: PoolShell[]) => {
+              this.myShells = this.sortShellsByDateDesc(
+                shells.filter((shell) => shell.seasonName > "2021")
+              );
+            },
+            error: (e) => {
+              this.setAlert("danger", e);
+              this.processingMyShells = false;
+            },
+            complete: () => {
+              this.processingMyShells = false;
+            },
+          });
+      },
+      error: (e) => {
+        this.setAlert("danger", e);
+        this.processingMyShells = false;
+      },
+    });
   }
 
   protected sortShellsByDateDesc(shells: PoolShell[]): PoolShell[] {
     shells.sort((ts1, ts2) => {
-      return (ts1.seasonName < ts2.seasonName ? 1 : -1);
+      return ts1.seasonName < ts2.seasonName ? 1 : -1;
     });
     return shells;
   }
 
   protected setAlert(type: string, message: string) {
-    this.alert = { 'type': type, 'message': message };
+    this.alert = { type: type, message: message };
+    console.log(this.alert);
   }
 
   // isLoggedIn() {
@@ -112,30 +108,29 @@ export class HomeComponent implements OnInit {
 
   linkToNew() {
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/pool/new']);
+      this.router.navigate(["/pool/new"]);
     } else {
-      this.router.navigate(['/pool/prenew']);
+      this.router.navigate(["/pool/prenew"]);
     }
   }
 
   linkToPool(shell: PoolShell) {
-    const year = (new Date()).getFullYear();
-    const shellYear = shell.seasonName.substring(0,4);
-    if (year == +shellYear ) {
+    const year = new Date().getFullYear();
+    const shellYear = shell.seasonName.substring(0, 4);
+    if (year == +shellYear) {
       // console.log(this.canAssemble);
       // console.log(this.canCreateAndJoin);
-      if (this.canAssemble ) {
-        this.router.navigate(['/pool/formation/assemble', shell.poolId]);
+      if (this.canAssemble) {
+        this.router.navigate(["/pool/formation/assemble", shell.poolId]);
         return;
-      } else if (this.canCreateAndJoin ) {
-        this.router.navigate(['/pool/users', shell.poolId]);
+      } else if (this.canCreateAndJoin) {
+        this.router.navigate(["/pool/users", shell.poolId]);
         return;
       }
     } // else {
-      this.router.navigate(['/pool', shell.poolId]);
+    this.router.navigate(["/pool", shell.poolId]);
     // }
   }
-
 }
 
 export enum PoolActions {

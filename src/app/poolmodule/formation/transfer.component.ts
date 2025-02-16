@@ -26,11 +26,17 @@ import { S11FormationLine } from '../../lib/formation/line';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormationLineTransfersComponent } from './line/transfers.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-transfer",
   standalone: true,
-  imports: [FontAwesomeModule,NgbAlertModule,FormationLineTransfersComponent,PoolNavBarComponent],
+  imports: [
+    FontAwesomeModule,
+    NgbAlertModule,
+    FormationLineTransfersComponent,
+    PoolNavBarComponent,
+  ],
   templateUrl: "./transfer.component.html",
   styleUrls: ["./transfer.component.scss"],
 })
@@ -50,6 +56,7 @@ export class FormationTransferComponent
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public transferEditMode = TransferEditMode.Single;
   public goalKeeperPlace: S11FormationPlace | undefined;
+  faEnvelope = faEnvelope;
 
   constructor(
     route: ActivatedRoute,
@@ -199,7 +206,10 @@ export class FormationTransferComponent
   ): void {
     // als al transfers dan vragen om transfers te verwijderen.
     if (poolUser.getTransferPeriodActionList().transfers.length === 0) {
-      this.router.navigate(["/pool/formation/replacements", poolUser.getPool().getId()]);
+      this.router.navigate([
+        "/pool/formation/replacements",
+        poolUser.getPool().getId(),
+      ]);
     } else {
       this.openRemoveModal(poolUser.getPool(), assembleFormation, modalContent);
     }

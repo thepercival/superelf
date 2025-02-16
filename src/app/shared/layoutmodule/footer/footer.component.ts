@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GlobalEventsManager } from '../../commonmodule/eventmanager';
-import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEnvelope, faCopyright } from '@fortawesome/free-solid-svg-icons';
 
 @Component({

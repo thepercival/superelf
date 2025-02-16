@@ -6,17 +6,17 @@
         <fa-icon [icon]="['fas', 'envelope']"></fa-icon> inschrijven
       </h1>
 
-      <h2 ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" spin=true></fa-icon>
+      <h2*ngIf="processing" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
       </h2>
 
       @if(alert){
       <ngb-alert [type]="alert.type" class="text-center">{{ alert.message }}</ngb-alert>
       }
 
-      <div ngIf="!processing">
-        <div ngIf="!joined && !alert">
-          <div ngIf="!pool">
+      <div*ngIf="!processing">
+        <div*ngIf="!joined && !alert">
+          <div*ngIf="!pool">
             <div class="alert alert-info text-center" role="alert">kies 1 van onderstaande opties om je in te schrijven
             </div>
             <div class="d-flex justify-content-center my-4">
@@ -29,12 +29,12 @@
             </div>
           </div>
 
-          <button ngIf="pool" routerLink="['/']" type="button" class="btn btn-primary btn-block">
+          <button*ngIf="pool" routerLink="['/']" type="button" class="btn btn-primary btn-block">
             ga naar de home-pagina
           </button>
         </div>
 
-        <div ngIf="joined && pool" class="text-center">
+        <div*ngIf="joined && pool" class="text-center">
           <button routerLink="['/pool/users', pool.getId()]" type="button" class="btn btn-primary btn-block">
             ga naar de pool
           </button>

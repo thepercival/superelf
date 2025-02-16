@@ -1,6 +1,6 @@
 <nav class="navbar navbar-dark bg-primary py-1 ps-1 text-light">
   <div>
-    <a class="navbar-brand text-light" tabindex="-1" routerLink="['/']">
+    <a class="navbar-brand text-light" tabindex="-1" [routerLink]="['/']">
       {{nameInfo ? 'S11' : 'SuperElf'}}
     </a>
   </div>
@@ -19,15 +19,20 @@
     </div>
   }
 
-  <button ngIf="!authService.isLoggedIn()" routerLink="/user/login" routerLinkActive="active" class="btn text-light"
-    role="button" aria-label="inloggen " tabindex="-1">
-    <fa-icon [icon]="faSignInAlt"></fa-icon>
-    <span class="ms-1">inloggen</span>
-  </button>
-  <button ngIf="authService.isLoggedIn()" routerLink="['/user/profile', authService.getUser()?.getId()]"
-    class="btn text-light border-0 p-0 pt-1" role="button" tabindex="-1" aria-label="account">
-    <fa-icon [icon]="faUserCircle" size="3x"></fa-icon>
-  </button>
+  @if(authService.isLoggedIn()) {
+    <button routerLink="['/user/profile', authService.getUser()?.getId()]"
+      class="btn text-light border-0 p-0 pt-1" role="button" tabindex="-1" aria-label="account">
+      <fa-icon [icon]="faUserCircle" size="3x"></fa-icon>
+    </button>
+  } @else {
+    <button routerLink="/user/login" class="btn text-light" role="button"
+      aria-label="inloggen " tabindex="-1">
+      <fa-icon [icon]="faSignInAlt"></fa-icon>
+      <span class="ms-1">inloggen</span>
+    </button>
+  }
+  
+  
 
   <!-- <button class="navbar-toggler navbar-toggler-right pointer" type="button" data-toggle="collapse
     " data-target="#navbarResponsive "

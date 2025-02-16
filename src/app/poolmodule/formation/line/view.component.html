@@ -5,10 +5,10 @@
     </h5>
   </td>
   <td class="table-no-bottom-border text-end">
-    <span ngIf="totalGameRoundPoints()" class="badge bg-totals">{{totalGameRoundPoints()}}</span>    
+    <span*ngIf="totalGameRoundPoints()" class="badge bg-totals">{{totalGameRoundPoints()}}</span>    
   </td>
   <td class="table-no-bottom-border text-end">
-    <span ngIf="totalPoints()" class="badge bg-totals">{{totalPoints()}}</span>    
+    <span*ngIf="totalPoints()" class="badge bg-totals">{{totalPoints()}}</span>    
   </td>
 </tr>
   
@@ -23,18 +23,18 @@
   
 
 <ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentTeam="currentTeam">
-  <tr ngIf="processing()">
+  <tr*ngIf="processing()">
     <td class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" spin=true></fa-icon>
+      <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
     </td>
   </tr>
-  <tr ngIf="!processing()" (click)="maybeLinkToPlayer(place)" ngClass="{'pointer': s11Player}">   
+  <tr*ngIf="!processing()" (click)="maybeLinkToPlayer(place)" ngClass="{'pointer': s11Player}">   
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
-      <span ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
+      <span*ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
       <!-- <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="editPlace.emit(place)">
         kies een {{place.isSubstitute() ? 'wissel' : 'speler'}}
       </button> -->
-      <span ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
+      <span*ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
     </td>
     <td class="{{getSubstituteClass(place.isSubstitute())}} text-nowrap">
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
@@ -51,8 +51,8 @@
             <span class="badge bg-nopoints">x</span>
           }
         } @else {
-          <div ngIf="place.getFormationLine().hasSubstituteAppareance(gameRound())">
-            <ng-container ngIf="statisticsGetter().hasAppeared(place,gameRound());else substituteNotAppeared">
+          <div*ngIf="place.getFormationLine().hasSubstituteAppareance(gameRound())">
+            <ng-container*ngIf="statisticsGetter().hasAppeared(place,gameRound());else substituteNotAppeared">
               <span class="badge bg-points">
                 {{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound(), undefined)}}</span>
             </ng-container>

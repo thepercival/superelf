@@ -6,7 +6,7 @@
                 style="background-image: url('{{getPlayerImageUrl(tmplPlayer)}}');">
                 <app-lineicon *ngIf="player()" [line]="tmplPlayer.getLine()"></app-lineicon>
                 <div>
-                    <span ngIf="points() !== undefined" class="badge bg-totals">{{points()}}</span>
+                    <span*ngIf="points() !== undefined" class="badge bg-totals">{{points()}}</span>
                 </div>
             </div>
         }

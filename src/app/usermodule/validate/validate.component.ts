@@ -8,16 +8,17 @@ import { AuthComponent } from '../component';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserTitleComponent } from '../title/title.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgIf } from '@angular/common';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
-  imports: [NgIf,NgbAlertModule, UserTitleComponent, FontAwesomeModule],
+  imports: [NgbAlertModule, UserTitleComponent, FontAwesomeModule],
   selector: "app-validate",
   templateUrl: "./validate.component.html",
   styleUrls: ["./validate.component.css"],
 })
 export class ValidateComponent extends AuthComponent implements OnInit {
+  faUserCirlce = faUserCircle;  
   protected emailaddress: string | undefined;
   protected key: string | undefined;
   public validated = false;

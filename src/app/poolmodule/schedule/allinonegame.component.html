@@ -13,7 +13,7 @@
                     <button  (click)="navigateToChat(pool, poule)" type="button" class="btn btn-outline-dark ms-3 position-relative">
                         <fa-icon [icon]="['fas', 'message']"></fa-icon>
                         <span class="ms-1"> chat</span>
-                        <span ngIf="nrOfUnreadMessages > 0"
+                        <span*ngIf="nrOfUnreadMessages > 0"
                             class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{nrOfUnreadMessages}}
                             <span class="visually-hidden">ongelezen berichten</span>
@@ -23,12 +23,12 @@
             </div>
         }
 
-        <h2 ngIf="processing" class="text-center">
+        <h2*ngIf="processing" class="text-center">
             <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
         </h2>
         @if(!processing && pool){
             <div>
-                <h2 ngIf="processingGames" class="text-center">
+                <h2*ngIf="processingGames" class="text-center">
                     <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
                 </h2>
 
@@ -41,7 +41,7 @@
                 </div>
                 }
 
-                <table class="table" ngIf="!processingGames && formationMap && currentSourceGame && sportRankingItems.length > 0">
+                <table class="table"*ngIf="!processingGames && formationMap && currentSourceGame && sportRankingItems.length > 0">
                     <tbody>
                     @for(sportRankingItem of sportRankingItems; track sportRankingItem.getPlaceLocation()) {
                         <tr>
@@ -67,10 +67,10 @@
 
                 <ng-template #contentSideForamtionPlaces let-formationPlaces="formationPlaces">
                     <div ngFor="let formationPlace of formationPlaces" class="d-flex justify-content-between">
-                        <ng-container ngIf="formationPlace.getPlayer()" ngTemplateOutlet="contentSidePlayer"
+                        <ng-container*ngIf="formationPlace.getPlayer()" ngTemplateOutlet="contentSidePlayer"
                             ngTemplateOutletContext="{s11Player:formationPlace.getPlayer()}">
                         </ng-container>
-                        <span ngIf="formationPlace.isSubstitute()" class="badge badge-reserve ms-1">r</span>
+                        <span*ngIf="formationPlace.isSubstitute()" class="badge badge-reserve ms-1">r</span>
                     </div>
                 </ng-template>
 

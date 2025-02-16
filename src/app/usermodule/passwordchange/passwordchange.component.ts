@@ -8,19 +8,20 @@ import { User } from '../../lib/user';
 import { PasswordValidation } from '../password-validation';
 import { AuthComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
-import { NgIf } from '@angular/common';
 import { UserTitleComponent } from '../title/title.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
   selector: 'app-passwordchange',
-  imports: [NgIf,UserTitleComponent,FontAwesomeModule,NgbAlertModule],
+  imports: [UserTitleComponent,FontAwesomeModule,NgbAlertModule],
   templateUrl: './passwordchange.component.html',
   styleUrls: ['./passwordchange.component.css']
 })
 export class PasswordchangeComponent extends AuthComponent implements OnInit {
+  faKey = faKey;
   passwordChanged = false;
   form: UntypedFormGroup;
 

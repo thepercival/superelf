@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
+import { User } from '../../user';
 
 @Injectable({
     providedIn: 'root'
@@ -14,12 +15,15 @@ export class PoolShellRepository extends APIRepository {
         super();
     }
 
-    getUrlpostfix(withRole: boolean): string {
-        return 'shells' + (withRole ? 'withrole' : '');
-    }
+    // getUrlpostfix(withRole: boolean): string {
+    //     return 'shells' + (withRole ? 'withrole' : '');
+    // }
 
-    getUrl(withRole: boolean): string {
-        return super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix(withRole);
+    getUrl(user?: User): string {
+        if( user ) {
+          return super.getApiUrl() + "users/" + user.getId() + "/shells";
+        }
+        return super.getApiUrl() + "shells";
     }
 
     canCreateAndJoinPool(): Observable<number> {
@@ -28,15 +32,14 @@ export class PoolShellRepository extends APIRepository {
         );
     }
 
-    getObjects(filter?: PoolShellFilter): Observable<PoolShell[]> {
+    getObjects(user?: User, filter?: PoolShellFilter): Observable<PoolShell[]> {
         const options = {
             headers: super.getHeaders(),
             params: this.getHttpParams(filter)
         };
-        const withRole: boolean = filter?.roles ? filter.roles > 0 : false;
-        return this.http.get<PoolShell[]>(this.getUrl(withRole), options).pipe(
-            catchError((err: Error) => this.handleError(err))
-        );
+        return this.http
+          .get<PoolShell[]>(this.getUrl(user), options)
+          .pipe(catchError((err: Error) => this.handleError(err)));
     }
 
     private getHttpParams(filter?: PoolShellFilter): HttpParams {

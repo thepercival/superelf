@@ -13,4 +13,4 @@
  *
  * Learn more in https://angular.io/docs/ts/latest/guide/browser-support.html
  */
-import '@angular/localize/init';
+// import '@angular/localize/init';

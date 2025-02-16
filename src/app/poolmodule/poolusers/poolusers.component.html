@@ -4,8 +4,8 @@
       <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
     </h2>
 
-    <h2 ngIf="processing" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" spin=true></fa-icon>
+    <h2*ngIf="processing" class="text-center">
+      <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
     </h2>
 
     @if(alert) {
@@ -19,10 +19,10 @@
       <thead>
         <tr>
           <th>naam</th>
-          <th ngIf="pool.transferPeriodNotStarted()">
+          <th*ngIf="pool.transferPeriodNotStarted()">
             gekozen spelers
           </th>
-          <th ngIf="pool.getTransferPeriod().isIn()">
+          <th*ngIf="pool.getTransferPeriod().isIn()">
             transfers
           </th>
           <!-- <th></th> -->
@@ -34,14 +34,14 @@
           <td>
             {{poolUser.getName()}}
           </td>
-          <td ngIf="pool.transferPeriodNotStarted()">
+          <td*ngIf="pool.transferPeriodNotStarted()">
             <fa-icon *ngIf="poolUser.getNrOfAssembled() < 15" [icon]="['fas', 'times-circle']" class="text-danger">
             </fa-icon>
             <fa-icon *ngIf="poolUser.getNrOfAssembled() == 15" [icon]="['fas', 'check-circle']" class="text-success">
             </fa-icon>
             {{poolUser.getNrOfAssembled()}}/15
           </td>
-          <td ngIf="pool.getTransferPeriod().isIn()">
+          <td*ngIf="pool.getTransferPeriod().isIn()">
             {{poolUser.getNrOfTransfers()}}/{{pool.getTransferPeriod().getMaxNrOfTransfers()}}
           </td>
           <!-- <td class="text-end">

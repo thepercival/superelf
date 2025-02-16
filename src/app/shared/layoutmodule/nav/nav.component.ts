@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
 import { DateFormatter } from '../../../lib/dateFormatter';
@@ -12,17 +12,17 @@ import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   standalone: true,
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, RouterLink],
   selector: "app-nav",
   templateUrl: "./nav.component.html",
   styleUrls: ["./nav.component.css"],
 })
 export class NavComponent implements OnInit {
-  faSignInAlt = faSignInAlt
-  faUserCircle = faUserCircle
   navbarCollapsed = true;
   user: User | undefined;
   public nameInfo: NavHeaderInfo | undefined;
+  faUserCircle = faUserCircle;
+  faSignInAlt = faSignInAlt;
 
   constructor(
     public authService: AuthService,

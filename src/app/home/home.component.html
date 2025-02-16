@@ -1,45 +1,53 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
     @if(alert){
-    <div class="alert alert-{{alert.type}}">{{alert.message}}</div>
+    <!-- <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert> -->
     }
-    <h2 ngIf="processingMyShells" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" spin=true></fa-icon>
-    </h2>
-
-    <div ngIf="!processingMyShells" class="mt-3">
-      <!-- header -->
-      <div ngIf="(canCreateAndJoin || canAssemble) && myShells.length > 0" class="mt-3 d-flex justify-content-between">
-        <h2 class="text-center">mijn pools</h2>
-        <div class="d-flex justify-content-center">
-          <button type="button" class="btn btn-primary" (click)="linkToNew()">
-            <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> pool organiseren
-          </button>
-        </div>
-      </div>
-      <div ngIf="(canCreateAndJoin || canAssemble) && myShells.length === 0" class="mt-3">
-        <div class="d-flex justify-content-center">
-          <button type="button" class="btn btn-primary" (click)="linkToNew()">
-            <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> pool organiseren
-          </button>
-        </div>
-      </div>
-      <div ngIf="!(canCreateAndJoin || canAssemble) && myShells.length > 0" class="mt-3">
-        <h2 class="text-center">mijn pools</h2>
-      </div>
-
-      <!-- myShells -->
-      <table ngIf="myShells.length > 0" class="table mt-2">
-        <tbody>
-          @for(shell of myShells; track shell){
-          <tr class="pointer" (click)="linkToPool(shell)">
-            <td>{{shell.name}}</td>
-            <td>{{shell.seasonName}}</td>
-          </tr>
+    <ngb-alert [type]="'danger'">cdl</ngb-alert>
+    @if(!processingMyShells) {            
+      <div class="mt-3">
+        @if(canCreateAndJoin || canAssemble){
+          @if( myShells.length > 0){
+            <!-- header -->
+            <div class="mt-3 d-flex justify-content-between">
+              <h2 class="text-center">mijn pools</h2>
+              <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-primary" (click)="linkToNew()">
+                  <fa-icon [icon]=faPlusCircle></fa-icon> pool organiseren
+                </button>
+              </div>
+            </div>
+          } @else {
+            <div class="mt-3">
+              <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-primary" (click)="linkToNew()">
+                  <fa-icon [icon]=faPlusCircle></fa-icon> pool organiseren
+                </button>
+              </div>
+            </div>
           }
-        </tbody>
-      </table>
-    </div>
+        } @else if( myShells.length > 0){
+          <div class="mt-3">
+            <h2 class="text-center">mijn pools</h2>
+          </div>
+          <!-- myShells -->
+          <table class="table mt-2">
+            <tbody>
+              @for(shell of myShells; track shell){
+              <tr class="pointer" (click)="linkToPool(shell)">
+                <td>{{shell.name}}</td>
+                <td>{{shell.seasonName}}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>      
+    } @else {
+      <h2 class="text-center">
+        <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+      </h2>
+    }  
 
     <!-- <div class="text-center mt-5">
 

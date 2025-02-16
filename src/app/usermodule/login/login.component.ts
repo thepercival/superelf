@@ -1,21 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  FormControl,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from "@angular/forms";
+import { ActivatedRoute } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { User } from '../../lib/user';
 import { AuthComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { StartSessionService } from '../../shared/commonmodule/startSessionService';
-import { NgIf } from '@angular/common';
 import { UserTitleComponent } from '../title/title.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { faEnvelope, faKey, faSignInAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
   selector: "app-login",
-  imports: [NgIf, UserTitleComponent, FontAwesomeModule, NgbAlertModule],
+  imports: [UserTitleComponent, FontAwesomeModule, NgbAlertModule,ReactiveFormsModule],
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
 })
@@ -23,12 +29,10 @@ export class LoginComponent extends AuthComponent implements OnInit {
   registered = false;
   form: UntypedFormGroup;
 
-  validations: any = {
-    minlengthemailaddress: User.MIN_LENGTH_EMAIL,
-    maxlengthemailaddress: User.MAX_LENGTH_EMAIL,
-    minlengthpassword: User.MIN_LENGTH_PASSWORD,
-    maxlengthpassword: User.MAX_LENGTH_PASSWORD,
-  };
+  faSignInAlt = faSignInAlt;
+  faSpinner = faSpinner;
+  faKey = faKey;
+  faEnvelope = faEnvelope;
 
   constructor(
     protected route: ActivatedRoute,
@@ -38,23 +42,20 @@ export class LoginComponent extends AuthComponent implements OnInit {
     fb: UntypedFormBuilder
   ) {
     super(authService, eventsManager);
+    if (this.isLoggedIn()) {
+      this.authService.logout();
+    }
     this.form = fb.group({
-      emailaddress: [
-        "",
-        Validators.compose([
-          Validators.required,
-          Validators.minLength(this.validations.minlengthemailaddress),
-          Validators.maxLength(this.validations.maxlengthemailaddress),
-        ]),
-      ],
-      password: [
-        "",
-        Validators.compose([
-          Validators.required,
-          Validators.minLength(this.validations.minlengthpassword),
-          Validators.maxLength(this.validations.maxlengthpassword),
-        ]),
-      ],
+      emailaddress: new FormControl("", [
+        Validators.required,
+        Validators.minLength(User.MIN_LENGTH_EMAIL),
+        Validators.maxLength(User.MAX_LENGTH_EMAIL),
+      ]),
+      password: new FormControl("", [
+        Validators.required,
+        Validators.minLength(User.MIN_LENGTH_PASSWORD),
+        Validators.maxLength(User.MAX_LENGTH_PASSWORD),
+      ]),
     });
   }
 
@@ -68,9 +69,6 @@ export class LoginComponent extends AuthComponent implements OnInit {
         this.setAlert("info", param.message);
       }
     });
-    if (this.isLoggedIn()) {
-      this.setAlert("danger", "je bent al ingelogd");
-    }
     this.processing = false;
   }
 
@@ -104,13 +102,5 @@ export class LoginComponent extends AuthComponent implements OnInit {
 
   get control() {
     return this.form.controls;
-  }
-
-  isValid(control: AbstractControl): boolean {
-    return control.value !== undefined && control.valid;
-  }
-
-  isInvalid(control: AbstractControl): boolean {
-    return control.value !== undefined && control.invalid;
   }
 }

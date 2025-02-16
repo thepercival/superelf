@@ -1,4 +1,4 @@
-<div ngIf="line()" class="card mt-0 border-0">
+<div*ngIf="line()" class="card mt-0 border-0">
 
   <div class="card-body pb-0">
     <h5 class="card-title">
@@ -19,27 +19,27 @@
   </div>
 </div>
 <ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentTeam="currentTeam">
-  <tr ngIf="processing()">
+  <tr*ngIf="processing()">
     <td colspan=3 class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" spin=true></fa-icon>
+      <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
     </td>
   </tr>
-  <tr ngIf="!processing()" (click)="maybeLinkToPlayer(place)" ngClass="{'pointer': s11Player}">
+  <tr*ngIf="!processing()" (click)="maybeLinkToPlayer(place)" ngClass="{'pointer': s11Player}">
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
-      <span ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
-      <button ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="editPlace.emit(place)">
+      <span*ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
+      <button*ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="editPlace.emit(place)">
         kies een {{place.isSubstitute() ? 'wissel' : 'speler'}}
       </button>
-      <span ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
+      <span*ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
     </td>
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
     </td>
     <td class="text-end" (click)="$event.stopPropagation()" class="{{getSubstituteClass(place.isSubstitute())}}">
-      <button ngIf="!s11Player" type="button" class="btn btn-sm" (click)="editPlace.emit(place)">
+      <button*ngIf="!s11Player" type="button" class="btn btn-sm" (click)="editPlace.emit(place)">
         <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
       </button>
-      <button ngIf="s11Player" type="button" class="btn btn-sm" (click)="emptyPlace(place)">
+      <button*ngIf="s11Player" type="button" class="btn btn-sm" (click)="emptyPlace(place)">
         <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
       </button>
     </td>

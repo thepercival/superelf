@@ -7,18 +7,19 @@ import { PasswordValidation } from '../password-validation';
 import { AuthComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgIf } from '@angular/common';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserTitleComponent } from '../title/title.component';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
   selector: "app-register",
-  imports: [NgIf, NgbAlertModule, UserTitleComponent,FontAwesomeModule],
+  imports: [NgbAlertModule, UserTitleComponent,FontAwesomeModule],
   templateUrl: "./register.component.html",
-  styleUrls: ["./register.component.css"],
+  styleUrls: ["./register.component.scss"],
 })
 export class RegisterComponent extends AuthComponent implements OnInit {
+  faUserCirlce = faUserCircle;
   registered = false;
   form: UntypedFormGroup;
 

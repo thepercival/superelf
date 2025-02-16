@@ -3,119 +3,135 @@
 
     <div class="d-flex justify-content-between mt-3 mb-1">
 
-      <h1 ngIf="!processing && poolUser" class="me-2 text-truncate">
-        <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> {{poolUser.getName()}}
-        <small>transferacties</small>
-      </h1>
-    
-      <div ngIf="!processing && pool">
-        <button ngIf="inTransfer()" class="btn btn-outline-info ms-1" routerLink="['/pool/formation/substitutions', pool.getId()]">
-          <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
-        </button>
-        <button ngIf="inAfterTransfer()" class="btn btn-outline-info ms-1" routerLink="['/pool/user', pool.getId(), poolUser.getId(), 0]">
-          <fa-icon [icon]="['fas', 'users']"></fa-icon>
-        </button>
-      </div>
+      @if(!processing) {
+        @if(poolUser) {
+          <h1 class="me-2 text-truncate">
+            <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> {{poolUser.getName()}}
+            <small>transferacties</small>
+          </h1>
+        }
+        @if(pool) {
+          <div>
+            @if(inTransfer(pool)) {
+              <button class="btn btn-outline-info ms-1"
+                routerLink="['/pool/formation/substitutions', pool.getId()]">
+                <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
+                </button>
+            }
+            @if(inAfterTransfer(pool)) {
+              <button class="btn btn-outline-info ms-1"
+                routerLink="['/pool/user', pool.getId(), poolUser.getId(), 0]">
+                <fa-icon [icon]="['fas', 'users']"></fa-icon>
+              </button>
+            }
+          </div>
+        }
+      }
+      
     </div>
 
     @if(alert){
     <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
     }
 
-    <!-- replacements-->
-    <div ngIf="!processing && list && list.replacements.length > 0" class="mt-5">
-      <h2>
-        vervangingen
-      </h2>
-      <table class="table">
-        <tbody>
-          @for(replacement of list.replacements; track replacement.getId()) {
-          <tr>
-            <td>
-              <app-team-name [team]="replacement.getPlayerIn().getTeam()" [fullName]="false"></app-team-name>
-            </td>
-            <td>
-              <app-lineicon [line]="replacement.getPlayerOut().getLine()"></app-lineicon>
-              <span>{{replacement.getPlayerOut().getPerson().getName()}}</span>
-            </td>
-            <td>
-              <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
-            </td>
-            <td>
-              <app-lineicon [line]="replacement.getPlayerIn().getLine()"></app-lineicon>
-              <span>{{replacement.getPlayerIn().getPerson().getName()}}</span>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-
-    <!-- transfers-->
-    <div ngIf="!processing && list && list.transfers.length > 0" class="mt-5">
-      <h2>
-        transfers
-      </h2>
-      <table class="table">
-        <tbody>
-          @for(transfer of list.transfers; track transfer.getId()) {
-          <tr>
-            <td class="text-nowrap">
-              <app-team-name [team]="transfer.getPlayerOut().getTeam()" [fullName]="false"></app-team-name>
-            </td>
-            <td>
-              <app-lineicon [line]="transfer.getPlayerOut().getLine()"></app-lineicon>
-              <span>{{transfer.getPlayerOut().getPerson().getName()}}</span>
-            </td>
-            <td>
-              <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
-            </td>
-            <td class="text-nowrap">
-              <app-team-name [team]="transfer.getPlayerIn().getTeam()" [fullName]="false"></app-team-name>
-            </td>
-            <td>
-              <app-lineicon [line]="transfer.getPlayerIn().getLine()"></app-lineicon>
-              <span>{{transfer.getPlayerIn().getPerson().getName()}}</span>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-
-    <!-- wissels-->
-    @if(!processing && calcFormation && list && list.substitutions.length > 0){
-    <div class="mt-5">
-      <h2>
-        wissels
-      </h2>
-      <table class="table">
-        <tbody>
-          @for(substitution of list.substitutions; track substitution.getId()) {
-          <tr>
-            <td>
-              <app-lineicon [line]="substitution.getLineNumberOut()"></app-lineicon>
-            </td>
-            <td class="text-nowrap">
-              <app-team-name [team]="getPlayerOut(calcFormation, substitution).getTeam()" [fullName]="false"></app-team-name>
-            </td>
-            <td>
-              <span class="text-break">{{getPlayerIn(calcFormation, substitution).getPerson().getName()}}</span>
-            </td>
-            <td>
-              <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
-            </td>
-            <td class="text-nowrap">
-              <app-team-name [team]="getPlayerIn(calcFormation, substitution).getTeam()" [fullName]="false"></app-team-name>
-            </td>
-            <td>
-              <span class="text-break">{{getPlayerOut(calcFormation, substitution).getPerson().getName()}}</span>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+    @if(!processing) {
+      <!-- replacements-->
+      @if(list && list.replacements.length > 0) {
+        <div class="mt-5">
+          <h2>
+            vervangingen
+          </h2>
+          <table class="table">
+            <tbody>
+              @for(replacement of list.replacements; track replacement.getId()) {
+              <tr>
+                <td>
+                  <app-team-name [team]="replacement.getPlayerIn().getTeam()" [fullName]="false"></app-team-name>
+                </td>
+                <td>
+                  <app-lineicon [line]="replacement.getPlayerOut().getLine()"></app-lineicon>
+                  <span>{{replacement.getPlayerOut().getPerson().getName()}}</span>
+                </td>
+                <td>
+                  <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+                </td>
+                <td>
+                  <app-lineicon [line]="replacement.getPlayerIn().getLine()"></app-lineicon>
+                  <span>{{replacement.getPlayerIn().getPerson().getName()}}</span>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+      <!-- transfers-->
+      @if(list && list.transfers.length > 0) {
+        <div class="mt-5">
+          <h2>
+            transfers
+          </h2>
+          <table class="table">
+            <tbody>
+              @for(transfer of list.transfers; track transfer.getId()) {
+              <tr>
+                <td class="text-nowrap">
+                  <app-team-name [team]="transfer.getPlayerOut().getTeam()" [fullName]="false"></app-team-name>
+                </td>
+                <td>
+                  <app-lineicon [line]="transfer.getPlayerOut().getLine()"></app-lineicon>
+                  <span>{{transfer.getPlayerOut().getPerson().getName()}}</span>
+                </td>
+                <td>
+                  <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+                </td>
+                <td class="text-nowrap">
+                  <app-team-name [team]="transfer.getPlayerIn().getTeam()" [fullName]="false"></app-team-name>
+                </td>
+                <td>
+                  <app-lineicon [line]="transfer.getPlayerIn().getLine()"></app-lineicon>
+                  <span>{{transfer.getPlayerIn().getPerson().getName()}}</span>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+      <!-- wissels-->
+      @if(calcFormation && list && list.substitutions.length > 0){
+        <div class="mt-5">
+          <h2>
+            wissels
+          </h2>
+          <table class="table">
+            <tbody>
+              @for(substitution of list.substitutions; track substitution.getId()) {
+              <tr>
+                <td>
+                  <app-lineicon [line]="substitution.getLineNumberOut()"></app-lineicon>
+                </td>
+                <td class="text-nowrap">
+                  <app-team-name [team]="getPlayerOut(calcFormation, substitution).getTeam()" [fullName]="false"></app-team-name>
+                </td>
+                <td>
+                  <span class="text-break">{{getPlayerIn(calcFormation, substitution).getPerson().getName()}}</span>
+                </td>
+                <td>
+                  <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+                </td>
+                <td class="text-nowrap">
+                  <app-team-name [team]="getPlayerIn(calcFormation, substitution).getTeam()" [fullName]="false"></app-team-name>
+                </td>
+                <td>
+                  <span class="text-break">{{getPlayerOut(calcFormation, substitution).getPerson().getName()}}</span>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
     }
   </div>  
 </div>

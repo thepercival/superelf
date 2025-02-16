@@ -14,7 +14,7 @@ competities  | programma | prijzenkast | spelregels | beheer
 <nav class="fixed-bottom navbar-dark bg-dark border-top ">
 
   
-  <div ngIf="Competitions === current() && upperNavBar">
+  <div*ngIf="Competitions === current() && upperNavBar">
     <ng-container *ngTemplateOutlet="upperNavBar()"></ng-container>    
   </div>
 
@@ -22,7 +22,7 @@ competities  | programma | prijzenkast | spelregels | beheer
   <div class="navbar-parent justify-content-center">
 
     <!-- invite -->
-    <h2 ngIf="pool && poolUser && poolUser.getAdmin() && pool.getCreateAndJoinPeriod().isIn()"
+    <h2*ngIf="pool && poolUser && poolUser.getAdmin() && pool.getCreateAndJoinPeriod().isIn()"
       class="mb-0 pt-cus navbar-item">
       <a type="button" class="btn {{getTextColorClass(Admin)}} pt-cus" (click)="linkTo(Invite)">
         <fa-icon [icon]="['fas', 'envelope']"></fa-icon> <br /><span>uitnodigen</span>
@@ -32,7 +32,7 @@ competities  | programma | prijzenkast | spelregels | beheer
         
 
     <!-- poolusers -->
-    <h2 ngIf="pool.getCompetitionConfig().isInCreateOrJoinOrAssemblePeriod()" class="mb-0 navbar-item">
+    <h2*ngIf="pool.getCompetitionConfig().isInCreateOrJoinOrAssemblePeriod()" class="mb-0 navbar-item">
       <a type="button" class="btn {{getTextColorClass(PoolUsers)}} pt-cus" (click)="linkTo(PoolUsers)">
         <fa-icon style="display: 'inline-block'; font-size: 1.3rem" [icon]="['fas', 'calendar-alt']"></fa-icon>
         <br /><span>deelnemers</span>
@@ -40,7 +40,7 @@ competities  | programma | prijzenkast | spelregels | beheer
     </h2>
   
     <!-- competitions -->
-    <h2 ngIf="pool.getCompetitionConfig().afterAssemblePeriod()" class="mb-0 navbar-item">
+    <h2*ngIf="pool.getCompetitionConfig().afterAssemblePeriod()" class="mb-0 navbar-item">
       <a type="button" class="btn {{getTextColorClass(Competitions)}}" (click)="linkTo(Competitions)">
         <app-superelf-icon [large]="true" [name]="'structure'"></app-superelf-icon><br /><span class="">competities</span>
       </a>
@@ -48,14 +48,14 @@ competities  | programma | prijzenkast | spelregels | beheer
 
     <!--schedule -->
     <!-- and if scheduleGameRoundNumber ??-->
-    <h2 ngIf="pool.getCompetitionConfig().afterAssemblePeriod()" class="mb-0 navbar-item">
+    <h2*ngIf="pool.getCompetitionConfig().afterAssemblePeriod()" class="mb-0 navbar-item">
       <a type="button" class="btn {{getTextColorClass(Schedule)}} pt-cus" (click)="linkTo(Schedule)">
         <fa-icon style="display: 'inline-block'; font-size: 1.3rem" [icon]="['fas', 'calendar-alt']"></fa-icon>          
         <br /><span>programma</span>
       </a>
     </h2>
 
-    <ng-container ngIf="pool.getCompetitionConfig().getAssemblePeriod().isIn();else scouting">    
+    <ng-container*ngIf="pool.getCompetitionConfig().getAssemblePeriod().isIn();else scouting">    
       <!-- my team -->
       <h2 class="mb-0 navbar-item">
         <a type="button" class="btn {{getTextColorClass(MyTeam)}} pt-cus" (click)="linkTo(MyTeam)">
@@ -66,7 +66,7 @@ competities  | programma | prijzenkast | spelregels | beheer
     </ng-container>
     <ng-template #scouting>
       <!-- scouting -->
-      <h2 ngIf="pool.getCompetitionConfig().getCreateAndJoinPeriod().isIn()" class="mb-0 navbar-item">
+      <h2*ngIf="pool.getCompetitionConfig().getCreateAndJoinPeriod().isIn()" class="mb-0 navbar-item">
         <a type="button" class="btn {{getTextColorClass(Scouting)}} pt-cus" (click)="linkTo(Scouting)">
           <fa-icon style="display: 'inline-block'; font-size: 1.3rem" [icon]="['fas', 'user-secret']"></fa-icon>
           <br /><span>scouting</span>
@@ -74,7 +74,7 @@ competities  | programma | prijzenkast | spelregels | beheer
       </h2>
     </ng-template>
 
-    <ng-container ngIf="poolUser && pool.getCompetitionConfig().getTransferPeriod().isIn();else achievements">
+    <ng-container*ngIf="poolUser && pool.getCompetitionConfig().getTransferPeriod().isIn();else achievements">
       <!-- transfers -->
       <h2 class="mb-0 navbar-item">
         <a type="button" class="btn {{getTextColorClass(Transfers)}} long-and-truncated position-relative"
@@ -91,7 +91,7 @@ competities  | programma | prijzenkast | spelregels | beheer
           (click)="linkTo(Achievements)">
           <app-superelf-icon [large]="true" [name]="'trophy'"></app-superelf-icon>
           <br /><span>prijzenkast</span>
-          <span ngIf="hasUnviewedAchievements"
+          <span*ngIf="hasUnviewedAchievements"
             class="position-absolute top-0 start-75 translate-middle p-2 mt-2 me-2 bg-danger border border-light rounded-circle">
             <span class="visually-hidden">nieuwe prijzen</span>
           </span>

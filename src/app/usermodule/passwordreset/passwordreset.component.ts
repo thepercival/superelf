@@ -7,19 +7,20 @@ import { IAlert } from '../../shared/commonmodule/alert';
 import { User } from '../../lib/user';
 import { AuthComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
-import { NgIf } from '@angular/common';
 import { UserTitleComponent } from '../title/title.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
   selector: 'app-passwordreset',
-  imports: [NgIf,UserTitleComponent,FontAwesomeModule,NgbAlertModule],
+  imports: [UserTitleComponent,FontAwesomeModule,NgbAlertModule],
   templateUrl: './passwordreset.component.html',
   styleUrls: ['./passwordreset.component.css']
 })
 export class PasswordresetComponent extends AuthComponent implements OnInit {
+  faKey = faKey;
   codeSend = false;
   form: UntypedFormGroup;
 

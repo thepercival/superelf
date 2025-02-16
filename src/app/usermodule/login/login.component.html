@@ -2,46 +2,48 @@
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-6 col-lg-4 g-0">
       <div class="card my-3">
-        <app-user-title title="inloggen" icon="sign-in-alt">
+        <app-user-title title="inloggen" [icon]="faSignInAlt">
         </app-user-title>
 
-        <h2 *ngIf="processing" class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
-        </h2>
-        <div *ngIf="!processing" class="card-body card-body-auth">
-          <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-          <form *ngIf="!processing && !isLoggedIn()" name="form" (ngSubmit)="login()" formGroup="form" novalidate>
-            <div class="row">
-              <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">
-                  <fa-icon [icon]="['fas', 'envelope']"></fa-icon>
-                </span>
-                <input class="form-control"
-                  ngClass="{ 'is-invalid': !isValid(control.emailaddress), 'is-valid': isValid(control.emailaddress) }"
-                  type="text" formControlName="emailaddress" placeholder="emailadres">
+        @if(!processing) {
+          <div class="card-body card-body-auth">
+            @if(alert) {
+              <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+            }
+            <form name="form" (ngSubmit)="login()" [formGroup]="form" novalidate>
+              <div class="row">
+                <div class="input-group">
+                  <span class="input-group-text" id="basic-addon1">
+                    <fa-icon [icon]=faEnvelope></fa-icon>
+                  </span>
+                  <input class="form-control" type="text" formControlName="emailaddress" placeholder="emailadres" required>
+                </div>
               </div>
-            </div>
-            <div class="row mt-4">
-              <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">
-                  <fa-icon [icon]="['fas', 'key']"></fa-icon>
-                </span>
-                <input class="form-control"
-                  ngClass="{ 'is-invalid': !isValid(control.password), 'is-valid': isValid(control.password) }"
-                  type="password" formControlName="password" placeholder="wachtwoord">
+              <div class="row mt-4">
+                <div class="input-group">
+                  <span class="input-group-text" id="basic-addon1">
+                    <fa-icon [icon]=faKey></fa-icon>
+                  </span>
+                  <input class="form-control" type="password" formControlName="password" placeholder="wachtwoord" required>
+                </div>
               </div>
-            </div>
-            <div class="row mt-4 g-0">
-              <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
-                inloggen
-              </button>
-            </div>
-            <div class="row g-0">
-              <button routerLink="/user/register" class="btn btn-secondary me-2 mt-4">registreren</button>
-              <button routerLink="/user/passwordreset" class="btn btn-secondary mt-4">wachtwoord vergeten</button>
-            </div>
-          </form>
-        </div>
+              <div class="row mt-4 g-0">
+                <button [disabled]="form.invalid" type="submit" class="btn btn-primary">
+                  inloggen
+                </button>
+              </div>
+              <div class="row g-0">
+                <button routerLink="/user/register" class="btn btn-secondary me-2 mt-4">registreren</button>
+                <button routerLink="/user/passwordreset" class="btn btn-secondary mt-4">wachtwoord vergeten</button>
+              </div>
+            </form>
+          </div>          
+        }
+        @else {
+          <h2 class="text-center">
+            <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+          </h2>
+        }
       </div>
     </div>
   </div>

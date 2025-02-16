@@ -1,33 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AuthService } from '../lib/auth/auth.service';
-import { IAlert } from '../shared/commonmodule/alert';
-import { PoolShell,  PoolShellRepository } from '../lib/pool/shell/repository';
-import { GlobalEventsManager } from '../shared/commonmodule/eventmanager';
+import { AuthService } from '../../src/app/lib/auth/auth.service';
+import { IAlert } from '../../src/app/shared/commonmodule/alert';
+import { PoolShell,  PoolShellRepository } from '../../src/app/lib/pool/shell/repository';
+import { GlobalEventsManager } from '../../src/app/shared/commonmodule/eventmanager';
 import { Season } from 'ngx-sport';
-import { SeasonRepository } from '../lib/season/repository';
+import { SeasonRepository } from '../../src/app/lib/season/repository';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { User } from '../../src/app/lib/user';
 
 @Component({
-  selector: 'app-pools',
+  selector: "app-pools",
   standalone: true,
   imports: [FontAwesomeModule],
-  templateUrl: './poollist.component.html',
-  styleUrls: ['./poollist.component.scss']
+  templateUrl: "./poollist.component.html",
+  styleUrls: ["./poollist.component.scss"],
 })
 export class PoolListComponent implements OnInit {
+  public user = input.required<User>();
   public processing = true;
   public searching = false;
   // linethroughDate: Date;
-  public selectableSeasons: Season[]|undefined;
+  public selectableSeasons: Season[] | undefined;
   public poolShells: PoolShell[] = [];
   public alert: IAlert | undefined;
   public typedForm: FormGroup<{
-    season: FormControl<Season|null>
+    season: FormControl<Season | null>;
   }>;
-  
+  public faSpinnter = faSpinner;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,37 +43,36 @@ export class PoolListComponent implements OnInit {
     this.globalEventsManager.navHeaderInfo.emit(undefined);
     this.typedForm = new FormGroup({
       season: new FormControl<Season | null>(null, {
-        nonNullable: false
-      })
+        nonNullable: false,
+      }),
     });
   }
 
   ngOnInit() {
-    
     // set season
 
-    this.seasonRepos.getObjects()
-      .subscribe(
-        {
-          next: (seasons: Season[]) => {
-            
-            this.selectableSeasons = seasons.filter(season => season.getName() > '2021').sort((seasonA: Season, seasonB: Season): number => {
-              return seasonB.getStartDateTime().getTime() - seasonA.getStartDateTime().getTime();
-            }).slice();
-            this.typedForm.controls.season.setValue(this.selectableSeasons[0]);
-            this.updatePools();
-            
-            this.processing = false;
-          },
-          error: (e) => {
-            this.setAlert('danger', e); this.processing = false;
-          }
-        }
+    this.seasonRepos.getObjects().subscribe({
+      next: (seasons: Season[]) => {
+        this.selectableSeasons = seasons
+          .filter((season) => season.getName() > "2021")
+          .sort((seasonA: Season, seasonB: Season): number => {
+            return (
+              seasonB.getStartDateTime().getTime() -
+              seasonA.getStartDateTime().getTime()
+            );
+          })
+          .slice();
+        this.typedForm.controls.season.setValue(this.selectableSeasons[0]);
+        this.updatePools();
 
-
-      );
+        this.processing = false;
+      },
+      error: (e) => {
+        this.setAlert("danger", e);
+        this.processing = false;
+      },
+    });
   }
-
 
   updatePools() {
     // console.log(this.typedForm.controls.season.value);
@@ -82,21 +84,19 @@ export class PoolListComponent implements OnInit {
     // console.log(this.selectedSeason);
 
     const filter = { seasonId: season.getId() };
-    this.poolShellRepos.getObjects(filter)
-      .subscribe({
-        next: (shells: PoolShell[]) => {
-          this.poolShells = shells.filter(shell => shell.seasonName > '2021');
-        },
-        error: (e) => {
-          this.setAlert('danger', e); this.searching = false;
-        },
-        complete: () => this.searching = false
-      });
-
+    this.poolShellRepos.getObjects(this.user(), filter).subscribe({
+      next: (shells: PoolShell[]) => {
+        this.poolShells = shells.filter((shell) => shell.seasonName > "2021");
+      },
+      error: (e) => {
+        this.setAlert("danger", e);
+        this.searching = false;
+      },
+      complete: () => (this.searching = false),
+    });
   }
 
-
-  // 
+  //
   //   this.poolShellRepos.getObjects(filter)
   // .subscribe(
   //         /* happy path */ myShells => {
@@ -150,7 +150,7 @@ export class PoolListComponent implements OnInit {
   // }
 
   protected setAlert(type: string, message: string) {
-    this.alert = { 'type': type, 'message': message };
+    this.alert = { type: type, message: message };
   }
 
   // isLoggedIn() {
@@ -159,14 +159,14 @@ export class PoolListComponent implements OnInit {
 
   linkToNew() {
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/pool/new']);
+      this.router.navigate(["/pool/new"]);
     } else {
-      this.router.navigate(['/pool/prenew']);
+      this.router.navigate(["/pool/prenew"]);
     }
   }
 
   linkToPool(shell: PoolShell) {
-    this.router.navigate(['/pool', shell.poolId]);
+    this.router.navigate(["/pool", shell.poolId]);
   }
 
   //   private extendHourRange(pastFuture: number, hoursToAdd: number): PoolShellFilter {

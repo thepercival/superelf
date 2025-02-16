@@ -2,23 +2,30 @@
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-6 col-lg-4 g-0">
       <div class="card my-3">
-        <app-user-title title="valideren" icon="user-circle">
-        </app-user-title>
-        <h2 *ngIf="processing" class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
-        </h2>
-        <div *ngIf="!processing" class="card-body card-body-auth">
-          <ngb-alert *ngIf="alert !== undefined" [type]="alert.type">{{ alert.message }}</ngb-alert>
-          <div *ngIf="!processing && validated" class="card card-body text-center mx-auto bg-faded form-validate mt-3">
-            <p>
-              <button routerLink="['']" type="button" class="btn btn-primary">
-                naar de home-pagina
-              </button>
-            </p>
-            <p>OF</p>
-            <p>Gebruik de link in de uitnodigings-email om mee te doen met een pool.</p>
+        <app-user-title title="valideren" [icon]="faUserCirlce">
+        </app-user-title>        
+        @if(!processing){
+          <div class="card-body card-body-auth">
+            @if(alert){
+            <ngb-alert  [type]="alert.type">{{ alert.message }}</ngb-alert>
+            }
+            @if(validated){
+            <div class="card card-body text-center mx-auto bg-faded form-validate mt-3">
+              <p>
+                <button routerLink="['']" type="button" class="btn btn-primary">
+                  naar de home-pagina
+                </button>
+              </p>
+              <p>OF</p>
+              <p>Gebruik de link in de uitnodigings-email om mee te doen met een pool.</p>
+            </div>
+          }
           </div>
-        </div>
+        } @else {
+          <h2 class="text-center">
+            <fa-icon [icon]=faSpinner spin="true"></fa-icon>
+          </h2>
+        }
       </div>
     </div>
   </div>

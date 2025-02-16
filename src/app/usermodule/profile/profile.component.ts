@@ -9,19 +9,20 @@ import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { AuthComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
-import { NgIf } from '@angular/common';
 import { UserTitleComponent } from '../title/title.component';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
   selector: "app-profile",
-  imports: [NgIf,NgbAlertModule,UserTitleComponent,FontAwesomeModule],
+  imports: [NgbAlertModule, UserTitleComponent, FontAwesomeModule],
   templateUrl: "./profile.component.html",
   styleUrls: ["./profile.component.scss"],
 })
 export class ProfileComponent extends AuthComponent implements OnInit {
+  faUserCirlce = faUserCircle;
   user: User | undefined;
   form: UntypedFormGroup;
 

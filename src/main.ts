@@ -29,6 +29,8 @@ import { GlobalEventsManager } from './app/shared/commonmodule/eventmanager';
 import { StartSessionService } from './app/shared/commonmodule/startSessionService';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { WorldCupPreviousService } from './app/shared/commonmodule/worldCupPreviousService';
+import { provideRouter } from '@angular/router';
+import { routes } from './app/app.routes';
 
 if (environment.production) {
   enableProdMode();
@@ -37,7 +39,6 @@ if (environment.production) {
 // document.addEventListener('DOMContentLoaded', () => {
 //   bootstrapApplication(AppComponent, {
 //     providers: [
-//       provideExperimentalZonelessChangeDetection(),
 //       importProvidersFrom(
 //         BrowserModule,
 //         RoutingModule,
@@ -62,8 +63,10 @@ if (environment.production) {
 //   }).catch((err) => console.log(err));
 // });
 
+console.log(routes);
 bootstrapApplication(AppComponent, {
   providers: [
+    provideRouter(routes),
     provideExperimentalZonelessChangeDetection(),
     AuthService,
     AuthUserGuardService,
