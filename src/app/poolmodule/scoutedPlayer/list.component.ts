@@ -25,6 +25,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TeamNameComponent } from '../team/name.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { NgIf } from '@angular/common';
+import { faSearch, faSignInAlt, faSpinner, faTrashAlt, faUsers, faUserSecret } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
@@ -34,7 +35,7 @@ import { NgIf } from '@angular/common';
     FontAwesomeModule,
     TeamNameComponent,
     NgbAlertModule,
-    NgIf
+    NgIf,
   ],
   selector: "app-pool-scouting-list",
   templateUrl: "./list.component.html",
@@ -49,6 +50,12 @@ export class ScoutedPlayerListComponent
   };
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public assembleFormation: S11Formation | undefined;
+  public faSpinner = faSpinner;
+  public faTrashAlt = faTrashAlt;
+  public faSignInAlt = faSignInAlt;
+  public faSearch = faSearch;
+  public faUsers = faUsers;
+  public faUserSecret = faUserSecret;
 
   constructor(
     route: ActivatedRoute,
@@ -119,7 +126,7 @@ export class ScoutedPlayerListComponent
           this.setAlert("danger", e);
           this.processing.set(false);
         },
-        complete: () => (this.processing.set(false)),
+        complete: () => this.processing.set(false),
       });
   }
 
@@ -181,7 +188,7 @@ export class ScoutedPlayerListComponent
           this.setAlert("danger", e);
           this.processing.set(false);
         },
-        complete: () => (this.processing.set(false)),
+        complete: () => this.processing.set(false),
       });
   }
 
@@ -219,7 +226,7 @@ export class ScoutedPlayerListComponent
           this.setAlert("danger", e);
           this.processing.set(false);
         },
-        complete: () => (this.processing.set(false)),
+        complete: () => this.processing.set(false),
       });
   }
 

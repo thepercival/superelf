@@ -3,6 +3,7 @@ import { GameRound } from '../../lib/gameRound';
 import { ViewPeriod } from '../../lib/period/view';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgIf } from '@angular/common';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-gameround-scroller',
@@ -20,6 +21,8 @@ export class GameRoundScrollerComponent implements OnInit, OnChanges {
   readonly current = model<GameRound>();
   @Output() update = new EventEmitter<GameRound | undefined>();
   @Output() updateViewPeriod = new EventEmitter<ViewPeriod>();
+  public faChevronLeft = faChevronLeft;
+  public faChevronRight = faChevronRight;
 
   constructor() {
   }

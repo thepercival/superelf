@@ -26,7 +26,7 @@ import { S11FormationLine } from '../../lib/formation/line';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormationLineTransfersComponent } from './line/transfers.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faEnvelope, faTrashAlt, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-transfer",
@@ -56,7 +56,12 @@ export class FormationTransferComponent
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public transferEditMode = TransferEditMode.Single;
   public goalKeeperPlace: S11FormationPlace | undefined;
-  faEnvelope = faEnvelope;
+  public faEnvelope = faEnvelope;
+  public faChevronLeft = faChevronLeft;
+  public faChevronRight = faChevronRight;
+  faUsers = faUsers;
+  faUserCircle = faUserCircle;
+  faTrashAlt = faTrashAlt;
 
   constructor(
     route: ActivatedRoute,

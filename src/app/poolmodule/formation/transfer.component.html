@@ -22,8 +22,8 @@
         @if(hasPlayersWithoutCurrentTeam(poolUser.getPool(), assembleFormation)){
           <button class="btn btn-outline-primary btn-sm"
             (click)="linkToReplacements(poolUser, assembleFormation, contentRemove)">
-            <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
-            <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+            <fa-icon [icon]=faChevronLeft></fa-icon>
+            <fa-icon [icon]=faChevronLeft></fa-icon>
           </button>
         }
           
@@ -33,18 +33,18 @@
           @let transfers = poolUser.getTransferPeriodActionList().transfers;
           @if(transferEditMode === SingleEditMode && transfers.length < transferPeriod.getMaxNrOfTransfers()){
             <button class="btn btn-outline-primary ms-1" (click)="toggleTransferEditMode(contentInfo)">
-              <fa-icon [icon]="['fas', 'users']"></fa-icon>
+              <fa-icon [icon]=faUsers></fa-icon>
             </button>
           }
           @if(transferEditMode === DoubleEditMode && (transfers.length + 1) < transferPeriod.getMaxNrOfTransfers()){
             <button class="btn btn-secondary ms-1"(click)="toggleTransferEditMode(contentInfo)">
-              <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
+              <fa-icon [icon]=faUserCircle></fa-icon>
             </button>
           }
           @if(transfers.length){ 
             <button type="button" class="btn btn-primary ms-1" 
             (click)="remove(poolUser.getPool(),assembleFormation, transfers, false)">
-            <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+            <fa-icon [icon]=faTrashAlt></fa-icon>
           </button>
           }
         </div>
@@ -52,8 +52,8 @@
         <!-- right -->    
         <button class="btn btn-outline-primary ms-1"
           (click)="linkToSubstitutions(poolUser.getPool())">
-          <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
-          <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+          <fa-icon [icon]=faChevronRight></fa-icon>
+          <fa-icon [icon]=faChevronRight></fa-icon>
         </button>
         
       </div> <!-- end header --> 

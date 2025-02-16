@@ -11,7 +11,7 @@
                 </app-gameround-scroller>
                 @if(poule){
                     <button  (click)="navigateToChat(pool, poule)" type="button" class="btn btn-outline-dark ms-3 position-relative">
-                        <fa-icon [icon]="['fas', 'message']"></fa-icon>
+                        <fa-icon [icon]=faMessage></fa-icon>
                         <span class="ms-1"> chat</span>
                         <span *ngIf="nrOfUnreadMessages > 0"
                             class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -24,12 +24,12 @@
         }
 
         <h2 *ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+            <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
         </h2>
         @if(!processing && pool){
             <div>
                 <h2 *ngIf="processingGames" class="text-center">
-                    <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+                    <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
                 </h2>
 
                 @if(!processingGames && sourceGameRoundGames.length > 0 && currentSourceGame){

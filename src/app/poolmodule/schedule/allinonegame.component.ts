@@ -32,6 +32,7 @@ import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavB
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { GameScrollerComponent } from '../game/source/gameScroller.component';
 import { NgIf } from '@angular/common';
+import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -45,7 +46,7 @@ import { NgIf } from '@angular/common';
     PoolNavBarComponent,
     LineIconComponent,
     GameScrollerComponent,
-    NgIf
+    NgIf,
   ],
   templateUrl: "./allinonegame.component.html",
   styleUrls: ["./allinonegame.component.scss"],
@@ -72,6 +73,8 @@ export class PoolAllInOneGameScheduleComponent
   // public poolUsers: PoolUser[] = [];
   public sportRankingItems!: SportRoundRankingItem[];
   private sourceStructure!: Structure;
+  public faMessage = faMessage;
+  public faSpinner = faSpinner;
 
   constructor(
     route: ActivatedRoute,

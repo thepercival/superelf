@@ -13,7 +13,7 @@
           <span [ngClass]="{ 'favitem': isFavorite(rankingItem.getName()) }">{{rankingItem.getRank()}}</span>
         </td>
         <td>
-          <fa-icon *ngIf="hasMedal(rankingItem.getRank())" [icon]="['fas', 'medal']"
+          <fa-icon *ngIf="hasMedal(rankingItem.getRank())" [icon]=faMedal
             class="{{getMedalColor(rankingItem.getRank())}}"></fa-icon>
         </td>
         <td [ngClass]="{ 'favitem': isFavorite(rankingItem.getName()) }">{{rankingItem.getName()}}</td>

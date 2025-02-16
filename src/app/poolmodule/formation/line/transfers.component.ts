@@ -16,13 +16,14 @@ import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineico
 import { TeamNameComponent } from '../../team/name.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgIf } from '@angular/common';
+import { faSpinner, faRightLeft, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-pool-formationline-transfers',
+  selector: "app-pool-formationline-transfers",
   standalone: true,
-  imports: [LineIconComponent,TeamNameComponent,FontAwesomeModule,NgIf],
-  templateUrl: './transfers.component.html',
-  styleUrls: ['./transfers.component.scss']
+  imports: [LineIconComponent, TeamNameComponent, FontAwesomeModule, NgIf],
+  templateUrl: "./transfers.component.html",
+  styleUrls: ["./transfers.component.scss"],
 })
 export class FormationLineTransfersComponent implements OnInit {
   readonly line = input.required<S11FormationLine>();
@@ -39,15 +40,17 @@ export class FormationLineTransfersComponent implements OnInit {
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public hasTransferLeft: boolean = false;
 
+  public faSpinner = faSpinner;
+  public faRightLeft = faRightLeft;
+  public faCircleCheck = faCircleCheck;
+
   constructor(
     public imageRepository: ImageRepository,
     public superElfNameService: SuperElfNameService,
     private formationRepository: FormationRepository,
     private modalService: NgbModal,
     private cssService: CSSService
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
     this.hasTransferLeft = this.transfers().length < this.maxNrOfTransfers();
@@ -55,12 +58,14 @@ export class FormationLineTransfersComponent implements OnInit {
   }
 
   completed() {
-    return this.line().getPlaces().every((place: S11FormationPlace) => place.getPlayer());
+    return this.line()
+      .getPlaces()
+      .every((place: S11FormationPlace) => place.getPlayer());
   }
 
   getTeamImageUrl(s11Player: S11Player): string {
     const team = this.getCurrentTeam(s11Player);
-    return team ? this.imageRepository.getTeamUrl(team) : '';
+    return team ? this.imageRepository.getTeamUrl(team) : "";
   }
 
   getCurrentTeam(s11Player: S11Player | undefined): Team | undefined {
@@ -91,11 +96,11 @@ export class FormationLineTransfersComponent implements OnInit {
   // }
 
   getLineClass(prefix: string): string {
-    return this.cssService.getLine(this.line().getNumber(), prefix + '-');
+    return this.cssService.getLine(this.line().getNumber(), prefix + "-");
   }
 
   getPointsTotalsClass() {
-    return this.viewGameRound() === undefined ? 'bg-totals' : 'bg-points';
+    return this.viewGameRound() === undefined ? "bg-totals" : "bg-points";
   }
 
   maybeLinkToPlayer(place: S11FormationPlace): void {
@@ -107,7 +112,7 @@ export class FormationLineTransfersComponent implements OnInit {
   }
 
   getSubstituteClass(isSubstitute: boolean): string {
-    return isSubstitute ? 'table-no-bottom-border' : '';
+    return isSubstitute ? "table-no-bottom-border" : "";
   }
 
   // isTransfer(place: S11FormationPlace): boolean {
@@ -127,28 +132,27 @@ export class FormationLineTransfersComponent implements OnInit {
   //   });
 
   transferAction(place: S11FormationPlace): void {
-    if( this.hasTransferLeft && !this.getTransfer(place)) {
+    if (this.hasTransferLeft && !this.getTransfer(place)) {
       this.transfer.emit(place);
-    } 
+    }
   }
 
-  getTransfer(place: S11FormationPlace): Transfer|undefined {
-    
+  getTransfer(place: S11FormationPlace): Transfer | undefined {
     return this.transfers().find((transfer: Transfer): boolean => {
       const player = place.getPlayer()?.getPlayersDescendingStart().shift();
       return player !== undefined && player === transfer.getPlayerIn();
     });
   }
-  
-  removeTransfer(transfer: Transfer|undefined): void {
-    if( transfer === undefined) {
+
+  removeTransfer(transfer: Transfer | undefined): void {
+    if (transfer === undefined) {
       return;
     }
     const list = transfer.getPoolUser().getTransferPeriodActionList();
-    if( list.hasDoubleTransfer() ) {
-      this.remove.emit(list.transfers)
+    if (list.hasDoubleTransfer()) {
+      this.remove.emit(list.transfers);
     } else {
-      this.remove.emit([transfer])
+      this.remove.emit([transfer]);
     }
   }
 }

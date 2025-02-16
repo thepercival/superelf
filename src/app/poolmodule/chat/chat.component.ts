@@ -25,13 +25,21 @@ import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.compone
 import { PouleTitleComponent } from '../poule/title.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { NgIf } from '@angular/common';
+import { facSuperCup } from '../../shared/poolmodule/icons';
+import { faListOl, faSpinner, faPaperPlane, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-pool-chat',
+  selector: "app-pool-chat",
   standalone: true,
-  imports: [FontAwesomeModule,SuperElfIconComponent,PouleTitleComponent,PoolNavBarComponent,NgIf],
-  templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.scss']
+  imports: [
+    FontAwesomeModule,
+    SuperElfIconComponent,
+    PouleTitleComponent,
+    PoolNavBarComponent,
+    NgIf,
+  ],
+  templateUrl: "./chat.component.html",
+  styleUrls: ["./chat.component.scss"],
 })
 export class PoolChatComponent extends PoolComponent implements OnInit {
   // public gameRounds: GameRound[] = [];
@@ -50,6 +58,11 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
   public poolUsers!: PoolUser[];
   // private sourceStructure!: Structure;
   public sportRankingItems!: SportRoundRankingItem[];
+  public facSuperCup = facSuperCup;
+  public faListOl = faListOl;
+  public faSpinner = faSpinner;
+  public faPaperPlane = faPaperPlane;
+  public faUserCircle = faUserCircle;
 
   constructor(
     route: ActivatedRoute,
@@ -64,10 +77,11 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
     public imageRepository: ImageRepository,
     public cssService: CSSService,
     private myNavigation: MyNavigation,
-    fb: UntypedFormBuilder) {
+    fb: UntypedFormBuilder
+  ) {
     super(route, router, poolRepository, globalEventsManager);
     this.form = fb.group({
-      message: '',
+      message: "",
     });
   }
 
@@ -75,56 +89,83 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.setPool(pool);
 
-      this.poolUserRepository.getObjects(pool).subscribe((poolUsers: PoolUser[]) => {
-        this.poolUsers = poolUsers;
+      this.poolUserRepository
+        .getObjects(pool)
+        .subscribe((poolUsers: PoolUser[]) => {
+          this.poolUsers = poolUsers;
 
-        this.route.params.subscribe((params: Params) => {
-          this.leagueName = params.leagueName;
+          this.route.params.subscribe((params: Params) => {
+            this.leagueName = params.leagueName;
 
-          // begin met het ophalen van de wedstrijden van de poolcompetitie 
-          const competition = pool.getCompetition(this.leagueName);
-          if (competition === undefined) {
-            this.processing.set(false);
-            throw Error('competition not found');
-          }
+            // begin met het ophalen van de wedstrijden van de poolcompetitie
+            const competition = pool.getCompetition(this.leagueName);
+            if (competition === undefined) {
+              this.processing.set(false);
+              throw Error("competition not found");
+            }
 
-          this.structureRepository.getObject(competition).subscribe({
-            next: (structure: Structure) => {
-              const round = structure.getSingleCategory().getRootRound();
-              const poule: Poule = this.structureRepository.getPouleFromPouleId(round, +params.pouleId);
-              this.poolPoule = poule;
+            this.structureRepository.getObject(competition).subscribe({
+              next: (structure: Structure) => {
+                const round = structure.getSingleCategory().getRootRound();
+                const poule: Poule =
+                  this.structureRepository.getPouleFromPouleId(
+                    round,
+                    +params.pouleId
+                  );
+                this.poolPoule = poule;
 
-              // this.poolStartLocationMap = new StartLocationMap(poolCompetitors);
-              // const gameRoundNumbers: number[] = poule.getAgainstGames().map((game: AgainstGame) => game.getGameRoundNumber());
-              // const currentGameRoundNumber = this.getCurrentSourceGameRoundNumber(poule);
+                // this.poolStartLocationMap = new StartLocationMap(poolCompetitors);
+                // const gameRoundNumbers: number[] = poule.getAgainstGames().map((game: AgainstGame) => game.getGameRoundNumber());
+                // const currentGameRoundNumber = this.getCurrentSourceGameRoundNumber(poule);
 
-              const competitionSport = pool.getCompetitionSport(this.leagueName);
-              const rankingCalculator = new AgainstSportRoundRankingCalculator(competitionSport, [GameState.Finished]);
-              this.sportRankingItems = rankingCalculator.getItemsForPoule(poule);
+                const competitionSport = pool.getCompetitionSport(
+                  this.leagueName
+                );
+                const rankingCalculator =
+                  new AgainstSportRoundRankingCalculator(competitionSport, [
+                    GameState.Finished,
+                  ]);
+                this.sportRankingItems =
+                  rankingCalculator.getItemsForPoule(poule);
 
-              this.chatMessageRepository.getObjects(poule, pool).subscribe({
-                next: (chatMessages: ChatMessage[]) => {
-                  this.chatMessages = chatMessages;
-                  this.processing.set(false);
-                }
-              });
+                this.chatMessageRepository.getObjects(poule, pool).subscribe({
+                  next: (chatMessages: ChatMessage[]) => {
+                    this.chatMessages = chatMessages;
+                    this.processing.set(false);
+                  },
+                });
 
-              // this.initCurrentGameRound(competitionConfig, currentViewPeriod);
-            },
-            error: (e: string) => { this.setAlert('danger', e); this.processing.set(false); }
+                // this.initCurrentGameRound(competitionConfig, currentViewPeriod);
+              },
+              error: (e: string) => {
+                this.setAlert("danger", e);
+                this.processing.set(false);
+              },
+            });
           });
         });
-      });
     });
   }
 
-  get HomeSide(): AgainstSide { return AgainstSide.Home; }
-  get AwaySide(): AgainstSide { return AgainstSide.Away; }
+  get HomeSide(): AgainstSide {
+    return AgainstSide.Home;
+  }
+  get AwaySide(): AgainstSide {
+    return AgainstSide.Away;
+  }
 
-  get CupOrSuperCup(): boolean { return this.leagueName === LeagueName.Cup || this.leagueName === LeagueName.SuperCup; }
+  get CupOrSuperCup(): boolean {
+    return (
+      this.leagueName === LeagueName.Cup ||
+      this.leagueName === LeagueName.SuperCup
+    );
+  }
 
   getMessageDate(date: Date): string {
-    return this.dateFormatter.toString(date, this.dateFormatter.niceDateTime()) + ' uur';
+    return (
+      this.dateFormatter.toString(date, this.dateFormatter.niceDateTime()) +
+      " uur"
+    );
   }
 
   sendMessage(pool: Pool, poule: Poule): void {
@@ -136,12 +177,20 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
         this.form.controls.message.reset();
         this.processingMessage = false;
       },
-      error: (e: string) => { this.setAlert('danger', e); this.processingMessage = false; }
+      error: (e: string) => {
+        this.setAlert("danger", e);
+        this.processingMessage = false;
+      },
     });
   }
 
   linkToPoolUser(poolUser: PoolUser): void {
-    this.router.navigate(['/pool/user', poolUser.getPool().getId(), poolUser.getId(), 0]);
+    this.router.navigate([
+      "/pool/user",
+      poolUser.getPool().getId(),
+      poolUser.getId(),
+      0,
+    ]);
   }
 
   navigateBack() {

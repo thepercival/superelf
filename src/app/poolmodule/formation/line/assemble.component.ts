@@ -14,23 +14,27 @@ import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineico
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TeamNameComponent } from '../../team/name.component';
 import { NgIf } from '@angular/common';
+import { faSpinner, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-pool-formationline-assemble',
+  selector: "app-pool-formationline-assemble",
   standalone: true,
-  imports: [NgIf,LineIconComponent,FontAwesomeModule,TeamNameComponent],
-  templateUrl: './assemble.component.html',
-  styleUrls: ['./assemble.component.scss']
+  imports: [NgIf, LineIconComponent, FontAwesomeModule, TeamNameComponent],
+  templateUrl: "./assemble.component.html",
+  styleUrls: ["./assemble.component.scss"],
 })
 export class FormationLineAssembleComponent implements OnInit {
   readonly line = input.required<S11FormationLine>();
   readonly selectedPlace = input<S11FormationPlace>();
-  readonly viewGameRound = input<GameRound>();  
+  readonly viewGameRound = input<GameRound>();
   readonly processing = model<boolean>(true);
   @Output() editPlace = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
+  public faSpinner = faSpinner;
+  public faPencilAlt = faPencilAlt;
+  public faTrashAlt = faTrashAlt;
 
   constructor(
     public imageRepository: ImageRepository,
@@ -38,21 +42,21 @@ export class FormationLineAssembleComponent implements OnInit {
     private formationRepository: FormationRepository,
     private modalService: NgbModal,
     private cssService: CSSService
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
     this.processing.set(false);
   }
 
   completed() {
-    return this.line().getPlaces().every((place: S11FormationPlace) => place.getPlayer());
+    return this.line()
+      .getPlaces()
+      .every((place: S11FormationPlace) => place.getPlayer());
   }
 
   getTeamImageUrl(s11Player: S11Player): string {
     const team = this.getCurrentTeam(s11Player);
-    return team ? this.imageRepository.getTeamUrl(team) : '';
+    return team ? this.imageRepository.getTeamUrl(team) : "";
   }
 
   getCurrentTeam(s11Player: S11Player | undefined): Team | undefined {
@@ -69,8 +73,8 @@ export class FormationLineAssembleComponent implements OnInit {
   emptyPlace(place: S11FormationPlace) {
     this.processing.set(true);
     this.formationRepository.editPlace(place, undefined).subscribe({
-      next: () => { },
-      complete: () => this.processing.set(false)
+      next: () => {},
+      complete: () => this.processing.set(false),
     });
   }
 
@@ -83,11 +87,11 @@ export class FormationLineAssembleComponent implements OnInit {
   // }
 
   getLineClass(prefix: string): string {
-    return this.cssService.getLine(this.line().getNumber(), prefix + '-');
+    return this.cssService.getLine(this.line().getNumber(), prefix + "-");
   }
 
   getPointsTotalsClass() {
-    return this.viewGameRound() === undefined ? 'bg-totals' : 'bg-points';
+    return this.viewGameRound() === undefined ? "bg-totals" : "bg-points";
   }
 
   maybeLinkToPlayer(place: S11FormationPlace): void {
@@ -99,6 +103,6 @@ export class FormationLineAssembleComponent implements OnInit {
   }
 
   getSubstituteClass(isSubstitute: boolean): string {
-    return isSubstitute ? 'table-no-bottom-border' : '';
+    return isSubstitute ? "table-no-bottom-border" : "";
   }
 }

@@ -23,6 +23,9 @@ import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.c
 import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
 import { AgainstGameTitleComponent } from './source/title.component';
 import { NgIf } from '@angular/common';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faFutbol, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { facCard } from '../../shared/poolmodule/icons';
 
 @Component({
   selector: "app-game-source",
@@ -33,7 +36,7 @@ import { NgIf } from '@angular/common';
     LineIconComponent,
     SuperElfIconComponent,
     AgainstGameTitleComponent,
-    NgIf
+    NgIf,
   ],
   templateUrl: "./source.component.html",
   styleUrls: ["./source.component.scss"],
@@ -50,6 +53,7 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
 
   public processingLineups = true;
   public processingEvents = true;
+  public faSpinner = faSpinner;
 
   constructor(
     route: ActivatedRoute,
@@ -72,7 +76,7 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
       this.setPool(pool);
 
       this.route.params.subscribe((params) => {
-        const gameRound = this.getGameRoundByNumber(pool,+params["gameRound"]);
+        const gameRound = this.getGameRoundByNumber(pool, +params["gameRound"]);
 
         this.getSourceStructure(pool.getSourceCompetition()).subscribe({
           next: (structure: Structure) => {
@@ -151,7 +155,7 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
                 }
                 this.game = game;
               },
-              complete: () => (this.processing.set(false)),
+              complete: () => this.processing.set(false),
             });
           },
         });
@@ -186,6 +190,21 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
     return eventItem.color;
   }
 
+  getIconDefintion(event: FootballEvent): IconDefinition {
+    switch (event) {
+      case FootballGoal.Normal:
+      case FootballGoal.Own:
+        return faFutbol;
+      case FootballGoal.Assist:
+        return faFutbol;
+      case FootballGoal.Penalty:
+        return faFutbol;
+      case FootballCard.Yellow:
+      case FootballCard.Red:
+        return facCard;
+    }
+  }
+
   get HomeSide(): AgainstSide {
     return AgainstSide.Home;
   }
@@ -200,7 +219,7 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
     return this.structureRepository.getObject(competition);
   }
 
-  getGameRoundByNumber(pool: Pool,gameRoundNumber: number): GameRound {
+  getGameRoundByNumber(pool: Pool, gameRoundNumber: number): GameRound {
     const viewPeriods = pool.getCompetitionConfig().getViewPeriods();
 
     let viewPeriod = viewPeriods.shift();

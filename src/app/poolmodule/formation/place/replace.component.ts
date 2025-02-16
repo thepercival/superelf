@@ -27,6 +27,7 @@ import { ViewPeriodType } from '../../../lib/period/view/json';
 import { S11Formation } from '../../../lib/formation';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faRightLeft, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-place-replace",
@@ -59,6 +60,9 @@ export class FormationPlaceReplaceComponent
   public selectableLines!: FootballLine[];
   public assembleFormation: S11Formation | undefined;
   public formationChecker: FootballFormationChecker | undefined;
+
+  public faRightLeft = faRightLeft;
+  public faSpinner = faSpinner;
 
   constructor(
     route: ActivatedRoute,

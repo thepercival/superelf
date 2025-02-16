@@ -15,6 +15,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { TeamNameComponent } from '../team/name.component';
 import { NgIf } from '@angular/common';
+import { faChevronRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-player-choose",
@@ -33,6 +34,7 @@ export class S11PlayerChooseComponent implements OnInit {
   readonly filter = model.required<ChoosePlayersFilter>();
   readonly showAll = input<boolean>(false);
   readonly viewPeriodType = input.required<ViewPeriodType>();
+  public faChevronRight = faChevronRight;
 
   @Output() selectS11Player = new EventEmitter<S11Player>();
   @Output() selectPlayer = new EventEmitter<Player>();
@@ -47,6 +49,8 @@ export class S11PlayerChooseComponent implements OnInit {
   private alreadyChosenPersonsMap!: PersonMap;
   private alreadyChosenTeamsMap!: TeamMap;
 
+  public faSpinner = faSpinner;
+  
   constructor(
     protected playerRepository: S11PlayerRepository,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,

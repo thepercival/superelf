@@ -27,6 +27,7 @@ import { S11FormationCalculator } from '../../../lib/formation/calculator';
 import { ViewPeriodType } from '../../../lib/period/view/json';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faRightLeft, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-place-transfer",
@@ -36,7 +37,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     NgbAlertModule,
     FontAwesomeModule,
     S11PlayerChooseComponent,
-    NgIf
+    NgIf,
   ],
   templateUrl: "./transfer.component.html",
   styleUrls: ["./transfer.component.scss"],
@@ -59,6 +60,9 @@ export class FormationPlaceTransferComponent
   public selectableLines!: FootballLine[];
   public formationChecker: FootballFormationChecker | undefined;
   public calcFormation: S11Formation | undefined;
+
+  public faRightLeft = faRightLeft;
+  public faSpinner = faSpinner;
 
   constructor(
     route: ActivatedRoute,
@@ -265,7 +269,7 @@ export class FormationPlaceTransferComponent
         this.setAlert("danger", e);
         this.processing.set(false);
       },
-      complete: () => (this.processing.set(false)),
+      complete: () => this.processing.set(false),
     });
   }
 

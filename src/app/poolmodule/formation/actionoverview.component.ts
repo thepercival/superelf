@@ -19,11 +19,17 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TeamNameComponent } from '../team/name.component';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
+import { faChevronLeft, faRightLeft, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-actionoverview",
   standalone: true,
-  imports: [FontAwesomeModule,NgbAlertModule,TeamNameComponent,LineIconComponent],
+  imports: [
+    FontAwesomeModule,
+    NgbAlertModule,
+    TeamNameComponent,
+    LineIconComponent,
+  ],
   templateUrl: "./actionoverview.component.html",
   styleUrls: ["./actionoverview.component.scss"],
 })
@@ -38,6 +44,10 @@ export class FormationActionOverviewComponent
   transfers: Transfer[] | undefined;
   substitutions: Substitution[] | undefined;
   public calcFormation: S11Formation | undefined;
+  public faChevronLeft = faChevronLeft;
+  public faRightLeft = faRightLeft;
+  public faUsers = faUsers;
+  public faUserCircle = faUserCircle;
 
   constructor(
     route: ActivatedRoute,
@@ -75,14 +85,14 @@ export class FormationActionOverviewComponent
                       this.setAlert("danger", e);
                       this.processing.set(false);
                     },
-                    complete: () => (this.processing.set(false)),
+                    complete: () => this.processing.set(false),
                   });
               },
               error: (e: string) => {
                 this.setAlert("danger", e);
                 this.processing.set(false);
               },
-              complete: () => (this.processing.set(false)),
+              complete: () => this.processing.set(false),
             });
         });
       },
@@ -131,8 +141,7 @@ export class FormationActionOverviewComponent
 
   inAfterTransfer(pool: Pool): boolean {
     return (
-      pool.getTransferPeriod().getEndDateTime().getTime() <
-      new Date().getTime()
+      pool.getTransferPeriod().getEndDateTime().getTime() < new Date().getTime()
     );
   }
 }

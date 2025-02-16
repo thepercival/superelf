@@ -21,11 +21,12 @@ import { MyNavigation } from '../../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../../shared/poolmodule/component';
 import { ChoosePlayersFilter, S11PlayerChooseComponent } from '../../player/choose.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-scouted-player-edit",
   standalone: true,
-  imports: [FontAwesomeModule, NgbAlertModule, S11PlayerChooseComponent,NgIf],
+  imports: [FontAwesomeModule, NgbAlertModule, S11PlayerChooseComponent, NgIf],
   templateUrl: "./edit.component.html",
   styleUrls: ["./edit.component.scss"],
 })
@@ -45,7 +46,9 @@ export class FormationPlaceEditComponent
   public alreadyChosenTeams: Team[] = [];
   public selectableLines: FootballLine[];
   public selectableTeams: Team[] = [];
-
+  public faSpinner = faSpinner;
+  public faUsers = faUsers;
+  
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -100,7 +103,7 @@ export class FormationPlaceEditComponent
                   this.setAlert("danger", e);
                   this.processing.set(false);
                 },
-                complete: () => (this.processing.set(false)),
+                complete: () => this.processing.set(false),
               });
             this.selectableTeams = pool
               .getSourceCompetition()
@@ -114,7 +117,7 @@ export class FormationPlaceEditComponent
           this.setAlert("danger", e);
           this.processing.set(false);
         },
-        complete: () => (this.processing.set(false)),
+        complete: () => this.processing.set(false),
       });
     });
   }
@@ -233,7 +236,7 @@ export class FormationPlaceEditComponent
           this.setAlert("danger", e);
           this.processing.set(false);
         },
-        complete: () => (this.processing.set(false)),
+        complete: () => this.processing.set(false),
       });
   }
 

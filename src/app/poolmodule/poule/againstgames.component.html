@@ -3,14 +3,14 @@
 
         <div class="d-flex justify-content-{{poolPoule && poolUserFromSession ? 'between' : 'center'}} mt-2">
             <h2 class="ms-3" ngClass="{'pointer': pool}" (click)="navigateToStructure()">
-                <app-superelf-icon [name]="cssService.getIconName(leagueName)"></app-superelf-icon>
+                <app-superelf-icon [icon]="leagueName === Cup ? facCup : facSuperCup"></app-superelf-icon>
                 <span class="ms-1">{{nameService.getLeagueName(leagueName)}}</span>
             </h2>
             <div>
                 @if(pool && poolPoule && poolUserFromSession){
                 <button (click)="navigateToChat(pool,poolPoule)" type="button"
                     class="btn btn-outline-dark me-3 position-relative">
-                    <fa-icon [icon]="['fas', 'message']"></fa-icon>
+                    <fa-icon [icon]=faMessage></fa-icon>
                     <span class="ms-1"> chat</span>
                     <span *ngIf="nrOfUnreadMessages > 0"
                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -23,7 +23,7 @@
         </div>
 
         <h2 *ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+            <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
         </h2>
 
         @if(!processing && pool && currentViewPeriod && poolPoule){
@@ -42,7 +42,7 @@
             </div>
 
             <h2 *ngIf="processingGameRound" class="text-center">
-                <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+                <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
             </h2>            
             @if(!processing && homeCompetitor && awayCompetitor && currentGameRound){
             <table class="table">

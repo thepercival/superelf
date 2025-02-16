@@ -5,26 +5,24 @@ import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.c
 import { TeamNameComponent } from '../team/name.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgIf } from '@angular/common';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-player-basics',
+  selector: "app-player-basics",
   standalone: true,
-  imports: [NgIf,LineIconComponent,TeamNameComponent,FontAwesomeModule],
-  templateUrl: './basics.component.html',
-  styleUrls: ['./basics.component.scss']
+  imports: [NgIf, LineIconComponent, TeamNameComponent, FontAwesomeModule],
+  templateUrl: "./basics.component.html",
+  styleUrls: ["./basics.component.scss"],
 })
 export class PlayerBasicsComponent implements OnInit {
   readonly player = input<Player>();
   // @Input() pool!: Pool;
   readonly points = input<number>();
+  public faUserCircle = faUserCircle;
 
-  constructor(
-    public imageRepository: ImageRepository) {
-  }
+  constructor(public imageRepository: ImageRepository) {}
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   //OnChanges player, points
 

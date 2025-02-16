@@ -1,11 +1,11 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-6">
     <h2>
-      <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
+      <fa-icon [icon]=faUsers></fa-icon> deelnemers
     </h2>
 
     <h2 *ngIf="processing" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+      <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
     </h2>
 
     @if(alert) {
@@ -35,9 +35,9 @@
             {{poolUser.getName()}}
           </td>
           <td *ngIf="pool.transferPeriodNotStarted()">
-            <fa-icon *ngIf="poolUser.getNrOfAssembled() < 15" [icon]="['fas', 'times-circle']" class="text-danger">
+            <fa-icon *ngIf="poolUser.getNrOfAssembled() < 15" [icon]=faTimesCircle class="text-danger">
             </fa-icon>
-            <fa-icon *ngIf="poolUser.getNrOfAssembled() == 15" [icon]="['fas', 'check-circle']" class="text-success">
+            <fa-icon *ngIf="poolUser.getNrOfAssembled() == 15" [icon]=faCheckCircle class="text-success">
             </fa-icon>
             {{poolUser.getNrOfAssembled()}}/15
           </td>
@@ -47,7 +47,7 @@
           <!-- <td class="text-end">
             <button *ngIf="!poolUser.getAdmin() && canBeRemoved()" type="button" class="btn btn-sm btn-danger"
               [disabled]="processing" (click)="openRemoveApprovalModal(poolUser)">
-              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+              <fa-icon [icon]=faTrashAlt></fa-icon>
             </button>
           </td> -->
         </tr>

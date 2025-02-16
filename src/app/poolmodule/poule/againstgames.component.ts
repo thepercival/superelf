@@ -37,12 +37,22 @@ import { PoolCompetitionsNavBarComponent } from '../../shared/poolmodule/competi
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { NgIf } from '@angular/common';
+import { facCup, facSuperCup } from '../../shared/poolmodule/icons';
+import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-againstgames",
   standalone: true,
-  imports: [SuperElfIconComponent,FontAwesomeModule,PouleTitleComponent,GameRoundScrollerComponent,
-    TeamNameComponent,PoolCompetitionsNavBarComponent,PoolNavBarComponent,LineIconComponent, NgIf
+  imports: [
+    SuperElfIconComponent,
+    FontAwesomeModule,
+    PouleTitleComponent,
+    GameRoundScrollerComponent,
+    TeamNameComponent,
+    PoolCompetitionsNavBarComponent,
+    PoolNavBarComponent,
+    LineIconComponent,
+    NgIf,
   ],
   templateUrl: "./againstgames.component.html",
   styleUrls: ["./againstgames.component.scss"],
@@ -75,6 +85,11 @@ export class PoolPouleAgainstGamesComponent
 
   public sourcePoule!: Poule;
   public nrOfUnreadMessages = 0;
+
+  public faSpinner = faSpinner;
+  public faMessage = faMessage;
+  public facCup = facCup;
+  public facSuperCup = facSuperCup;
 
   constructor(
     route: ActivatedRoute,
@@ -229,7 +244,7 @@ export class PoolPouleAgainstGamesComponent
                               .splice(idx)
                               .concat([], this.gameRounds);
                           }
-                          this.setGameRoundAndGetStatistics(pool,gameRound);
+                          this.setGameRoundAndGetStatistics(pool, gameRound);
                         }
                         this.processing.set(false);
                       },
@@ -262,6 +277,15 @@ export class PoolPouleAgainstGamesComponent
     });
   }
 
+  get Cup(): LeagueName {
+    return LeagueName.Cup;
+  }
+  get SuperCup(): LeagueName {
+    return LeagueName.SuperCup;
+  }
+  get WorldCup(): LeagueName {
+    return LeagueName.WorldCup;
+  }
   get Created(): GameState {
     return GameState.Created;
   }

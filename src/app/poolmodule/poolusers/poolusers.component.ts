@@ -15,19 +15,23 @@ import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { NgIf } from '@angular/common';
+import { faCheckCircle, faSpinner, faTimesCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
-  selector: 'app-pool-users',
+  selector: "app-pool-users",
   standalone: true,
-  imports: [FontAwesomeModule, NgbAlertModule,PoolNavBarComponent,NgIf],
-  templateUrl: './poolusers.component.html',
-  styleUrls: ['./poolusers.component.scss']
+  imports: [FontAwesomeModule, NgbAlertModule, PoolNavBarComponent, NgIf],
+  templateUrl: "./poolusers.component.html",
+  styleUrls: ["./poolusers.component.scss"],
 })
 export class PoolUsersComponent extends PoolComponent implements OnInit {
+  public poolUsers: PoolUser[] = [];
+  public faUsers = faUsers;
+  public faSpinner = faSpinner;
+  public faTimesCircle = faTimesCircle;
+  public faCheckCircle = faCheckCircle;
 
-  poolUsers: PoolUser[] = [];
-  
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -37,7 +41,6 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
     private modalService: NgbModal
   ) {
     super(route, router, poolRepository, globalEventsManager);
-
   }
 
   ngOnInit() {
@@ -63,15 +66,17 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
           },
           complete: () => this.processing.set(false),
         });
-
       },
       error: (e) => {
-        this.setAlert('danger', e); this.processing.set(false);
-      }
+        this.setAlert("danger", e);
+        this.processing.set(false);
+      },
     });
   }
 
-  get PoolUsers(): NavBarItem { return NavBarItem.PoolUsers; }
+  get PoolUsers(): NavBarItem {
+    return NavBarItem.PoolUsers;
+  }
 
   // openRemoveApprovalModal(poolUser: PoolUser) {
   //   const modalRef = this.modalService.open(PoolUserRemoveModalComponent);

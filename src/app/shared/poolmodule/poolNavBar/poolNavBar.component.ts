@@ -14,12 +14,13 @@ import { NavBarItem } from './items';
 import { SuperElfIconComponent } from '../icon/icon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgIf, NgTemplateOutlet } from '@angular/common';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt, faEnvelope, faInfoCircle, faUsers, faUserSecret } from '@fortawesome/free-solid-svg-icons';
+import { facStructure, facTrophy } from '../icons';
 
 @Component({
   standalone: true,
   selector: "app-pool-navbar",
-  imports: [NgIf,FontAwesomeModule,SuperElfIconComponent,NgTemplateOutlet],
+  imports: [NgIf, FontAwesomeModule, SuperElfIconComponent, NgTemplateOutlet],
   templateUrl: "./poolNavBar.component.html",
   styleUrls: ["./poolNavBar.component.scss"],
 })
@@ -33,6 +34,12 @@ export class PoolNavBarComponent implements OnInit, OnChanges {
   public hasUnviewedAchievements: boolean = false;
   public latestGetUnviewedRequest: Date | undefined;
   public faInfoCircle = faInfoCircle;
+  public facTrophy = facTrophy;
+  public facStructure = facStructure;
+  public faCalendarAlt = faCalendarAlt;
+  public faUsers = faUsers;
+  public faUserSecret = faUserSecret;
+  public faEnvelope = faEnvelope;
 
   constructor(
     public authService: AuthService,

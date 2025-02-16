@@ -2,7 +2,7 @@
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-6 col-lg-4 g-0">
       <div class="card my-3">
-        <app-user-title title="registreren" [icon]="faUserCirlce">
+        <app-user-title title="registreren" [icon]="faUserCircle">
         </app-user-title>
 
         @if(!processing) {
@@ -29,7 +29,7 @@
                   <div class="row">
                     <div class="input-group">
                       <span class="input-group-text" id="basic-addon1">
-                        <fa-icon [icon]="['fas', 'envelope']"></fa-icon>
+                        <fa-icon [icon]=faEnvelope></fa-icon>
                       </span>
                       <input class="form-control"
                         ngClass="{ 'is-invalid': form.controls.emailaddress.invalid, 'is-valid': form.controls.emailaddress.valid }"
@@ -40,7 +40,7 @@
                   <div class="row mt-4">
                     <div class="input-group">
                       <span class="input-group-text" id="basic-addon1">
-                        <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
+                        <fa-icon [icon]=faUserCircle></fa-icon>
                       </span>
                       <input class="form-control"
                         ngClass="{ 'is-invalid': form.controls.name.invalid, 'is-valid': form.controls.name.valid }" type="text"
@@ -51,7 +51,7 @@
                   <div class="row mt-4">
                     <div class="input-group">
                       <span class="input-group-text" id="basic-addon1">
-                        <fa-icon [icon]="['fas', 'key']"></fa-icon>
+                        <fa-icon [icon]=faKey></fa-icon>
                       </span>
                       <input class="form-control"
                         ngClass="{ 'is-invalid': form.controls.password.invalid, 'is-valid': form.controls.password.valid }"
@@ -62,7 +62,7 @@
                   <div class="row mt-4">
                     <div class="input-group">
                       <span class="input-group-text" id="basic-addon1">
-                        <fa-icon [icon]="['fas', 'key']"></fa-icon>
+                        <fa-icon [icon]=faKey></fa-icon>
                       </span>
                       <input class="form-control"
                         ngClass="{ 'is-invalid': form.controls.passwordRepeat.invalid, 'is-valid': form.controls.passwordRepeat.valid }"

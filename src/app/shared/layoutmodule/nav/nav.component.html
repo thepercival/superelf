@@ -1,18 +1,19 @@
 <nav class="navbar navbar-dark bg-primary py-1 ps-1 text-light">
   <div>
     <a class="navbar-brand text-light" tabindex="-1" routerLink="['/']">
-      {{nameInfo ? 'S11' : 'SuperElf'}}
+      {{headerInfo() ? 'S11' : 'SuperElf'}}
     </a>
   </div>
 
-  @if(nameInfo) {
+  @let tmplHeaderInfo = headerInfo();
+  @if(tmplHeaderInfo) {
     <div>
-      <h1 class="h3 text-truncate me-1 d-flex mb-0 pointer" (click)="navigateToPoolHome(nameInfo.id)">
-        <span class="me-1">{{nameInfo.name}}</span>
+      <h1 class="h3 text-truncate me-1 d-flex mb-0 pointer" (click)="navigateToPoolHome(tmplHeaderInfo.id)">
+        <span class="me-1">{{tmplHeaderInfo.name}}</span>
     
         <small class="d-flex flex-column p-0" style="font-size: 11px;">
-          <span>{{getSeasonStart(nameInfo.start)}}</span>
-          <span>{{getSeasonEnd(nameInfo.start)}}</span>
+          <span>{{getSeasonStart(tmplHeaderInfo.start)}}</span>
+          <span>{{getSeasonEnd(tmplHeaderInfo.start)}}</span>
         </small>
     
       </h1>

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FootballLine, HorizontalMultipleQualifyRule, HorizontalPoule, HorizontalSingleQualifyRule, Place, QualifyGroup, QualifyTarget, Round, VerticalMultipleQualifyRule, VerticalSingleQualifyRule} from 'ngx-sport';
 import { LeagueName } from '../../lib/leagueName';
-import { CustomIconName } from '../poolmodule/icon/icon.component';
-
 @Injectable({
     providedIn: 'root'
 })
@@ -75,10 +73,4 @@ export class CSSService {
     getLine(line: FootballLine, prefix: string = 'bg-'): string {
         return prefix + 'line-' + line;
     }
-
-    getIconName(leagueName: LeagueName): CustomIconName {
-        return leagueName === LeagueName.Cup ? 'cup' : 'super-cup';
-    }
-
-
 }

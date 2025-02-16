@@ -3,17 +3,17 @@
 
     <div class="d-flex flex-wrap justify-content-between my-3">
       <h2 class="me-2 text-truncate">
-        <fa-icon [icon]="['fas', 'user-secret']"></fa-icon> scoutingslijst
+        <fa-icon [icon]=faUserSecret></fa-icon> scoutingslijst
       </h2>
       @if(pool) {
         <div>
           <button *ngIf="!processing && pool.getAssemblePeriod().isIn()" class="btn btn-secondary mx-2"
             routerLink="['/pool/formation/assemble', pool.getId()]">
-            <fa-icon [icon]="['fas', 'users']"></fa-icon> <span class="ms-1 d-none d-sm-inline">
+            <fa-icon [icon]=faUsers></fa-icon> <span class="ms-1 d-none d-sm-inline">
               mijn team</span>
           </button>
           <button (click)="linkToSearch(pool)" type="button" class="btn btn-secondary ms-2">
-            <fa-icon [icon]="['fas', 'search']"></fa-icon> <span class="d-none d-sm-inline ms-1">zoeken</span>
+            <fa-icon [icon]=faSearch></fa-icon> <span class="d-none d-sm-inline ms-1">zoeken</span>
           </button>
         </div>
       }
@@ -21,7 +21,7 @@
     
     @if(processing()){
     <h2 class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+      <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
     </h2>
     }
     @if(alert){
@@ -40,7 +40,7 @@
           <td class="text-end" (click)="$event.stopPropagation()">
             <button *ngIf="showCopyToTeam(assembleFormation, scoutedPlayer.getS11Player())"
               (click)="copyToTeam(assembleFormation, scoutedPlayer.getS11Player())" type="button" class="btn btn-sm btn-secondary">
-              <fa-icon [icon]=" [ 'fas', 'sign-in-alt'] "></fa-icon>
+              <fa-icon [icon]=faSignInAlt></fa-icon>
               <span class="d-none d-sm-inline ms-1">plaats in team</span>
             </button>
           </td>
@@ -63,7 +63,7 @@
           <td (click)="$event.stopPropagation()">
             @if(pool) {
               <button type="button" class="btn btn-sm btn-outline-danger" (click)="openRemoveModal(scoutedPlayer, pool)">
-                <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                <fa-icon [icon]=faTrashAlt></fa-icon>
               </button>
             }
           </td>

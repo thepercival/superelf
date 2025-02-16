@@ -1,7 +1,8 @@
 import { Component, input } from '@angular/core';
-import { IconName, IconPrefix, SizeProp } from '@fortawesome/fontawesome-svg-core';
+import { IconDefinition, IconName, IconPrefix, SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { LeagueName } from '../../../lib/leagueName';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { facCup, facPlate, facSuperCup, facWorldCup } from '../icons';
 
 @Component({
     standalone: true,
@@ -14,20 +15,16 @@ export class SuperElfTrophyIconComponent {
     readonly leagueName = input.required<LeagueName>();
     readonly size = input<SizeProp>();    
 
-    get prefix(): IconPrefix { 
-        return <IconPrefix>'fac'; 
-    }    
-
-    get iconName(): IconName {
+    public getIconDefinition(): IconDefinition {
         switch (this.leagueName()) {
             case LeagueName.Competition:
-              return <IconName>'plate';
+              return facPlate;
             case LeagueName.Cup:
-                return <IconName>'cup';
+                return facCup;
             case LeagueName.SuperCup:
-                return <IconName>'super-cup';
+                return facSuperCup;
             case LeagueName.WorldCup:
-                return <IconName>'world-cup';
+                return facWorldCup;
         }
     }
     

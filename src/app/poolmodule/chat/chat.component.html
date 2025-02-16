@@ -5,14 +5,14 @@
 
             <button (click)="navigateBack()" type="button" class="btn btn-outline-dark ms-3 position-relative">
                 <span class="me-1">terug naar</span>
-                <fa-icon *ngIf="!CupOrSuperCup" [icon]="['fas', 'list-ol']"></fa-icon>
-                <app-superelf-icon *ngIf="CupOrSuperCup" [name]="'super-cup'"></app-superelf-icon>
+                <fa-icon *ngIf="!CupOrSuperCup" [icon]=faListOl></fa-icon>
+                <app-superelf-icon *ngIf="CupOrSuperCup" [icon]=facSuperCup></app-superelf-icon>
                 <span class="ms-1">{{nameService.getLeagueName(leagueName)}}</span>
             </button>
         </div>
 
         <h2 *ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+            <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
         </h2>
 
         @if(!processing && pool && poolPoule && chatMessages){
@@ -30,7 +30,7 @@
                     <textarea class="form-control" placeholder="plaats een bericht"
                         formControlName="message"></textarea>
                     <button type="button" class="btn btn-primary ms-1" (click)="sendMessage(pool,poolPoule)">
-                        <fa-icon [icon]="['fas', 'paper-plane']"></fa-icon>
+                        <fa-icon [icon]=faPaperPlane></fa-icon>
                     </button>
                 </div>
             </form>
@@ -51,7 +51,7 @@
 
 <ng-template #contentMessageTitle let-message="message" let-end="end">
     <div class="d-flex mx-1" ngClass="{'flex-row-reverse': end}">
-        <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
+        <fa-icon [icon]=faUserCircle></fa-icon>
 
         <span class="ms-1">{{message.getUser().getName()}}</span>
 

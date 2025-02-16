@@ -3,11 +3,11 @@
     <div class="col-xs-12 col-sm-10 col-md-8 col-xl-6">
 
       <h1 class="text-center">
-        <fa-icon [icon]="['fas', 'envelope']"></fa-icon> inschrijven
+        <fa-icon [icon]=faEnvelope></fa-icon> inschrijven
       </h1>
 
       <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+        <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
       </h2>
 
       @if(alert){
@@ -21,10 +21,10 @@
             </div>
             <div class="d-flex justify-content-center my-4">
               <button type="button" class="btn btn-lg btn-primary me-4" routerLink="['/user/register']">
-                <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> registreren
+                <fa-icon [icon]=faUserCircle></fa-icon> registreren
               </button>
               <button type="button" class="btn btn-xl btn-primary ms-4" routerLink="['/user/login']">
-                <fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon> inloggen
+                <fa-icon [icon]=faSignInAlt></fa-icon> inloggen
               </button>
             </div>
           </div>

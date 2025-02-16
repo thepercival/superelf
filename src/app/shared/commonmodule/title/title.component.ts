@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { Router } from '@angular/router';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
+import { IconDefinition, IconName } from '@fortawesome/fontawesome-svg-core';
 
 import { MyNavigation } from '../../commonmodule/navigation';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -13,7 +13,7 @@ import { NgIf } from '@angular/common';
   templateUrl: "./title.component.html",
 })
 export class TitleComponent {
-  readonly iconName = input<IconName>();
+  readonly icon = input<IconDefinition>();
   readonly center = input<boolean>(false);
   readonly title = input<string>("");
   readonly poolId = input<number>();

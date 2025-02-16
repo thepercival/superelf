@@ -30,6 +30,7 @@ import { AgainstGameTitleComponent } from '../game/source/title.component';
 import { S11PlayerViewPeriodStatisticsComponent } from '../statistics/viewperiod.component';
 import { S11PlayerGameRoundStatisticsComponent } from '../statistics/gameround.component';
 import { NgIf } from '@angular/common';
+import { faChevronLeft, faLevelUpAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-s11player-info",
@@ -43,7 +44,7 @@ import { NgIf } from '@angular/common';
     AgainstGameTitleComponent,
     S11PlayerViewPeriodStatisticsComponent,
     S11PlayerGameRoundStatisticsComponent,
-    NgIf
+    NgIf,
   ],
   templateUrl: "./info.component.html",
   styleUrls: ["./info.component.scss"],
@@ -65,6 +66,10 @@ export class S11PlayerComponent extends PoolComponent implements OnInit {
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public player: Player | undefined;
   public sliderGameRounds: (GameRound | undefined)[] = [];
+
+  public faLevelUpAlt = faLevelUpAlt;
+  public faSpinner = faSpinner;
+  public faChevronLeft = faChevronLeft;
 
   constructor(
     route: ActivatedRoute,

@@ -2,7 +2,7 @@
 
 <!-- <div class="d-flex justify-content-between mb-4 mt-2">
   <h2 class="text-center">
-    <fa-icon [icon]="['fas', 'users']"></fa-icon> spelers kiezen
+    <fa-icon [icon]=faUsers></fa-icon> spelers kiezen
   </h2>
   <button (click)="close.emit()" type="button" class="btn btn-outline-dark">
     <span class="fs-4">&times;</span>
@@ -10,7 +10,7 @@
 </div> -->
 
 <h2 *ngIf="processing" class="text-center">
-  <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+  <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
 </h2>
 
 <!-- <ngb-alert *ngIf="alert" [type]="alert.type">
@@ -53,7 +53,7 @@
         <td class="text-end" (click)="$event.stopPropagation()">
           <button *ngIf="isChoosable(choosePersonItem.player)" type="button" class="btn btn-primary btn-sm"
             (click)="select(choosePersonItem.s11Player,choosePersonItem.player)">
-            <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+            <fa-icon [icon]=faChevronRight></fa-icon>
           </button>
         </td>
       </tr>

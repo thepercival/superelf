@@ -21,7 +21,7 @@
 <ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentTeam="currentTeam">
   <tr *ngIf="processing()">
     <td colspan=3 class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+      <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
     </td>
   </tr>
   <tr *ngIf="!processing()" (click)="maybeLinkToPlayer(place)" ngClass="{'pointer': s11Player}">
@@ -37,10 +37,10 @@
     </td>
     <td class="text-end" (click)="$event.stopPropagation()" class="{{getSubstituteClass(place.isSubstitute())}}">
       <button *ngIf="!s11Player" type="button" class="btn btn-sm" (click)="editPlace.emit(place)">
-        <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+        <fa-icon [icon]=faPencilAlt></fa-icon>
       </button>
       <button *ngIf="s11Player" type="button" class="btn btn-sm" (click)="emptyPlace(place)">
-        <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+        <fa-icon [icon]=faTrashAlt></fa-icon>
       </button>
     </td>
   </tr>

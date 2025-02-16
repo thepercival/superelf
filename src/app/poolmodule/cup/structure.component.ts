@@ -24,27 +24,33 @@ import { PoolCupRoundComponent } from './round.component';
 import { PoolCompetitionsNavBarComponent } from '../../shared/poolmodule/competitionsNavBar/competitionsNavBar.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { NgIf } from '@angular/common';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
-  selector: 'app-pool-cup',
+  selector: "app-pool-cup",
   standalone: true,
-  imports: [FontAwesomeModule,PoolCupRoundComponent,PoolCompetitionsNavBarComponent,PoolNavBarComponent,NgIf],
-  templateUrl: './structure.component.html',
-  styleUrls: ['./structure.component.scss']
+  imports: [
+    FontAwesomeModule,
+    PoolCupRoundComponent,
+    PoolCompetitionsNavBarComponent,
+    PoolNavBarComponent,
+    NgIf,
+  ],
+  templateUrl: "./structure.component.html",
+  styleUrls: ["./structure.component.scss"],
 })
 export class PoolCupComponent extends PoolComponent implements OnInit {
-
   poolUsers: PoolUser[] = [];
-  
+
   public poule!: Poule;
   public competitionSport!: CompetitionSport;
   public startLocationMap!: StartLocationMap;
   protected structureNameService!: StructureNameService;
   public currentGameRound: GameRound | undefined;
   public gameRounds: GameRound[] = [];
-  public leagueName = LeagueName.Cup
-
+  public leagueName = LeagueName.Cup;
+  public faSpinner = faSpinner;
 
   constructor(
     route: ActivatedRoute,
@@ -57,16 +63,16 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
     protected authService: AuthService,
     private gameRoundRepository: GameRoundRepository,
     private modalService: NgbModal,
-    private myNavigation: MyNavigation) {
+    private myNavigation: MyNavigation
+  ) {
     super(route, router, poolRepository, globalEventsManager);
-
   }
 
   ngOnInit() {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
-        const competitionConfig = pool.getCompetitionConfig();        
+        const competitionConfig = pool.getCompetitionConfig();
         const currentViewPeriod = this.getCurrentViewPeriod(pool);
         if (currentViewPeriod === undefined) {
           return;
@@ -76,68 +82,94 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => {
             this.poolUsers = poolUsers;
-            this.poolUserFromSession = poolUsers.find((poolUser: PoolUser) => poolUser.getUser() === user);
+            this.poolUserFromSession = poolUsers.find(
+              (poolUser: PoolUser) => poolUser.getUser() === user
+            );
 
             const competition = pool.getCompetition(this.leagueName);
             if (competition === undefined) {
               this.processing.set(false);
-              throw Error('competitionSport not found');
+              throw Error("competitionSport not found");
             }
 
             this.structureRepository.getObject(competition).subscribe({
               next: (structure: Structure) => {
-
                 // -----------  JE TOONT VOOR EEN BEPAALDE VIEWPERIODE -------------- //
                 // DE GAMEROUNDS ZIJN DAN DE WEDSTRIJDEN EN DE POOLUSERS MET HUN PUNTEN PER GAMEROUND ZIJN DAN DE GAMEROUND-SCORE
                 const poolCompetitors = pool.getCompetitors(this.leagueName);
                 const round = structure.getSingleCategory().getRootRound();
                 this.poule = round.getFirstPoule(); // ?? GET FROM BACKEND ?? this.pool.getCompetition(PoolCollection.League_Default).get;
-                this.competitionSport = pool.getCompetitionSport(this.leagueName);
+                this.competitionSport = pool.getCompetitionSport(
+                  this.leagueName
+                );
                 this.startLocationMap = new StartLocationMap(poolCompetitors);
-                this.structureNameService = new StructureNameService(this.startLocationMap);
+                this.structureNameService = new StructureNameService(
+                  this.startLocationMap
+                );
 
                 // gameRoundScores voor competitors of poolCompetitions
                 // getGAMES!!
 
                 this.initCurrentGameRound(competitionConfig, currentViewPeriod);
               },
-              error: (e: string) => { this.setAlert('danger', e); this.processing.set(false); }
+              error: (e: string) => {
+                this.setAlert("danger", e);
+                this.processing.set(false);
+              },
             });
           },
-          error: (e: string) => { this.setAlert('danger', e); this.processing.set(false); }
+          error: (e: string) => {
+            this.setAlert("danger", e);
+            this.processing.set(false);
+          },
         });
       },
       error: (e) => {
-        this.setAlert('danger', e); this.processing.set(false);
-      }
+        this.setAlert("danger", e);
+        this.processing.set(false);
+      },
     });
   }
 
-  get Competitions(): NavBarItem { return NavBarItem.Competitions }
-  get CupStructure(): CompetitionsNavBarItem { return CompetitionsNavBarItem.CupStructure }
-  
-  initCurrentGameRound(competitionConfig: CompetitionConfig, viewPeriod: ViewPeriod): void {
-    this.gameRoundRepository.getCurrentNumbers(competitionConfig, viewPeriod).subscribe({
-      next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
-        let currentGameRound;
-        if (currentGameRoundNumbers.lastFinishedOrInPorgress) {
-          currentGameRound = viewPeriod.getGameRound(currentGameRoundNumbers.lastFinishedOrInPorgress);
-        }
-        this.currentGameRound = currentGameRound;
-        if (this.currentGameRound !== undefined) {
-          // console.log('CDK', this.currentGameRound, this.gameRounds[0]);
-          while (this.currentGameRound !== this.gameRounds[0]) {
-            const gameRound = this.gameRounds.shift();
-            if (gameRound !== undefined) {
-              this.gameRounds.push(gameRound);
+  get Competitions(): NavBarItem {
+    return NavBarItem.Competitions;
+  }
+  get CupStructure(): CompetitionsNavBarItem {
+    return CompetitionsNavBarItem.CupStructure;
+  }
+
+  initCurrentGameRound(
+    competitionConfig: CompetitionConfig,
+    viewPeriod: ViewPeriod
+  ): void {
+    this.gameRoundRepository
+      .getCurrentNumbers(competitionConfig, viewPeriod)
+      .subscribe({
+        next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
+          let currentGameRound;
+          if (currentGameRoundNumbers.lastFinishedOrInPorgress) {
+            currentGameRound = viewPeriod.getGameRound(
+              currentGameRoundNumbers.lastFinishedOrInPorgress
+            );
+          }
+          this.currentGameRound = currentGameRound;
+          if (this.currentGameRound !== undefined) {
+            // console.log('CDK', this.currentGameRound, this.gameRounds[0]);
+            while (this.currentGameRound !== this.gameRounds[0]) {
+              const gameRound = this.gameRounds.shift();
+              if (gameRound !== undefined) {
+                this.gameRounds.push(gameRound);
+              }
             }
           }
-        }
-        this.updateGameRound(currentGameRound);
-      },
-      error: (e: string) => { this.setAlert('danger', e); this.processing.set(false); },
-      complete: () => this.processing.set(false)
-    });
+          this.updateGameRound(currentGameRound);
+        },
+        error: (e: string) => {
+          this.setAlert("danger", e);
+          this.processing.set(false);
+        },
+        complete: () => this.processing.set(false),
+      });
   }
 
   updateGameRound(gameRound: GameRound | undefined): void {
@@ -149,6 +181,11 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
   }
 
   navigateToPoule(pool: Pool, poule: Poule): void {
-    this.router.navigate(['/pool/poule-againstgames', pool.getId(), this.leagueName, poule.getId()]);
+    this.router.navigate([
+      "/pool/poule-againstgames",
+      pool.getId(),
+      this.leagueName,
+      poule.getId(),
+    ]);
   }
 }

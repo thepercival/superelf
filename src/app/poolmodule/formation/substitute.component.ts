@@ -26,7 +26,7 @@ import { JsonSubstitution } from '../../lib/editAction/substitution/json';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { FormationLineSubstitutionsComponent } from './line/substitutions.component';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-substitute",
@@ -55,6 +55,7 @@ export class FormationSubstituteComponent
   public calcFormation: S11Formation | undefined;
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public faInfoCircle = faInfoCircle;
+  public faChevronLeft = faChevronLeft;
 
   constructor(
     route: ActivatedRoute,

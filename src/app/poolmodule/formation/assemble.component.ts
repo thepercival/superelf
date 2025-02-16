@@ -23,6 +23,7 @@ import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavB
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormationLineAssembleComponent } from './line/assemble.component';
 import { NgIf } from '@angular/common';
+import { faUserSecret, faUsers, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-assemble",
@@ -32,7 +33,7 @@ import { NgIf } from '@angular/common';
     NgbAlertModule,
     FontAwesomeModule,
     FormationLineAssembleComponent,
-    NgIf
+    NgIf,
   ],
   templateUrl: "./assemble.component.html",
   styleUrls: ["./assemble.component.scss"],
@@ -49,6 +50,9 @@ export class FormationAssembleComponent
   selectedTeamMap: TeamMap = new TeamMap();
   public oneTeamSimultaneous = new OneTeamSimultaneous();
   public statisticsGetter = new StatisticsGetter();
+  public faUserSecret = faUserSecret;
+  public faUsers = faUsers;
+  public faSpinner = faSpinner;
 
   constructor(
     route: ActivatedRoute,
@@ -85,14 +89,14 @@ export class FormationAssembleComponent
                     pool.getId(),
                   ]);
                 },
-                complete: () => (this.processing.set(false)),
+                complete: () => this.processing.set(false),
               });
           },
           error: (e: string) => {
             this.setAlert("danger", e);
             this.processing.set(false);
           },
-          complete: () => (this.processing.set(false)),
+          complete: () => this.processing.set(false),
         });
       },
       error: (e) => {

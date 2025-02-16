@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, signal, WritableSignal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -20,7 +20,7 @@ import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 export class NavComponent implements OnInit {
   navbarCollapsed = true;
   user: User | undefined;
-  public nameInfo: NavHeaderInfo | undefined;
+  public headerInfo: WritableSignal<NavHeaderInfo | undefined> = signal(undefined);
   faUserCircle = faUserCircle;
   faSignInAlt = faSignInAlt;
 
@@ -33,7 +33,7 @@ export class NavComponent implements OnInit {
   ) {
     this.globalEventsManager.navHeaderInfo.subscribe(
       (headerInfo: NavHeaderInfo | undefined) => {
-        this.nameInfo = headerInfo;
+        this.headerInfo.set(headerInfo);
       }
     );
   }

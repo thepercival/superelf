@@ -3,7 +3,7 @@
         
         <div class="d-flex justify-content-between mx-2 my-2">
             <h2>
-                <app-superelf-icon [name]="'trophy'"></app-superelf-icon>
+                <app-superelf-icon [icon]=facTrophy></app-superelf-icon>
                 <span class="ms-1">prijzenkasten</span>
             </h2>
 
@@ -133,7 +133,7 @@
             }
         } @else {
             <h2 class="text-center">
-                <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+                <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
             </h2>
         }     
     </div>
@@ -151,7 +151,7 @@
 
 <!-- <ng-template #contentMessageTitle let-message="message" let-end="end">
     <div class="d-flex mx-1" [ngClass]="{'flex-row-reverse': end}">
-        <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
+        <fa-icon [icon]=faUserCircle></fa-icon>
 
         <span class="ms-1">{{message.getUser().getName()}}</span>
 

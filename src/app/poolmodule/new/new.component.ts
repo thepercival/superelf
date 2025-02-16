@@ -14,6 +14,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TitleComponent } from '../../shared/commonmodule/title/title.component';
 import { NgIf } from '@angular/common';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class NewComponent implements OnInit {
     maxlengthname: PoolCollection.MAX_LENGTH_NAME,
   };
   public competitionConfig: CompetitionConfig | undefined;
+  public faSpinner = faSpinner;
   // activeSourceCompetitionShell: JsonCompetitionShell | undefined;
 
   constructor(

@@ -10,18 +10,24 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgIf } from '@angular/common';
+import { faEnvelope, faSpinner, faUserCircle, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
-  selector: 'app-pool-join',
+  selector: "app-pool-join",
   standalone: true,
-  imports: [NgIf,FontAwesomeModule,NgbAlertModule],
-  templateUrl: './join.component.html',
-  styleUrls: ['./join.component.scss']
+  imports: [NgIf, FontAwesomeModule, NgbAlertModule],
+  templateUrl: "./join.component.html",
+  styleUrls: ["./join.component.scss"],
 })
 export class JoinComponent extends PoolComponent implements OnInit {
   key: string | undefined;
   joined: boolean = false;
+
+  public faEnvelope = faEnvelope;
+  public faSpinner = faSpinner;
+  public faUserCircle = faUserCircle;
+  public faSignInAlt = faSignInAlt;
 
   constructor(
     protected authService: AuthService,
@@ -36,8 +42,8 @@ export class JoinComponent extends PoolComponent implements OnInit {
 
   ngOnInit() {
     if (!this.authService.isLoggedIn()) {
-      this.route.params.subscribe(params => {
-        this.startSessionService.setJoinAction(params['id'], params['key']);;
+      this.route.params.subscribe((params) => {
+        this.startSessionService.setJoinAction(params["id"], params["key"]);
       });
       this.processing.set(false);
     } else {
@@ -47,15 +53,16 @@ export class JoinComponent extends PoolComponent implements OnInit {
           this.join(pool);
         },
         error: (e) => {
-          this.setAlert('danger', e); this.processing.set(false);
-        }
+          this.setAlert("danger", e);
+          this.processing.set(false);
+        },
       });
     }
   }
 
   protected join(pool: Pool) {
-    this.route.params.subscribe(params => {
-      this.key = params['key'];
+    this.route.params.subscribe((params) => {
+      this.key = params["key"];
     });
     if (!this.key) {
       this.processing.set(false);
@@ -64,12 +71,13 @@ export class JoinComponent extends PoolComponent implements OnInit {
     this.poolRepository.join(pool, this.key).subscribe({
       next: () => {
         this.joined = true;
-        this.setAlert('success', 'je bent nu ingeschreven');
+        this.setAlert("success", "je bent nu ingeschreven");
       },
       error: (e) => {
-        this.setAlert('danger', e); this.processing.set(false);
+        this.setAlert("danger", e);
+        this.processing.set(false);
       },
-      complete: () => this.processing.set(false)
+      complete: () => this.processing.set(false),
     });
   }
 }

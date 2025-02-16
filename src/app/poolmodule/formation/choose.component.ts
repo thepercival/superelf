@@ -17,18 +17,27 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TitleComponent } from '../../shared/commonmodule/title/title.component';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { NgIf } from '@angular/common';
+import { faCheckCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-pool-chooseformation',
+  selector: "app-pool-chooseformation",
   standalone: true,
-  imports: [NgbAlertModule,FontAwesomeModule,TitleComponent,LineIconComponent,NgIf],
-  templateUrl: './choose.component.html',
-  styleUrls: ['./choose.component.scss']
+  imports: [
+    NgbAlertModule,
+    FontAwesomeModule,
+    TitleComponent,
+    LineIconComponent,
+    NgIf,
+  ],
+  templateUrl: "./choose.component.html",
+  styleUrls: ["./choose.component.scss"],
 })
 export class FormationChooseComponent extends PoolComponent implements OnInit {
   public formations: Formation[] = [];
   public poolUser!: PoolUser;
   public currentFormation: Formation | undefined;
+  public faCheckCircle = faCheckCircle;
+  public faSpinner = faSpinner;
 
   constructor(
     route: ActivatedRoute,
@@ -38,18 +47,19 @@ export class FormationChooseComponent extends PoolComponent implements OnInit {
     protected formationRepository: FormationRepository,
     protected competitionConfigRepository: CompetitionConfigRepository,
     private modalService: NgbModal,
-    protected poolUserRepository: PoolUserRepository,
+    protected poolUserRepository: PoolUserRepository
   ) {
     super(route, router, poolRepository, globalEventsManager);
   }
 
   ngOnInit() {
-    super.parentNgOnInit()
-      .subscribe({
-        next: (pool: Pool) => {
-          this.setPool(pool);
+    super.parentNgOnInit().subscribe({
+      next: (pool: Pool) => {
+        this.setPool(pool);
 
-          this.competitionConfigRepository.getAvailableFormations(pool.getCompetitionConfig()).pipe(
+        this.competitionConfigRepository
+          .getAvailableFormations(pool.getCompetitionConfig())
+          .pipe(
             concatMap((formations: Formation[]) => {
               this.formations = formations;
               return this.poolUserRepository.getObjectFromSession(pool);
@@ -58,43 +68,49 @@ export class FormationChooseComponent extends PoolComponent implements OnInit {
           .subscribe({
             next: (poolUser: PoolUser) => {
               this.poolUser = poolUser;
-              if( poolUser.hasAssembleFormation() ) {
-                this.formationRepository.getObject(poolUser, pool.getAssembleViewPeriod()).subscribe({
-                  next: (assembleFormation: S11Formation) => {
-                    this.currentFormation = assembleFormation.getEqualFormation(this.formations);
-                    this.processing.set(false);
-                  },
-                  error: (e) => {
-                    this.setAlert('danger', e); this.processing.set(false);
-                  }
-                });
+              if (poolUser.hasAssembleFormation()) {
+                this.formationRepository
+                  .getObject(poolUser, pool.getAssembleViewPeriod())
+                  .subscribe({
+                    next: (assembleFormation: S11Formation) => {
+                      this.currentFormation =
+                        assembleFormation.getEqualFormation(this.formations);
+                      this.processing.set(false);
+                    },
+                    error: (e) => {
+                      this.setAlert("danger", e);
+                      this.processing.set(false);
+                    },
+                  });
               } else {
                 this.processing.set(false);
               }
             },
             error: (e) => {
-              this.setAlert('danger', e); this.processing.set(false);
+              this.setAlert("danger", e);
+              this.processing.set(false);
             },
-            complete: () => this.processing.set(false)
+            complete: () => this.processing.set(false),
           });
-        },
-        error: (e) => {
-          this.setAlert('danger', e); this.processing.set(false);
-        }
-      });
+      },
+      error: (e) => {
+        this.setAlert("danger", e);
+        this.processing.set(false);
+      },
+    });
   }
 
   editFormation(pool: Pool, newFormation: Formation) {
-    this.formationRepository.editObject(this.poolUser, newFormation)
-      .subscribe({
-        next: () => {
-          this.router.navigate(['/pool/formation/assemble', pool.getId()]);
-        },
-        error: (e) => {
-          this.processing.set(false); this.setAlert('danger', e);
-        },
-        complete: () => this.processing.set(false)
-      });
+    this.formationRepository.editObject(this.poolUser, newFormation).subscribe({
+      next: () => {
+        this.router.navigate(["/pool/formation/assemble", pool.getId()]);
+      },
+      error: (e) => {
+        this.processing.set(false);
+        this.setAlert("danger", e);
+      },
+      complete: () => this.processing.set(false),
+    });
   }
 }
 

@@ -6,6 +6,6 @@
 </span> -->
 
 <fa-stack [size]="size()">
-    <fa-icon class="{{color}}" [icon]="['fas', 'circle']" stackItemSize="2x"></fa-icon>
+    <fa-icon class="{{color}}" [icon]=faCircle stackItemSize="2x"></fa-icon>
     <fa-icon *ngIf="badgeCategory()" [icon]="[getPrefix(), getIconName()]" stackItemSize="1x"></fa-icon>
 </fa-stack>

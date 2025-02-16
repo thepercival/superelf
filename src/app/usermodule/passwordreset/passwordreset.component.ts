@@ -10,7 +10,7 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { UserTitleComponent } from '../title/title.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
-import { faKey } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faKey } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
@@ -28,6 +28,7 @@ export class PasswordresetComponent extends AuthComponent implements OnInit {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
     maxlengthemailaddress: User.MAX_LENGTH_EMAIL
   };
+  public faEnvelope = faEnvelope;
 
   constructor(
     authService: AuthService,

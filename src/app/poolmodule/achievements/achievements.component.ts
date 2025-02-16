@@ -24,24 +24,30 @@ import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.compone
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SuperElfTrophyIconComponent } from '../../shared/poolmodule/icon/trophy.component';
 import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.component';
+import { facTrophy } from "../../shared/poolmodule/icons"
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 @Component({
-  selector: 'app-pool-achievements',
+  selector: "app-pool-achievements",
   standalone: true,
   imports: [
-    PoolNavBarComponent
-    ,WorldCupNavBarComponent,
+    PoolNavBarComponent,
+    WorldCupNavBarComponent,
     SuperElfIconComponent,
     FontAwesomeModule,
     SuperElfTrophyIconComponent,
-    SuperElfBadgeIconComponent],
-  templateUrl: './achievements.component.html',
-  styleUrls: ['./achievements.component.scss']
+    SuperElfBadgeIconComponent,
+  ],
+  templateUrl: "./achievements.component.html",
+  styleUrls: ["./achievements.component.scss"],
 })
 export class AchievementsComponent extends PoolComponent implements OnInit {
   public achievementListItems: AchievementListItem[] | undefined;
   public leagueName!: LeagueName;
   public goatToggle = false;
   public goatPoints: GoatPoints;
+  public faSpinner = faSpinner;
+  public facTrophy = facTrophy;
 
   constructor(
     route: ActivatedRoute,
@@ -59,8 +65,8 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
       competitionTrophy: 15,
       cupTrophy: 8,
       supercupTrophy: 5,
-      badge: 1
-    }
+      badge: 1,
+    };
     // this.form = fb.group({
     //   message: '',
     // });
@@ -71,62 +77,89 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
       this.setPool(pool);
       this.setLeagueName(pool.getCompetitions());
 
-      this.achievementRepository.getPoolCollection(pool.getCollection()).subscribe({
-        next: (achievements: (Trophy | Badge)[]) => {
-          achievements.sort((achievement1: Trophy | Badge, achievement2: Trophy | Badge) => {
-            return achievement1.seasonShortName >= achievement2.seasonShortName ? 1 : -1;
-          });
-          this.achievementListItems = this.mapToAchievementListItems(achievements);
-          this.processing.set(false);
-        },
-      });
+      this.achievementRepository
+        .getPoolCollection(pool.getCollection())
+        .subscribe({
+          next: (achievements: (Trophy | Badge)[]) => {
+            achievements.sort(
+              (achievement1: Trophy | Badge, achievement2: Trophy | Badge) => {
+                return achievement1.seasonShortName >=
+                  achievement2.seasonShortName
+                  ? 1
+                  : -1;
+              }
+            );
+            this.achievementListItems =
+              this.mapToAchievementListItems(achievements);
+            this.processing.set(false);
+          },
+        });
 
       this.poolUserRepository.getObjectFromSession(pool).subscribe({
-        next: ((poolUser: PoolUser) => {
+        next: (poolUser: PoolUser) => {
           this.poolUserFromSession = poolUser;
-          this.achievementRepository.getUnviewedObjects(poolUser.getPool()).subscribe({
-            next: (achievements: (Trophy | Badge)[]) => {
-              if (achievements.length > 0) {
-                this.achievementRepository.removeUnviewedObjects(poolUser).subscribe({});
-                this.openUnviewedModal(achievements);
-                this.s11Storage.setLatest(pool, new Date(), false);
-              }
-            },
-          });
-        }),
-        error: (e: string) => {
-          this.setAlert('danger', e); this.processing.set(false);
+          this.achievementRepository
+            .getUnviewedObjects(poolUser.getPool())
+            .subscribe({
+              next: (achievements: (Trophy | Badge)[]) => {
+                if (achievements.length > 0) {
+                  this.achievementRepository
+                    .removeUnviewedObjects(poolUser)
+                    .subscribe({});
+                  this.openUnviewedModal(achievements);
+                  this.s11Storage.setLatest(pool, new Date(), false);
+                }
+              },
+            });
         },
-        complete: () => this.processing.set(false)
+        error: (e: string) => {
+          this.setAlert("danger", e);
+          this.processing.set(false);
+        },
+        complete: () => this.processing.set(false),
       });
     });
   }
 
-
-  get Achievements(): NavBarItem { return NavBarItem.Achievements }
-  get Competition(): LeagueName { return LeagueName.Competition; }
-  get Cup(): LeagueName { return LeagueName.Cup; }
-  get SuperCup(): LeagueName { return LeagueName.SuperCup; }
-  get WorldCup(): LeagueName { return LeagueName.WorldCup; }
-
-  setLeagueName(competitions: Competition[]): void {
-    const hasWorldCup = false /*competitions.some((competition: Competition): boolean => {
-      return competition.getLeague().getName() === LeagueName.WorldCup;
-    })*/;
-    this.leagueName = hasWorldCup ? LeagueName.WorldCup : LeagueName.Competition;
+  get Achievements(): NavBarItem {
+    return NavBarItem.Achievements;
+  }
+  get Competition(): LeagueName {
+    return LeagueName.Competition;
+  }
+  get Cup(): LeagueName {
+    return LeagueName.Cup;
+  }
+  get SuperCup(): LeagueName {
+    return LeagueName.SuperCup;
+  }
+  get WorldCup(): LeagueName {
+    return LeagueName.WorldCup;
   }
 
-  private mapToAchievementListItems(achievements: (Badge | Trophy)[]): AchievementListItem[] {
+  setLeagueName(competitions: Competition[]): void {
+    const hasWorldCup =
+      false; /*competitions.some((competition: Competition): boolean => {
+      return competition.getLeague().getName() === LeagueName.WorldCup;
+    })*/
+    this.leagueName = hasWorldCup
+      ? LeagueName.WorldCup
+      : LeagueName.Competition;
+  }
+
+  private mapToAchievementListItems(
+    achievements: (Badge | Trophy)[]
+  ): AchievementListItem[] {
     const map = new Map<string | number, AchievementListItem>();
     achievements.forEach((achievement: Badge | Trophy) => {
       let item = map.get(achievement.poolUser.user.id);
       if (item === undefined) {
         item = {
-          name: achievement.poolUser.user.name ?? '',
+          name: achievement.poolUser.user.name ?? "",
           leagueTrophies: new Map(),
           badges: [],
           isGoat: false,
-          goatTotalPoints: 0
+          goatTotalPoints: 0,
         };
         item.leagueTrophies.set(LeagueName.Competition, []);
         item.leagueTrophies.set(LeagueName.Cup, []);
@@ -134,7 +167,7 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
 
         map.set(achievement.poolUser.user.id, item);
       }
-      
+
       if (achievement instanceof Trophy) {
         const leagueName = achievement.getCompetition().getLeague().getName();
         item.goatTotalPoints += this.getLeagueGoatPoints(leagueName);
@@ -144,12 +177,11 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
           trophies.push(achievement);
           item.leagueTrophies.set(leagueName, trophies);
         }
-      }
-      else {
+      } else {
         item.badges.push(achievement);
         item.goatTotalPoints++;
       }
-    })
+    });
 
     const list: AchievementListItem[] = [];
     for (const [propertyKey, achievementListItem] of map.entries()) {
@@ -168,56 +200,66 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
       return this.goatPoints.competitionTrophy;
     } else if (LeagueName.Cup == leagueName) {
       return this.goatPoints.cupTrophy;
-    } if (LeagueName.SuperCup == leagueName) {
+    }
+    if (LeagueName.SuperCup == leagueName) {
       return this.goatPoints.supercupTrophy;
     }
     return 0;
   }
 
   openUnviewedModal(achievements: (Trophy | Badge)[]) {
-    const modalRef = this.modalService.open(UnviewedAchievementsModalComponent, { backdrop: 'static' });
+    const modalRef = this.modalService.open(
+      UnviewedAchievementsModalComponent,
+      { backdrop: "static" }
+    );
     modalRef.componentInstance.achievements = achievements;
-    modalRef.result.then((result) => {
-
-    }, (reason) => {
-
-    });
+    modalRef.result.then(
+      (result) => {},
+      (reason) => {}
+    );
   }
 
   openLinkNewTab(pool: Pool, trophy: Trophy, leagueName: string) {
-
     const season = trophy.getCompetition().getSeason();
-    if (season.getStartDateTime().getTime() < new Date('2022-01-01').getTime()) {
+    if (
+      season.getStartDateTime().getTime() < new Date("2022-01-01").getTime()
+    ) {
       // old env
-      let suffix
-      const oldPoolId = this.convertToOldPoolId(pool, season.getStartDateTime());
-      if( oldPoolId === undefined ) {
+      let suffix;
+      const oldPoolId = this.convertToOldPoolId(
+        pool,
+        season.getStartDateTime()
+      );
+      if (oldPoolId === undefined) {
         return;
-      }      
-      if (leagueName === LeagueName.Competition) {        
-        suffix = 'pool/stand/poolid/' + oldPoolId + '/';
+      }
+      if (leagueName === LeagueName.Competition) {
+        suffix = "pool/stand/poolid/" + oldPoolId + "/";
       } else if (leagueName === LeagueName.Cup) {
-        suffix = 'pool/beker/poolid/' + oldPoolId + '/';
+        suffix = "pool/beker/poolid/" + oldPoolId + "/";
       } else if (leagueName === LeagueName.SuperCup) {
-        suffix = 'pool/supercup/poolid/' + oldPoolId + '/';
+        suffix = "pool/supercup/poolid/" + oldPoolId + "/";
       }
       // window.open('//localhost:8000/' + suffix, '_blank');
-      window.open('//old.superelf-eredivisie.nl/' + suffix, '_blank');
+      window.open("//old.superelf-eredivisie.nl/" + suffix, "_blank");
     } else {
-      let url      
+      let url;
       if (leagueName === LeagueName.Competition) {
-        url = 'pool/competition/' + trophy.poolId + '';
+        url = "pool/competition/" + trophy.poolId + "";
       } else if (leagueName === LeagueName.Cup) {
-        url = 'pool/cup/' + trophy.poolId + '';
+        url = "pool/cup/" + trophy.poolId + "";
       } else if (leagueName === LeagueName.SuperCup) {
-        url = 'pool/poule-againstgames/' + trophy.poolId + '/SuperCup/0';
+        url = "pool/poule-againstgames/" + trophy.poolId + "/SuperCup/0";
       }
-      window.open(url, '_blank');
+      window.open(url, "_blank");
     }
   }
 
-  private convertToOldPoolId(pool: Pool, seasonStartDateTime: Date): number|undefined {
-    if( pool.getName() === 'kamp duim') {
+  private convertToOldPoolId(
+    pool: Pool,
+    seasonStartDateTime: Date
+  ): number | undefined {
+    if (pool.getName() === "kamp duim") {
       if (seasonStartDateTime.getFullYear() === 2014) {
         return 1;
       } else if (seasonStartDateTime.getFullYear() === 2015) {
@@ -233,13 +275,13 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
       } else if (seasonStartDateTime.getFullYear() === 2021) {
         return 44;
       }
-    } else if (pool.getName() === 'Deerns') {
+    } else if (pool.getName() === "Deerns") {
       if (seasonStartDateTime.getFullYear() === 2020) {
         return 39;
       } else if (seasonStartDateTime.getFullYear() === 2021) {
         return 50;
       }
-    } else if (pool.getName() === 'Arriva') {
+    } else if (pool.getName() === "Arriva") {
       if (seasonStartDateTime.getFullYear() === 2020) {
         return 40;
       } else if (seasonStartDateTime.getFullYear() === 2021) {
@@ -253,18 +295,15 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     const modalRef = this.modalService.open(UserBadgesModalComponent);
     modalRef.componentInstance.userName = achievementListItem.name;
     modalRef.componentInstance.badges = achievementListItem.badges;
-    modalRef.result.then((result) => {
-
-    }, (reason) => {
-
-    });
+    modalRef.result.then(
+      (result) => {},
+      (reason) => {}
+    );
   }
-
 
   toggleGoat() {
     this.goatToggle = !this.goatToggle;
   }
-
 
   navigateBack() {
     this.myNavigation.back();

@@ -30,11 +30,19 @@ import { GameRoundScrollerComponent } from '../gameRound/gameRoundScroller.compo
 import { FormationLineViewComponent } from '../formation/line/view.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { NgIf } from '@angular/common';
+import { faRightLeft, faUsers, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-user",
   standalone: true,
-  imports: [NgIf,NgbAlertModule,FontAwesomeModule,GameRoundScrollerComponent,FormationLineViewComponent,PoolNavBarComponent],
+  imports: [
+    NgIf,
+    NgbAlertModule,
+    FontAwesomeModule,
+    GameRoundScrollerComponent,
+    FormationLineViewComponent,
+    PoolNavBarComponent,
+  ],
   templateUrl: "./pooluser.component.html",
   styleUrls: ["./pooluser.component.scss"],
 })
@@ -53,6 +61,10 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   public totalGameRoundPoints: number = 0;
   public processingFormation = true;
   public processingStatistics: boolean = false;
+
+  public faRightLeft = faRightLeft;
+  public faUsers = faUsers;
+  public faSpinner = faSpinner;
 
   constructor(
     route: ActivatedRoute,
@@ -102,7 +114,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
                 this.setAlert("danger", e);
                 this.processing.set(false);
               },
-              complete: () => (this.processing.set(false)),
+              complete: () => this.processing.set(false),
             });
         });
       },
@@ -141,7 +153,8 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   }
 
   private getCurrentGameRound(
-    pool: Pool, gameRoundParam: number | undefined
+    pool: Pool,
+    gameRoundParam: number | undefined
   ): Observable<GameRound | undefined | CurrentGameRoundNumbers> {
     if (gameRoundParam !== undefined && gameRoundParam > 0) {
       return of(this.viewPeriod.getGameRound(gameRoundParam));
@@ -157,7 +170,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     formation: S11Formation,
     gameRoundParam: number | undefined
   ): void {
-    this.getCurrentGameRound(pool,gameRoundParam).subscribe({
+    this.getCurrentGameRound(pool, gameRoundParam).subscribe({
       next: (object: GameRound | undefined | CurrentGameRoundNumbers) => {
         let currentGameRound;
         if (object instanceof GameRound) {
@@ -198,7 +211,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
         this.setAlert("danger", e);
         this.processing.set(false);
       },
-      complete: () => (this.processing.set(false)),
+      complete: () => this.processing.set(false),
     });
   }
 
@@ -267,12 +280,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       ? this.currentGameRound.getNumber()
       : 0;
     this.router.navigate(
-      [
-        "/pool/player/",
-        pool.getId(),
-        s11Player.getId(),
-        gameRoundNumber,
-      ] /*, {
+      ["/pool/player/", pool.getId(), s11Player.getId(), gameRoundNumber] /*, {
       state: { s11Player, "pool": pool, currentGameRound: undefined }
     }*/
     );

@@ -33,7 +33,8 @@ import { GameRoundScrollerComponent } from '../gameRound/gameRoundScroller.compo
 import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.component';
 import { TogetherRankingComponent } from './togetherranking.component';
 import { NgIf } from '@angular/common';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { facTrophy } from '../../shared/poolmodule/icons';
 
 
 @Component({
@@ -48,7 +49,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     GameRoundScrollerComponent,
     SuperElfBadgeIconComponent,
     TogetherRankingComponent,
-    NgIf
+    NgIf,
   ],
   templateUrl: "./competition.component.html",
   styleUrls: ["./competition.component.scss"],
@@ -65,7 +66,9 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   public currentGameRound: GameRound | undefined;
   public gameRounds: (GameRound | undefined)[] = [];
   public nrOfUnreadMessages = 0;
+  public faMessage = faMessage;
   public faSpinner = faSpinner;
+  public facTrophy = facTrophy;
 
   constructor(
     route: ActivatedRoute,
@@ -97,7 +100,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
           this.setAlert("info", "geen bekijk-periode gevonden");
           return;
         }
-        this.currentViewPeriod = currentViewPeriod;        
+        this.currentViewPeriod = currentViewPeriod;
         const user = this.authService.getUser();
         this.gameRounds = currentViewPeriod.getGameRounds();
         this.poolUserRepository.getObjects(pool).subscribe({
@@ -128,7 +131,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
                 },
               });
             }
-            this.initPoolUsersTotals(pool,currentViewPeriod);
+            this.initPoolUsersTotals(pool, currentViewPeriod);
             this.initCurrentGameRound(pool, currentViewPeriod);
           },
           error: (e: string) => {
@@ -192,33 +195,30 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
       });
   }
 
-  initCurrentGameRound(
-    pool: Pool,
-    viewPeriod: ViewPeriod
-  ): void {
-      const competitionConfig: CompetitionConfig = pool.getCompetitionConfig();
-      this.defaultGameRoundCalculator
-        .calculateFinished(competitionConfig, viewPeriod, undefined)
-        .subscribe({
-          next: (currentGameRound: GameRound) => {
-            const gameRounds: (GameRound | undefined)[] = viewPeriod
-              .getGameRounds()
-              .slice();
-            this.gameRounds = gameRounds;
+  initCurrentGameRound(pool: Pool, viewPeriod: ViewPeriod): void {
+    const competitionConfig: CompetitionConfig = pool.getCompetitionConfig();
+    this.defaultGameRoundCalculator
+      .calculateFinished(competitionConfig, viewPeriod, undefined)
+      .subscribe({
+        next: (currentGameRound: GameRound) => {
+          const gameRounds: (GameRound | undefined)[] = viewPeriod
+            .getGameRounds()
+            .slice();
+          this.gameRounds = gameRounds;
 
-            const idx = this.gameRounds.indexOf(currentGameRound);
-            if (idx >= 0) {
-              this.gameRounds = this.gameRounds
-                .splice(idx)
-                .concat([], this.gameRounds);
-            }
-            this.updateGameRound(pool, currentGameRound);
-          },
-          error: (e: string) => {
-            this.setAlert("danger", e);
-            this.processing.set(false);
-          },
-        });
+          const idx = this.gameRounds.indexOf(currentGameRound);
+          if (idx >= 0) {
+            this.gameRounds = this.gameRounds
+              .splice(idx)
+              .concat([], this.gameRounds);
+          }
+          this.updateGameRound(pool, currentGameRound);
+        },
+        error: (e: string) => {
+          this.setAlert("danger", e);
+          this.processing.set(false);
+        },
+      });
   }
 
   public updateViewPeriodFromScroller(
@@ -227,17 +227,20 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   ): void {
     this.processing.set(true);
     this.currentViewPeriod = viewPeriod;
-    this.initPoolUsersTotals(pool,viewPeriod);
+    this.initPoolUsersTotals(pool, viewPeriod);
     this.initCurrentGameRound(pool, viewPeriod);
   }
 
-  updateGameRoundFromScroller(pool: Pool, gameRound: GameRound | undefined): void {
+  updateGameRoundFromScroller(
+    pool: Pool,
+    gameRound: GameRound | undefined
+  ): void {
     if (gameRound === undefined) {
       this.currentGameRound = gameRound;
       this.currentGameRoundPoolUsersTotalsMap = undefined;
       return;
     }
-    this.updateGameRound(pool,gameRound);
+    this.updateGameRound(pool, gameRound);
   }
 
   updateGameRound(pool: Pool, gameRound: GameRound): void {

@@ -1,5 +1,5 @@
 <h2 *ngIf="processing" class="text-center">
-    <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+    <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
 </h2>
 <div class="row justify-content-center g-0">
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
@@ -16,13 +16,13 @@
                         <div class="d-flex justify-content-between">
                             <div></div>
                             <!-- <button type="button" class="btn btn-outline-primary">
-                            <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+                            <fa-icon [icon]=faChevronLeft></fa-icon>
                         </button> -->
                             <h2 class="text-center mb-0">
                                 {{s11Player.getPerson().getName()}}
                             </h2>
                             <button type="button" class="btn btn-outline-primary" (click)="navigateBack()">
-                                <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
+                                <fa-icon [icon]=faLevelUpAlt [rotate]="270"></fa-icon>
                                 <span class="ms-1 d-none d-md-inline"> terug</span>
                             </button>
                         </div>
@@ -35,7 +35,7 @@
 
                         <div class="text-center mt-3 mb-2">
                             <h2 *ngIf="processingGames" class="text-center">
-                                <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+                                <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
                             </h2>
                             @if(!processingGames && currentGame && currentGameRound){
                             <button type="button"

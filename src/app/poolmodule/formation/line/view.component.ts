@@ -15,6 +15,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TeamNameComponent } from '../../team/name.component';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
 import { NgIf } from '@angular/common';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: '[app-pool-formationline-view]',
@@ -33,6 +34,7 @@ export class FormationLineViewComponent implements OnInit {
   @Output() linkToPlayer = new EventEmitter<S11Player>();
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
+  public faSpinner = faSpinner;
 
   constructor(
     public imageRepository: ImageRepository,

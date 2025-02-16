@@ -3,16 +3,16 @@
 
     <div *ngIf="!processing && pool && poolUser" class="d-flex justify-content-between mt-3 mb-1 mx-1">
       <h2 class="me-2 text-truncate">
-        <fa-icon [icon]="['fas', 'users']"></fa-icon> {{getPoolUserName()}}
+        <fa-icon [icon]=faUsers></fa-icon> {{getPoolUserName()}}
       </h2>
       <div>
         <!-- <button *ngIf="pool.getAssemblePeriod().isIn()" class="btn btn-secondary mx-2"
           [routerLink]="['/pool/scouting/list', pool.getId()]">
-          <fa-icon [icon]="['fas', 'user-secret']"></fa-icon> <span class="ms-1 d-none d-sm-inline">
+          <fa-icon [icon]=faUserSecret></fa-icon> <span class="ms-1 d-none d-sm-inline">
             scoutingslijst</span>
         </button> -->
         <button *ngIf="inAfterTransfer(pool)" class="btn btn-outline-info me-1" routerLink="['/pool/formation/actions', pool.getId(), poolUser.getId()]">
-          <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
+          <fa-icon [icon]=faRightLeft></fa-icon>
         </button>
         <button class="btn btn-secondary" disabled>
           {{getFormationName()}}
@@ -20,9 +20,8 @@
       </div>
     </div>
 
-
     <h2 *ngIf="processing" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+      <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
     </h2>
     @if(alert) {
     <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
@@ -58,10 +57,10 @@
     </div>
     }
     <h2 *ngIf="processingFormation || processingStatistics" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" [animation]="'spin'"></fa-icon>
+      <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
     </h2>
   </div>
 </div>
-@if(pool){
+@if(!processing && pool){
 <app-pool-navbar [pool]="pool" [poolUser]="poolUser"></app-pool-navbar>
 }

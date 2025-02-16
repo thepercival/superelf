@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AgainstGame, GameState } from 'ngx-sport';
 import { AgainstGameTitleComponent } from './title.component';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-game-scroller',
@@ -15,6 +16,8 @@ export class GameScrollerComponent implements OnInit {
   readonly current = model.required<AgainstGame>();
   @Output() update = new EventEmitter<AgainstGame>();
   @Output() navigate = new EventEmitter<AgainstGame>();
+  public faChevronLeft = faChevronLeft;
+  public faChevronRight = faChevronRight;
 
   constructor() {
   }

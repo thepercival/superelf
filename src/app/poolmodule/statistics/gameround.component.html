@@ -31,7 +31,7 @@
             </div>
             <div class="card-body">
                 <div>
-                    <app-superelf-icon [gameEvent]="Goal"></app-superelf-icon>                
+                    <app-superelf-icon [icon]=faFutbol [gameEvent]="Goal"></app-superelf-icon>                
                     <span class="ms-1">veld</span>
                     <span *ngIf="statistics().getNrOfFieldGoals() > 0"
                         class="float-end ms-1">{{statistics().getNrOfFieldGoals()}}x</span>
@@ -44,14 +44,14 @@
                         class="float-end ms-1">{{statistics().getNrOfAssists()}}x</span>
                 </div>
                 <div>
-                    <app-superelf-icon [gameEvent]="OwnGoal"></app-superelf-icon>                
+                    <app-superelf-icon [icon]=faFutbol [gameEvent]="OwnGoal"></app-superelf-icon>                
                     <span class="ms-1">eigen</span>
                     <span *ngIf="statistics().getNrOfOwnGoals() > 0"
                         class="float-end ms-1">{{statistics().getNrOfOwnGoals()}}x</span>
                         <span *ngIf="statistics().getNrOfOwnGoals() === 0"class="float-end ms-1">-</span>
                 </div>
                 <div>
-                    <app-superelf-icon [name]="'penalty'"></app-superelf-icon>
+                    <app-superelf-icon [icon]=facPenalty></app-superelf-icon>
                     <span class="ms-1">penalty</span>
                     <span *ngIf="statistics().getNrOfPenalties() > 0"
                         class="float-end ms-1">{{statistics().getNrOfPenalties()}}x</span>
@@ -70,17 +70,17 @@
             </div>
             <div class="card-body">
                 <div>
-                    <app-superelf-icon [name]="'clean-sheet'"></app-superelf-icon>
+                    <app-superelf-icon [icon]=facCleanSheet></app-superelf-icon>
                     <span class="ms-1">de nul</span>
-                    <fa-icon *ngIf="statistics().hasCleanSheet()" [icon]="['fas', 'check-circle']"
+                    <fa-icon *ngIf="statistics().hasCleanSheet()" [icon]=faCheckCircle
                         class="float-end ms-1 text-success"></fa-icon>
                     <span *ngIf="!statistics().hasCleanSheet()" class="float-end ms-1">-</span>
                 </div>
 
                 <div>
-                    <app-superelf-icon class="me-1" [name]="'spotty-sheet'"></app-superelf-icon>
+                    <app-superelf-icon class="me-1" [icon]=facSpottySheet></app-superelf-icon>
                     <span>&gt; 3</span>
-                    <fa-icon *ngIf="statistics().hasSpottySheet()" [icon]="['fas', 'check-circle']"
+                    <fa-icon *ngIf="statistics().hasSpottySheet()" [icon]=faCheckCircle
                         class="float-end ms-1 text-success">
                     </fa-icon>
                     <span *ngIf="!statistics().hasSpottySheet()" class="float-end ms-1">-</span>
@@ -95,16 +95,16 @@
             </div>
             <div class="card-body">
                 <div>
-                    <app-superelf-icon [gameEvent]="YellowCard"></app-superelf-icon>
+                    <app-superelf-icon [icon]=facCard [gameEvent]="YellowCard"></app-superelf-icon>
                     <span class="mx-1">geel</span>
                     <span *ngIf="statistics().getNrOfYellowCards() > 0"
                         class="float-end ms-1">{{statistics().getNrOfYellowCards()}}x</span>
                     <span *ngIf="statistics().getNrOfYellowCards() === 0" class="float-end ms-1">-</span>
                 </div>
                 <div>
-                    <app-superelf-icon [gameEvent]="RedCard"></app-superelf-icon>
+                    <app-superelf-icon [icon]=facCard [gameEvent]="RedCard"></app-superelf-icon>
                     <span class="mx-1">rood</span>
-                    <fa-icon *ngIf="statistics().gotDirectRedCard()" [icon]="['fas', 'check-circle']"
+                    <fa-icon *ngIf="statistics().gotDirectRedCard()" [icon]=faCheckCircle
                         class="float-end ms-1 text-red">
                     </fa-icon>
                     <span *ngIf="!statistics().gotDirectRedCard()" class="float-end ms-1">-</span>

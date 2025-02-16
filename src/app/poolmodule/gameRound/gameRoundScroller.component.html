@@ -1,20 +1,20 @@
 <div class="d-flex justify-content-center">
     <div class="btn-group" role="group" aria-label="aantal">
         <button *ngIf="assembleViewPeriod() !== currentViewPeriod()" type="button" class="btn btn-outline-primary me-2" (click)="updateViewPeriod.emit(assembleViewPeriod())">
-            <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
-            <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+            <fa-icon [icon]=faChevronLeft></fa-icon>
+            <fa-icon [icon]=faChevronLeft></fa-icon>
         </button>
         <button type="button" class="btn btn-outline-primary" (click)="previous()">
-            <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+            <fa-icon [icon]=faChevronLeft></fa-icon>
         </button>
         <button [disabled]="true" type="button" class="btn btn-outline-primary btn-fixed-width">
             {{getCurrentLabel()}}
         </button>
         <button type="button" class="btn btn-outline-primary" (click)="next()">
-            <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+            <fa-icon [icon]=faChevronRight></fa-icon>
         </button>
         <button *ngIf="transferViewPeriod() !== currentViewPeriod()" type="button" class="btn btn-outline-primary ms-2 text-nowrap" (click)="updateViewPeriod.emit(transferViewPeriod())">
-            <fa-icon [icon]="['fas', 'chevron-right']"></fa-icon><fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+            <fa-icon [icon]=faChevronRight></fa-icon><fa-icon [icon]=faChevronRight></fa-icon>
         </button>
     </div>
 </div>

@@ -2,6 +2,7 @@ import { Component, input } from '@angular/core';
 import { IconName, IconPrefix, SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { BadgeCategory } from '../../../lib/achievement/badge/category';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     standalone: true,
@@ -14,6 +15,7 @@ export class SuperElfBadgeIconComponent {
     readonly badgeCategory = input<BadgeCategory>();
     readonly competitionConfig = input(true);
     readonly size = input<SizeProp>();
+    public faCircle = faCircle;
 
     getPrefix(): IconPrefix { 
         if (

@@ -6,7 +6,7 @@
       @if(!processing) {
         @if(poolUser) {
           <h1 class="me-2 text-truncate">
-            <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> {{poolUser.getName()}}
+            <fa-icon [icon]=faUserCircle></fa-icon> {{poolUser.getName()}}
             <small>transferacties</small>
           </h1>
         }
@@ -15,13 +15,13 @@
             @if(inTransfer(pool)) {
               <button class="btn btn-outline-info ms-1"
                 routerLink="['/pool/formation/substitutions', pool.getId()]">
-                <fa-icon [icon]="['fas', 'right-left']"></fa-icon>
+                <fa-icon [icon]=faRightLeft></fa-icon>
                 </button>
             }
             @if(inAfterTransfer(pool)) {
               <button class="btn btn-outline-info ms-1"
                 routerLink="['/pool/user', pool.getId(), poolUser.getId(), 0]">
-                <fa-icon [icon]="['fas', 'users']"></fa-icon>
+                <fa-icon [icon]=faUsers></fa-icon>
               </button>
             }
           </div>
@@ -53,7 +53,7 @@
                   <span>{{replacement.getPlayerOut().getPerson().getName()}}</span>
                 </td>
                 <td>
-                  <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+                  <fa-icon [icon]=faChevronLeft></fa-icon>
                 </td>
                 <td>
                   <app-lineicon [line]="replacement.getPlayerIn().getLine()"></app-lineicon>
@@ -83,7 +83,7 @@
                   <span>{{transfer.getPlayerOut().getPerson().getName()}}</span>
                 </td>
                 <td>
-                  <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+                  <fa-icon [icon]=faChevronLeft></fa-icon>
                 </td>
                 <td class="text-nowrap">
                   <app-team-name [team]="transfer.getPlayerIn().getTeam()" [fullName]="false"></app-team-name>
@@ -118,7 +118,7 @@
                   <span class="text-break">{{getPlayerIn(calcFormation, substitution).getPerson().getName()}}</span>
                 </td>
                 <td>
-                  <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+                  <fa-icon [icon]=faChevronLeft></fa-icon>
                 </td>
                 <td class="text-nowrap">
                   <app-team-name [team]="getPlayerIn(calcFormation, substitution).getTeam()" [fullName]="false"></app-team-name>

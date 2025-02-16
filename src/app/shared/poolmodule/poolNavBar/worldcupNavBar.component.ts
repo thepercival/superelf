@@ -17,6 +17,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SuperElfTrophyIconComponent } from '../icon/trophy.component';
 import { SuperElfIconComponent } from '../icon/icon.component';
 import { NgIf } from '@angular/common';
+import { facTrophy } from '../icons';
+import { faCalendarAlt, faLevelUpAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
@@ -38,6 +40,9 @@ export class WorldCupNavBarComponent implements OnInit, OnChanges {
   public structureMap = new Map<number, Structure>();
   public hasUnviewedAchievements: boolean = false;
   public latestGetUnviewedRequest: Date | undefined;
+  public facTrophy = facTrophy;
+  public faCalendarAlt = faCalendarAlt;
+  public faLevelUpAlt = faLevelUpAlt;
 
   constructor(
     public authService: AuthService,

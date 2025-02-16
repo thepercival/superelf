@@ -9,19 +9,21 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserTitleComponent } from '../title/title.component';
-import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faKey, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
   selector: "app-register",
-  imports: [NgbAlertModule, UserTitleComponent,FontAwesomeModule],
+  imports: [NgbAlertModule, UserTitleComponent, FontAwesomeModule],
   templateUrl: "./register.component.html",
   styleUrls: ["./register.component.scss"],
 })
 export class RegisterComponent extends AuthComponent implements OnInit {
-  faUserCirlce = faUserCircle;
   registered = false;
   form: UntypedFormGroup;
+  public faUserCircle = faUserCircle;
+  public faKey = faKey;
+  public faEnvelope = faEnvelope;
 
   validations: UserValidations = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -108,7 +110,7 @@ export class RegisterComponent extends AuthComponent implements OnInit {
           this.setAlert("danger", "het registreren is niet gelukt: " + e);
           this.processing.set(false);
         },
-        complete: () => (this.processing.set(false)),
+        complete: () => this.processing.set(false),
       });
     return false;
   }

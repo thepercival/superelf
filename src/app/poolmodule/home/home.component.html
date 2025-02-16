@@ -2,7 +2,7 @@
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
     <!-- <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
     <h2 *ngIf="processing" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      <fa-icon [icon]=faSpinner [spin]="true"></fa-icon>
     </h2> -->
 
     <!-- competities: start -->
@@ -53,7 +53,7 @@
           (click)="openModal(contentpoolUsers)">
           <div class="card-body text-center p-1 pt-2">
             <h5 class="card-title">
-              <fa-icon [icon]="['fas', 'users']"></fa-icon>
+              <fa-icon [icon]=faUsers></fa-icon>
             </h5>
             <div>deel</div>
             <div>nemers</div>
@@ -79,7 +79,7 @@
             
             <div class="card-text d-flex flex-nowrap gap-3 justify-content-between">
               <h5 class="card-title text-center text-nowrap">
-                <fa-icon class="align-middle" [icon]="['fas', 'calendar-alt']"></fa-icon>
+                <fa-icon class="align-middle" [icon]=faCalendarAlt></fa-icon>
                 <span class="ms-1 align-middle">programma</span>
               </h5>
 
@@ -130,7 +130,7 @@
             (click)="linkToTransferPeriodAction(poolUser)">
             <div class="card-body text-center p-1 pt-2">
               <h5 class="card-title">
-                <fa-icon [icon]="['fas', 'right-to-bracket']"></fa-icon>
+                <fa-icon [icon]=faRightToBracket']"></fa-icon>
               </h5>
               <div>transfers</div>              
             </div>
@@ -165,12 +165,12 @@
       class="card border-secondary {{inAssembleMode() ? 'pointer' : ''}} mt-3 mx-2" (click)="linkToAssemble()">
       <div class="card-body">
         <h5 class="card-title">
-          <fa-icon [icon]="['fas', 'users']"></fa-icon> mijn team
+          <fa-icon [icon]=faUsers></fa-icon> mijn team
         </h5>
         <p class="card-text">
           <span *ngIf="!inBeforeAssemble()">
-            <fa-icon *ngIf="getNrAssembled() < 15" [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon>
-            <fa-icon *ngIf="getNrAssembled() == 15" [icon]="['fas', 'check-circle']" class="text-success"></fa-icon>
+            <fa-icon *ngIf="getNrAssembled() < 15" [icon]=faTimesCircle class="text-danger"></fa-icon>
+            <fa-icon *ngIf="getNrAssembled() == 15" [icon]=faCheckCircle class="text-success"></fa-icon>
             {{getNrAssembled()}} speler(s) gekozen
           </span>
 
@@ -182,7 +182,7 @@
       [routerLink]="['/pool/scouting/list', pool.getId()]">
       <div class="card-body">
         <h5 class="card-title">
-          <fa-icon [icon]="['fas', 'user-secret']"></fa-icon> scoutingslijst
+          <fa-icon [icon]=faUserSecret></fa-icon> scoutingslijst
         </h5>
         <p class="card-text">
           <span>
@@ -210,7 +210,7 @@
         [routerLink]="['/pool/invite', pool.getId()]">
         <div class="card-body">
           <h5 class="card-title">
-            <fa-icon [icon]="['fas', 'envelope']"></fa-icon> uitnodigen
+            <fa-icon [icon]=faEnvelope></fa-icon> uitnodigen
           </h5>
           <p class="card-text">via een link
           </p>
@@ -220,7 +220,7 @@
         [routerLink]="['/pool/users', pool.getId()]">
         <div class="card-body">
           <h5 class="card-title">
-            <fa-icon [icon]="['fas', 'users']"></fa-icon> deelnemers
+            <fa-icon [icon]=faUsers></fa-icon> deelnemers
           </h5>
           <p class="card-text">
             <span *ngIf="pool.getCreateAndJoinPeriod().isIn()">
@@ -228,21 +228,21 @@
                 {{poolUsers.length}} deelnemer(s) ingeschreven
               </span>
               <span *ngIf="pool.getAssemblePeriod().isIn() && allPoolUsersHaveAssembled()">
-                <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> iedereen heeft zijn team
+                <fa-icon [icon]=faCheckCircle class="text-success"></fa-icon> iedereen heeft zijn team
                 samengesteld
               </span>
               <span *ngIf="pool.getAssemblePeriod().isIn() && !allPoolUsersHaveAssembled()">
-                <fa-icon [icon]="['fas', 'times-circle']" class="text-danger"></fa-icon> incomplete teams
+                <fa-icon [icon]=faTimesCircle class="text-danger"></fa-icon> incomplete teams
               </span>
             </span> -->
 
             <!-- <span>implement count of transfers</span> -->
             <!-- <span *ngIf="pool.getTransferPeriod().isIn() && allPoolUsersHaveTransfered()">
-                <fa-icon [icon]="['fas', 'check-circle']" class="text-success"></fa-icon> iedereen heeft zijn
+                <fa-icon [icon]=faCheckCircle class="text-success"></fa-icon> iedereen heeft zijn
                 transfers gedaan
               </span>
               <span *ngIf="pool.getTransferPeriod().isIn() && !allPoolUsersHaveTransfered()">
-                <fa-icon [icon]="['fas', 'times-circle']" class="text-warning"></fa-icon> niet iedereen heeft zijn
+                <fa-icon [icon]=faTimesCircle class="text-warning"></fa-icon> niet iedereen heeft zijn
                 transfers gedaan
               </span> -->
           <!-- </p>

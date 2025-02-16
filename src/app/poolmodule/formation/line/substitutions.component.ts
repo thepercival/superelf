@@ -16,13 +16,14 @@ import { TeamNameComponent } from '../../team/name.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
 import { NgIf } from '@angular/common';
+import { faSpinner, faPencilAlt, faTrashAlt, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-pool-formationline-substitutions',
+  selector: "app-pool-formationline-substitutions",
   standalone: true,
-  imports:  [TeamNameComponent,FontAwesomeModule,LineIconComponent,NgIf],
-  templateUrl: './substitutions.component.html',
-  styleUrls: ['./substitutions.component.scss']
+  imports: [TeamNameComponent, FontAwesomeModule, LineIconComponent, NgIf],
+  templateUrl: "./substitutions.component.html",
+  styleUrls: ["./substitutions.component.scss"],
 })
 export class FormationLineSubstitutionsComponent implements OnInit {
   readonly line = input.required<S11FormationLine>();
@@ -35,6 +36,9 @@ export class FormationLineSubstitutionsComponent implements OnInit {
   @Output() remove = new EventEmitter<Substitution[]>();
 
   public oneTeamSimultaneous = new OneTeamSimultaneous();
+  public faSpinner = faSpinner;
+  public faSignOutAlt = faSignOutAlt;
+  public faTrashAlt = faTrashAlt;
 
   constructor(
     public imageRepository: ImageRepository,
@@ -42,21 +46,21 @@ export class FormationLineSubstitutionsComponent implements OnInit {
     private formationRepository: FormationRepository,
     private modalService: NgbModal,
     private cssService: CSSService
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
     this.processing.set(false);
   }
 
   completed() {
-    return this.line().getPlaces().every((place: S11FormationPlace) => place.getPlayer());
+    return this.line()
+      .getPlaces()
+      .every((place: S11FormationPlace) => place.getPlayer());
   }
 
   getTeamImageUrl(s11Player: S11Player): string {
     const team = this.getCurrentTeam(s11Player);
-    return team ? this.imageRepository.getTeamUrl(team) : '';
+    return team ? this.imageRepository.getTeamUrl(team) : "";
   }
 
   getCurrentTeam(s11Player: S11Player | undefined): Team | undefined {
@@ -87,11 +91,11 @@ export class FormationLineSubstitutionsComponent implements OnInit {
   // }
 
   getLineClass(prefix: string): string {
-    return this.cssService.getLine(this.line().getNumber(), prefix + '-');
+    return this.cssService.getLine(this.line().getNumber(), prefix + "-");
   }
 
   getPointsTotalsClass() {
-    return this.viewGameRound() === undefined ? 'bg-totals' : 'bg-points';
+    return this.viewGameRound() === undefined ? "bg-totals" : "bg-points";
   }
 
   maybeLinkToPlayer(place: S11FormationPlace): void {
@@ -103,10 +107,10 @@ export class FormationLineSubstitutionsComponent implements OnInit {
   }
 
   getSubstituteClass(isSubstitute: boolean): string {
-    return isSubstitute ? 'table-no-bottom-border' : '';
+    return isSubstitute ? "table-no-bottom-border" : "";
   }
 
-  getSubstitution(line: FootballLine): Substitution|undefined {
+  getSubstitution(line: FootballLine): Substitution | undefined {
     return this.substitutions().find((substitution: Substitution): boolean => {
       return line === substitution.getLineNumberOut();
     });
@@ -119,18 +123,21 @@ export class FormationLineSubstitutionsComponent implements OnInit {
   }
 
   substituteAction(place: S11FormationPlace): void {
-    if( !this.hasLineSubstitution(place.getLine()) && !place.isSubstitute() ) {
+    if (!this.hasLineSubstitution(place.getLine()) && !place.isSubstitute()) {
       this.substitute.emit(place);
-    } else if ( this.hasLineSubstitution(place.getLine()) && place.isSubstitute() ) {
+    } else if (
+      this.hasLineSubstitution(place.getLine()) &&
+      place.isSubstitute()
+    ) {
       this.removeSubstitution(this.getSubstitution(place.getLine()));
     }
   }
 
-  removeSubstitution(substitution: Substitution|undefined): void {
+  removeSubstitution(substitution: Substitution | undefined): void {
     // console.log('removeSubstitution', substitution);
-    if( substitution === undefined) {
+    if (substitution === undefined) {
       return;
     }
-    this.remove.emit([substitution])
+    this.remove.emit([substitution]);
   }
 }

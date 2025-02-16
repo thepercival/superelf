@@ -23,6 +23,7 @@ import { PoolUser } from '../../lib/pool/user';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faLevelUpAlt, faSpinner, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-scouted-player-add",
@@ -46,6 +47,9 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   public choosePlayersFilter: ChoosePlayersFilter;
   public selectableTeams!: Team[];
   public selectableLines: FootballLine[];
+  public faSpinner = faSpinner;
+  public faUsers = faUsers;
+  public faLevelUpAlt = faLevelUpAlt;
 
   constructor(
     route: ActivatedRoute,
@@ -94,7 +98,10 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
           this.choosePlayersFilter.line = +params.line;
         }
         if (params.teamId !== undefined) {
-          this.choosePlayersFilter.team = this.getTeamById(pool, +params.teamId);
+          this.choosePlayersFilter.team = this.getTeamById(
+            pool,
+            +params.teamId
+          );
         }
       });
       this.initScoutedPlayers(pool);
@@ -129,7 +136,7 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
           this.setAlert("danger", e);
           this.processing.set(false);
         },
-        complete: () => (this.processing.set(false)),
+        complete: () => this.processing.set(false),
       });
   }
 
@@ -180,7 +187,7 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
           this.setAlert("danger", e);
           this.processing.set(false);
         },
-        complete: () => (this.processing.set(false)),
+        complete: () => this.processing.set(false),
       });
   }
 
