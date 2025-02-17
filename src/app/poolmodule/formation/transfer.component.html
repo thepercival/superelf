@@ -66,13 +66,14 @@
     @if(!processing && pool && poolUser && assembleFormation && calcFormation){
     <div>
       @if(!selectedPlace){      
-        <!-- lines-->
-        <app-pool-formationline-transfers *ngFor="let line of calcFormation.getLines()" [line]="line"
-          [transfers]="poolUser.getTransferPeriodActionList().transfers" [maxNrOfTransfers]="transferPeriod.getMaxNrOfTransfers()"
-          [canRemoveTransfer]="canRemoveTransfer(calcFormation,line)"
-          (transfer)="linkToTransfer(pool,$event)" (linkToPlayer)="linkToPlayer(pool,$event)"
-          (remove)="remove(pool, assembleFormation, $event, false)">
-        </app-pool-formationline-transfers>
+        @for(line of calcFormation.getLines();track line.getNumber()) {
+          <app-pool-formationline-transfers [line]="line"
+            [transfers]="poolUser.getTransferPeriodActionList().transfers" [maxNrOfTransfers]="transferPeriod.getMaxNrOfTransfers()"
+            [canRemoveTransfer]="canRemoveTransfer(calcFormation,line)"
+            (transfer)="linkToTransfer(pool,$event)" (linkToPlayer)="linkToPlayer(pool,$event)"
+            (remove)="remove(pool, assembleFormation, $event, false)">
+          </app-pool-formationline-transfers>
+        }
       }
     </div>
     }

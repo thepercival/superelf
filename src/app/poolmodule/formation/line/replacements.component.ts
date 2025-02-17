@@ -15,13 +15,19 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TeamNameComponent } from '../../team/name.component';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
-import { NgIf } from '@angular/common';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { faSpinner, faPencilAlt, faTrashAlt, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-formationline-replacements",
   standalone: true,
-  imports: [NgIf, FontAwesomeModule, TeamNameComponent, LineIconComponent],
+  imports: [
+    NgIf,
+    FontAwesomeModule,
+    TeamNameComponent,
+    LineIconComponent,
+    NgTemplateOutlet,
+  ],
   templateUrl: "./replacements.component.html",
   styleUrls: ["./replacements.component.scss"],
 })

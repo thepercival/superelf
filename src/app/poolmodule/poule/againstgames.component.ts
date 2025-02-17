@@ -36,7 +36,7 @@ import { TeamNameComponent } from '../team/name.component';
 import { PoolCompetitionsNavBarComponent } from '../../shared/poolmodule/competitionsNavBar/competitionsNavBar.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
-import { NgIf } from '@angular/common';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { facCup, facSuperCup } from '../../shared/poolmodule/icons';
 import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
@@ -53,6 +53,7 @@ import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
     PoolNavBarComponent,
     LineIconComponent,
     NgIf,
+    NgTemplateOutlet,
   ],
   templateUrl: "./againstgames.component.html",
   styleUrls: ["./againstgames.component.scss"],

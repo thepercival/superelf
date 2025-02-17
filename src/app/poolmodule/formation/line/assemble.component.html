@@ -7,11 +7,9 @@
     <table class="table {{getLineClass('border')}}">
       <tbody>
         @for(place of line().getStartingPlaces(); track place.getId){
-          <ng-container ngTemplateOutlet="placeRow"
-            ngTemplateOutletContext="{place:place, s11Player: place.getPlayer(), currentTeam: getCurrentTeam(place.getPlayer())}">
+          <ng-container *ngTemplateOutlet="placeRow; context: {place:place, s11Player: place.getPlayer(), currentTeam: getCurrentTeam(place.getPlayer())}">
           </ng-container>
-          <ng-container ngTemplateOutlet="placeRow"
-            ngTemplateOutletContext="{place:line().getSubstitute(), s11Player: line().getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line().getSubstitute().getPlayer())}">
+          <ng-container *ngTemplateOutlet="placeRow; context: {place:line().getSubstitute(), s11Player: line().getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line().getSubstitute().getPlayer())}">
           </ng-container>
         }
       </tbody>

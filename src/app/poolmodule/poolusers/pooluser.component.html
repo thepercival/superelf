@@ -27,7 +27,7 @@
     <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
     }
     
-    @if(!processing() && !processingStatistics && pool && poolUser && formation){
+    @if(!processing() && !processingStatistics() && pool && poolUser && formation){
     <div>
       <div class="d-flex justify-content-between mt-3 mb-1 mx-1">
         <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
@@ -44,19 +44,21 @@
       </div>
 
       <!-- lines-->
-       @if(currentGameRound){
+       @if(currentGameRound && formation){
       <table class="table">
-        <tbody app-pool-formationline-view *ngFor="let line of formation?.getLines()" [line]="line"
-            [statisticsGetter]="statisticsGetter" [gameRound]="currentGameRound" 
-            [totalPoints]="line.getNumber() === GoalKeeper ? totalPoints : undefined"
-            [totalGameRoundPoints]="line.getNumber() === GoalKeeper ? totalGameRoundPoints : undefined"
-            (linkToPlayer)="linkToPlayer(pool,$event)">
-        </tbody>
+        @for(line of formation.getLines();track line.getNumber()) {
+          <tbody app-pool-formationline-view [line]="line"
+              [statisticsGetter]="statisticsGetter" [gameRound]="currentGameRound" 
+              [totalPoints]="line.getNumber() === GoalKeeper ? totalPoints : undefined"
+              [totalGameRoundPoints]="line.getNumber() === GoalKeeper ? totalGameRoundPoints : undefined"
+              (linkToPlayer)="linkToPlayer(pool,$event)">
+          </tbody>
+        }
       </table>
       }
     </div>
     }
-    <h2 *ngIf="processingFormation || processingStatistics" class="text-center">
+    <h2 *ngIf="processingFormation() || processingStatistics()" class="text-center">
       <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
     </h2>
   </div>

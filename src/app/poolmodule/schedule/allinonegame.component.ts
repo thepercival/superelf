@@ -31,7 +31,7 @@ import { WorldCupNavBarComponent } from '../../shared/poolmodule/poolNavBar/worl
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { GameScrollerComponent } from '../game/source/gameScroller.component';
-import { NgIf } from '@angular/common';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
@@ -47,6 +47,7 @@ import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
     LineIconComponent,
     GameScrollerComponent,
     NgIf,
+    NgTemplateOutlet,
   ],
   templateUrl: "./allinonegame.component.html",
   styleUrls: ["./allinonegame.component.scss"],

@@ -37,8 +37,7 @@
 
             @for(message of chatMessages; track message.getId()){
             <div class="mt-3">
-                <ng-container ngTemplateOutlet="contentMessageTitle"
-                    ngTemplateOutletContext="{message, end: i % 2 === 1}">
+                <ng-container *ngTemplateOutlet="contentMessageTitle; context: {message, end: $index % 2 === 1}">
                 </ng-container>
                 <div class="d-flex" ngClass="{'flex-row-reverse': i % 2 === 1}"><span
                         class="badge bg-light py-3 px-2 fs-6 text-wrap text-start">{{message.getText()}}</span></div>

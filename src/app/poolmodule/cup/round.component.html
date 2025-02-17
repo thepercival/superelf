@@ -10,13 +10,13 @@
           <div class="btn-group mb-3" role="group" (click)="emitNavigateToPoule(poule)">
 
             @if(hasCompetitors){
-              <button type="button" class="btn btn-outline-primary ps-1">
-                {{structureNameService().getPouleName(poule,false)}}</button>
+              <button type="button" class="btn btn-outline-primary ps-1">{{structureNameService().getPouleName(poule,false)}}</button>
               <button type="button" class="btn btn-outline-primary px-1 text-start">
-                <ng-container ngTemplateOutlet="place" ngTemplateOutletContext="{poule, side: Home}"></ng-container>
+                <ng-container *ngTemplateOutlet="place; context: {poule, side: Home}"></ng-container>
                 <div *ngIf="poule.getPlaces().length === 1">bye</div>
-                <ng-container *ngIf="poule.getPlaces().length === 2"
-                ngTemplateOutlet="place" ngTemplateOutletContext="{poule, side: Away}"></ng-container>
+                @if(poule.getPlaces().length === 2) {
+                  <ng-container *ngTemplateOutlet="place; context: {poule, side: Away}"></ng-container>
+                }
               </button>
             }
             @else {
@@ -29,12 +29,13 @@
     </div>
   </div>
 
-
-  <app-superelf-cup-round *ngFor="let qualifyGroup of round().getQualifyGroupsLosersReversed();" class="mb-2"
-    [round]="qualifyGroup.getChildRound()" [poolUser]="poolUser()" [structureNameService]="structureNameService()"
-    (navigateToPoule)="emitNavigateToPoule($event)">
-  </app-superelf-cup-round>
-
+  @for(qualifyGroup of round().getQualifyGroupsLosersReversed();track qualifyGroup.getId())
+  {
+    <app-superelf-cup-round class="mb-2"
+      [round]="qualifyGroup.getChildRound()" [poolUser]="poolUser()" [structureNameService]="structureNameService()"
+      (navigateToPoule)="emitNavigateToPoule($event)">
+    </app-superelf-cup-round>
+  }
 
 </div>
 

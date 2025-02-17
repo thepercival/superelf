@@ -4,16 +4,15 @@
       <tr class="pointer"
           (click)="linkToPoolUser(rankingItem.poolUser, gameRound())">
 
-          <ng-container *ngIf="!hasAchievement(rankingItem);else worldcupQualify">
+          @if(!hasAchievement(rankingItem)){          
               <td class="rankingnr text-end ps-0"><!-- badge text-black -->
                   <span class="">{{rankingItem.rank}}</span>
               </td>
-          </ng-container>
-          <ng-template #worldcupQualify>
+          } @else {          
               <td class="rankingnr text-end ps-0 pointer" (click)="openModal(worldcupModal, badgeCategoryModal); $event.stopPropagation()">
                   <span class="badge text-bg-success text-decoration-underline">{{rankingItem.rank}}</span>
               </td>
-          </ng-template>
+          }
 
           <td class="text-break ps-0" ngClass="{ 'favitem': false}">
               <span>{{rankingItem.poolUser.getUser().getName()}}</span>

@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -59,8 +59,8 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
 
   public totalPoints: number = 0;
   public totalGameRoundPoints: number = 0;
-  public processingFormation = true;
-  public processingStatistics: boolean = false;
+  public processingFormation: WritableSignal<boolean> = signal(true);
+  public processingStatistics: WritableSignal<boolean> = signal(false);
 
   public faRightLeft = faRightLeft;
   public faUsers = faUsers;
@@ -136,14 +136,14 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   ): void {
     this.viewPeriod = viewPeriod;
 
-    this.processingFormation = true;
+    this.processingFormation.set(true);
     this.formationRepository.getObject(poolUser, viewPeriod).subscribe({
       next: (formation: S11Formation) => {
         this.formation = formation;
         this.totalPoints = this.formation.getTotalPoints(undefined);
 
         this.initGameRounds(poolUser.getPool(), this.formation, gameRoundNr);
-        this.processingFormation = false;
+        this.processingFormation.set(false);
       },
       error: (e) => {
         this.setAlert("danger", e);
@@ -238,7 +238,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       return;
     }
 
-    this.processingStatistics = true;
+    this.processingStatistics.set(true);
     this.statisticsRepository
       .getGameRoundObjects(formation, gameRound, this.statisticsGetter)
       .subscribe({
@@ -251,7 +251,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
               undefined
             );
           this.gameRoundCacheMap.set(gameRound.getNumber(), true);
-          this.processingStatistics = false;
+          this.processingStatistics.set(false);
         },
         error: (e) => {
           this.setAlert("danger", e);

@@ -21,11 +21,13 @@
             <div class="card-body p-1">
               @for(formationLine of formation.getLines(); track formationLine){
                 <div class="d-flex justify-content-around">
-                  <div ngFor="let position of formationLine.getNumbers()">
-                    <div class="m-1">
-                      <app-lineicon [line]="formationLine.getNumber()"></app-lineicon>
+                  @for(position of formationLine.getNumbers();track position) {
+                    <div>
+                      <div class="m-1">
+                        <app-lineicon [line]="formationLine.getNumber()"></app-lineicon>
+                      </div>
                     </div>
-                  </div>
+                  }
                 </div>
               }
             </div>

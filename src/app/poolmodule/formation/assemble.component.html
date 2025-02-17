@@ -24,14 +24,16 @@
       <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
     </h2>
     @if(alert){
-    <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
     }
     @if(!processing && pool && assembleFormation && !selectedPlace){
       <div>
         <!-- lines-->
-        <app-pool-formationline-assemble *ngFor="let line of assembleFormation.getLines()" [line]="line"
-          (editPlace)="editPlace(pool,$event)" (linkToPlayer)="linkToPlayer(pool,$event)">
-        </app-pool-formationline-assemble>
+        @for(line of assembleFormation.getLines();track line.getNumber()) {
+          <app-pool-formationline-assemble [line]="line"
+            (editPlace)="editPlace(pool,$event)" (linkToPlayer)="linkToPlayer(pool,$event)">
+          </app-pool-formationline-assemble>
+        }
       </div>
     }
   </div>

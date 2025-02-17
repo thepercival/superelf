@@ -15,13 +15,19 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
 import { TeamNameComponent } from '../../team/name.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgIf } from '@angular/common';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { faSpinner, faRightLeft, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-formationline-transfers",
   standalone: true,
-  imports: [LineIconComponent, TeamNameComponent, FontAwesomeModule, NgIf],
+  imports: [
+    LineIconComponent,
+    TeamNameComponent,
+    FontAwesomeModule,
+    NgIf,
+    NgTemplateOutlet,
+  ],
   templateUrl: "./transfers.component.html",
   styleUrls: ["./transfers.component.scss"],
 })

@@ -43,11 +43,13 @@
     <div>      
       @if(!processing && pool && poolUser && assembleFormation && calcFormation && !selectedPlace){
         <!-- lines-->
-        <app-pool-formationline-substitutions *ngFor="let line of calcFormation.getLines()" [line]="line"
-          [substitutions]="poolUser.getTransferPeriodActionList().substitutions"
-          (substitute)="substitute(assembleFormation, $event)" (linkToPlayer)="linkToPlayer(pool, $event)"
-          (remove)="remove(pool, assembleFormation, $event, false)">
-        </app-pool-formationline-substitutions>
+        @for(line of calcFormation.getLines();track line.getNumber()) {
+          <app-pool-formationline-substitutions [line]="line"
+            [substitutions]="poolUser.getTransferPeriodActionList().substitutions"
+            (substitute)="substitute(assembleFormation, $event)" (linkToPlayer)="linkToPlayer(pool, $event)"
+            (remove)="remove(pool, assembleFormation, $event, false)">
+          </app-pool-formationline-substitutions>
+        }
       }
     </div>
   </div>

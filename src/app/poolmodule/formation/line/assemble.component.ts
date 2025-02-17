@@ -13,13 +13,19 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TeamNameComponent } from '../../team/name.component';
-import { NgIf } from '@angular/common';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { faSpinner, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-pool-formationline-assemble",
   standalone: true,
-  imports: [NgIf, LineIconComponent, FontAwesomeModule, TeamNameComponent],
+  imports: [
+    NgIf,
+    LineIconComponent,
+    FontAwesomeModule,
+    TeamNameComponent,
+    NgTemplateOutlet,
+  ],
   templateUrl: "./assemble.component.html",
   styleUrls: ["./assemble.component.scss"],
 })

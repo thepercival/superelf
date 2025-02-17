@@ -28,12 +28,10 @@
 
 
                 <div class="me-3">
-                    <ng-container ngTemplateOutlet="lineupSide" ngTemplateOutletContext="{lineupItems:getLineUp(HomeSide)}">
-                    </ng-container>
+                    <ng-container *ngTemplateOutlet="lineupSide; context: {lineupItems:getLineUp(HomeSide)}"></ng-container>
                 </div>
                 <div>
-                    <ng-container ngTemplateOutlet="lineupSide"
-                        ngTemplateOutletContext="{lineupItems:getLineUp(AwaySide)}">
+                    <ng-container *ngTemplateOutlet="lineupSide; context: {lineupItems:getLineUp(AwaySide)}">
                     </ng-container>
                 </div>
             </div>
@@ -48,13 +46,11 @@
 
 
                 <div class="me-3">
-                    <ng-container ngTemplateOutlet="eventsSide"
-                        ngTemplateOutletContext="{eventItems:getEvents(HomeSide)}">
+                    <ng-container *ngTemplateOutlet="eventsSide; context: {eventItems:getEvents(HomeSide)}">
                     </ng-container>
                 </div>
                 <div>
-                    <ng-container ngTemplateOutlet="eventsSide"
-                        ngTemplateOutletContext="{eventItems:getEvents(AwaySide)}">
+                    <ng-container *ngTemplateOutlet="eventsSide; context: {eventItems:getEvents(AwaySide)}">
                     </ng-container>
                 </div>
             </div>
@@ -90,22 +86,21 @@
 
 <ng-template #eventsSide let-eventItems="eventItems">
     <ul class="list-group list-group-flush">
-        <ng-container *ngIf="eventItems.length > 0;else noEventItems">
+        @if(eventItems.length > 0) {
             @for(eventItem of eventItems;track eventItem.getId()){
-            <li class="list-group-item">
-                <div>
-                    <app-superelf-icon [icon]="getIconDefintion(eventItem)" [gameEvent]="getFootballEvent(eventItem)"></app-superelf-icon>
-                    <span class="px-1">{{eventItem.minute}}'</span>
-                    <span>{{eventItem.player.getPerson().getName()}}</span>
-                </div>
-                <div *ngIf="eventItem.assistPlayer">
-                    <small class="px-3">a: {{eventItem.assistPlayer.getPerson().getName()}}</small>
-                </div>
-            </li>
+                <li class="list-group-item">
+                    <div>
+                        <app-superelf-icon [icon]="getIconDefintion(eventItem)" [gameEvent]="getFootballEvent(eventItem)"></app-superelf-icon>
+                        <span class="px-1">{{eventItem.minute}}'</span>
+                        <span>{{eventItem.player.getPerson().getName()}}</span>
+                    </div>
+                    <div *ngIf="eventItem.assistPlayer">
+                        <small class="px-3">a: {{eventItem.assistPlayer.getPerson().getName()}}</small>
+                    </div>
+                </li>
             }
-        </ng-container>
-        <ng-template #noEventItems>
+        } @else {
             <div class="noEventItems"></div>
-        </ng-template>        
+        }
     </ul>
 </ng-template>

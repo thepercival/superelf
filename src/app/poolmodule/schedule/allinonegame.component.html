@@ -51,13 +51,11 @@
                                 </a>
                             </td>
                             <td>
-                                <ng-container ngTemplateOutlet="contentSideForamtionPlaces"
-                                    ngTemplateOutletContext="{formationPlaces:getFormationPlaces(currentSourceGame, HomeSide, formationMap, sportRankingItem)}">
+                                <ng-container *ngTemplateOutlet="contentSideForamtionPlaces; context:{formationPlaces:getFormationPlaces(currentSourceGame, HomeSide, formationMap, sportRankingItem)}">
                                 </ng-container>
                             </td>
                             <td>
-                                <ng-container ngTemplateOutlet="contentSideForamtionPlaces"
-                                    ngTemplateOutletContext="{formationPlaces:getFormationPlaces(currentSourceGame, AwaySide, formationMap, sportRankingItem)}">
+                                <ng-container *ngTemplateOutlet="contentSideForamtionPlaces; context:{formationPlaces:getFormationPlaces(currentSourceGame, AwaySide, formationMap, sportRankingItem)}">
                                 </ng-container>
                             </td>
                         </tr>
