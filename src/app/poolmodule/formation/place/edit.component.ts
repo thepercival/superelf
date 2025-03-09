@@ -8,8 +8,7 @@ import { FootballLine, Team, Person, TeamCompetitor } from 'ngx-sport';
 import { S11Formation } from '../../../lib/formation';
 import { S11FormationPlace } from '../../../lib/formation/place';
 import { FormationRepository } from '../../../lib/formation/repository';
-import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
-import { ViewPeriodType } from '../../../lib/period/view/json';
+import { ViewPeriodType } from '../../../lib/periods/viewPeriod/json';
 import { S11Player } from '../../../lib/player';
 import { Pool } from '../../../lib/pool';
 import { PoolRepository } from '../../../lib/pool/repository';
@@ -22,6 +21,7 @@ import { PoolComponent } from '../../../shared/poolmodule/component';
 import { ChoosePlayersFilter, S11PlayerChooseComponent } from '../../player/choose.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { SportExtensions } from '../../../lib/sportExtensions';
 
 @Component({
   selector: "app-pool-scouted-player-edit",
@@ -39,7 +39,6 @@ export class FormationPlaceEditComponent
     scoutedPlayers: [] /*, mappedPersons: new PersonMap()*/,
   };
   public form: UntypedFormGroup;
-  public oneTeamSimultaneous = new OneTeamSimultaneous();
   public choosePlayersFilter: ChoosePlayersFilter;
   public place!: S11FormationPlace;
   public alreadyChosenPersons: Person[] = [];
@@ -59,7 +58,8 @@ export class FormationPlaceEditComponent
     private location: Location,
     public myNavigation: MyNavigation,
     private modalService: NgbModal,
-    fb: UntypedFormBuilder
+    fb: UntypedFormBuilder,
+    public sportExtensions: SportExtensions
   ) {
     super(route, router, poolRepository, globalEventsManager);
     this.form = fb.group({
@@ -150,7 +150,7 @@ export class FormationPlaceEditComponent
   getChoosenTeams(assembleFormation: S11Formation): Team[] {
     const teams: Team[] = [];
     assembleFormation.getPlayers().forEach((player: S11Player) => {
-      const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player);
+      const currentPlayer = this.sportExtensions.getCurrentPlayer(player);
       if (currentPlayer === undefined) {
         return;
       }

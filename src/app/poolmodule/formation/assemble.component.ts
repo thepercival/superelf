@@ -13,7 +13,6 @@ import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { PoolUser } from '../../lib/pool/user';
 import { FormationRepository } from '../../lib/formation/repository';
 import { S11Player } from '../../lib/player';
-import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { S11Formation } from '../../lib/formation';
@@ -48,7 +47,6 @@ export class FormationAssembleComponent
   selectedPlace: S11FormationPlace | undefined;
   selectedSearchLine: FootballLine | undefined;
   selectedTeamMap: TeamMap = new TeamMap();
-  public oneTeamSimultaneous = new OneTeamSimultaneous();
   public statisticsGetter = new StatisticsGetter();
   public faUserSecret = faUserSecret;
   public faUsers = faUsers;

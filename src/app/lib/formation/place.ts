@@ -1,10 +1,10 @@
 import { FootballLine, Identifiable, Team } from 'ngx-sport';
 import { BadgeCategory } from '../achievement/badge/category';
-import { OneTeamSimultaneous } from '../oneTeamSimultaneousService';
 import { S11Player } from '../player';
 import { Totals } from '../totals';
 import { JsonTotals } from '../totals/json';
 import { S11FormationLine } from './line';
+import { SportExtensions } from '../sportExtensions';
 
 export class S11FormationPlace extends Identifiable {
     protected number: number;
@@ -57,7 +57,7 @@ export class S11FormationPlace extends Identifiable {
         if( s11Player === undefined ) {
             return undefined;
         }
-        const player = (new OneTeamSimultaneous()).getPlayer(s11Player, dateTime );
+        const player = (new SportExtensions()).getPlayer(s11Player, dateTime );
         return player?.getTeam();
     }
 

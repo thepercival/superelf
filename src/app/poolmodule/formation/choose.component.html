@@ -1,15 +1,15 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
 
-    <app-title *ngIf="pool" title="formatie kiezen"></app-title>
+    <app-title *ngIf="!processing() && pool" title="formatie kiezen"></app-title>
 
-    <h2 *ngIf="processing" class="text-center">
+    <h2 *ngIf="processing()" class="text-center">
       <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
     </h2>
     @if(alert){
     <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
     }
-    @if(!processing && pool) {
+    @if(!processing() && pool) {
       <div class="d-flex flex-wrap justify-content-center">
         @for(formation of formations; track formation.getName()){
           <div class="card border-secondary pointer mt-3 mx-2"(click)="editFormation(pool,formation)">

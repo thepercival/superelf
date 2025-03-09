@@ -7,7 +7,7 @@ import { APIRepository } from '../repository';
 import { ScoutedPlayerMapper } from './mapper';
 import { JsonScoutedPlayer } from './json';
 import { ScoutedPlayer } from '../scoutedPlayer';
-import { ViewPeriod } from '../period/view';
+import { ViewPeriod } from '../periods/viewPeriod';
 import { S11Player } from '../player';
 import { S11PlayerMapper } from '../player/mapper';
 import { Competition } from 'ngx-sport';

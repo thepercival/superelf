@@ -8,10 +8,9 @@ import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
 import { ScoutedPlayer } from '../../lib/scoutedPlayer';
 import { Pool } from '../../lib/pool';
 import { NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { FormationRepository } from '../../lib/formation/repository';
 import { S11Player } from '../../lib/player';
-import { ViewPeriod } from '../../lib/period/view';
+import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { Person, Team } from 'ngx-sport';
 import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addremovemodal.component';
 import { PoolUser } from '../../lib/pool/user';
@@ -26,6 +25,7 @@ import { TeamNameComponent } from '../team/name.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { NgIf } from '@angular/common';
 import { faSearch, faSignInAlt, faSpinner, faTrashAlt, faUsers, faUserSecret } from '@fortawesome/free-solid-svg-icons';
+import { SportExtensions } from '../../lib/sportExtensions';
 
 @Component({
   standalone: true,
@@ -48,7 +48,6 @@ export class ScoutedPlayerListComponent
   scoutingList: ScoutingList = {
     scoutedPlayers: [] /*, mappedPersons: new PersonMap()*/,
   };
-  public oneTeamSimultaneous = new OneTeamSimultaneous();
   public assembleFormation: S11Formation | undefined;
   public faSpinner = faSpinner;
   public faTrashAlt = faTrashAlt;
@@ -65,7 +64,8 @@ export class ScoutedPlayerListComponent
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
     private modalService: NgbModal,
     private poolUserRepository: PoolUserRepository,
-    private formationRepository: FormationRepository
+    private formationRepository: FormationRepository,
+    public sportExtensions: SportExtensions
   ) {
     super(route, router, poolRepository, globalEventsManager);
   }
@@ -151,7 +151,7 @@ export class ScoutedPlayerListComponent
     if (!s11Player) {
       return undefined;
     }
-    const player = this.oneTeamSimultaneous.getCurrentPlayer(s11Player);
+    const player = this.sportExtensions.getCurrentPlayer(s11Player);
     if (!player) {
       return undefined;
     }

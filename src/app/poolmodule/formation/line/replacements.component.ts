@@ -9,7 +9,6 @@ import { GameRound } from '../../../lib/gameRound';
 import { ImageRepository } from '../../../lib/image/repository';
 import { SuperElfNameService } from '../../../lib/nameservice';
 import { GameRepository } from '../../../lib/ngx-sport/game/repository';
-import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../../lib/player';
 import { CSSService } from '../../../shared/commonmodule/cssservice';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -17,6 +16,7 @@ import { TeamNameComponent } from '../../team/name.component';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { faSpinner, faPencilAlt, faTrashAlt, faRightLeft } from '@fortawesome/free-solid-svg-icons';
+import { SportExtensions } from '../../../lib/sportExtensions';
 
 @Component({
   selector: "app-pool-formationline-replacements",
@@ -41,7 +41,6 @@ export class FormationLineReplacementsComponent implements OnInit {
   @Output() remove = new EventEmitter<Replacement>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
 
-  public oneTeamSimultaneous = new OneTeamSimultaneous();
   public faSpinner = faSpinner;
   public faPencilAlt = faPencilAlt;
   public faTrashAlt = faTrashAlt;
@@ -52,7 +51,8 @@ export class FormationLineReplacementsComponent implements OnInit {
     public superElfNameService: SuperElfNameService,
     private formationRepository: FormationRepository,
     private modalService: NgbModal,
-    private cssService: CSSService
+    private cssService: CSSService,
+    public sportExtensions: SportExtensions
   ) {}
 
   ngOnInit() {
@@ -74,7 +74,7 @@ export class FormationLineReplacementsComponent implements OnInit {
     if (!s11Player) {
       return undefined;
     }
-    const player = this.oneTeamSimultaneous.getCurrentPlayer(s11Player);
+    const player = this.sportExtensions.getCurrentPlayer(s11Player);
     if (!player) {
       return undefined;
     }

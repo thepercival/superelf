@@ -9,7 +9,6 @@ import { JoinComponent } from './join/join.component';
 import { AuthUserGuardService } from '../lib/auth/guard/userguard.service';
 import { PoolUsersComponent } from './poolusers/poolusers.component';
 import { InviteComponent } from './invite/invite.component';
-import { S11PlayerComponent } from './player/info.component';
 import { ScoutedPlayerListComponent } from './scoutedPlayer/list.component';
 import { ScoutedPlayerAddComponent } from './scoutedPlayer/add.component';
 import { FormationChooseComponent } from './formation/choose.component';
@@ -29,7 +28,7 @@ import { FormationPlaceTransferComponent } from './formation/place/transfer.comp
 import { FormationSubstituteComponent } from './formation/substitute.component';
 import { FormationActionOverviewComponent } from './formation/actionoverview.component';
 import { PoolPouleAgainstGamesComponent } from './poule/againstgames.component';
-import { PoolAllInOneGameScheduleComponent } from './schedule/allinonegame.component';
+import { PoolAllInOneGameScheduleComponent } from './allinonegame/allinonegame.component';
 
 export const poolRoutes: Routes = [
   { path: "pool/new", component: NewComponent, canActivate: [AuthUserGuardService] },
@@ -98,7 +97,7 @@ export const poolRoutes: Routes = [
     canActivate: [AuthUserGuardService],
   },
   { path: "pool/join/:id/:key", component: JoinComponent },
-  { path: "pool/player/:id/:playerId/:gameRound", component: S11PlayerComponent },
+  // { path: "pool/player/:id/:playerId/:gameRound", component: S11PlayerComponent },
   {
     path: "pool/poule-againstgames/:id/:leagueName/:pouleId",
     component: PoolPouleAgainstGamesComponent,

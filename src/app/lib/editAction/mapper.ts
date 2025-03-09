@@ -3,7 +3,7 @@ import { Association, PersonMapper, PlayerMapper } from 'ngx-sport';
 import { TransferPeriodActionList } from '../editAction';
 import { S11Formation } from '../formation';
 import { S11FormationPlace } from '../formation/place';
-import { JsonTransferPeriod } from '../period/transfer/json';
+import { JsonTransferPeriod } from '../periods/transferPeriod/json';
 import { PoolUser } from '../pool/user';
 import { JsonTransferAction } from './json';
 import { Replacement } from './replacement';

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgainstGame, AgainstGamePlace, AgainstGpp, AgainstH2h, AgainstSide, AllInOneGame, Competition, Competitor, CompetitorBase, GamePlace, GameState, Poule, Round, Single, StartLocation, StartLocationMap, Structure, Team, TeamCompetitor, TogetherGame } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
@@ -14,7 +14,7 @@ import { LeagueName } from '../../lib/leagueName';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { ViewPeriod } from '../../lib/period/view';
+import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { Pool } from '../../lib/pool';
 import { PoolCompetitor } from '../../lib/pool/competitor';
 import { PoolRepository } from '../../lib/pool/repository';
@@ -79,8 +79,7 @@ export class PoolPouleAgainstGamesComponent
   // public homeGameRoundStatistics: StatisticsMap|undefined;
   // public awayGameRoundStatistics: StatisticsMap|undefined;
 
-  public processingPoolUsers = true;
-  public processingGameRound = true;
+  public processingGameRound: WritableSignal<boolean> = signal(true);
   public poolCompetitors: PoolCompetitor[] = [];
   public statisticsGetter = new StatisticsGetter();
 
@@ -489,13 +488,13 @@ export class PoolPouleAgainstGamesComponent
     pool: Pool,
     gameRound: GameRound | undefined
   ): void {
-    this.processingGameRound = true;
+    this.processingGameRound.set(true);
 
     const editPeriod = this.getMostRecentEndedEditPeriod(pool);
 
     if (gameRound === undefined || editPeriod === undefined) {
       console.error("gameRound or editPeriod is undefined");
-      this.processingGameRound = false;
+      this.processingGameRound.set(false);
       return;
     }
 
@@ -508,7 +507,7 @@ export class PoolPouleAgainstGamesComponent
 
           if (this.gameRoundCacheMap.has(gameRound.getNumber())) {
             this.currentGameRound = gameRound;
-            this.processingGameRound = false;
+            this.processingGameRound.set(false);
             return;
           }
 
@@ -533,7 +532,7 @@ export class PoolPouleAgainstGamesComponent
                 homeProcessing = false;
                 if (!awayProcessing) {
                   this.gameRoundCacheMap.set(gameRound.getNumber(), true);
-                  this.processingGameRound = false;
+                  this.processingGameRound.set(false);
                 }
               },
             });
@@ -550,7 +549,7 @@ export class PoolPouleAgainstGamesComponent
                 awayProcessing = false;
                 if (!homeProcessing) {
                   this.gameRoundCacheMap.set(gameRound.getNumber(), true);
-                  this.processingGameRound = false;
+                  this.processingGameRound.set(false);
                 }
               },
             });

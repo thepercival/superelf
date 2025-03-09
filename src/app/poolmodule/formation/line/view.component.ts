@@ -7,7 +7,6 @@ import { FormationRepository } from '../../../lib/formation/repository';
 import { GameRound } from '../../../lib/gameRound';
 import { ImageRepository } from '../../../lib/image/repository';
 import { SuperElfNameService } from '../../../lib/nameservice';
-import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../../lib/player';
 import { StatisticsGetter } from '../../../lib/statistics/getter';
 import { CSSService } from '../../../shared/commonmodule/cssservice';
@@ -16,6 +15,7 @@ import { TeamNameComponent } from '../../team/name.component';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { SportExtensions } from '../../../lib/sportExtensions';
 
 @Component({
   selector: '[app-pool-formationline-view]',
@@ -33,7 +33,6 @@ export class FormationLineViewComponent implements OnInit {
   readonly totalGameRoundPoints = input<number>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
 
-  public oneTeamSimultaneous = new OneTeamSimultaneous();
   public faSpinner = faSpinner;
 
   constructor(
@@ -41,7 +40,8 @@ export class FormationLineViewComponent implements OnInit {
     public superElfNameService: SuperElfNameService,
     private formationRepository: FormationRepository,
     private modalService: NgbModal,
-    private cssService: CSSService
+    private cssService: CSSService,
+    public sportExtensions: SportExtensions
   ) {
 
   }
@@ -71,7 +71,7 @@ export class FormationLineViewComponent implements OnInit {
       const stats = this.statisticsGetter().getStatistics(s11Player, gameRound);
       date = stats?.getGameStartDate();
     }
-    const player = this.oneTeamSimultaneous.getPlayer(s11Player, date ?? new Date());
+    const player = this.sportExtensions.getPlayer(s11Player, date ?? new Date());
     if (!player) {
       return undefined;
     }

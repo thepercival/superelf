@@ -6,22 +6,17 @@
                 <app-superelf-icon [icon]=facTrophy></app-superelf-icon>
                 <span class="ms-1">prijzenkasten</span>
             </h2>
-
             <div class="form-check form-switch pointer">
                 <input type="checkbox" class="form-check-input pointer" id="goat-switch" (change)="toggleGoat()">
                 <label class="form-check-label pointer" for="goat-switch"><img height="40rem" src="assets/images/goat-small.png" /></label>
-            </div>            
-
+            </div>
             <!-- <div class="form-check form-switch">
                 <input class="form-check-input pointer" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                 <label class="form-check-label pointer" for="flexSwitchCheckDefault">details</label>
-            </div> -->
-            
+            </div> -->            
         </div>        
 
-        
-
-        @if(!processing){
+        @if(!processing()){
             @if(pool){
                 <div>
                     <table class="table">
@@ -70,7 +65,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for(achievementListItem of achievementListItems; track achievementListItem.name) {
+                            @for(achievementListItem of achievementListItems; track achievementListItem) {
                             <tr>
                                 <td>                                    
                                     {{achievementListItem.name}} 
@@ -96,19 +91,19 @@
                                     </td>
                                 } @else {
                                     <td class="text-center">
-                                        @for(trophy of achievementListItem.leagueTrophies.get(Competition); track trophy.getId()) {
+                                        @for(trophy of achievementListItem.leagueTrophies.get(Competition); track trophy) {
                                         <div class="badge bg-secondary mb-1 ms-1 px-1 pointer" (click)="openLinkNewTab(pool, trophy, Competition)">
                                             {{trophy.seasonShortName}}</div>
                                         }
                                     </td>
                                     <td class="text-center">
-                                        @for(trophy of achievementListItem.leagueTrophies.get(Cup); track trophy.getId()) {
+                                        @for(trophy of achievementListItem.leagueTrophies.get(Cup); track trophy) {
                                         <div class="badge bg-secondary mb-1 ms-1 px-1 pointer" (click)="openLinkNewTab(pool, trophy, Cup)">
                                             {{trophy.seasonShortName}}</div>
                                         }
                                     </td>
                                     <td class="text-center">
-                                        @for(trophy of achievementListItem.leagueTrophies.get(SuperCup); track trophy.getId()) {
+                                        @for(trophy of achievementListItem.leagueTrophies.get(SuperCup); track trophy) {
                                         <div class="badge bg-secondary mb-1 ms-1 px-1 pointer" (click)="openLinkNewTab(pool, trophy, SuperCup)">
                                             {{trophy.seasonShortName}}</div>
                                         }
@@ -139,14 +134,16 @@
     </div>
 </div>
 
-@if(pool){
-    <app-pool-navbar *ngIf="leagueName !== WorldCup" [current]="Achievements" [pool]="pool"
-        [poolUser]="poolUserFromSession">
-    </app-pool-navbar>
-
-    <app-worldcup-navbar *ngIf="leagueName === WorldCup" [current]="Achievements" [pool]="pool"
-        [poolUser]="poolUserFromSession">
-    </app-worldcup-navbar>
+@if(!processing() && pool){
+    @if(leagueName === WorldCup) {
+        <app-worldcup-navbar *ngIf="" [current]="Achievements" [pool]="pool" [poolUser]="poolUserFromSession">
+        </app-worldcup-navbar>
+    } @else {
+        <app-pool-navbar [current]="Achievements" [pool]="pool"
+            [poolUser]="poolUserFromSession">
+        </app-pool-navbar>
+    }
+    
 }
 
 <!-- <ng-template #contentMessageTitle let-message="message" let-end="end">

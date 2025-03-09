@@ -26,7 +26,7 @@
             <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
         </h2>
 
-        @if(!processing && pool && currentViewPeriod && poolPoule){
+        @if(!processing() && pool && currentViewPeriod && poolPoule){
         <div>
             <h2 class="d-flex justify-content-center mt-3">
                 <app-poule-title [poule]="poolPoule" [poolCompetitors]="pool.getCompetitors(leagueName)"
@@ -41,10 +41,10 @@
                 </app-gameround-scroller>
             </div>
 
-            <h2 *ngIf="processingGameRound" class="text-center">
+            <h2 *ngIf="processingGameRound()" class="text-center">
                 <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
             </h2>            
-            @if(!processing && homeCompetitor && awayCompetitor && currentGameRound){
+            @if(!processing() && homeCompetitor && awayCompetitor && currentGameRound){
             <table class="table">
                 <tbody>
                     <!-- GameRoundPoints -->

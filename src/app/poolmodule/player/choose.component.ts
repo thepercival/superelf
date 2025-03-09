@@ -3,19 +3,19 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 import { Competition, FootballLine, NameService, Person, PersonMap, Player, Team, TeamMap } from 'ngx-sport';
 import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
-import { ViewPeriod } from '../../lib/period/view';
+import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { IAlert } from '../../shared/commonmodule/alert';
-import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
 import { S11PlayerRepository } from '../../lib/player/repository';
 import { ImageRepository } from '../../lib/image/repository';
-import { ViewPeriodType } from '../../lib/period/view/json';
+import { ViewPeriodType } from '../../lib/periods/viewPeriod/json';
 import { CompetitionConfig } from '../../lib/competitionConfig';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { TeamNameComponent } from '../team/name.component';
 import { NgIf } from '@angular/common';
 import { faChevronRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { SportExtensions } from '../../lib/sportExtensions';
 
 @Component({
   selector: "app-pool-player-choose",
@@ -45,7 +45,6 @@ export class S11PlayerChooseComponent implements OnInit {
   nameService = new NameService();
   public alert: IAlert | undefined;
   public processing: WritableSignal<boolean> = signal(true);
-  public oneTeamSimultaneous = new OneTeamSimultaneous();
   private alreadyChosenPersonsMap!: PersonMap;
   private alreadyChosenTeamsMap!: TeamMap;
 
@@ -55,7 +54,8 @@ export class S11PlayerChooseComponent implements OnInit {
     protected playerRepository: S11PlayerRepository,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
     public imageRepository: ImageRepository,
-    fb: UntypedFormBuilder
+    fb: UntypedFormBuilder,
+    public sportExtensions: SportExtensions
   ) {
     this.filter.set({
       line: undefined,
@@ -132,7 +132,7 @@ export class S11PlayerChooseComponent implements OnInit {
   setChoosePersonItems(players: S11Player[]) {
     const choosePersonItems: ChoosePersonItem[] = [];
     players.forEach((player: S11Player) => {
-      const currentPlayer = this.oneTeamSimultaneous.getCurrentPlayer(player);
+      const currentPlayer = this.sportExtensions.getCurrentPlayer(player);
       if (currentPlayer) {
         choosePersonItems.push({ player: currentPlayer, s11Player: player });
       }

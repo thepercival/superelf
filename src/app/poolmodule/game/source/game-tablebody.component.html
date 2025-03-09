@@ -1,0 +1,37 @@
+@for(sportRankingItem of sportRankingItems(); track sportRankingItem.getPlaceLocation()) 
+{
+    <tr>
+        <td>
+            @let homeFormationPlaces = getFormationPlaces(HomeSide, sportRankingItem);
+            <ng-container
+                *ngTemplateOutlet="contentSideForamtionPlaces; context:{formationPlaces: homeFormationPlaces, side: HomeSide}">
+            </ng-container>
+        </td>
+        <td class="text-center">
+            <a routerLink="getRouterLink(sportRankingItem())">
+                {{getPoolUser(sportRankingItem).getName()}}
+            </a>
+        </td>
+        <td>
+            @let awayFormationPlaces = getFormationPlaces(AwaySide, sportRankingItem);
+            <ng-container *ngTemplateOutlet="contentSideForamtionPlaces; context:{formationPlaces: awayFormationPlaces, side: AwaySide}">
+            </ng-container>
+        </td>
+    </tr>
+}
+<ng-template #contentSideForamtionPlaces let-formationPlaces="formationPlaces" let-side="side">
+    @for(formationPlace of formationPlaces; track formationPlace){
+    <div class="d-flex justify-content-between" [ngClass]="{'flex-row-reverse': side === HomeSide}">
+        @let s11Player = formationPlace.getPlayer();
+        @if(s11Player){
+            <div [ngClass]="{'d-flex': true, 'flex-row-reverse': side === HomeSide}">
+                <app-lineicon [line]="s11Player.getLine()"></app-lineicon>
+                <a href="javascript:void(0)" (click)="openPlayerModal(s11Player)">
+                    <span class="px-1 text-break">{{s11Player.getPerson().getName()}}</span>
+                </a>
+            </div>
+        }
+        <span *ngIf="formationPlace.isSubstitute()" class="badge badge-reserve ms-1">r</span>
+    </div>
+    }
+</ng-template>

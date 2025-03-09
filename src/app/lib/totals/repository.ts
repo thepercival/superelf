@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BadgeCategory } from '../achievement/badge/category';
 import { GameRound } from '../gameRound';
-import { ViewPeriod } from '../period/view';
+import { ViewPeriod } from '../periods/viewPeriod';
 
 import { Pool } from '../pool';
 import { APIRepository } from '../repository';

@@ -14,7 +14,7 @@
     <ngb-alert *ngIf="pool && pool.getAssemblePeriod().isIn()" type="warning">Let op: wanneer je team incompleet is, doet het
       NIET mee</ngb-alert>
 
-    @if(!processing && pool) {
+    @if(!processing() && pool) {
     <table class="table">
       <thead>
         <tr>

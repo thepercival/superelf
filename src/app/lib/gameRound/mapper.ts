@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GameRound } from '../gameRound';
-import { ViewPeriod } from '../period/view';
+import { ViewPeriod } from '../periods/viewPeriod';
 import { JsonGameRound } from './json';
 
 @Injectable({

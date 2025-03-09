@@ -25,3 +25,20 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+  // wedstrijden-scherm:
+  //      je wilt hier de wedstrijdronde van de eerste volgende wedstrijd zien die moet gaan beginnen,
+  //          als deze er niet is, de wedstrijdronde van de laatst gespeelde wedstrijd (lastFinishedOrInPorgress)
+  // stand & pooluser-scherm:
+  //      de wedstrijdronde, met een gespeelde wedstrijd en het hoogste nummer (lastFinishedOrInPorgress)
+
+  // bovenaan het schern [voor][transferperiode i(met acties)][na]
+  // chat plaatsing nog onbekend
+  // blokjes(speelronden) 2 ervoor, huidig en 1 erna + een blokje "alle"
+  // swipen voor vorige of volgende wedstrijdronde
+
+  // lijst met wedstrijdnummer
+  // en per wedstrijd het begin tijdstip en de status van de wedstrijd
+
+  // backend juiste nummer ophalen voor juiste scherm
+  // backend data ophalen voor lijst van gameRoundNumbers(4 per scherm, dus 4 per keer)

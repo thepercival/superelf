@@ -11,7 +11,7 @@
         <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
       </h2>
       
-      @if(!processing && competitionConfig){
+      @if(!processing() && competitionConfig){
       <form name="form" class="max-form-width" (ngSubmit)="create(competitionConfig)" formGroup="form" novalidate>
         <div class="row g-3">
           <label for="name" class="col-4 col-form-label">naam</label>

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../repository';
 
-import { ViewPeriod } from '../period/view';
+import { ViewPeriod } from '../periods/viewPeriod';
 import { S11PlayerMapper } from './mapper';
 import { JsonS11Player } from './json';
 import { S11Player } from '../player';

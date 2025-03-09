@@ -15,7 +15,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRound } from '../../lib/gameRound';
 import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
 import { CompetitionConfig } from '../../lib/competitionConfig';
-import { ViewPeriod } from '../../lib/period/view';
+import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
@@ -147,9 +147,9 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
       .subscribe({
         next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
           let currentGameRound;
-          if (currentGameRoundNumbers.lastFinishedOrInPorgress) {
+          if (currentGameRoundNumbers.lastFinishedOrInProgresss) {
             currentGameRound = viewPeriod.getGameRound(
-              currentGameRoundNumbers.lastFinishedOrInPorgress
+              currentGameRoundNumbers.lastFinishedOrInProgresss
             );
           }
           this.currentGameRound = currentGameRound;

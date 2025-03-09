@@ -89,8 +89,7 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
                   : -1;
               }
             );
-            this.achievementListItems =
-              this.mapToAchievementListItems(achievements);
+            this.achievementListItems = this.mapToAchievementListItems(achievements);
             this.processing.set(false);
           },
         });

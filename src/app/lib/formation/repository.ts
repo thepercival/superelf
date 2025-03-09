@@ -20,11 +20,11 @@ import { Transfer } from '../editAction/transfer';
 import { JsonTransfer } from '../editAction/transfer/json';
 import { Substitution } from '../editAction/substitution';
 import { JsonSubstitution } from '../editAction/substitution/json';
-import { ViewPeriod } from '../period/view';
-import { AssemblePeriod } from '../period/assemble';
-import { TransferPeriod } from '../period/transfer';
+import { ViewPeriod } from '../periods/viewPeriod';
+import { AssemblePeriod } from '../periods/assemblePeriod';
+import { TransferPeriod } from '../periods/transferPeriod';
 import { Pool } from '../pool';
-import { S11FormationMap } from '../../poolmodule/schedule/allinonegame.component';
+import { S11FormationMap } from '../../poolmodule/allinonegame/allinonegame.component';
 
 @Injectable({
     providedIn: 'root'

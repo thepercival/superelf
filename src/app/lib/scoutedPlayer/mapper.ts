@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Competition } from 'ngx-sport';
-import { ViewPeriod } from '../period/view';
+import { ViewPeriod } from '../periods/viewPeriod';
 import { S11PlayerMapper } from '../player/mapper';
 import { ScoutedPlayer } from '../scoutedPlayer';
 import { JsonScoutedPlayer } from './json';

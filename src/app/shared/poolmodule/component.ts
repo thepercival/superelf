@@ -7,9 +7,9 @@ import { Observable } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { PoolUser } from '../../lib/pool/user';
 import { GlobalEventsManager } from '../commonmodule/eventmanager';
-import { AssemblePeriod } from '../../lib/period/assemble';
-import { TransferPeriod } from '../../lib/period/transfer';
-import { ViewPeriod } from '../../lib/period/view';
+import { AssemblePeriod } from '../../lib/periods/assemblePeriod';
+import { TransferPeriod } from '../../lib/periods/transferPeriod';
+import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { signal, WritableSignal } from '@angular/core';
 
 export class PoolComponent {

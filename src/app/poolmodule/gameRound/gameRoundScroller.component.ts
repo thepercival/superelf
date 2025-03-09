@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges, input, model } from '@angular/core';
 import { GameRound } from '../../lib/gameRound';
-import { ViewPeriod } from '../../lib/period/view';
+import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgIf } from '@angular/common';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';

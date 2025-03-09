@@ -8,7 +8,6 @@ import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
 import { ScoutedPlayer } from '../../lib/scoutedPlayer';
 import { Pool } from '../../lib/pool';
 import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
 import { FootballLine, Person, Team, TeamCompetitor } from 'ngx-sport';
 import { HttpParams } from '@angular/common/http';
@@ -17,7 +16,7 @@ import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addrem
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { ChoosePlayersFilter, S11PlayerChooseComponent } from '../player/choose.component';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
-import { ViewPeriodType } from '../../lib/period/view/json';
+import { ViewPeriodType } from '../../lib/periods/viewPeriod/json';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { PoolUser } from '../../lib/pool/user';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
@@ -43,7 +42,6 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   scoutingList: ScoutingList = {
     scoutedPlayers: [] /*, mappedPersons: new PersonMap()*/,
   };
-  public oneTeamSimultaneous = new OneTeamSimultaneous();
   public choosePlayersFilter: ChoosePlayersFilter;
   public selectableTeams!: Team[];
   public selectableLines: FootballLine[];

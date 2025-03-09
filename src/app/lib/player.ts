@@ -1,6 +1,6 @@
 import { FootballLine, Identifiable, Period, Person, Player, Team } from 'ngx-sport';
 import { BadgeCategory } from './achievement/badge/category';
-import { ViewPeriod } from './period/view';
+import { ViewPeriod } from './periods/viewPeriod';
 import { ScorePointsMap } from './score/points';
 import { Totals } from './totals';
 

@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { CompetitionMapper } from 'ngx-sport';
 
 import { JsonCompetitionConfig } from './json';
-import { AssemblePeriodMapper } from '../period/assemble/mapper';
-import { TransferPeriodMapper } from '../period/transfer/mapper';
-import { ViewPeriodMapper } from '../period/view/mapper';
+import { AssemblePeriodMapper } from '../periods/assemblePeriod/mapper';
+import { TransferPeriodMapper } from '../periods/transferPeriod/mapper';
+import { ViewPeriodMapper } from '../periods/viewPeriod/mapper';
 import { CompetitionConfig } from '../competitionConfig';
 import { ScorePoints } from '../score/points';
 

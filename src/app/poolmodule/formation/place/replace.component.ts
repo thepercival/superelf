@@ -10,7 +10,6 @@ import { CompetitionConfigRepository } from '../../../lib/competitionConfig/repo
 import { FootballFormationChecker } from '../../../lib/formation/footballChecker';
 import { S11FormationPlace } from '../../../lib/formation/place';
 import { FormationRepository } from '../../../lib/formation/repository';
-import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../../lib/player';
 import { Pool } from '../../../lib/pool';
 import { PoolRepository } from '../../../lib/pool/repository';
@@ -23,7 +22,7 @@ import { PoolComponent } from '../../../shared/poolmodule/component';
 import { ChoosePlayersFilter, S11PlayerChooseComponent } from '../../player/choose.component';
 import { JsonReplacement } from '../../../lib/editAction/replacement/json';
 import { S11FormationCalculator } from '../../../lib/formation/calculator';
-import { ViewPeriodType } from '../../../lib/period/view/json';
+import { ViewPeriodType } from '../../../lib/periods/viewPeriod/json';
 import { S11Formation } from '../../../lib/formation';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -51,7 +50,6 @@ export class FormationPlaceReplaceComponent
     scoutedPlayers: [] /*, mappedPersons: new PersonMap()*/,
   };
   public form: UntypedFormGroup;
-  public oneTeamSimultaneous = new OneTeamSimultaneous();
   public choosePlayersFilter: ChoosePlayersFilter;
   public place!: S11FormationPlace;
   public alreadyChosenPersons: Person[] = [];

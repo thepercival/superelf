@@ -13,7 +13,6 @@ import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { PoolUser } from '../../lib/pool/user';
 import { FormationRepository } from '../../lib/formation/repository';
 import { S11Player } from '../../lib/player';
-import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { S11Formation } from '../../lib/formation';
@@ -46,7 +45,6 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
   public calcFormation: S11Formation | undefined;
   public assembleFormation: S11Formation | undefined;
   public calculator = new S11FormationCalculator();
-  public oneTeamSimultaneous = new OneTeamSimultaneous();
 
   constructor(
     route: ActivatedRoute,

@@ -7,7 +7,7 @@
       <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
     }
     
-    @if(!processing && pool) {
+    @if(!processing() && pool) {
       <div>
         <div class="d-flex justify-content-between mb-3">
           <h2 class="me-2 text-truncate">

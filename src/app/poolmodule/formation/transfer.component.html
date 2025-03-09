@@ -6,7 +6,7 @@
       <h2 class="me-2 text-truncate">
         2. transfer
       </h2>
-      @if(!processing && pool && calcFormation){
+      @if(!processing() && pool && calcFormation){
       <div>
         <button class="btn btn-secondary" disabled>
           {{calcFormation.getName()}}
@@ -16,7 +16,7 @@
     </div>
 
     <!-- start header --> 
-    @if(!processing && poolUser && assembleFormation){
+    @if(!processing() && poolUser && assembleFormation){
       <div class="d-flex justify-content-between mt-3 mb-1">
         <!-- left -->      
         @if(hasPlayersWithoutCurrentTeam(poolUser.getPool(), assembleFormation)){
@@ -63,7 +63,7 @@
     <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
     }
 
-    @if(!processing && pool && poolUser && assembleFormation && calcFormation){
+    @if(!processing() && pool && poolUser && assembleFormation && calcFormation){
     <div>
       @if(!selectedPlace){      
         @for(line of calcFormation.getLines();track line.getNumber()) {

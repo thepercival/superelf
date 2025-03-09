@@ -5,6 +5,8 @@ import { CSSService } from '../cssservice';
 
 @Component({
   selector: 'app-lineicon',
+  standalone: true,
+  imports: [],
   styleUrls: ['./lineicon.component.scss'],
   templateUrl: './lineicon.component.html'
 })

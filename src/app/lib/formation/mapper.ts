@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { S11Formation } from '../formation';
-import { ViewPeriod } from '../period/view';
+import { ViewPeriod } from '../periods/viewPeriod';
 import { PoolUser } from '../pool/user';
 import { JsonS11Formation } from './json';
 import { S11FormationLine } from './line';

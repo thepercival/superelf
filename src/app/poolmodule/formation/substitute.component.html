@@ -6,7 +6,7 @@
       <h2 class="me-2 text-truncate">
         <span>3. wisselen</span>
       </h2>
-      @if(!processing && pool && calcFormation){
+      @if(!processing() && pool && calcFormation){
       <div>
         <button class="btn btn-secondary" disabled>
           {{calcFormation.getName()}}
@@ -16,7 +16,7 @@
     </div>
 
     <!-- start header --> 
-    @if(!processing && poolUser && assembleFormation){
+    @if(!processing() && poolUser && assembleFormation){
       <div class="d-flex justify-content-between mt-3 mb-1">
         <!-- left -->      
           <button class="btn btn-outline-primary btn-sm"
@@ -41,7 +41,7 @@
     }
 
     <div>      
-      @if(!processing && pool && poolUser && assembleFormation && calcFormation && !selectedPlace){
+      @if(!processing() && pool && poolUser && assembleFormation && calcFormation && !selectedPlace){
         <!-- lines-->
         @for(line of calcFormation.getLines();track line.getNumber()) {
           <app-pool-formationline-substitutions [line]="line"

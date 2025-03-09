@@ -5,7 +5,7 @@
       <h2 class="me-2 text-truncate">
         <fa-icon [icon]=faUsers></fa-icon> mijn team
       </h2>
-      <div *ngIf="!processing && pool">
+      <div *ngIf="!processing() && pool">
         <button *ngIf="pool.getAssemblePeriod().isIn()" class="btn btn-secondary mx-2"
           routerLink="['/pool/scouting/list', pool.getId()]">
           <fa-icon [icon]=faUserSecret></fa-icon> <span class="ms-1 d-none d-sm-inline">
@@ -20,13 +20,13 @@
 
     </div>
 
-    <h2 *ngIf="processing" class="text-center">
+    <h2 *ngIf="processing()" class="text-center">
       <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
     </h2>
     @if(alert){
       <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
     }
-    @if(!processing && pool && assembleFormation && !selectedPlace){
+    @if(!processing() && pool && assembleFormation && !selectedPlace){
       <div>
         <!-- lines-->
         @for(line of assembleFormation.getLines();track line.getNumber()) {

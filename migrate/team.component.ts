@@ -13,7 +13,7 @@ import { Pool } from '../src/app/lib/pool';
 import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
 import { ConfirmS11PlayerChoiceModalComponent } from '../chooseplayers/confirmchoicemodal.component';
 import { S11Player } from '../src/app/lib/player';
-import { ViewPeriod } from '../src/app/lib/period/view';
+import { ViewPeriod } from '../src/app/lib/periods/viewPeriod';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TitleComponent } from '../src/app/shared/commonmodule/title/title.component';
 

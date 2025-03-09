@@ -1,98 +1,102 @@
-@if(pool){
+<h2 class="mb-3">
+  <fa-icon [icon]=faInfoCircle></fa-icon> spelregels
+</h2>
+
 <div class="ps-3">
 
-  <h2 class="mb-3">
-    <fa-icon [icon]=faInfoCircle></fa-icon> spelregels
-  </h2>
-
-  @if(alert){
+  @if(!processing() && alert){
     <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
   }
 
-  <h5 class="text-primary">teambeheer</h5>
-  <p class="card-text">Het samenstellen van je team kan van
-    {{pool.getAssemblePeriod().getStartDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
-    false,'hour':'2-digit','minute':'2-digit'})}}
-    tot
-    {{pool.getAssemblePeriod().getEndDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
-    false,'hour':'2-digit','minute':'2-digit'})}}.
-    <br />De transferperiode is van
-    {{pool.getTransferPeriod().getStartDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
-    false,'hour':'2-digit','minute':'2-digit'})}}
-    tot
-    {{pool.getTransferPeriod().getEndDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
-    false,'hour':'2-digit','minute':'2-digit'})}}.
-  </p>
+  @if(!processing() && pool){
 
-  <h5 class="text-primary">team samenstellen</h5>
-  <ul class="list-group mb-3">
-    <li class="list-group-item">je mag van elk team max 1 speler kiezen ( wanneer je door een transfer toch 2
-      spelers
-      van 1 team hebt, dan is dit
-      toegestaan )</li>
-    <li class="list-group-item">de toegestane formaties zijn : {{getFormationNames()}}</li>
-  </ul>
+    <h5 class="text-primary">teambeheer</h5>
+    <p class="card-text">Het samenstellen van je team kan van
+      {{pool.getAssemblePeriod().getStartDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
+      false,'hour':'2-digit','minute':'2-digit'})}}
+      tot
+      {{pool.getAssemblePeriod().getEndDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
+      false,'hour':'2-digit','minute':'2-digit'})}}.
+      <br />De transferperiode is van
+      {{pool.getTransferPeriod().getStartDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
+      false,'hour':'2-digit','minute':'2-digit'})}}
+      tot
+      {{pool.getTransferPeriod().getEndDateTime().toLocaleString('nl',{'year':'numeric','month':'short','day':'2-digit','hour12':
+      false,'hour':'2-digit','minute':'2-digit'})}}.
+    </p>
 
-  <h5 class="text-primary">transferperiode</h5>
-  <ul class="list-group mb-3">
-    <li class="list-group-item">een speler, die niet meer voor een team uit de eredivisie uitkomt, mag in de
-      transferperiode worden vervangen door een
-      speler van hetzelfde team, zonder dat dit ten koste gaat van een wissel</li>
-    <li class="list-group-item">je mag een speler, die wissel staat, ruilen met een speler die in de basis staat,
-      zonder dat dit ten koste gaat van een
-      wissel</li>
-    <li class="list-group-item">je mag van formatie wisselen tijdens de transferperiode. Dit kun je doen door
-      bijvoorbeeld een middenvelder te
-      wisselen
-      voor een verdediger. De formatie verandert dus van 4-3-3 naar 5-3-2. De nieuwe formatie dient 1 van de
-      toegstane
-      formaties te zijn</li>
-  </ul>
+    <h5 class="text-primary">team samenstellen</h5>
+    <ul class="list-group mb-3">
+      <li class="list-group-item">je mag van elk team max 1 speler kiezen ( wanneer je door een transfer toch 2
+        spelers
+        van 1 team hebt, dan is dit
+        toegestaan )</li>
+      <li class="list-group-item">de toegestane formaties zijn : {{getFormationNames()}}</li>
+    </ul>
 
-  <h5 class="text-primary">puntentelling</h5>
-  <ul class="list-group mb-3">
-    <li class="list-group-item">de wedstrijden worden per speelronde gedaan, dus wanneer een wedstrijd is uitgesteld
-      blijft de wedstrijd bij dezelfde
-      speelronde horen</li>
-    <li class="list-group-item">wanneer een speler minimaal 1 seconde meedoet, dan telt dit als een gespeelde
-      wedstrijd</li>
-    <li class="list-group-item">de wisselspeler wordt ingezet indien minimaal 1 speler van dezelfde linie niet heeft
-      meegedaan</li>
-  </ul>
+    <h5 class="text-primary">transferperiode</h5>
+    <ul class="list-group mb-3">
+      <li class="list-group-item">een speler, die niet meer voor een team uit de eredivisie uitkomt, mag in de
+        transferperiode worden vervangen door een
+        speler van hetzelfde team, zonder dat dit ten koste gaat van een wissel</li>
+      <li class="list-group-item">je mag een speler, die wissel staat, ruilen met een speler die in de basis staat,
+        zonder dat dit ten koste gaat van een
+        wissel</li>
+      <li class="list-group-item">je mag van formatie wisselen tijdens de transferperiode. Dit kun je doen door
+        bijvoorbeeld een middenvelder te
+        wisselen
+        voor een verdediger. De formatie verandert dus van 4-3-3 naar 5-3-2. De nieuwe formatie dient 1 van de
+        toegstane
+        formaties te zijn</li>
+    </ul>
 
-  <h5 class="text-primary">punten behalen</h5>
-  <div class="d-flex flex-wrap justify-content-center">
+    <h5 class="text-primary">puntentelling</h5>
+    <ul class="list-group mb-3">
+      <li class="list-group-item">de wedstrijden worden per speelronde gedaan, dus wanneer een wedstrijd is uitgesteld
+        blijft de wedstrijd bij dezelfde
+        speelronde horen</li>
+      <li class="list-group-item">wanneer een speler minimaal 1 seconde meedoet, dan telt dit als een gespeelde
+        wedstrijd</li>
+      <li class="list-group-item">de wisselspeler wordt ingezet indien minimaal 1 speler van dezelfde linie niet heeft
+        meegedaan</li>
+    </ul>
 
-    <div class="card mb-3 mx-2">
-      <div class="card-body">
-        <h5 class="card-title">alle spelers</h5>
-        <ul class="list-group list-group-flush">
-          @for(pointsItem of getPointsItems(pool); track pointsItem.name){
-            <li class="list-group-item d-flex justify-content-between align-items-center ps-0">
-              <span>{{pointsItem.name}}</span>
-              <span class="badge rounded-pill bg-primary ms-2">{{pointsItem.points}}</span>
-            </li>
-          }
-        </ul>
-      </div>
-    </div>
+    <h5 class="text-primary">punten behalen</h5>
+    <div class="d-flex flex-wrap justify-content-center">
 
-    @for(line of getPossibleLines(); track line){
-      <div class="card mb-3 mx-2 {{getLineClass(line, 'border')}}">
+      <div class="card mb-3 mx-2">
         <div class="card-body">
-          <h5 class="card-title">{{nameService.getLineName(line)}}</h5>
+          <h5 class="card-title">alle spelers</h5>
           <ul class="list-group list-group-flush">
-            @for(pointsItem of getLinePointsItems(pool,line); track pointsItem.name){
-              <li class="list-group-item d-flex justify-content-between align-items-center ps-0 {{getLineClass(line, 'border')}}">
+            @for(pointsItem of getPointsItems(pool); track pointsItem.name){
+              <li class="list-group-item d-flex justify-content-between align-items-center ps-0">
                 <span>{{pointsItem.name}}</span>
-                <span class="badge rounded-pill {{getLineClass(line)}} ms-2">{{pointsItem.points}}</span>
+                <span class="badge rounded-pill bg-primary ms-2">{{pointsItem.points}}</span>
               </li>
             }
           </ul>
         </div>
       </div>
-    }
-  </div>
+
+      @for(line of getPossibleLines(); track line){
+        <div class="card mb-3 mx-2 {{getLineClass(line, 'border')}}">
+          <div class="card-body">
+            <h5 class="card-title">{{nameService.getLineName(line)}}</h5>
+            <ul class="list-group list-group-flush">
+              @for(pointsItem of getLinePointsItems(pool,line); track pointsItem.name){
+                <li class="list-group-item d-flex justify-content-between align-items-center ps-0 {{getLineClass(line, 'border')}}">
+                  <span>{{pointsItem.name}}</span>
+                  <span class="badge rounded-pill {{getLineClass(line)}} ms-2">{{pointsItem.points}}</span>
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+      }
+    </div>
+  }
 </div>
-<app-pool-navbar [current]="Rules" [pool]="pool" [poolUser]="poolUserFromSession"></app-pool-navbar>
+
+@if(!processing() && pool){
+  <app-pool-navbar [current]="Rules" [pool]="pool" [poolUser]="poolUserFromSession"></app-pool-navbar>
 }

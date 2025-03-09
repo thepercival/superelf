@@ -15,7 +15,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRound } from '../../lib/gameRound';
 import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
 import { CompetitionConfig } from '../../lib/competitionConfig';
-import { ViewPeriod } from '../../lib/period/view';
+import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
@@ -23,7 +23,6 @@ import { BadgeCategory } from '../../lib/achievement/badge/category';
 import { ChooseBadgeCategoryModalComponent } from '../badge/choosecategory-modal.component';
 import { GameRoundTotalsMap, PoolTotalsRepository, PoolUsersTotalsMap } from '../../lib/totals/repository';
 import { SuperElfNameService } from '../../lib/nameservice';
-import { DefaultGameRoundCalculator } from '../../lib/gameRound/defaultCalculator';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolCompetitionsNavBarComponent } from '../../shared/poolmodule/competitionsNavBar/competitionsNavBar.component';
 import { WorldCupNavBarComponent } from '../../shared/poolmodule/poolNavBar/worldcupNavBar.component';
@@ -35,6 +34,7 @@ import { TogetherRankingComponent } from './togetherranking.component';
 import { NgIf } from '@angular/common';
 import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { facTrophy } from '../../shared/poolmodule/icons';
+import { GameRoundService } from '../../lib/gameRound/activeGameRoundsCalculator';
 
 
 @Component({
@@ -81,7 +81,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     protected structureRepository: StructureRepository,
     protected poolTotalsRepository: PoolTotalsRepository,
     private gameRoundRepository: GameRoundRepository,
-    private defaultGameRoundCalculator: DefaultGameRoundCalculator,
+    private gameRoundService: GameRoundService,
     public nameService: SuperElfNameService,
     private authService: AuthService,
     private modalService: NgbModal
@@ -197,8 +197,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
 
   initCurrentGameRound(pool: Pool, viewPeriod: ViewPeriod): void {
     const competitionConfig: CompetitionConfig = pool.getCompetitionConfig();
-    this.defaultGameRoundCalculator
-      .calculateFinished(competitionConfig, viewPeriod, undefined)
+    this.gameRoundService.calculateFinished(competitionConfig, viewPeriod, undefined)
       .subscribe({
         next: (currentGameRound: GameRound) => {
           const gameRounds: (GameRound | undefined)[] = viewPeriod

@@ -7,7 +7,6 @@ import { FormationRepository } from '../../../lib/formation/repository';
 import { GameRound } from '../../../lib/gameRound';
 import { ImageRepository } from '../../../lib/image/repository';
 import { SuperElfNameService } from '../../../lib/nameservice';
-import { OneTeamSimultaneous } from '../../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../../lib/player';
 import { CSSService } from '../../../shared/commonmodule/cssservice';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
@@ -15,6 +14,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TeamNameComponent } from '../../team/name.component';
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { faSpinner, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { SportExtensions } from '../../../lib/sportExtensions';
 
 @Component({
   selector: "app-pool-formationline-assemble",
@@ -30,14 +30,13 @@ import { faSpinner, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-
   styleUrls: ["./assemble.component.scss"],
 })
 export class FormationLineAssembleComponent implements OnInit {
-  readonly line = input.required<S11FormationLine>();
-  readonly selectedPlace = input<S11FormationPlace>();
-  readonly viewGameRound = input<GameRound>();
-  readonly processing = model<boolean>(true);
+  public readonly line = input.required<S11FormationLine>();
+  public readonly selectedPlace = input<S11FormationPlace>();
+  public readonly viewGameRound = input<GameRound>();
+  public readonly processing = model<boolean>(true);
   @Output() editPlace = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
 
-  public oneTeamSimultaneous = new OneTeamSimultaneous();
   public faSpinner = faSpinner;
   public faPencilAlt = faPencilAlt;
   public faTrashAlt = faTrashAlt;
@@ -47,7 +46,8 @@ export class FormationLineAssembleComponent implements OnInit {
     public superElfNameService: SuperElfNameService,
     private formationRepository: FormationRepository,
     private modalService: NgbModal,
-    private cssService: CSSService
+    private cssService: CSSService,
+    public sportExtensions: SportExtensions
   ) {}
 
   ngOnInit() {
@@ -69,7 +69,7 @@ export class FormationLineAssembleComponent implements OnInit {
     if (!s11Player) {
       return undefined;
     }
-    const player = this.oneTeamSimultaneous.getCurrentPlayer(s11Player);
+    const player = this.sportExtensions.getCurrentPlayer(s11Player);
     if (!player) {
       return undefined;
     }

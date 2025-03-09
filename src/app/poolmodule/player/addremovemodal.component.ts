@@ -1,12 +1,12 @@
 import { Component, OnInit, input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Player } from 'ngx-sport';
-import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11Player } from '../../lib/player';
 import { ScorePointsMap } from '../../lib/score/points';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { PlayerBasicsComponent } from './basics.component';
 import { NgIf } from '@angular/common';
+import { SportExtensions } from '../../lib/sportExtensions';
 
 @Component({
     selector: 'app-modal-s11player-addremove',
@@ -24,12 +24,13 @@ export class S11PlayerAddRemoveModalComponent implements OnInit {
 
     constructor(
         public activeModal: NgbActiveModal,
-        public cssService: CSSService) {
+        public cssService: CSSService,
+        public sportExtensions: SportExtensions) {
 
     }
 
     ngOnInit() {
-        this.player = (new OneTeamSimultaneous()).getCurrentPlayer(this.s11Player());
+        this.player = this.sportExtensions.getCurrentPlayer(this.s11Player());
     }
 
     get Add(): PlayerAction { return PlayerAction.Add }

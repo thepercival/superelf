@@ -5,7 +5,7 @@
       <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
     </h2>
 
-    @if(!processing && pool && poule){
+    @if(!processing() && pool && poule){
       <app-superelf-cup-round [poolUser]="poolUserFromSession" [round]="poule.getRound()" class="px-0"
         [structureNameService]="structureNameService" (navigateToPoule)="navigateToPoule(pool, $event)">
       </app-superelf-cup-round>

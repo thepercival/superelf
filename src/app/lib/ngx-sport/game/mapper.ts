@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Association, Competition, JsonPerson, Person, PersonMapper, Player, PlayerMapper } from 'ngx-sport';
-import { ViewPeriod } from '../../period/view';
+import { ViewPeriod } from '../../periods/viewPeriod';
 import { JsonS11Player } from '../../player/json';
 import { AgainstGameCardEvent, AgainstGameEvent, AgainstGameGoalEvent, AgainstGameLineupItem, AgainstGameSubstitute, JsonAgainstGameCardEvent, JsonAgainstGameEvent, JsonAgainstGameGoalEvent, JsonAgainstGameLineupItem, JsonAgainstGameSubstitute } from './football';
 

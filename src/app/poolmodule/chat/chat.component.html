@@ -11,11 +11,11 @@
             </button>
         </div>
 
-        <h2 *ngIf="processing" class="text-center">
+        <h2 *ngIf="processing()" class="text-center">
             <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
         </h2>
 
-        @if(!processing && pool && poolPoule && chatMessages){
+        @if(!processing() && pool && poolPoule && chatMessages){
         <div>
             <div class="d-flex justify-content-center mt-2">
                 <h2 *ngIf="CupOrSuperCup">

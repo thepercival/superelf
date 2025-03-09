@@ -14,14 +14,13 @@ import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { PoolUser } from '../../lib/pool/user';
 import { FormationRepository } from '../../lib/formation/repository';
 import { S11Player } from '../../lib/player';
-import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { AuthService } from '../../lib/auth/auth.service';
 import { GameRound } from '../../lib/gameRound';
 import { Observable, of } from 'rxjs';
 import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
-import { ViewPeriod } from '../../lib/period/view';
+import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { StatisticsRepository } from '../../lib/statistics/repository';
 import { S11Formation } from '../../lib/formation';
 import { StatisticsGetter } from '../../lib/statistics/getter';
@@ -49,7 +48,6 @@ import { faRightLeft, faUsers, faSpinner } from '@fortawesome/free-solid-svg-ico
 export class PoolUserComponent extends PoolComponent implements OnInit {
   poolUser!: PoolUser;
   nameService = new NameService();
-  public oneTeamSimultaneous = new OneTeamSimultaneous();
   public viewPeriod!: ViewPeriod;
   public formation: S11Formation | undefined;
   public gameRounds: (GameRound | undefined)[] = [];
@@ -176,11 +174,11 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
         if (object instanceof GameRound) {
           currentGameRound = object;
         } else if (object !== undefined) {
-          if (object.hasOwnProperty("lastFinishedOrInPorgress")) {
-            const lastFinishedOrInPorgress = object.lastFinishedOrInPorgress;
-            if (typeof lastFinishedOrInPorgress === "number") {
+          if (object.hasOwnProperty("lastFinishedOrInProgresss")) {
+            const lastFinishedOrInProgresss = object.lastFinishedOrInProgresss;
+            if (typeof lastFinishedOrInProgresss === "number") {
               currentGameRound = this.viewPeriod.getGameRound(
-                lastFinishedOrInPorgress
+                lastFinishedOrInProgresss
               );
             }
           } else if (object.hasOwnProperty("firstCreatedOrInProgress")) {

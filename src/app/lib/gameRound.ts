@@ -1,40 +1,35 @@
-import { AgainstGame, Period } from 'ngx-sport';
-import { ViewPeriod } from './period/view';
+import { GameState, Period } from 'ngx-sport';
+import { ViewPeriod } from './periods/viewPeriod';
 
 export class GameRound {
-    protected againstGames: AgainstGame[] | undefined;
-    protected period: Period|undefined;
+  constructor(
+    public readonly viewPeriod: ViewPeriod,
+    public readonly number: number,
+    public readonly period: Period,
+    public readonly state: GameState) {
+    // viewPeriod.getGameRounds().push(this);
+  }
 
-    constructor(protected viewPeriod: ViewPeriod, protected number: number) {
-        viewPeriod.getGameRounds().push(this);
-    }
+  //   protected againstGames: AgainstGame[] | undefined;
 
-    public getNumber(): number {
-        return this.number;
-    }
+  // public hasAgainstGames(): boolean {
+  //     return this.againstGames !== undefined && this.againstGames.length > 0;
+  // }
 
-    public getViewPeriod(): ViewPeriod {
-        return this.viewPeriod;
-    }
+  // public getAgainstGames(): AgainstGame[] {
+  //     if (this.againstGames === undefined) {
+  //         throw new Error('gameround has uninitialized againstgames');
+  //     }
+  //     return this.againstGames;
+  // }
 
-    public hasAgainstGames(): boolean {
-        return this.againstGames !== undefined && this.againstGames.length > 0;
-    }
+  // public setAgainstGames(againstGames: AgainstGame[]): void {
+  //     this.againstGames = againstGames;
+  //     const dates = this.againstGames.map((againstGame: AgainstGame): number => againstGame.getStartDateTime().getTime() );
+  //     this.period = new Period(new Date(Math.min(...dates)), new Date(Math.max(...dates)));
+  // }
 
-    public getAgainstGames(): AgainstGame[] {
-        if (this.againstGames === undefined) {
-            throw new Error('gameround has uninitialized againstgames');
-        }
-        return this.againstGames;
-    }
-
-    public setAgainstGames(againstGames: AgainstGame[]): void {
-        this.againstGames = againstGames;
-        const dates = this.againstGames.map((againstGame: AgainstGame): number => againstGame.getStartDateTime().getTime() );
-        this.period = new Period(new Date(Math.min(...dates)), new Date(Math.max(...dates)));
-    }
-
-    public getPeriod(): Period|undefined {
-        return this.period;
-    }
+  public getPeriod(): Period | undefined {
+    return this.period;
+  }
 }

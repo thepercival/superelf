@@ -3,13 +3,13 @@ import { Pool } from '../pool';
 import { User } from '../user';
 import { S11Formation } from '../formation';
 import { Identifiable } from 'ngx-sport';
-import { AssemblePeriod } from '../period/assemble';
-import { TransferPeriod } from '../period/transfer';
+import { AssemblePeriod } from '../periods/assemblePeriod';
+import { TransferPeriod } from '../periods/transferPeriod';
 import { LeagueName } from '../leagueName';
 import { Replacement } from '../editAction/replacement';
 import { Substitution } from '../editAction/substitution';
 import { Transfer } from '../editAction/transfer';
-import { ViewPeriod } from '../period/view';
+import { ViewPeriod } from '../periods/viewPeriod';
 import { TransferPeriodActionList } from '../editAction';
 
 export class PoolUser extends Identifiable {

@@ -1,7 +1,7 @@
 import { JsonCompetition, JsonIdentifiable } from 'ngx-sport';
-import { JsonAssemblePeriod } from '../period/assemble/json';
-import { JsonTransferPeriod } from '../period/transfer/json';
-import { JsonViewPeriod } from '../period/view/json';
+import { JsonAssemblePeriod } from '../periods/assemblePeriod/json';
+import { JsonTransferPeriod } from '../periods/transferPeriod/json';
+import { JsonViewPeriod } from '../periods/viewPeriod/json';
 import { LineScorePoints, ScorePoints } from '../score/points';
 
 export interface JsonCompetitionConfig extends JsonIdentifiable {

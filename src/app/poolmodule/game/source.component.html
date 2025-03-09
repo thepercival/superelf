@@ -3,9 +3,9 @@
         <h2 *ngIf="processing" class="text-center">
             <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
         </h2>
-        <ngb-alert *ngIf="!processing && !game" type="danger">de wedstrijd kan niet gevonden worden</ngb-alert>
+        <ngb-alert *ngIf="!processing() && !game" type="danger">de wedstrijd kan niet gevonden worden</ngb-alert>
         
-        @if(!processing && game){
+        @if(!processing() && game){
         <div>
 
             <div class="d-flex justify-content-between">

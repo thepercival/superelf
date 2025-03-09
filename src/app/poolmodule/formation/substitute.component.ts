@@ -13,14 +13,13 @@ import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { PoolUser } from '../../lib/pool/user';
 import { FormationRepository } from '../../lib/formation/repository';
 import { S11Player } from '../../lib/player';
-import { OneTeamSimultaneous } from '../../lib/oneTeamSimultaneousService';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { S11Formation } from '../../lib/formation';
 import { S11FormationCalculator } from '../../lib/formation/calculator';
 import { EditActionMapper } from '../../lib/editAction/mapper';
 import { forkJoin, Observable } from 'rxjs';
-import { TransferPeriod } from '../../lib/period/transfer';
+import { TransferPeriod } from '../../lib/periods/transferPeriod';
 import { Substitution } from '../../lib/editAction/substitution';
 import { JsonSubstitution } from '../../lib/editAction/substitution/json';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -53,7 +52,6 @@ export class FormationSubstituteComponent
   public transferPeriod!: TransferPeriod;
   public assembleFormation: S11Formation | undefined;
   public calcFormation: S11Formation | undefined;
-  public oneTeamSimultaneous = new OneTeamSimultaneous();
   public faInfoCircle = faInfoCircle;
   public faChevronLeft = faChevronLeft;
 

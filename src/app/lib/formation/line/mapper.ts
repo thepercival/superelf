@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Competition } from 'ngx-sport';
 import { S11Formation } from '../../formation';
-import { ViewPeriod } from '../../period/view';
+import { ViewPeriod } from '../../periods/viewPeriod';
 import { S11PlayerMapper } from '../../player/mapper';
 import { S11FormationLine } from '../line';
 import { JsonS11FormationPlace } from '../place/json';

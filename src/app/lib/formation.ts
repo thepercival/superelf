@@ -4,7 +4,7 @@ import { BadgeCategory } from './achievement/badge/category';
 import { S11FormationLine } from './formation/line';
 import { S11FormationPlace } from './formation/place';
 import { GameRound } from './gameRound';
-import { ViewPeriod } from './period/view';
+import { ViewPeriod } from './periods/viewPeriod';
 import { S11Player } from './player';
 import { PoolUser } from './pool/user';
 

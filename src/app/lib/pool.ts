@@ -1,9 +1,9 @@
 import { Association, Competition, CompetitionSport, Identifiable, PlaceRange, Season } from 'ngx-sport';
 
 import { PoolCollection } from './pool/collection';
-import { AssemblePeriod } from './period/assemble';
-import { TransferPeriod } from './period/transfer';
-import { ViewPeriod } from './period/view';
+import { AssemblePeriod } from './periods/assemblePeriod';
+import { TransferPeriod } from './periods/transferPeriod';
+import { ViewPeriod } from './periods/viewPeriod';
 import { PoolUser } from './pool/user';
 import { CompetitionConfig } from './competitionConfig';
 import { PoolCompetitor } from './pool/competitor';

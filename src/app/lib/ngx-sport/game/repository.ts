@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
 import { AgainstGame, AgainstSide, Competition, GameMapper, JsonAgainstGame, JsonTogetherGame, Poule, TogetherGame } from 'ngx-sport';
 import { GameRound } from '../../gameRound';
-import { ViewPeriod } from '../../period/view';
+import { ViewPeriod } from '../../periods/viewPeriod';
 import { AgainstGameCardEvent, AgainstGameEvent, AgainstGameGoalEvent, AgainstGameLineupItem, JsonAgainstGameCardEvent, JsonAgainstGameEvent, JsonAgainstGameGoalEvent, JsonAgainstGameLineupItem } from './football';
 import { AgainstGameMapper } from './mapper';
 

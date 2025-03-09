@@ -1,0 +1,31 @@
+<th class="text-end">
+    <ng-container *ngTemplateOutlet="side; context: {side: HomeSide}"></ng-container>
+</th>
+
+<th class="text-center px-2">    
+    @if(againstGame().getState() === Finished) {        
+        {{s11NameService.getAgainstScore(againstGame())}}
+    } @else {
+        VS        
+    }
+</th>
+
+<th>
+    <ng-container *ngTemplateOutlet="side; context: {side: AwaySide}"></ng-container>
+</th>
+
+<ng-template #side let-side="side">
+    @let sideCompetitor = sportExtensions.getCompetitor(againstGame(), side);
+    @if(sideCompetitor) {
+        @let team = getTeam(sideCompetitor);
+        @if(team){
+            <div class="w-100" [ngClass]="{'align-self-end': side == HomeSide}">
+                @if(isTeamCompetitor(sideCompetitor)) {
+                    <app-team-name [team]="team" [fullName]="true" [reverse]="side == HomeSide">
+                    </app-team-name>
+                }
+                
+            </div>
+        }
+    }
+</ng-template>

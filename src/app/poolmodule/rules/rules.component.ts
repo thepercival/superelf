@@ -47,14 +47,27 @@ export class RulesComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
+        let processingA = true;
+        let processingB = true;
+
         this.competitionConfigRepository
           .getAvailableFormations(pool.getCompetitionConfig())
-          .subscribe(
-            (formations: Formation[]) => (this.availableFormations = formations)
-          );
+          .subscribe((formations: Formation[]) => {
+            this.availableFormations = formations;
+            if (processingB === false) {
+                this.processing.set(false);
+              } else {
+                processingA = false;
+              }
+          });        
         this.poolUserRepository.getObjectFromSession(pool).subscribe({
           next: (poolUser: PoolUser) => {
             this.poolUserFromSession = poolUser;
+            if( processingA === false ) {
+              this.processing.set(false);
+            } else {
+              processingB = false;
+            }
           },
         });
         this.processing.set(false);
