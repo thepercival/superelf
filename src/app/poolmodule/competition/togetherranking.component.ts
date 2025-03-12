@@ -209,7 +209,7 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
       "/pool/user",
       poolUser.getPool().getId(),
       poolUser.getId(),
-      gameRound ? gameRound.getNumber() : 0,
+      gameRound ? gameRound.number : 0,
     ]);
   }
 

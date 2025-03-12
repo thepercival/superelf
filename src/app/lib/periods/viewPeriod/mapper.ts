@@ -14,7 +14,7 @@ export class ViewPeriodMapper {
     toObject(json: JsonViewPeriod): ViewPeriod {
         const viewPeriod = new ViewPeriod(new Date(json.start), new Date(json.end));
         viewPeriod.setId(json.id);
-        json.gameRounds.forEach(jsonGameRound => this.gameRoundMapper.toObject(jsonGameRound, viewPeriod));
+        // json.gameRounds.forEach(jsonGameRound => this.gameRoundMapper.toObject(jsonGameRound, viewPeriod));
         return viewPeriod;
     }
 }

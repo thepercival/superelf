@@ -24,18 +24,14 @@ export class GameRepository extends APIRepository {
         return this.getApiUrl() + 'public/competitions/' + sourceCompetition.getId();
     }
 
-    getSourceObjects(poule: Poule, gameRound: GameRound): Observable<AgainstGame[]> {
-        if (gameRound.hasAgainstGames()) {
-            return of(gameRound.getAgainstGames());
-        }
-        const url = this.getUrl(poule.getCompetition()) + '/gamerounds/' + gameRound.getNumber();
+    getSourceObjects(poule: Poule, gameRoundNr: number): Observable<AgainstGame[]> {
+        const url =
+          this.getUrl(poule.getCompetition()) + "/gamerounds/" + gameRoundNr;
         return this.http.get<JsonAgainstGame[]>(url, this.getOptions()).pipe(
             map((jsonAgainstGames: JsonAgainstGame[]) => {
-                const againstGames = jsonAgainstGames.map((jsonAgainstGame: JsonAgainstGame) => {
+                return jsonAgainstGames.map((jsonAgainstGame: JsonAgainstGame) => {
                     return this.mapper.toNewAgainst(jsonAgainstGame, poule, poule.getCompetition().getSingleSport());
                 });
-                gameRound.setAgainstGames(againstGames);
-                return againstGames;
             }),
             catchError((err) => this.handleError(err))
         );

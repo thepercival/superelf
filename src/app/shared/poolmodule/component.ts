@@ -48,26 +48,13 @@ export class PoolComponent {
 
   protected setPool(pool: Pool): void {
     this.pool = pool;
-    this.currentViewPeriod = this.getCurrentViewPeriod(pool);
+    this.currentViewPeriod = pool.getCurrentViewPeriod();
     this.globalEventsManager.navHeaderInfo.emit({
       id: +pool.getId(),
       name: pool.getName(),
       start: pool.getSeason().getStartDateTime(),
     });
     // this.globalEventsManager.showFooter.emit(false);
-  }
-
-  public getCurrentViewPeriod(pool: Pool, date?: Date): ViewPeriod {
-    if (date === undefined) {
-      date = new Date();
-    }
-    if (date.getTime() > pool.getTransferPeriod().getEndDateTime().getTime()) {
-      return pool.getTransferPeriod().getViewPeriod();
-    }
-    if (date.getTime() > pool.getAssemblePeriod().getEndDateTime().getTime()) {
-      return pool.getAssemblePeriod().getViewPeriod();
-    }
-    return pool.getCreateAndJoinPeriod();
   }
 
   // protected getMostRecentStartedEditPeriod(pool: Pool): AssemblePeriod | TransferPeriod | undefined {

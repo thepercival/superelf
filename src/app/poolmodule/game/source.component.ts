@@ -77,7 +77,8 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
       this.setPool(pool);
 
       this.route.params.subscribe((params) => {
-        const gameRound = this.getGameRoundByNumber(pool, +params["gameRound"]);
+        // @TODO CDK
+        // const gameRound = this.getGameRoundByNumber(pool, +params["gameRound"]);
 
         this.getSourceStructure(pool.getSourceCompetition()).subscribe({
           next: (structure: Structure) => {
@@ -86,78 +87,80 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
               .getRootRound()
               .getFirstPoule();
 
-            this.gameRepository.getSourceObjects(poule, gameRound).subscribe({
-              next: (games: AgainstGame[]) => {
-                const game = games.find(
-                  (game: AgainstGame) => game.getId() === +params["gameId"]
-                );
-                if (game) {
-                  const competitors = game
-                    .getPoule()
-                    .getCompetition()
-                    .getTeamCompetitors();
-                  this.startLocationMap = new StartLocationMap(competitors);
+            this.gameRepository
+              .getSourceObjects(poule, +params["gameRound"])
+              .subscribe({
+                next: (games: AgainstGame[]) => {
+                  const game = games.find(
+                    (game: AgainstGame) => game.getId() === +params["gameId"]
+                  );
+                  if (game) {
+                    const competitors = game
+                      .getPoule()
+                      .getCompetition()
+                      .getTeamCompetitors();
+                    this.startLocationMap = new StartLocationMap(competitors);
 
-                  // (AgainstGameGoalEvent | AgainstGameCardEvent)[]
-                  // AgainstGameLineupItem[]
+                    // (AgainstGameGoalEvent | AgainstGameCardEvent)[]
+                    // AgainstGameLineupItem[]
 
-                  const lineupRequests = [
-                    AgainstSide.Home,
-                    AgainstSide.Away,
-                  ].map((side: AgainstSide) => {
-                    return this.gameRepository
-                      .getSourceObjectLineup(game, side)
-                      .pipe(
-                        map((lineupItems: AgainstGameLineupItem[]) => {
-                          this.lineupSidesMap.set(side, lineupItems);
-                        })
-                      );
-                  });
-                  forkJoin(lineupRequests).subscribe({
-                    next: (results) => {
-                      this.processingLineups = false;
-                    },
-                  });
+                    const lineupRequests = [
+                      AgainstSide.Home,
+                      AgainstSide.Away,
+                    ].map((side: AgainstSide) => {
+                      return this.gameRepository
+                        .getSourceObjectLineup(game, side)
+                        .pipe(
+                          map((lineupItems: AgainstGameLineupItem[]) => {
+                            this.lineupSidesMap.set(side, lineupItems);
+                          })
+                        );
+                    });
+                    forkJoin(lineupRequests).subscribe({
+                      next: (results) => {
+                        this.processingLineups = false;
+                      },
+                    });
 
-                  const eventsRequests = [
-                    AgainstSide.Home,
-                    AgainstSide.Away,
-                  ].map((side: AgainstSide) => {
-                    return this.gameRepository
-                      .getSourceObjectEvents(game, side)
-                      .pipe(
-                        map(
-                          (
-                            events: (
-                              | AgainstGameGoalEvent
-                              | AgainstGameCardEvent
-                            )[]
-                          ) => {
-                            this.eventsSidesMap.set(side, events);
-                          }
-                        )
-                      );
-                  });
-                  forkJoin(eventsRequests).subscribe({
-                    next: (results) => {
-                      this.processingEvents = false;
-                    },
-                  });
+                    const eventsRequests = [
+                      AgainstSide.Home,
+                      AgainstSide.Away,
+                    ].map((side: AgainstSide) => {
+                      return this.gameRepository
+                        .getSourceObjectEvents(game, side)
+                        .pipe(
+                          map(
+                            (
+                              events: (
+                                | AgainstGameGoalEvent
+                                | AgainstGameCardEvent
+                              )[]
+                            ) => {
+                              this.eventsSidesMap.set(side, events);
+                            }
+                          )
+                        );
+                    });
+                    forkJoin(eventsRequests).subscribe({
+                      next: (results) => {
+                        this.processingEvents = false;
+                      },
+                    });
 
-                  // this.gameRepository.getSourceObjectLineup(game, AgainstSide.Home).subscribe({
-                  //   next: (lineupItems: AgainstGameLineupItem[]) => {
-                  //     this.lineupSidesMap.set(AgainstSide.Home, lineupItems);
-                  //   },
-                  //   error: (e) => {
-                  //     this.setAlert('danger', e); this.processing.set(false);
-                  //   },
-                  //   complete: () => this.processing.set(false)
-                  // });
-                }
-                this.game = game;
-              },
-              complete: () => this.processing.set(false),
-            });
+                    // this.gameRepository.getSourceObjectLineup(game, AgainstSide.Home).subscribe({
+                    //   next: (lineupItems: AgainstGameLineupItem[]) => {
+                    //     this.lineupSidesMap.set(AgainstSide.Home, lineupItems);
+                    //   },
+                    //   error: (e) => {
+                    //     this.setAlert('danger', e); this.processing.set(false);
+                    //   },
+                    //   complete: () => this.processing.set(false)
+                    // });
+                  }
+                  this.game = game;
+                },
+                complete: () => this.processing.set(false),
+              });
           },
         });
       });
@@ -220,20 +223,20 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
     return this.structureRepository.getObject(competition);
   }
 
-  getGameRoundByNumber(pool: Pool, gameRoundNumber: number): GameRound {
-    const viewPeriods = pool.getCompetitionConfig().getViewPeriods();
+  // getGameRoundByNumber(pool: Pool, gameRoundNumber: number): GameRound {
+  //   const viewPeriods = pool.getCompetitionConfig().getViewPeriods();
 
-    let viewPeriod = viewPeriods.shift();
-    while (viewPeriod !== undefined) {
-      try {
-        return viewPeriod.getGameRound(gameRoundNumber);
-      } catch (any) {}
-      viewPeriod = viewPeriods.shift();
-    }
-    throw new Error(
-      'gameRound could not be found for number "' + gameRoundNumber + '"'
-    );
-  }
+  //   let viewPeriod = viewPeriods.shift();
+  //   while (viewPeriod !== undefined) {
+  //     try {
+  //       return viewPeriod.getGameRound(gameRoundNumber);
+  //     } catch (any) {}
+  //     viewPeriod = viewPeriods.shift();
+  //   }
+  //   throw new Error(
+  //     'gameRound could not be found for number "' + gameRoundNumber + '"'
+  //   );
+  // }
 
   getCompetitors(
     game: AgainstGame,

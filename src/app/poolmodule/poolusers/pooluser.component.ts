@@ -140,7 +140,8 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
         this.formation = formation;
         this.totalPoints = this.formation.getTotalPoints(undefined);
 
-        this.initGameRounds(poolUser.getPool(), this.formation, gameRoundNr);
+        // @TODO CDK
+        // this.initGameRounds(poolUser.getPool(), this.formation, gameRoundNr);
         this.processingFormation.set(false);
       },
       error: (e) => {
@@ -150,68 +151,70 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     });
   }
 
-  private getCurrentGameRound(
-    pool: Pool,
-    gameRoundParam: number | undefined
-  ): Observable<GameRound | undefined | CurrentGameRoundNumbers> {
-    if (gameRoundParam !== undefined && gameRoundParam > 0) {
-      return of(this.viewPeriod.getGameRound(gameRoundParam));
-    }
-    return this.gameRoundRepository.getCurrentNumbers(
-      pool.getCompetitionConfig(),
-      this.viewPeriod
-    );
-  }
+  // TODO @CDK
+  // private getCurrentGameRound(
+  //   pool: Pool,
+  //   gameRoundParam: number | undefined
+  // ): Observable<GameRound | undefined | CurrentGameRoundNumbers> {
+  //   if (gameRoundParam !== undefined && gameRoundParam > 0) {
+  //     return of(this.viewPeriod.getGameRound(gameRoundParam));
+  //   }
+  //   return this.gameRoundRepository.getCurrentNumbers(
+  //     pool.getCompetitionConfig(),
+  //     this.viewPeriod
+  //   );
+  // }
 
-  private initGameRounds(
-    pool: Pool,
-    formation: S11Formation,
-    gameRoundParam: number | undefined
-  ): void {
-    this.getCurrentGameRound(pool, gameRoundParam).subscribe({
-      next: (object: GameRound | undefined | CurrentGameRoundNumbers) => {
-        let currentGameRound;
-        if (object instanceof GameRound) {
-          currentGameRound = object;
-        } else if (object !== undefined) {
-          if (object.hasOwnProperty("lastFinishedOrInProgresss")) {
-            const lastFinishedOrInProgresss = object.lastFinishedOrInProgresss;
-            if (typeof lastFinishedOrInProgresss === "number") {
-              currentGameRound = this.viewPeriod.getGameRound(
-                lastFinishedOrInProgresss
-              );
-            }
-          } else if (object.hasOwnProperty("firstCreatedOrInProgress")) {
-            const firstCreatedOrInProgress = object.firstCreatedOrInProgress;
-            if (typeof firstCreatedOrInProgress === "number") {
-              currentGameRound = this.viewPeriod.getGameRound(
-                firstCreatedOrInProgress
-              );
-            }
-          }
-        }
-        // console.log(object);
-        const gameRounds: (GameRound | undefined)[] = this.viewPeriod
-          .getGameRounds()
-          .slice();
-        this.gameRounds = gameRounds;
-        if (currentGameRound !== undefined) {
-          const idx = this.gameRounds.indexOf(this.currentGameRound);
-          if (idx >= 0) {
-            this.gameRounds = this.gameRounds
-              .splice(idx)
-              .concat([], this.gameRounds);
-          }
-          this.setGameRoundAndGetStatistics(formation, currentGameRound);
-        }
-      },
-      error: (e: string) => {
-        this.setAlert("danger", e);
-        this.processing.set(false);
-      },
-      complete: () => this.processing.set(false),
-    });
-  }
+  // @TODO CDK
+  // private initGameRounds(
+  //   pool: Pool,
+  //   formation: S11Formation,
+  //   gameRoundParam: number | undefined
+  // ): void {
+  //   this.getCurrentGameRound(pool, gameRoundParam).subscribe({
+  //     next: (object: GameRound | undefined | CurrentGameRoundNumbers) => {
+  //       let currentGameRound;
+  //       if (object instanceof GameRound) {
+  //         currentGameRound = object;
+  //       } else if (object !== undefined) {
+  //         if (object.hasOwnProperty("lastFinishedOrInProgresss")) {
+  //           const lastFinishedOrInProgresss = object.lastFinishedOrInProgresss;
+  //           if (typeof lastFinishedOrInProgresss === "number") {
+  //             currentGameRound = this.viewPeriod.getGameRound(
+  //               lastFinishedOrInProgresss
+  //             );
+  //           }
+  //         } else if (object.hasOwnProperty("firstCreatedOrInProgress")) {
+  //           const firstCreatedOrInProgress = object.firstCreatedOrInProgress;
+  //           if (typeof firstCreatedOrInProgress === "number") {
+  //             currentGameRound = this.viewPeriod.getGameRound(
+  //               firstCreatedOrInProgress
+  //             );
+  //           }
+  //         }
+  //       }
+  //       // console.log(object);
+  //       const gameRounds: (GameRound | undefined)[] = this.viewPeriod
+  //         .getGameRounds()
+  //         .slice();
+  //       this.gameRounds = gameRounds;
+  //       if (currentGameRound !== undefined) {
+  //         const idx = this.gameRounds.indexOf(this.currentGameRound);
+  //         if (idx >= 0) {
+  //           this.gameRounds = this.gameRounds
+  //             .splice(idx)
+  //             .concat([], this.gameRounds);
+  //         }
+  //         this.setGameRoundAndGetStatistics(formation, currentGameRound);
+  //       }
+  //     },
+  //     error: (e: string) => {
+  //       this.setAlert("danger", e);
+  //       this.processing.set(false);
+  //     },
+  //     complete: () => this.processing.set(false),
+  //   });
+  // }
 
   // getGameRounds(): (GameRound | undefined)[] {
   //   const gameRounds = this.poolUser?.getPool().getAssembleViewPeriod().getGameRounds();
@@ -222,40 +225,40 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     formation: S11Formation,
     gameRound: GameRound | undefined
   ): void {
-    if (gameRound === undefined) {
-      return;
-    }
-    if (this.gameRoundCacheMap.has(gameRound.getNumber())) {
-      this.currentGameRound = gameRound;
-      this.totalGameRoundPoints =
-        this.statisticsGetter.getFormationGameRoundPoints(
-          formation,
-          gameRound,
-          undefined
-        );
-      return;
-    }
-
-    this.processingStatistics.set(true);
-    this.statisticsRepository
-      .getGameRoundObjects(formation, gameRound, this.statisticsGetter)
-      .subscribe({
-        next: () => {
-          this.currentGameRound = gameRound;
-          this.totalGameRoundPoints =
-            this.statisticsGetter.getFormationGameRoundPoints(
-              formation,
-              gameRound,
-              undefined
-            );
-          this.gameRoundCacheMap.set(gameRound.getNumber(), true);
-          this.processingStatistics.set(false);
-        },
-        error: (e) => {
-          this.setAlert("danger", e);
-          this.processing.set(false);
-        },
-      });
+    // @TODO CDK
+    //   if (gameRound === undefined) {
+    //     return;
+    //   }
+    //   if (this.gameRoundCacheMap.has(gameRound.getNumber())) {
+    //     this.currentGameRound = gameRound;
+    //     this.totalGameRoundPoints =
+    //       this.statisticsGetter.getFormationGameRoundPoints(
+    //         formation,
+    //         gameRound,
+    //         undefined
+    //       );
+    //     return;
+    //   }
+    //   this.processingStatistics.set(true);
+    //   this.statisticsRepository
+    //     .getGameRoundObjects(formation, gameRound, this.statisticsGetter)
+    //     .subscribe({
+    //       next: () => {
+    //         this.currentGameRound = gameRound;
+    //         this.totalGameRoundPoints =
+    //           this.statisticsGetter.getFormationGameRoundPoints(
+    //             formation,
+    //             gameRound,
+    //             undefined
+    //           );
+    //         this.gameRoundCacheMap.set(gameRound.getNumber(), true);
+    //         this.processingStatistics.set(false);
+    //       },
+    //       error: (e) => {
+    //         this.setAlert("danger", e);
+    //         this.processing.set(false);
+    //       },
+    //     });
   }
 
   getPoolUserName(): string {
@@ -275,7 +278,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
 
   linkToPlayer(pool: Pool, s11Player: S11Player): void {
     const gameRoundNumber = this.currentGameRound
-      ? this.currentGameRound.getNumber()
+      ? this.currentGameRound.number
       : 0;
     this.router.navigate(
       ["/pool/player/", pool.getId(), s11Player.getId(), gameRoundNumber] /*, {

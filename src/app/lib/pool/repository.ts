@@ -36,8 +36,14 @@ export class PoolRepository extends APIRepository {
 
     getObject(id: number): Observable<Pool> {
         const url = super.getApiUrl() + (this.getToken() === undefined ? 'public/' : '') + this.getUrlpostfix() + '/' + id;
+        
         return this.http.get<JsonPool>(url, { headers: super.getHeaders() }).pipe(
-            map((jsonPool: JsonPool) => this.mapper.toObject(jsonPool)),
+            map((jsonPool: JsonPool) => {
+                console.log(jsonPool);
+                const t = this.mapper.toObject(jsonPool);
+                console.log(t);
+                return t;
+            }),
             catchError((err) => this.handleError(err))
         );
     }

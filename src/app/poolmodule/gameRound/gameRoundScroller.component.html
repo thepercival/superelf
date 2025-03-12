@@ -1,4 +1,12 @@
-<div class="d-flex justify-content-center">
+hier zo maken dat wanneer je bijv 1 week na de transfer periode zit dan tonen als : <br/>
+    <= T 21 22 23<br/>
+    op pijltje naar andere viewperiod  <br />
+    op t transfers tonen <br />
+    active ronde duidelijk aangeven <br />
+    voor wedstrijdenscherm kan meer vooruit kijken handig zijn <br />
+    swipen voor tonen eerdere/recentere ronden 
+    
+<div class="d-flex justify-content-center">    
     <div class="btn-group" role="group" aria-label="aantal">
         <button *ngIf="assembleViewPeriod() !== currentViewPeriod()" type="button" class="btn btn-outline-primary me-2" (click)="updateViewPeriod.emit(assembleViewPeriod())">
             <fa-icon [icon]=faChevronLeft></fa-icon>

@@ -21,7 +21,7 @@ export class PoolMapper {
         const config: CompetitionConfig = this.competitionConfigMapper.toObject(json.competitionConfig)
         const pool = new Pool(
             this.collectionMapper.toObject(json.collection),
-            config);
+            config);            
         json.competitions.forEach(jsonCompetition => {
             pool.getCompetitions().push(this.competitionMapper.toObject(jsonCompetition));
         });

@@ -1,59 +1,57 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-6">
 
-    <h2 *ngIf="processing()" class="text-center">
-      <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
-    </h2>
-
-    @if(!processing() && pool){
-      <div>
-        <div class="d-flex flex-nowrap justify-content-between mt-2">
-          @if(currentViewPeriod){
-          <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
-            (update)="updateGameRoundFromScroller(pool,$event)" [currentViewPeriod]="currentViewPeriod"
-            (updateViewPeriod)="updateViewPeriodFromScroller(pool, $event)"
-            [assembleViewPeriod]="pool.getAssembleViewPeriod()" [transferViewPeriod]="pool.getTransferViewPeriod()">
-          </app-gameround-scroller>
-          }
-          <div>
-            @if(pouleId){
-            <button (click)="navigateToChat(pool,pouleId)" type="button"
-              class="btn btn-outline-dark me-1 position-relative">
-              <fa-icon [icon]=faMessage></fa-icon>
-              <span class="ms-1 d-none d-sm-inline"> chat</span>
-              <span *ngIf="nrOfUnreadMessages > 0"
-                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                {{nrOfUnreadMessages}}
-                <span class="visually-hidden">ongelezen berichten</span>
-              </span>
-            </button>
+    @if(!processing()){
+      @if(pool){
+        <div>
+          <div class="d-flex flex-nowrap justify-content-between mt-2">
+            @if(currentViewPeriod){
+              <app-gameround-scroller [gameRounds]="viewGameRounds()" [current]="currentGameRound()"
+                (update)="updateGameRoundFromScroller(pool,currentViewPeriod,$event)" [currentViewPeriod]="currentViewPeriod"
+                (updateViewPeriod)="updateViewPeriodFromScroller(pool, $event)"
+                [assembleViewPeriod]="pool.getAssembleViewPeriod()" [transferViewPeriod]="pool.getTransferViewPeriod()">
+              </app-gameround-scroller>
             }
-            <button (click)="openChooseBadgeCategoryModal()" type="button"
-              class="btn {{badgeCategory !== undefined ? 'btn-success' : 'btn-outline-dark'}} me-0 position-relative">
-              <app-superelf-icon [icon]=facTrophy></app-superelf-icon>
-            </button>          
-          </div>
-        </div>
-
+            <div>
+              @if(pouleId){
+                <button (click)="navigateToChat(pool,pouleId)" type="button"
+                  class="btn btn-outline-dark me-1 position-relative">
+                  <fa-icon [icon]=faMessage></fa-icon>
+                  <span class="ms-1 d-none d-sm-inline"> chat</span>
+                  <span *ngIf="nrOfUnreadMessages > 0"
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{nrOfUnreadMessages}}
+                    <span class="visually-hidden">ongelezen berichten</span>
+                  </span>
+                </button>
+              }
+              <button (click)="openChooseBadgeCategoryModal()" type="button"
+                class="btn {{badgeCategory !== undefined ? 'btn-success' : 'btn-outline-dark'}} me-0 position-relative">
+                <app-superelf-icon [icon]=facTrophy></app-superelf-icon>
+              </button>          
+            </div>
+          </div>      
+        </div>      
+        
         @if(badgeCategory){
-        <div class="text-center mt-3">
-          <span class="">
-            <app-superelf-badge-icon [badgeCategory]="badgeCategory"></app-superelf-badge-icon>
-            <span class="ms-1">{{nameService.getBadgeCategoryName(badgeCategory)}}-badge</span>
-          </span>          
-        </div>
+          <div class="text-center mt-3">
+            <span class="">
+              <app-superelf-badge-icon [badgeCategory]="badgeCategory"></app-superelf-badge-icon>
+              <span class="ms-1">{{nameService.getBadgeCategoryName(badgeCategory)}}-badge</span>
+            </span>          
+          </div>
         }
     
         @if(poolUsersTotalsMap){
-        <app-together-ranking [poolUsers]="poolUsers" 
-          [poolUsersTotalsMap]="poolUsersTotalsMap" 
-          [gameRoundPoolUserTotalsMap]="currentGameRoundPoolUsersTotalsMap" 
-          [gameRound]="currentGameRound" [badgeCategory]="badgeCategory" 
-          [scorePointsMap]="pool.getCompetitionConfig().getScorePointsMap()"
-          [header]="true" >
-        </app-together-ranking>
+          <app-together-ranking [poolUsers]="poolUsers" 
+            [poolUsersTotalsMap]="poolUsersTotalsMap" 
+            [gameRoundPoolUserTotalsMap]="currentGameRoundPoolUsersTotalsMap" 
+            [gameRound]="currentGameRound()" [badgeCategory]="badgeCategory" 
+            [scorePointsMap]="pool.getCompetitionConfig().getScorePointsMap()"
+            [header]="true" >
+          </app-together-ranking>
         }
-      </div>
+      }
     }
   </div>
 </div>

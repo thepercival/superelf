@@ -78,7 +78,8 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
           return;
         }
         const user = this.authService.getUser();
-        this.gameRounds = currentViewPeriod.getGameRounds();
+        // @TODO CDK
+        // this.gameRounds = currentViewPeriod.getGameRounds();
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => {
             this.poolUsers = poolUsers;
@@ -142,34 +143,35 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
     competitionConfig: CompetitionConfig,
     viewPeriod: ViewPeriod
   ): void {
-    this.gameRoundRepository
-      .getCurrentNumbers(competitionConfig, viewPeriod)
-      .subscribe({
-        next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
-          let currentGameRound;
-          if (currentGameRoundNumbers.lastFinishedOrInProgresss) {
-            currentGameRound = viewPeriod.getGameRound(
-              currentGameRoundNumbers.lastFinishedOrInProgresss
-            );
-          }
-          this.currentGameRound = currentGameRound;
-          if (this.currentGameRound !== undefined) {
-            // console.log('CDK', this.currentGameRound, this.gameRounds[0]);
-            while (this.currentGameRound !== this.gameRounds[0]) {
-              const gameRound = this.gameRounds.shift();
-              if (gameRound !== undefined) {
-                this.gameRounds.push(gameRound);
-              }
-            }
-          }
-          this.updateGameRound(currentGameRound);
-        },
-        error: (e: string) => {
-          this.setAlert("danger", e);
-          this.processing.set(false);
-        },
-        complete: () => this.processing.set(false),
-      });
+    // @TODO CDK
+    // this.gameRoundRepository
+    //   .getCurrentNumbers(competitionConfig, viewPeriod)
+    //   .subscribe({
+    //     next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
+    //       let currentGameRound;
+    //       if (currentGameRoundNumbers.lastFinishedOrInProgresss) {
+    //         currentGameRound = viewPeriod.getGameRound(
+    //           currentGameRoundNumbers.lastFinishedOrInProgresss
+    //         );
+    //       }
+    //       this.currentGameRound = currentGameRound;
+    //       if (this.currentGameRound !== undefined) {
+    //         // console.log('CDK', this.currentGameRound, this.gameRounds[0]);
+    //         while (this.currentGameRound !== this.gameRounds[0]) {
+    //           const gameRound = this.gameRounds.shift();
+    //           if (gameRound !== undefined) {
+    //             this.gameRounds.push(gameRound);
+    //           }
+    //         }
+    //       }
+    //       this.updateGameRound(currentGameRound);
+    //     },
+    //     error: (e: string) => {
+    //       this.setAlert("danger", e);
+    //       this.processing.set(false);
+    //     },
+    //     complete: () => this.processing.set(false),
+    //   });
   }
 
   updateGameRound(gameRound: GameRound | undefined): void {

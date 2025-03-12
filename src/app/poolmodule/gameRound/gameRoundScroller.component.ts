@@ -71,7 +71,7 @@ export class GameRoundScrollerComponent implements OnInit, OnChanges {
     if (current === undefined) {
       return 'alle speelronden';
     }
-    return 'speelronde ' + current.getNumber();
+    return 'speelronde ' + current.number;
   }
 
   

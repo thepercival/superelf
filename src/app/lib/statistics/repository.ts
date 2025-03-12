@@ -27,7 +27,7 @@ export class StatisticsRepository extends APIRepository {
     }
 
     getFormationUrl(formation: S11Formation, gameRound: GameRound): string {
-        return super.getApiUrl() + 'formations/' + formation.getId() + '/statistics/' + gameRound.getNumber();
+        return super.getApiUrl() + 'formations/' + formation.getId() + '/statistics/' + gameRound.number;
     }
 
 

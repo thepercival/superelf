@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
@@ -34,7 +34,10 @@ import { TogetherRankingComponent } from './togetherranking.component';
 import { NgIf } from '@angular/common';
 import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { facTrophy } from '../../shared/poolmodule/icons';
-import { GameRoundService } from '../../lib/gameRound/activeGameRoundsCalculator';
+import { ActiveGameRoundsCalculator } from '../../lib/gameRound/activeGameRoundsCalculator';
+import { GameRoundViewType } from '../../lib/gameRound/viewType';
+import { concatMap } from 'rxjs';
+import { PoolUsersTotalsGetter } from '../../lib/pool/user/totalsGetter';
 
 
 @Component({
@@ -55,16 +58,19 @@ import { GameRoundService } from '../../lib/gameRound/activeGameRoundsCalculator
   styleUrls: ["./competition.component.scss"],
 })
 export class PoolCompetitionComponent extends PoolComponent implements OnInit {
+  public currentGameRound: WritableSignal<GameRound | undefined> =
+    signal(undefined);
+  public viewGameRounds: WritableSignal<GameRound[]> = signal([]);
+
   poolUsers: PoolUser[] = [];
 
   public pouleId: string | number | undefined;
   public leagueName!: LeagueName;
-  public poolUsersTotalsMap: PoolUsersTotalsMap | undefined;
-  public gameRoundTotalsMap: GameRoundTotalsMap = new GameRoundTotalsMap();
+  public poolUsersTotalsGetter: PoolUsersTotalsGetter;
   public currentGameRoundPoolUsersTotalsMap: PoolUsersTotalsMap | undefined;
+  public activeGameRoundsCalculator: ActiveGameRoundsCalculator;
   public badgeCategory: BadgeCategory | undefined;
-  public currentGameRound: GameRound | undefined;
-  public gameRounds: (GameRound | undefined)[] = [];
+
   public nrOfUnreadMessages = 0;
   public faMessage = faMessage;
   public faSpinner = faSpinner;
@@ -75,34 +81,68 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     router: Router,
     poolRepository: PoolRepository,
     globalEventsManager: GlobalEventsManager,
+    gameRoundRepository: GameRoundRepository,
+    poolTotalsRepository: PoolTotalsRepository,
     protected structureEditor: StructureEditor,
     protected poolUserRepository: PoolUserRepository,
     protected chatMessageRepository: ChatMessageRepository,
     protected structureRepository: StructureRepository,
-    protected poolTotalsRepository: PoolTotalsRepository,
-    private gameRoundRepository: GameRoundRepository,
-    private gameRoundService: GameRoundService,
     public nameService: SuperElfNameService,
     private authService: AuthService,
     private modalService: NgbModal
   ) {
     super(route, router, poolRepository, globalEventsManager);
+    this.activeGameRoundsCalculator = new ActiveGameRoundsCalculator(
+      1,
+      0,
+      gameRoundRepository
+    );
+    this.poolUsersTotalsGetter = new PoolUsersTotalsGetter(
+      poolTotalsRepository
+    );
+    
   }
 
   ngOnInit() {
+    console.log(123);
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
+
         this.setLeagueName(pool.getCompetitions());
         const competitionConfig = pool.getCompetitionConfig();
-        const currentViewPeriod: ViewPeriod = this.getCurrentViewPeriod(pool);
+        const currentViewPeriod: ViewPeriod = pool.getCurrentViewPeriod();
         if (currentViewPeriod === undefined) {
           this.setAlert("info", "geen bekijk-periode gevonden");
           return;
         }
         this.currentViewPeriod = currentViewPeriod;
         const user = this.authService.getUser();
-        this.gameRounds = currentViewPeriod.getGameRounds();
+        this.activeGameRoundsCalculator
+          .determineActiveGameRound(
+            competitionConfig,
+            currentViewPeriod,
+            GameRoundViewType.Ranking
+          )
+          .pipe(
+            concatMap((activeGameRound: GameRound) => {
+              this.currentGameRound.set(activeGameRound);
+              return this.activeGameRoundsCalculator.getActiveGameRounds(
+                competitionConfig,
+                currentViewPeriod,
+                activeGameRound
+              );
+            })
+          )
+          .subscribe({
+            next: (activeGameRounds: GameRound[]) => {
+              this.viewGameRounds.set(activeGameRounds);
+              this.processing.set(false);
+            },
+          });
+
+        // @TODO CDK END
+
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => {
             this.poolUsers = poolUsers;
@@ -111,7 +151,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
             );
             const competition = pool.getCompetition(this.leagueName);
             if (competition === undefined) {
-              this.processing.set(false);
+              // this.processing.set(false);
               throw Error("competitionSport not found");
             }
 
@@ -130,15 +170,17 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
                   this.pouleId = pouleId;
                 },
               });
-            }
-            this.initPoolUsersTotals(pool, currentViewPeriod);
-            this.initCurrentGameRound(pool, currentViewPeriod);
+            }            
+            // this.initCurrentGameRound(pool, currentViewPeriod);
           },
           error: (e: string) => {
             this.setAlert("danger", e);
-            this.processing.set(false);
+            // this.processing.set(false);
           },
         });
+
+        
+
       },
       error: (e) => {
         this.setAlert("danger", e);
@@ -167,57 +209,60 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
       : LeagueName.Competition;
   }
 
-  initPoolUsersTotals(pool: Pool, viewPeriod: ViewPeriod): void {
-    const assembleViewPeriod = pool.getAssembleViewPeriod();
+  // ON CHANGE CURRENT GAMEROUND
+  this.currentGameRoundPoolUsersTotalsMap = this.poolUsersTotalsGetter.getPoolUserTotals(, gameRound);
 
-    this.poolTotalsRepository
-      .getViewPeriodPoolUsersMap(pool, assembleViewPeriod)
-      .subscribe({
-        next: (assemblePoolUsersTotalsMap: PoolUsersTotalsMap) => {
-          this.poolUsersTotalsMap = assemblePoolUsersTotalsMap;
-          if (assembleViewPeriod !== viewPeriod) {
-            this.poolTotalsRepository
-              .getViewPeriodPoolUsersMap(pool, viewPeriod)
-              .subscribe({
-                next: (poolUsersTotalsMap: PoolUsersTotalsMap) => {
-                  // console.log(poolUsersTotalsMap);
-                  assemblePoolUsersTotalsMap.add(poolUsersTotalsMap);
-                },
-                error: (e: string) => {
-                  this.setAlert("danger", e);
-                },
-              });
-          }
-        },
-        error: (e: string) => {
-          this.setAlert("danger", e);
-        },
-      });
-  }
+  // initPoolUsersTotals(pool: Pool, viewPeriod: ViewPeriod): void {
+  //   const assembleViewPeriod = pool.getAssembleViewPeriod();
+
+  //   this.poolTotalsRepository
+  //     .getViewPeriodPoolUsersMap(pool, assembleViewPeriod)
+  //     .subscribe({
+  //       next: (assemblePoolUsersTotalsMap: PoolUsersTotalsMap) => {
+  //         this.poolUsersTotalsMap = assemblePoolUsersTotalsMap;
+  //         if (assembleViewPeriod !== viewPeriod) {
+  //           this.poolTotalsRepository
+  //             .getViewPeriodPoolUsersMap(pool, viewPeriod)
+  //             .subscribe({
+  //               next: (poolUsersTotalsMap: PoolUsersTotalsMap) => {
+  //                 // console.log(poolUsersTotalsMap);
+  //                 assemblePoolUsersTotalsMap.add(poolUsersTotalsMap);
+  //               },
+  //               error: (e: string) => {
+  //                 this.setAlert("danger", e);
+  //               },
+  //             });
+  //         }
+  //       },
+  //       error: (e: string) => {
+  //         this.setAlert("danger", e);
+  //       },
+  //     });
+  // }
 
   initCurrentGameRound(pool: Pool, viewPeriod: ViewPeriod): void {
-    const competitionConfig: CompetitionConfig = pool.getCompetitionConfig();
-    this.gameRoundService.calculateFinished(competitionConfig, viewPeriod, undefined)
-      .subscribe({
-        next: (currentGameRound: GameRound) => {
-          const gameRounds: (GameRound | undefined)[] = viewPeriod
-            .getGameRounds()
-            .slice();
-          this.gameRounds = gameRounds;
-
-          const idx = this.gameRounds.indexOf(currentGameRound);
-          if (idx >= 0) {
-            this.gameRounds = this.gameRounds
-              .splice(idx)
-              .concat([], this.gameRounds);
-          }
-          this.updateGameRound(pool, currentGameRound);
-        },
-        error: (e: string) => {
-          this.setAlert("danger", e);
-          this.processing.set(false);
-        },
-      });
+    // @TODO CDK
+    // const competitionConfig: CompetitionConfig = pool.getCompetitionConfig();
+    // this.gameRoundService.calculateFinished(competitionConfig, viewPeriod, undefined)
+    //   .subscribe({
+    //     next: (currentGameRound: GameRound) => {
+    //       const gameRounds: (GameRound | undefined)[] = viewPeriod
+    //         .getGameRounds()
+    //         .slice();
+    //       this.gameRounds = gameRounds;
+    //       const idx = this.gameRounds.indexOf(currentGameRound);
+    //       if (idx >= 0) {
+    //         this.gameRounds = this.gameRounds
+    //           .splice(idx)
+    //           .concat([], this.gameRounds);
+    //       }
+    //       this.updateGameRound(pool, currentGameRound);
+    //     },
+    //     error: (e: string) => {
+    //       this.setAlert("danger", e);
+    //       this.processing.set(false);
+    //     },
+    //   });
   }
 
   public updateViewPeriodFromScroller(
@@ -232,40 +277,42 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
 
   updateGameRoundFromScroller(
     pool: Pool,
+    viewPeriod: ViewPeriod,
     gameRound: GameRound | undefined
   ): void {
-    if (gameRound === undefined) {
-      this.currentGameRound = gameRound;
-      this.currentGameRoundPoolUsersTotalsMap = undefined;
-      return;
-    }
-    this.updateGameRound(pool, gameRound);
+    //   if (gameRound === undefined) {
+    //     this.currentGameRound = gameRound;
+    //     this.currentGameRoundPoolUsersTotalsMap = undefined;
+    //     return;
+    //   }
+    //   this.updateGameRound(pool, viewPeriod, gameRound);
   }
 
-  updateGameRound(pool: Pool, gameRound: GameRound): void {
-    this.processing.set(true);
-    this.poolTotalsRepository
-      .getGameRoundPoolUsersMap(pool, gameRound)
-      .subscribe({
-        next: (gameRoundPoolUsersTotals: PoolUsersTotalsMap) => {
-          this.currentGameRound = gameRound;
-          // HIER KIJKEN HOE JE DEZE MOET OPBOUWEN, ALS AL BESTAAT DAN NIET NOG EENS OPHALEN VAN SERVER
-          this.gameRoundTotalsMap.set(
-            this.getGameRoundIndex(gameRound),
-            gameRoundPoolUsersTotals
-          );
-          this.currentGameRoundPoolUsersTotalsMap = gameRoundPoolUsersTotals;
-          this.processing.set(false);
-        },
-        error: (e: string) => {
-          this.setAlert("danger", e);
-          this.processing.set(false);
-        },
-      });
-  }
-
-  private getGameRoundIndex(gameRound: GameRound): string {
-    return gameRound.getViewPeriod().getId() + "-" + gameRound.getNumber();
+  updateGameRound(
+    pool: Pool,
+    viewPeriod: ViewPeriod,
+    gameRound: GameRound
+  ): void {
+    // @TODO CDK
+    // this.processing.set(true);
+    // this.poolTotalsRepository
+    //   .getGameRoundPoolUsersMap(pool, viewPeriod, gameRound)
+    //   .subscribe({
+    //     next: (gameRoundPoolUsersTotals: PoolUsersTotalsMap) => {
+    //       this.currentGameRound = gameRound;
+    //       // HIER KIJKEN HOE JE DEZE MOET OPBOUWEN, ALS AL BESTAAT DAN NIET NOG EENS OPHALEN VAN SERVER
+    //       this.gameRoundTotalsMap.set(
+    //         this.getGameRoundIndex(gameRound),
+    //         gameRoundPoolUsersTotals
+    //       );
+    //       this.currentGameRoundPoolUsersTotalsMap = gameRoundPoolUsersTotals;
+    //       this.processing.set(false);
+    //     },
+    //     error: (e: string) => {
+    //       this.setAlert("danger", e);
+    //       this.processing.set(false);
+    //     },
+    //   });
   }
 
   navigateToChat(pool: Pool, pouleId: string | number): void {

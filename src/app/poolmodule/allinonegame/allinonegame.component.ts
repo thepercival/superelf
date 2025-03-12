@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Place, Poule, SportRoundRankingItem, StartLocationMap, Structure, StructureNameService, Team, TeamCompetitor, TogetherGame, TogetherSportRoundRankingCalculator } from 'ngx-sport';
-import { Observable } from 'rxjs';
+import { concatMap, Observable } from 'rxjs';
 import { AuthService } from '../../lib/auth/auth.service';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
 import { S11Formation } from '../../lib/formation';
@@ -63,9 +63,12 @@ export class PoolAllInOneGameScheduleComponent
   extends PoolComponent
   implements OnInit
 {
-  public currentGameRound: GameRound | undefined;
+  public currentGameRound: WritableSignal<GameRound | undefined> = signal(undefined);
+  public viewGameRounds: WritableSignal<GameRound[]> = signal([]);
+
   public sourceGameRoundGames: AgainstGame[] = [];
   public sourceAgainstGamesMap: Map<number, AgainstGame[]> = new Map();
+
   public poolUsersStartLocationMap: StartLocationMap | undefined;
   public formationMap: Map<number, S11Formation> | undefined;
 
@@ -164,26 +167,29 @@ export class PoolAllInOneGameScheduleComponent
                       next: (structure: Structure) => {
                         this.sourceStructure = structure;
 
-                        this.activeGameRoundsCalculator.determineActiveGameRound(
-                          pool.getCompetitionConfig(),
-                          this.getCurrentViewPeriod(pool),
-                          GameRoundViewType.Games
-                        ).subscribe({
-                          next: (activeGameRound: GameRound) => {
-                            this.activeGameRoundsCalculator.getActiveGameRounds(
-                              pool.getCompetitionConfig(),
-                              this.getCurrentViewPeriod(pool),
-                              activeGameRound).subscribe({
-                                next: (activeGameRounds: GameRound[]) => {
-                                  // updat scroller
-                                  this.activeGameRounds.set(activeGameRounds);
-                                }                                                           
-                              });
-                            // update gameRound
-                            this.selectedGameRound.set(activeGameRound);
-                          }
-                        });
-                      }
+                        this.activeGameRoundsCalculator
+                          .determineActiveGameRound(
+                            pool.getCompetitionConfig(),
+                            this.getCurrentViewPeriod(pool),
+                            GameRoundViewType.Games
+                          )
+                          .pipe(
+                            concatMap((activeGameRound: GameRound) => {
+                              this.currentGameRound.set(activeGameRound);
+                              return this.activeGameRoundsCalculator.getActiveGameRounds(
+                                pool.getCompetitionConfig(),
+                                this.getCurrentViewPeriod(pool),
+                                activeGameRound
+                              );
+                            })
+                          )
+                          .subscribe({
+                            next: (activeGameRounds: GameRound[]) => {
+                              this.viewGameRounds.set(activeGameRounds);                              
+                              this.processing.set(false);
+                            },
+                          });
+                      },
                     });
                   });
 
@@ -284,35 +290,29 @@ export class PoolAllInOneGameScheduleComponent
 
     this.processingGames.set(true);
 
-    this.currentGameRound = gameRound;
+    this.currentGameRound.set(gameRound);
     const poule = this.sourceStructure
       .getSingleCategory()
       .getRootRound()
       .getFirstPoule();
 
-    if (gameRound.hasAgainstGames()) {
-      this.updateSourceGame(this.getDefaultGame(gameRound.getAgainstGames()));
-      this.processing.set(false);
-      this.processingGames.set(false);
-      return;
-    }
+    // @TODO CDK
+    // if (gameRound.hasAgainstGames()) {
+    //   this.updateSourceGame(this.getDefaultGame(gameRound.getAgainstGames()));
+    //   this.processing.set(false);
+    //   this.processingGames.set(false);
+    //   return;
+    // }
 
-    this.gameRepository
-      .getSourceObjects(poule, this.currentGameRound)
-      .subscribe({
-        next: (games: AgainstGame[]) => {
-          this.sourceGameRoundGames = games;
-          let game = games.find((game: AgainstGame) => game.getId() === gameId);
-          if (game == undefined) {
-            game = this.getDefaultGame(games);
-          }
-          this.updateSourceGame(game);
-        },
-        complete: () => {
-          this.processing.set(false);
-          this.processingGames.set(false);
-        },
-      });
+    // this.gameRepository.getSourceObjects(poule, gameRound).subscribe({
+    //   next: (games: AgainstGame[]) => {
+    //     this.sourceGameRoundGames = games;
+    //   },
+    //   complete: () => {
+    //     this.processing.set(false);
+    //     this.processingGames.set(false);
+    //   },
+    // });
   }
 
   // updateGameRounds(gameRoundsourceGame: AgainstGame): void {

@@ -79,7 +79,7 @@ export class S11FormationLine extends Identifiable {
         if (gameRound === undefined) {
             return this.substituteAppearances.size > 0;
         }
-        const gameRoundNr = gameRound instanceof GameRound ? gameRound.getNumber() : gameRound;
+        const gameRoundNr = gameRound instanceof GameRound ? gameRound.number : gameRound;
         // console.log(this.getNumber(), this.substituteAppearances.has(gameRound.getNumber()));
         return this.substituteAppearances.has(gameRoundNr);
     }

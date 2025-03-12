@@ -39,6 +39,7 @@ import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.c
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { facCup, facSuperCup } from '../../shared/poolmodule/icons';
 import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { SourceGameManager } from '../../lib/gameRound/sourceGameManager';
 
 @Component({
   selector: "app-pool-againstgames",
@@ -82,6 +83,7 @@ export class PoolPouleAgainstGamesComponent
   public processingGameRound: WritableSignal<boolean> = signal(true);
   public poolCompetitors: PoolCompetitor[] = [];
   public statisticsGetter = new StatisticsGetter();
+  private sourceGameManager: SourceGameManager;
 
   public sourcePoule!: Poule;
   public nrOfUnreadMessages = 0;
@@ -110,6 +112,7 @@ export class PoolPouleAgainstGamesComponent
     private myNavigation: MyNavigation
   ) {
     super(route, router, poolRepository, globalEventsManager);
+    this.sourceGameManager = new SourceGameManager(gameRepository);
   }
 
   ngOnInit() {
@@ -149,8 +152,9 @@ export class PoolPouleAgainstGamesComponent
               poule,
               sportVariant
             );
-            const viewPeriod =
-              pool.getViewPeriodByRoundNumber(currentGameRoundNr);
+            // @TODO CDK
+            // const viewPeriod =
+            //   pool.getViewPeriodByRoundNumber(currentGameRoundNr);
             const gameRoundNrs: number[] = this.getGameRoundNumbers(
               poule,
               sportVariant
@@ -173,87 +177,89 @@ export class PoolPouleAgainstGamesComponent
                   poolCompetitors
                 );
 
-                // -- GETTING FORMATIONS
-                const getFormationRequests: Observable<S11Formation>[] = [];
-                if (this.homeCompetitor !== undefined) {
-                  getFormationRequests.push(
-                    this.formationRepository.getObject(
-                      this.homeCompetitor.getPoolUser(),
-                      viewPeriod
-                    )
-                  );
-                }
-                if (this.awayCompetitor !== undefined) {
-                  getFormationRequests.push(
-                    this.formationRepository.getObject(
-                      this.awayCompetitor.getPoolUser(),
-                      viewPeriod
-                    )
-                  );
-                }
-                forkJoin(getFormationRequests).subscribe({
-                  next: (formations: S11Formation[]) => {
-                    formations.forEach((formation: S11Formation) => {
-                      if (
-                        this.homeCompetitor !== undefined &&
-                        this.homeCompetitor.getPoolUser() ===
-                          formation.getPoolUser()
-                      ) {
-                        this.formationsMap.set(AgainstSide.Home, formation);
-                      }
-                      if (
-                        this.awayCompetitor !== undefined &&
-                        this.awayCompetitor.getPoolUser() ===
-                          formation.getPoolUser()
-                      ) {
-                        this.formationsMap.set(AgainstSide.Away, formation);
-                      }
-                    });
+                // @TODO CDK
+                // // -- GETTING FORMATIONS
+                // const getFormationRequests: Observable<S11Formation>[] = [];
+                // if (this.homeCompetitor !== undefined) {
+                //   getFormationRequests.push(
+                //     this.formationRepository.getObject(
+                //       this.homeCompetitor.getPoolUser(),
+                //       viewPeriod
+                //     )
+                //   );
+                // }
+                // if (this.awayCompetitor !== undefined) {
+                //   getFormationRequests.push(
+                //     this.formationRepository.getObject(
+                //       this.awayCompetitor.getPoolUser(),
+                //       viewPeriod
+                //     )
+                //   );
+                // }
+                // forkJoin(getFormationRequests).subscribe({
+                //   next: (formations: S11Formation[]) => {
+                //     formations.forEach((formation: S11Formation) => {
+                //       if (
+                //         this.homeCompetitor !== undefined &&
+                //         this.homeCompetitor.getPoolUser() ===
+                //           formation.getPoolUser()
+                //       ) {
+                //         this.formationsMap.set(AgainstSide.Home, formation);
+                //       }
+                //       if (
+                //         this.awayCompetitor !== undefined &&
+                //         this.awayCompetitor.getPoolUser() ===
+                //           formation.getPoolUser()
+                //       ) {
+                //         this.formationsMap.set(AgainstSide.Away, formation);
+                //       }
+                //     });
 
-                    // source
-                    this.getSourceStructure(
-                      pool.getSourceCompetition()
-                    ).subscribe({
-                      next: (structure: Structure) => {
-                        const sourcePoule = structure
-                          .getSingleCategory()
-                          .getRootRound()
-                          .getFirstPoule();
-                        this.sourcePoule = sourcePoule;
+                //     // source
+                //     this.getSourceStructure(
+                //       pool.getSourceCompetition()
+                //     ).subscribe({
+                //       next: (structure: Structure) => {
+                //         const sourcePoule = structure
+                //           .getSingleCategory()
+                //           .getRootRound()
+                //           .getFirstPoule();
+                //         this.sourcePoule = sourcePoule;
 
-                        const competitors = sourcePoule
-                          .getCompetition()
-                          .getTeamCompetitors();
-                        this.startLocationMap = new StartLocationMap(
-                          competitors
-                        );
+                //         const competitors = sourcePoule
+                //           .getCompetition()
+                //           .getTeamCompetitors();
+                //         this.startLocationMap = new StartLocationMap(
+                //           competitors
+                //         );
 
-                        this.gameRounds = gameRoundNrs.map(
-                          (gameRoundNr: number): GameRound => {
-                            return viewPeriod.getGameRound(gameRoundNr);
-                          }
-                        );
+                        // @TODO CDK
+                        // this.gameRounds = gameRoundNrs.map(
+                        //   (gameRoundNr: number): GameRound => {
+                        //     return viewPeriod.getGameRound(gameRoundNr);
+                        //   }
+                        // );
 
-                        const gameRound =
-                          viewPeriod.getGameRound(currentGameRoundNr);
-                        if (gameRound !== undefined) {
-                          // init scroller
-                          const idx = this.gameRounds.indexOf(gameRound);
-                          if (idx >= 0) {
-                            this.gameRounds = this.gameRounds
-                              .splice(idx)
-                              .concat([], this.gameRounds);
-                          }
-                          this.setGameRoundAndGetStatistics(pool, gameRound);
-                        }
-                        this.processing.set(false);
-                      },
-                    });
-                  },
-                  error: (e) => {
-                    console.log(e);
-                  },
-                });
+                        // const gameRound =
+                        //   viewPeriod.getGameRound(currentGameRoundNr);
+                        // if (gameRound !== undefined) {
+                        //   // init scroller
+                        //   const idx = this.gameRounds.indexOf(gameRound);
+                        //   if (idx >= 0) {
+                        //     this.gameRounds = this.gameRounds
+                        //       .splice(idx)
+                        //       .concat([], this.gameRounds);
+                        //   }
+                        //   this.setGameRoundAndGetStatistics(pool, gameRound);
+                        // }
+                //         this.processing.set(false);
+                //       },
+                //     });
+                //   },
+                //   error: (e) => {
+                //     console.log(e);
+                //   },
+                // });
 
                 if (this.poolUserFromSession) {
                   this.chatMessageRepository
@@ -437,7 +443,7 @@ export class PoolPouleAgainstGamesComponent
       ?.getAgainstGames()
       .find(
         (game: AgainstGame): boolean =>
-          game.getGameRoundNumber() === currentGameRound.getNumber()
+          game.getGameRoundNumber() === currentGameRound.number
       );
   }
 
@@ -469,20 +475,20 @@ export class PoolPouleAgainstGamesComponent
     return this.structureRepository.getObject(competition);
   }
 
-  getGameRoundByNumber(pool: Pool, gameRoundNumber: number): GameRound {
-    const viewPeriods = pool.getCompetitionConfig().getViewPeriods();
+  // getGameRoundByNumber(pool: Pool, gameRoundNumber: number): GameRound {
+  //   const viewPeriods = pool.getCompetitionConfig().getViewPeriods();
 
-    let viewPeriod = viewPeriods.shift();
-    while (viewPeriod !== undefined) {
-      try {
-        return viewPeriod.getGameRound(gameRoundNumber);
-      } catch (any) {}
-      viewPeriod = viewPeriods.shift();
-    }
-    throw new Error(
-      'gameRound could not be found for number "' + gameRoundNumber + '"'
-    );
-  }
+  //   let viewPeriod = viewPeriods.shift();
+  //   while (viewPeriod !== undefined) {
+  //     try {
+  //       return viewPeriod.getGameRound(gameRoundNumber);
+  //     } catch (any) {}
+  //     viewPeriod = viewPeriods.shift();
+  //   }
+  //   throw new Error(
+  //     'gameRound could not be found for number "' + gameRoundNumber + '"'
+  //   );
+  // }
 
   setGameRoundAndGetStatistics(
     pool: Pool,
@@ -498,14 +504,13 @@ export class PoolPouleAgainstGamesComponent
       return;
     }
 
-    this.gameRepository
-      .getSourceObjects(this.sourcePoule, gameRound)
+    this.sourceGameManager.getAgainstGames(this.sourcePoule, editPeriod.getViewPeriod(), gameRound.number)
       .subscribe({
         next: (games: AgainstGame[]) => {
           this.sourceGames = games;
           // this.sideMap = this.getSideMap(games);
 
-          if (this.gameRoundCacheMap.has(gameRound.getNumber())) {
+          if (this.gameRoundCacheMap.has(gameRound.number)) {
             this.currentGameRound = gameRound;
             this.processingGameRound.set(false);
             return;
@@ -531,7 +536,7 @@ export class PoolPouleAgainstGamesComponent
                 this.currentGameRound = gameRound;
                 homeProcessing = false;
                 if (!awayProcessing) {
-                  this.gameRoundCacheMap.set(gameRound.getNumber(), true);
+                  this.gameRoundCacheMap.set(gameRound.number, true);
                   this.processingGameRound.set(false);
                 }
               },
@@ -548,7 +553,7 @@ export class PoolPouleAgainstGamesComponent
                 this.currentGameRound = gameRound;
                 awayProcessing = false;
                 if (!homeProcessing) {
-                  this.gameRoundCacheMap.set(gameRound.getNumber(), true);
+                  this.gameRoundCacheMap.set(gameRound.number, true);
                   this.processingGameRound.set(false);
                 }
               },
@@ -737,7 +742,7 @@ export class PoolPouleAgainstGamesComponent
       "/pool/user",
       poolUser.getPool().getId(),
       poolUser.getId(),
-      gameRound ? gameRound.getNumber() : 0,
+      gameRound ? gameRound.number : 0,
     ]);
   }
 

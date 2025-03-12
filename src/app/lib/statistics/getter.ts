@@ -115,7 +115,7 @@ export class StatisticsGetter {
     // }
 
     public getStatistics(s11Player: S11Player, gameRound: GameRound | number): Statistics | undefined {
-        const gameRoundNr = gameRound instanceof GameRound ? gameRound.getNumber() : gameRound;        
+        const gameRoundNr = gameRound instanceof GameRound ? gameRound.number : gameRound;        
         const gameRoundStatsMap = this.personMap.get(s11Player.getPerson().getId());
         if( gameRoundStatsMap === undefined ) {
             return undefined;
@@ -124,7 +124,7 @@ export class StatisticsGetter {
     }
 
     public addStatistics(gameRound: GameRound | number, personId: string|number, statistics: Statistics): void {
-        const gameRoundNr = gameRound instanceof GameRound ? gameRound.getNumber() : gameRound;
+        const gameRoundNr = gameRound instanceof GameRound ? gameRound.number : gameRound;
         // console.log('addStats-' + gameRoundNr + '-' + personId);
         let gameRoundStatsMap = this.personMap.get(personId);
         if( gameRoundStatsMap === undefined) {

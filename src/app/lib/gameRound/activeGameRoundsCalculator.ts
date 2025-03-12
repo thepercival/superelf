@@ -5,9 +5,10 @@ import { CurrentGameRoundNumbers, GameRoundRepository } from "./repository";
 import { GameRoundRange } from "./range";
 import { GameRound } from "../gameRound";
 import { GameRoundViewType } from "./viewType";
+import { GameRoundGetter } from "./gameRoundGetter";
 
 export class ActiveGameRoundsCalculator {
-  private gameRoundsMaps: Map<number, Map<number, GameRound>> = new Map();
+  private gameRoundGetter: GameRoundGetter;
 
   // = new Map(
   //     gameRounds.map((gr) => [gr.number, gr])
@@ -16,11 +17,12 @@ export class ActiveGameRoundsCalculator {
   constructor(
     public readonly nrOfGamesBefore: number,
     private readonly nrOfGamesAfter: number,
-    private gameRoundRepository: GameRoundRepository
+    private readonly gameRoundRepository: GameRoundRepository
   ) {
-    if (nrOfGamesBefore <= 0 || nrOfGamesAfter <= 0) {
+    if (nrOfGamesBefore < 0 || nrOfGamesAfter < 0) {
       throw new Error();
     }
+    this.gameRoundGetter = new GameRoundGetter(gameRoundRepository);
   }
 
   public getActiveGameRounds(
@@ -28,10 +30,11 @@ export class ActiveGameRoundsCalculator {
     viewPeriod: ViewPeriod,
     activeGameRound: GameRound
   ): Observable<GameRound[]> {
-    return this.getGameRoundMap(competitionConfig, viewPeriod)
+    return this.gameRoundGetter
+      .getGameRoundMap(competitionConfig, viewPeriod)
       .pipe(
-        concatMap((gameRoundMap: Map<number,GameRound>) => {
-          const gameRounds = Array.from(gameRoundMap.values()); 
+        concatMap((gameRoundMap: Map<number, GameRound>) => {
+          const gameRounds = Array.from(gameRoundMap.values());
           const minGameRoundNr: number = Math.max(
             ...gameRounds.map((gameRound) => gameRound.number)
           );
@@ -101,63 +104,26 @@ export class ActiveGameRoundsCalculator {
       );
   }
 
-  public getGameRoundMap(
-    competitionConfig: CompetitionConfig,
-    viewPeriod: ViewPeriod
-  ): Observable<Map<number, GameRound>> {
-    const gameRoundMap = this.gameRoundsMaps.get(viewPeriod.getId());
-    if (gameRoundMap !== undefined) {
-      return of(gameRoundMap);
-    }
-    return this.gameRoundRepository
-      .getObjects(competitionConfig, viewPeriod)
-      .pipe(
-        concatMap((gameRounds: GameRound[]) => {
-          return of(new Map(
-            gameRounds.map((gr) => [gr.number, gr])
-          ));
-        })
-      );
-  }
-
-  public getGameRound(
-    competitionConfig: CompetitionConfig,
-    viewPeriod: ViewPeriod,
-    gameRoundNr: number
-  ): Observable<GameRound> {
-    return this.getGameRoundMap(competitionConfig, viewPeriod)
-      .pipe(
-        concatMap((gameRoundMap: Map<number,GameRound>) => {
-          const gameRound = gameRoundMap.get(gameRoundNr);
-          if (gameRound === undefined) {
-            throw new Error("gameround not found");
-          }
-          return of(gameRound);
-        })
-      );
-  }
-
   public determineActiveGameRound(
     competitionConfig: CompetitionConfig,
     viewPeriod: ViewPeriod,
     viewType: GameRoundViewType
   ): Observable<GameRound> {
-     return this.getGameRoundMap(competitionConfig, viewPeriod)
+    return this.gameRoundGetter
+      .getGameRoundMap(competitionConfig, viewPeriod)
       .pipe(
-        concatMap((gameRoundMap: Map<number,GameRound>) => {
-           return this.gameRoundRepository.getActive(
-            competitionConfig,
-            viewPeriod,
-            viewType
-          ).pipe(
-            concatMap((activeGameRoundNr: number) => {
-              const activeGameRound = gameRoundMap.get(activeGameRoundNr);
-              if(activeGameRound === undefined) {
-                throw new Error('gameRound not found');
-              }
-              return of(activeGameRound);
-            })
-          )
+        concatMap((gameRoundMap: Map<number, GameRound>) => {
+          return this.gameRoundRepository
+            .getActive(competitionConfig, viewPeriod, viewType)
+            .pipe(
+              concatMap((activeGameRoundNr: number) => {
+                const activeGameRound = gameRoundMap.get(activeGameRoundNr);
+                if (activeGameRound === undefined) {
+                  throw new Error("gameRound not found");
+                }
+                return of(activeGameRound);
+              })
+            );
         })
       );
   }

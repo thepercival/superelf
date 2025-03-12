@@ -16,65 +16,97 @@ import { TotalsMapper } from './mapper';
 
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: "root",
 })
 export class PoolTotalsRepository extends APIRepository {
+  private url: string;
 
-    private url: string;
+  constructor(private totalsMapper: TotalsMapper, private http: HttpClient) {
+    super();
+    this.url = super.getApiUrl() + this.getUrlpostfix();
+  }
 
-    constructor(
-        private totalsMapper: TotalsMapper,
-        private http: HttpClient) {
-        super();
-        this.url = super.getApiUrl() + this.getUrlpostfix();
-    }
+  getUrlpostfix(): string {
+    return "public/pools";
+  }
 
-    getUrlpostfix(): string {
-        return 'public/pools';
-    }
+  getGameRoundUrl(
+    pool: Pool,
+    gameRound: GameRound
+  ): string {
+    return (
+      this.url +
+      "/" +
+      pool.getId() +
+      "/viewperiods/" +
+      gameRound.viewPeriod.getId() +
+      "/gamerounds/" +
+      gameRound.number +
+      "/totals"
+    );
+  }
 
-    getGameRoundUrl(pool: Pool, gameRound: GameRound): string {
-        return this.url + '/' + pool.getId() + '/viewperiods/' + gameRound.getViewPeriod().getId() + '/gamerounds/' + gameRound.getNumber() + '/totals';
-    }
+  getViewPeriodUrl(pool: Pool, viewPeriod: ViewPeriod): string {
+    return (
+      this.url +
+      "/" +
+      pool.getId() +
+      "/viewperiods/" +
+      viewPeriod.getId() +
+      "/totals"
+    );
+  }
 
-    getViewPeriodUrl(pool: Pool, viewPeriod: ViewPeriod): string {
-        return this.url + '/' + pool.getId() + '/viewperiods/' + viewPeriod.getId() + '/totals';
-    }
+  getViewPeriodPoolUsersMap(
+    pool: Pool,
+    viewPeriod: ViewPeriod
+  ): Observable<PoolUsersTotalsMap> {
+    const url = this.getViewPeriodUrl(pool, viewPeriod);
+    return this.http
+      .get<JsonPoolUserTotals[]>(url, { headers: super.getHeaders() })
+      .pipe(
+        map((jsonGameRoundPoolUsersTotals: JsonPoolUserTotals[]) => {
+          return this.mapPoolUsersTotals(jsonGameRoundPoolUsersTotals);
+        }),
+        catchError((err) => this.handleError(err))
+      );
+  }
 
-    getViewPeriodPoolUsersMap(pool: Pool, viewPeriod: ViewPeriod): Observable<PoolUsersTotalsMap> {
-        const url = this.getViewPeriodUrl(pool, viewPeriod);
-        return this.http.get<JsonPoolUserTotals[]>(url, { headers: super.getHeaders() }).pipe(
-            map((jsonGameRoundPoolUsersTotals: JsonPoolUserTotals []) => {
-                return this.mapPoolUsersTotals(jsonGameRoundPoolUsersTotals);
-            }),
-            catchError((err) => this.handleError(err))
+  getGameRoundPoolUsersMap(pool: Pool, gameRound: GameRound): Observable<PoolUsersTotalsMap> {
+    const url = this.getGameRoundUrl(pool, gameRound);
+    return this.http
+      .get<JsonPoolUserTotals[]>(url, { headers: super.getHeaders() })
+      .pipe(
+        map((jsonGameRoundPoolUsersTotals: JsonPoolUserTotals[]) => {
+          return this.mapPoolUsersTotals(jsonGameRoundPoolUsersTotals);
+        }),
+        catchError((err) => this.handleError(err))
+      );
+  }
+
+  protected mapPoolUsersTotals(
+    jsonGameRoundPoolUsersTotals: JsonPoolUserTotals[]
+  ): PoolUsersTotalsMap {
+    const map = new PoolUsersTotalsMap();
+    //console.log('pre gameRoundPoolUsersTotals');
+    jsonGameRoundPoolUsersTotals.forEach(
+      (jsonPoolUserTotals: JsonPoolUserTotals) => {
+        const formationLineMap = new FormationLineTotalsMap();
+        jsonPoolUserTotals.formationLineTotals.forEach(
+          (json: JsonFormationLineTotals) => {
+            formationLineMap.set(
+              json.line,
+              this.totalsMapper.toObject(json.totals)
+            );
+          }
         );
-    }   
-
-    getGameRoundPoolUsersMap(pool: Pool, gameRound: GameRound): Observable<PoolUsersTotalsMap> {
-        const url = this.getGameRoundUrl(pool, gameRound);
-        return this.http.get<JsonPoolUserTotals[]>(url, { headers: super.getHeaders() }).pipe(
-            map((jsonGameRoundPoolUsersTotals: JsonPoolUserTotals []) => {
-                return this.mapPoolUsersTotals(jsonGameRoundPoolUsersTotals);
-            }),
-            catchError((err) => this.handleError(err))
-        );
-    }
-
-    protected mapPoolUsersTotals(jsonGameRoundPoolUsersTotals: JsonPoolUserTotals []): PoolUsersTotalsMap {        
-        const map = new PoolUsersTotalsMap();
-        //console.log('pre gameRoundPoolUsersTotals');
-        jsonGameRoundPoolUsersTotals.forEach((jsonPoolUserTotals: JsonPoolUserTotals) => {
-            const formationLineMap = new FormationLineTotalsMap();                    
-            jsonPoolUserTotals.formationLineTotals.forEach((json: JsonFormationLineTotals) => {
-                formationLineMap.set(json.line, this.totalsMapper.toObject(json.totals));
-            });
-            map.set(jsonPoolUserTotals.poolUserId, formationLineMap);
-        });
-        // gameRoundFormationLineTotals: GameRoundFormationLineTotals
-        //console.log('check gameRoundPoolUsersTotals', map);
-        return map;           
-    }
+        map.set(jsonPoolUserTotals.poolUserId, formationLineMap);
+      }
+    );
+    // gameRoundFormationLineTotals: GameRoundFormationLineTotals
+    //console.log('check gameRoundPoolUsersTotals', map);
+    return map;
+  }
 }
 
 // string is viewPeriod-gameRoundNr
