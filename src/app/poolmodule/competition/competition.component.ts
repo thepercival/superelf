@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
@@ -36,8 +36,11 @@ import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { facTrophy } from '../../shared/poolmodule/icons';
 import { ActiveGameRoundsCalculator } from '../../lib/gameRound/activeGameRoundsCalculator';
 import { GameRoundViewType } from '../../lib/gameRound/viewType';
-import { concatMap } from 'rxjs';
+import { combineLatest, concatMap, forkJoin, Observable, of } from 'rxjs';
 import { PoolUsersTotalsGetter } from '../../lib/pool/user/totalsGetter';
+import { EditPeriod } from '../../lib/periods/editPeriod';
+import { CompetitorWithGameRoundsPoints, GameRoundsPoints } from '../../lib/views/togetherRankingView/competitorWithGameRoundsPoints';
+import { PoolCompetitor } from '../../lib/pool/competitor';
 
 
 @Component({
@@ -46,6 +49,7 @@ import { PoolUsersTotalsGetter } from '../../lib/pool/user/totalsGetter';
   imports: [
     FontAwesomeModule,
     PoolCompetitionsNavBarComponent,
+    NgbAlertModule,
     WorldCupNavBarComponent,
     PoolNavBarComponent,
     SuperElfIconComponent,
@@ -61,15 +65,18 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   public currentGameRound: WritableSignal<GameRound | undefined> =
     signal(undefined);
   public viewGameRounds: WritableSignal<GameRound[]> = signal([]);
+  public poolUsersWithGameRoundsPoints: WritableSignal<
+    CompetitorWithGameRoundsPoints[]
+  > = signal([]);
+  public badgeCategory: WritableSignal<BadgeCategory | undefined> =
+    signal(undefined);
 
-  poolUsers: PoolUser[] = [];
+  public poolUsers: PoolUser[] | undefined = [];
 
   public pouleId: string | number | undefined;
   public leagueName!: LeagueName;
-  public poolUsersTotalsGetter: PoolUsersTotalsGetter;
-  public currentGameRoundPoolUsersTotalsMap: PoolUsersTotalsMap | undefined;
   public activeGameRoundsCalculator: ActiveGameRoundsCalculator;
-  public badgeCategory: BadgeCategory | undefined;
+  public poolUsersTotalsGetter: PoolUsersTotalsGetter;
 
   public nrOfUnreadMessages = 0;
   public faMessage = faMessage;
@@ -100,48 +107,18 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     this.poolUsersTotalsGetter = new PoolUsersTotalsGetter(
       poolTotalsRepository
     );
-    
   }
 
   ngOnInit() {
-    console.log(123);
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
 
         this.setLeagueName(pool.getCompetitions());
         const competitionConfig = pool.getCompetitionConfig();
-        const currentViewPeriod: ViewPeriod = pool.getCurrentViewPeriod();
-        if (currentViewPeriod === undefined) {
-          this.setAlert("info", "geen bekijk-periode gevonden");
-          return;
-        }
-        this.currentViewPeriod = currentViewPeriod;
-        const user = this.authService.getUser();
-        this.activeGameRoundsCalculator
-          .determineActiveGameRound(
-            competitionConfig,
-            currentViewPeriod,
-            GameRoundViewType.Ranking
-          )
-          .pipe(
-            concatMap((activeGameRound: GameRound) => {
-              this.currentGameRound.set(activeGameRound);
-              return this.activeGameRoundsCalculator.getActiveGameRounds(
-                competitionConfig,
-                currentViewPeriod,
-                activeGameRound
-              );
-            })
-          )
-          .subscribe({
-            next: (activeGameRounds: GameRound[]) => {
-              this.viewGameRounds.set(activeGameRounds);
-              this.processing.set(false);
-            },
-          });
+        const currentViewPeriod = pool.getCurrentViewPeriod();
 
-        // @TODO CDK END
+        const user = this.authService.getUser();
 
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => {
@@ -154,6 +131,19 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
               // this.processing.set(false);
               throw Error("competitionSport not found");
             }
+
+            this.determineActiveGameRound(
+              competitionConfig,
+              currentViewPeriod
+            ).subscribe({
+              next: (activeGameRound: GameRound) => {
+                this.selectGameRound(
+                  pool,
+                  poolUsers,
+                  activeGameRound
+                );
+              },
+            });
 
             if (this.poolUserFromSession) {
               this.structureRepository.getFirstPouleId(competition).subscribe({
@@ -170,7 +160,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
                   this.pouleId = pouleId;
                 },
               });
-            }            
+            }
             // this.initCurrentGameRound(pool, currentViewPeriod);
           },
           error: (e: string) => {
@@ -178,9 +168,6 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
             // this.processing.set(false);
           },
         });
-
-        
-
       },
       error: (e) => {
         this.setAlert("danger", e);
@@ -209,8 +196,117 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
       : LeagueName.Competition;
   }
 
+  getPoolUsersWithGameRoundsPoints(
+    pool: Pool,
+    poolUsers: PoolUser[],
+    viewPeriod: ViewPeriod,
+    gameRounds: GameRound[]
+  ): Observable<CompetitorWithGameRoundsPoints[]> {
+    const scorePointsMap = pool.getCompetitionConfig().getScorePointsMap();
+    // const totals: Observable<PoolUsersTotalsMap[]> = [];
+
+    // get gameround totals    
+    const totals = gameRounds.map((gameRound: GameRound) => {
+      return this.poolUsersTotalsGetter.getGameRoundTotals(pool, gameRound);
+    });
+    totals.push(
+      this.poolUsersTotalsGetter.getViewPeriodTotals(pool, viewPeriod)
+    );
+    
+    // get viewPeriod totals
+    {
+      const competitionConfig = pool.getCompetitionConfig();
+      if(viewPeriod === competitionConfig.getTransferPeriod().getViewPeriod() ){ 
+        const assembleViewPeriod = competitionConfig.getAssemblePeriod().getViewPeriod();
+        totals.push(
+          this.poolUsersTotalsGetter.getViewPeriodTotals(pool, assembleViewPeriod)
+        );
+      };
+    }    
+
+    return forkJoin(totals).pipe(
+      concatMap((poolUsersTotalsMaps: PoolUsersTotalsMap[], index: number) => {
+        const gameRoundsPoolUserTotals = poolUsersTotalsMaps.filter(
+          (poolUsersTotalsMap) => poolUsersTotalsMap.gameRoundNr > 0
+        );
+        const viewPeriodsPoolUserTotals = poolUsersTotalsMaps.filter(
+          (poolUsersTotalsMap) => poolUsersTotalsMap.gameRoundNr === 0
+        );
+        
+        const competitorsWithGameRoundPoints = poolUsers.map((poolUser: PoolUser): CompetitorWithGameRoundsPoints => {
+            const viewPeriodPoints: GameRoundsPoints[] = viewPeriodsPoolUserTotals.map(
+              (poolUserTotalsMap: PoolUsersTotalsMap): GameRoundsPoints => {
+                return {
+                  number: poolUserTotalsMap.gameRoundNr,
+                  points:
+                    poolUserTotalsMap
+                      .get(poolUser.getId())
+                      ?.getPoints(scorePointsMap, this.badgeCategory()) ??
+                    0,
+                };
+              }
+            );
+            const totalPoints = viewPeriodPoints.map((viewPeriodPoints: GameRoundsPoints) => viewPeriodPoints.points).reduce((a, b) => a + b, 0);
+
+            const gameRoundsPoints: GameRoundsPoints[] = gameRoundsPoolUserTotals.map(
+              (poolUserTotalsMap: PoolUsersTotalsMap): GameRoundsPoints => {  
+                return {
+                  number: poolUserTotalsMap.gameRoundNr,
+                  points:
+                    poolUserTotalsMap
+                      .get(poolUser.getId())
+                      ?.getPoints(scorePointsMap, this.badgeCategory()) ??
+                    0,
+                };
+              }
+            );
+            const competitors = poolUser.getPool().getCompetitors(LeagueName.Competition);
+            const competitor: PoolCompetitor|undefined = competitors.find(
+              (competitor) => competitor.getPoolUser() === poolUser
+            );
+            if (competitor == undefined) {
+              throw new Error("competitor not found");
+            }
+            return {
+              rank: 0,
+              competitor: competitor,
+              viewPeriodsPoints: totalPoints,                  
+              gameRoundsPoints: gameRoundsPoints,
+            };
+          });
+
+        competitorsWithGameRoundPoints.sort((a, b) => {
+          return b.viewPeriodsPoints - a.viewPeriodsPoints;
+        });
+        // set rank
+        {
+          let rank = 0;
+          let currentPoints = -1; 
+          let nrWithSamePoints = 0;
+          competitorsWithGameRoundPoints.forEach(
+            (competitorWithGameRoundsPoints: CompetitorWithGameRoundsPoints) => {
+              if (currentPoints == -1) {
+                currentPoints = competitorWithGameRoundsPoints.viewPeriodsPoints;
+                rank++;
+              } else if (competitorWithGameRoundsPoints.viewPeriodsPoints < currentPoints) {
+                currentPoints = competitorWithGameRoundsPoints.viewPeriodsPoints;
+                rank += 1 + nrWithSamePoints;
+                nrWithSamePoints = 0;
+              } else {
+                nrWithSamePoints++;
+              }
+              competitorWithGameRoundsPoints.rank = rank;
+            }
+          );
+        }
+        return of(competitorsWithGameRoundPoints);
+      })
+    );
+  }
+
+
   // ON CHANGE CURRENT GAMEROUND
-  this.currentGameRoundPoolUsersTotalsMap = this.poolUsersTotalsGetter.getPoolUserTotals(, gameRound);
+  // this.currentGameRoundPoolUsersTotalsMap = this.poolUsersTotalsGetter.getPoolUserTotals(, gameRound);
 
   // initPoolUsersTotals(pool: Pool, viewPeriod: ViewPeriod): void {
   //   const assembleViewPeriod = pool.getAssembleViewPeriod();
@@ -240,6 +336,75 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   //     });
   // }
 
+  determineActiveGameRound(
+    competitionConfig: CompetitionConfig,
+    viewPeriod: ViewPeriod
+  ): Observable<GameRound> {
+    return this.activeGameRoundsCalculator.determineActiveGameRound(
+      competitionConfig,
+      viewPeriod,
+      GameRoundViewType.Ranking
+    );
+  }
+
+  selectGameRound(
+    pool: Pool,
+    poolUsers: PoolUser[],
+    gameRound: GameRound
+  ): void {
+    this.processing.set(true);
+
+    console.log("selectGameRound");
+
+    this.currentGameRound.set(gameRound);
+
+    this.activeGameRoundsCalculator
+      .getActiveGameRounds(
+        pool.getCompetitionConfig(),
+        gameRound.viewPeriod,
+        gameRound
+      )
+      .subscribe({
+        next: (activeGameRounds: GameRound[]) => {
+          this.viewGameRounds.set(activeGameRounds);
+          this.getPoolUsersWithGameRoundsPoints(
+            pool,
+            poolUsers,
+            gameRound.viewPeriod,
+            activeGameRounds
+          ).subscribe({
+            next: (
+              poolUsersWithGameRoundsPoints: CompetitorWithGameRoundsPoints[]
+            ) => {
+              this.poolUsersWithGameRoundsPoints.set(
+                poolUsersWithGameRoundsPoints
+              );
+              console.log(poolUsersWithGameRoundsPoints);
+              this.processing.set(false);
+            },
+          });
+        },
+      });
+  }
+
+  selectViewPeriod(
+    pool: Pool,
+    poolUsers: PoolUser[],
+    viewPeriod: ViewPeriod
+  ): void {
+    this.processing.set(true);
+    this.determineActiveGameRound(pool.getCompetitionConfig(), viewPeriod).subscribe({
+      next: (activeGameRound: GameRound) => {
+        this.selectGameRound(pool, poolUsers, activeGameRound);
+      },
+    });
+  }
+
+  showTransferPeriodModal(
+    competitionConfig: CompetitionConfig,
+    transferPeriod: EditPeriod
+  ) {}
+
   initCurrentGameRound(pool: Pool, viewPeriod: ViewPeriod): void {
     // @TODO CDK
     // const competitionConfig: CompetitionConfig = pool.getCompetitionConfig();
@@ -265,28 +430,28 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     //   });
   }
 
-  public updateViewPeriodFromScroller(
-    pool: Pool,
-    viewPeriod: ViewPeriod
-  ): void {
-    this.processing.set(true);
-    this.currentViewPeriod = viewPeriod;
-    this.initPoolUsersTotals(pool, viewPeriod);
-    this.initCurrentGameRound(pool, viewPeriod);
-  }
+  // public updateViewPeriodFromScroller(
+  //   pool: Pool,
+  //   viewPeriod: ViewPeriod
+  // ): void {
+  //   this.processing.set(true);
+  //   this.currentViewPeriod = viewPeriod;
+  //   // this.initPoolUsersTotals(pool, viewPeriod);
+  //   // this.initCurrentGameRound(pool, viewPeriod);
+  // }
 
-  updateGameRoundFromScroller(
-    pool: Pool,
-    viewPeriod: ViewPeriod,
-    gameRound: GameRound | undefined
-  ): void {
-    //   if (gameRound === undefined) {
-    //     this.currentGameRound = gameRound;
-    //     this.currentGameRoundPoolUsersTotalsMap = undefined;
-    //     return;
-    //   }
-    //   this.updateGameRound(pool, viewPeriod, gameRound);
-  }
+  // updateGameRoundFromScroller(
+  //   pool: Pool,
+  //   viewPeriod: ViewPeriod,
+  //   gameRound: GameRound | undefined
+  // ): void {
+  //   //   if (gameRound === undefined) {
+  //   //     this.currentGameRound = gameRound;
+  //   //     this.currentGameRoundPoolUsersTotalsMap = undefined;
+  //   //     return;
+  //   //   }
+  //   //   this.updateGameRound(pool, viewPeriod, gameRound);
+  // }
 
   updateGameRound(
     pool: Pool,
@@ -329,7 +494,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     modalRef.componentInstance.currentBadgeCategory = this.badgeCategory;
     modalRef.result.then(
       (choosenBadgeCategory: BadgeCategory | undefined) => {
-        this.badgeCategory = choosenBadgeCategory;
+        this.badgeCategory.set(choosenBadgeCategory);
       },
       (reason) => {}
     );

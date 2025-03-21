@@ -16,7 +16,9 @@ export class GameRoundMapper {
           viewPeriod,
           json.number,
           period,
-          json.state
+          json.created,
+          json.inProgress,
+          json.finished
         );
         return gameRound;
     }

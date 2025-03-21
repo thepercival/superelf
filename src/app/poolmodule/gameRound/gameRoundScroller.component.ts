@@ -1,86 +1,117 @@
-import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges, input, model } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
 import { GameRound } from '../../lib/gameRound';
 import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgIf } from '@angular/common';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { EditPeriod } from '../../lib/periods/editPeriod';
+import { CompetitionConfig } from '../../lib/competitionConfig';
+import { NgbProgressbar, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-gameround-scroller',
+  selector: "app-gameround-scroller",
   standalone: true,
-  imports: [NgIf,FontAwesomeModule],
-  templateUrl: './gameRoundScroller.component.html',
-  styleUrls: ['./gameRoundScroller.component.scss']
+  imports: [FontAwesomeModule, NgbProgressbarModule],
+  templateUrl: "./gameRoundScroller.component.html",
+  styleUrls: ["./gameRoundScroller.component.scss"],
 })
-export class GameRoundScrollerComponent implements OnInit, OnChanges {
-
-  readonly assembleViewPeriod = input<ViewPeriod>();
-  readonly transferViewPeriod = input<ViewPeriod>();
-  readonly currentViewPeriod = input.required<ViewPeriod>();
-  readonly gameRounds = input<(GameRound | undefined)[]>([]);
-  readonly current = model<GameRound>();
-  @Output() update = new EventEmitter<GameRound | undefined>();
-  @Output() updateViewPeriod = new EventEmitter<ViewPeriod>();
+export class GameRoundScrollerComponent implements OnInit {
+  readonly competitionConfig = input.required<CompetitionConfig>();
+  readonly gameRounds = input.required<GameRound[]>();
+  readonly current = input.required<GameRound>();
+  @Output() selectGameRound = new EventEmitter<GameRound>();
+  @Output() selectViewPeriod = new EventEmitter<ViewPeriod>();
+  @Output() selectTransferPeriod = new EventEmitter<EditPeriod>();
+  public segments: number[] | undefined;
   public faChevronLeft = faChevronLeft;
   public faChevronRight = faChevronRight;
 
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit() {
+    const nrOfCompetitors: number = this.competitionConfig()
+      .getSourceCompetition()
+      .getTeamCompetitors().length;
+    const nrOfSegments = Math.floor(nrOfCompetitors / 2);
+    this.segments = Array.from({ length: nrOfSegments }, (_, i) => i + 1);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    // console.log('cdk', changes.current, this.gameRounds.slice());
-    
-    const gameRounds = this.gameRounds();
-    if (changes.current && changes.current.firstChange && changes.current.currentValue && gameRounds) {
-      while (this.current() !== gameRounds[0]) {
-        const gameRound = gameRounds.shift();
-        if (gameRound !== undefined) {
-          gameRounds.push(gameRound);
-        }
-      }
-      // console.log('cdk2', changes.current.currentValue, this.gameRounds.slice());
-    }
+  isCurrentBeforeTransferPeriod(): boolean {
+    return this.CurrentViewPeriod != this.TransferPeriod.getViewPeriod();
   }
 
-
-  previous(): void {
-    // console.log('scroller->previous pre', this.gameRounds.slice());
-    this.current.set(this.gameRounds().pop());
-    const current = this.current();
-    this.gameRounds().unshift(current);
-    // console.log('scroller->previous post', this.gameRounds.slice());
-    this.update.emit(current);
+  get CurrentViewPeriod(): ViewPeriod {
+    return this.current().viewPeriod;
+  }
+  get AssembleViewPeriod(): ViewPeriod {
+    return this.competitionConfig().getAssemblePeriod().getViewPeriod();
+  }
+  get TransferViewPeriod(): ViewPeriod {
+    return this.TransferPeriod.getViewPeriod();
+  }
+  get TransferPeriod(): EditPeriod {
+    return this.competitionConfig().getTransferPeriod();
   }
 
-  next(): void {
-    // console.log('scroller->next pre', this.gameRounds.slice());
-    const gameRounds = this.gameRounds();
-    this.gameRounds().push(gameRounds.shift());
-    const gameRound = gameRounds.shift();
-    this.current.set(gameRound);
-    gameRounds.unshift(gameRound);
-    // console.log('scroller->next post', this.gameRounds.slice());
-    this.update.emit(this.current());
-  }
+  // ngOnChanges(changes: SimpleChanges) {
+  //   // console.log('cdk', changes.current, this.gameRounds.slice());
+
+  //   const gameRounds = this.gameRounds();
+  //   if (changes.current && changes.current.firstChange && changes.current.currentValue && gameRounds) {
+  //     while (this.current() !== gameRounds[0]) {
+  //       const gameRound = gameRounds.shift();
+  //       if (gameRound !== undefined) {
+  //         gameRounds.push(gameRound);
+  //       }
+  //     }
+  //     // console.log('cdk2', changes.current.currentValue, this.gameRounds.slice());
+  //   }
+  // }
+
+  // previous(): void {
+  //   // console.log('scroller->previous pre', this.gameRounds.slice());
+  //   this.current.set(this.gameRounds().pop());
+  //   const current = this.current();
+  //   this.gameRounds().unshift(current);
+  //   // console.log('scroller->previous post', this.gameRounds.slice());
+  //   this.update.emit(current);
+  // }
+
+  // next(): void {
+  //   // console.log('scroller->next pre', this.gameRounds.slice());
+  //   const gameRounds = this.gameRounds();
+  //   this.gameRounds().push(gameRounds.shift());
+  //   const gameRound = gameRounds.shift();
+  //   this.current.set(gameRound);
+  //   gameRounds.unshift(gameRound);
+  //   // console.log('scroller->next post', this.gameRounds.slice());
+  //   this.update.emit(this.current());
+  // }
 
   getCurrentLabel(): string {
     const current = this.current();
     if (current === undefined) {
-      return 'alle speelronden';
+      return "alle speelronden";
     }
-    return 'speelronde ' + current.number;
+    return "speelronde " + current.number;
   }
 
-  
-  inAssembleViewPeriod(): boolean {
-    return this.assembleViewPeriod()?.isIn() ?? false;
+  // inAssembleViewPeriod(): boolean {
+  //   return this.assembleViewPeriod()?.isIn() ?? false;
+  // }
+
+  // inTransferViewPeriod(): boolean {
+  //   return this.transferViewPeriod()?.isIn() ?? false;
+  // }
+
+  getPercentageCreated(gameRound: GameRound): number {
+    return Math.floor((gameRound.created / gameRound.totalNrOfGames) * 100);
   }
-  
-  
-  inTransferViewPeriod(): boolean {
-    return this.transferViewPeriod()?.isIn() ?? false;
+
+  getPercentageInProgress(gameRound: GameRound): number {
+    return Math.floor((gameRound.inProgress / gameRound.totalNrOfGames) * 100);
+  }
+
+  getPercentageFinished(gameRound: GameRound): number {
+    return Math.floor((gameRound.finished / gameRound.totalNrOfGames) * 100);
   }
 }

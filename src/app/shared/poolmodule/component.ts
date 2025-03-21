@@ -9,12 +9,10 @@ import { PoolUser } from '../../lib/pool/user';
 import { GlobalEventsManager } from '../commonmodule/eventmanager';
 import { AssemblePeriod } from '../../lib/periods/assemblePeriod';
 import { TransferPeriod } from '../../lib/periods/transferPeriod';
-import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { signal, WritableSignal } from '@angular/core';
 
 export class PoolComponent {
   public pool: Pool | undefined;
-  public currentViewPeriod: ViewPeriod | undefined;
   public poolUserFromSession: PoolUser | undefined;
   public poolUserFromId: PoolUser | undefined;
   public alert: IAlert | undefined;
@@ -48,7 +46,6 @@ export class PoolComponent {
 
   protected setPool(pool: Pool): void {
     this.pool = pool;
-    this.currentViewPeriod = pool.getCurrentViewPeriod();
     this.globalEventsManager.navHeaderInfo.emit({
       id: +pool.getId(),
       name: pool.getName(),

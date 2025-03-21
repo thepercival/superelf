@@ -73,7 +73,7 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
       next: (pool: Pool) => {
         this.setPool(pool);
         const competitionConfig = pool.getCompetitionConfig();
-        const currentViewPeriod = this.getCurrentViewPeriod(pool);
+        const currentViewPeriod = pool.getCurrentViewPeriod();
         if (currentViewPeriod === undefined) {
           return;
         }

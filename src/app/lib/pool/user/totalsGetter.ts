@@ -2,14 +2,15 @@ import { concatMap, Observable, of } from "rxjs";
 import { GameRound } from "../../gameRound";
 import { Pool } from "../../pool";
 import { GameRoundTotalsMap, PoolTotalsRepository, PoolUsersTotalsMap } from "../../totals/repository";
+import { ViewPeriod } from "../../periods/viewPeriod";
 
 export class PoolUsersTotalsGetter {
   public gameRoundTotalsMap: GameRoundTotalsMap = new GameRoundTotalsMap();
+  public viewPeriodTotalsMap: Map<number, PoolUsersTotalsMap> = new Map();
 
   constructor(private poolTotalsRepository: PoolTotalsRepository) {}
 
-  // PoolUsersTotals
-  public getPoolUserTotals(
+  public getGameRoundTotals(
     pool: Pool,
     gameRound: GameRound
   ): Observable<PoolUsersTotalsMap> {
@@ -32,4 +33,30 @@ export class PoolUsersTotalsGetter {
   private getGameRoundIndex(gameRound: GameRound): string {
     return gameRound.viewPeriod.getId() + "-" + gameRound.number;
   }
+
+  public getViewPeriodTotals(
+    pool: Pool,
+    viewPeriod: ViewPeriod
+  ): Observable<PoolUsersTotalsMap> {
+    const viewPeriodTotals: PoolUsersTotalsMap | undefined =
+      this.viewPeriodTotalsMap.get(viewPeriod.getId());
+    if (viewPeriodTotals !== undefined) {
+      return of(viewPeriodTotals);
+    }
+    return this.poolTotalsRepository
+      .getViewPeriodPoolUsersMap(pool, viewPeriod)
+      .pipe(
+        concatMap((viewPeriodTotalsTmp: PoolUsersTotalsMap) => {
+          this.viewPeriodTotalsMap.set(viewPeriod.getId(), viewPeriodTotalsTmp);
+          return of(viewPeriodTotalsTmp);
+        })
+      );
+  }
 }
+
+
+  //   this.poolTotalsRepository
+  //     .(pool, assembleViewPeriod)
+  //     .subscribe({
+  //       next: (assemblePoolUsersTotalsMap: PoolUsersTotalsMap) => {
+  //         this.poolUsersTotalsMap = assemblePoolUsersTotalsMap;

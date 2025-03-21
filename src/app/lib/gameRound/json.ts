@@ -1,7 +1,9 @@
-import { GameState, JsonPeriod } from "ngx-sport";
+import { JsonPeriod } from "ngx-sport";
 
 export interface JsonGameRound {
-    number: number;
-    period: JsonPeriod,
-    state: GameState
+  number: number;
+  period: JsonPeriod;
+  created: number;
+  inProgress: number;
+  finished: number;
 }

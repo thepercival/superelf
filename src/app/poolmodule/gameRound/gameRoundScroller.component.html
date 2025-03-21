@@ -8,11 +8,43 @@ hier zo maken dat wanneer je bijv 1 week na de transfer periode zit dan tonen al
     
 <div class="d-flex justify-content-center">    
     <div class="btn-group" role="group" aria-label="aantal">
-        <button *ngIf="assembleViewPeriod() !== currentViewPeriod()" type="button" class="btn btn-outline-primary me-2" (click)="updateViewPeriod.emit(assembleViewPeriod())">
-            <fa-icon [icon]=faChevronLeft></fa-icon>
-            <fa-icon [icon]=faChevronLeft></fa-icon>
-        </button>
-        <button type="button" class="btn btn-outline-primary" (click)="previous()">
+        @if(!isCurrentBeforeTransferPeriod()){
+            <div>
+                <button type="button" class="btn btn-outline-primary me-2" (click)="selectViewPeriod.emit(AssembleViewPeriod)">
+                    <fa-icon [icon]=faChevronLeft></fa-icon>
+                    <fa-icon [icon]=faChevronLeft></fa-icon>
+                </button>
+                <div class="me-2">
+                    <ngb-progressbar class="d-none" [value]="0" [max]="100"></ngb-progressbar>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" class="btn btn-outline-primary me-4" (click)="selectTransferPeriod.emit(TransferPeriod)">
+                    T
+                </button>
+                <div class="me-2">
+                    <ngb-progressbar class="d-none" [value]="0" [max]="100"></ngb-progressbar>
+                </div>
+            </div>
+        }
+        
+        @for (gameRound of gameRounds(); track $index) {
+            <div>
+                <button type="button" class="btn btn-outline-primary me-2 mb-1" (click)="selectGameRound.emit(gameRound)">
+                    {{gameRound.number}}
+                </button>
+                <div class="me-2">
+                    <ngb-progressbar-stacked>
+                        <ngb-progressbar type="success" [value]="this.getPercentageFinished(gameRound)"></ngb-progressbar>
+                        <ngb-progressbar type="warning" [value]="this.getPercentageInProgress(gameRound)"></ngb-progressbar>
+                        <ngb-progressbar type="danger" [value]="this.getPercentageCreated(gameRound)"></ngb-progressbar>                        
+                    </ngb-progressbar-stacked>
+                </div>
+            </div>
+            
+        }
+        <!-- <button type="button" class="btn btn-outline-primary" (click)="previous()">
             <fa-icon [icon]=faChevronLeft></fa-icon>
         </button>
         <button [disabled]="true" type="button" class="btn btn-outline-primary btn-fixed-width">
@@ -20,9 +52,23 @@ hier zo maken dat wanneer je bijv 1 week na de transfer periode zit dan tonen al
         </button>
         <button type="button" class="btn btn-outline-primary" (click)="next()">
             <fa-icon [icon]=faChevronRight></fa-icon>
-        </button>
-        <button *ngIf="transferViewPeriod() !== currentViewPeriod()" type="button" class="btn btn-outline-primary ms-2 text-nowrap" (click)="updateViewPeriod.emit(transferViewPeriod())">
-            <fa-icon [icon]=faChevronRight></fa-icon><fa-icon [icon]=faChevronRight></fa-icon>
-        </button>
+        </button> -->
+        @if(isCurrentBeforeTransferPeriod()){
+            <button type="button" class="btn btn-outline-primary ms-4" (click)="selectTransferPeriod.emit(TransferPeriod)">
+                T
+            </button>
+            <div class="me-2">
+                <ngb-progressbar [value]="0"  [max]="100"></ngb-progressbar>
+            </div>
+
+            <button type="button" class="btn btn-outline-primary ms-2 text-nowrap" 
+                (click)="selectViewPeriod.emit(TransferViewPeriod)">
+                <fa-icon [icon]=faChevronRight></fa-icon><fa-icon [icon]=faChevronRight></fa-icon>
+            </button>
+            <div class="me-2">
+                <ngb-progressbar [value]="0"  [max]="100"></ngb-progressbar>
+            </div>
+        }
+        
     </div>
 </div>

@@ -2,16 +2,21 @@
   <div class="col-xs-12 col-sm-10 col-md-6">
 
     @if(!processing()){
-      @if(pool){
+      @if(alert){
+        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+      }
+      @let tmplCurrentGameRound = currentGameRound();
+      @if(pool && poolUsers && tmplCurrentGameRound){
         <div>
           <div class="d-flex flex-nowrap justify-content-between mt-2">
-            @if(currentViewPeriod){
-              <app-gameround-scroller [gameRounds]="viewGameRounds()" [current]="currentGameRound()"
-                (update)="updateGameRoundFromScroller(pool,currentViewPeriod,$event)" [currentViewPeriod]="currentViewPeriod"
-                (updateViewPeriod)="updateViewPeriodFromScroller(pool, $event)"
-                [assembleViewPeriod]="pool.getAssembleViewPeriod()" [transferViewPeriod]="pool.getTransferViewPeriod()">
-              </app-gameround-scroller>
-            }
+            
+            <app-gameround-scroller [gameRounds]="viewGameRounds()" [current]="tmplCurrentGameRound"
+                      [competitionConfig]="pool.getCompetitionConfig()"
+                      (selectViewPeriod)="selectViewPeriod(pool, poolUsers, $event)"
+                      (selectGameRound)="selectGameRound(pool, poolUsers, $event)"
+                      (selectTransferPeriod)="showTransferPeriodModal(pool.getCompetitionConfig(), $event)"
+            ></app-gameround-scroller>
+            
             <div>
               @if(pouleId){
                 <button (click)="navigateToChat(pool,pouleId)" type="button"
@@ -33,21 +38,23 @@
           </div>      
         </div>      
         
-        @if(badgeCategory){
+        @let tmplBadgeCategory = badgeCategory();
+        @if(tmplBadgeCategory){
           <div class="text-center mt-3">
             <span class="">
-              <app-superelf-badge-icon [badgeCategory]="badgeCategory"></app-superelf-badge-icon>
-              <span class="ms-1">{{nameService.getBadgeCategoryName(badgeCategory)}}-badge</span>
+              <app-superelf-badge-icon [badgeCategory]="tmplBadgeCategory"></app-superelf-badge-icon>
+              <span class="ms-1">{{nameService.getBadgeCategoryName(tmplBadgeCategory)}}-badge</span>
             </span>          
           </div>
         }
     
-        @if(poolUsersTotalsMap){
-          <app-together-ranking [poolUsers]="poolUsers" 
-            [poolUsersTotalsMap]="poolUsersTotalsMap" 
-            [gameRoundPoolUserTotalsMap]="currentGameRoundPoolUsersTotalsMap" 
-            [gameRound]="currentGameRound()" [badgeCategory]="badgeCategory" 
-            [scorePointsMap]="pool.getCompetitionConfig().getScorePointsMap()"
+        
+        @if(viewGameRounds() && poolUsersWithGameRoundsPoints()){
+          @let tmplViewPeriod  = tmplCurrentGameRound.viewPeriod;          
+          <app-together-ranking 
+            [competitorsWithGameRoundsPoints]="poolUsersWithGameRoundsPoints()"
+            [viewPeriod]="tmplViewPeriod"
+            [badgeCategory]="tmplBadgeCategory"
             [header]="true" >
           </app-together-ranking>
         }

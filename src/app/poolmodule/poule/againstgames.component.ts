@@ -63,8 +63,9 @@ export class PoolPouleAgainstGamesComponent
   extends PoolComponent
   implements OnInit
 {
-  public gameRounds: (GameRound | undefined)[] = [];
+  public gameRounds: GameRound[] = [];
   public currentGameRound: GameRound | undefined;
+  public currentViewPeriod: ViewPeriod | undefined;
 
   public homeCompetitor: PoolCompetitor | undefined;
   public awayCompetitor: PoolCompetitor | undefined;
@@ -233,25 +234,25 @@ export class PoolPouleAgainstGamesComponent
                 //           competitors
                 //         );
 
-                        // @TODO CDK
-                        // this.gameRounds = gameRoundNrs.map(
-                        //   (gameRoundNr: number): GameRound => {
-                        //     return viewPeriod.getGameRound(gameRoundNr);
-                        //   }
-                        // );
+                // @TODO CDK
+                // this.gameRounds = gameRoundNrs.map(
+                //   (gameRoundNr: number): GameRound => {
+                //     return viewPeriod.getGameRound(gameRoundNr);
+                //   }
+                // );
 
-                        // const gameRound =
-                        //   viewPeriod.getGameRound(currentGameRoundNr);
-                        // if (gameRound !== undefined) {
-                        //   // init scroller
-                        //   const idx = this.gameRounds.indexOf(gameRound);
-                        //   if (idx >= 0) {
-                        //     this.gameRounds = this.gameRounds
-                        //       .splice(idx)
-                        //       .concat([], this.gameRounds);
-                        //   }
-                        //   this.setGameRoundAndGetStatistics(pool, gameRound);
-                        // }
+                // const gameRound =
+                //   viewPeriod.getGameRound(currentGameRoundNr);
+                // if (gameRound !== undefined) {
+                //   // init scroller
+                //   const idx = this.gameRounds.indexOf(gameRound);
+                //   if (idx >= 0) {
+                //     this.gameRounds = this.gameRounds
+                //       .splice(idx)
+                //       .concat([], this.gameRounds);
+                //   }
+                //   this.setGameRoundAndGetStatistics(pool, gameRound);
+                // }
                 //         this.processing.set(false);
                 //       },
                 //     });
@@ -504,7 +505,12 @@ export class PoolPouleAgainstGamesComponent
       return;
     }
 
-    this.sourceGameManager.getAgainstGames(this.sourcePoule, editPeriod.getViewPeriod(), gameRound.number)
+    this.sourceGameManager
+      .getAgainstGames(
+        this.sourcePoule,
+        editPeriod.getViewPeriod(),
+        gameRound.number
+      )
       .subscribe({
         next: (games: AgainstGame[]) => {
           this.sourceGames = games;

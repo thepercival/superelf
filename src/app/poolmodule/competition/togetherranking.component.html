@@ -1,51 +1,32 @@
-<table class="table table-striped mb-2 mt-3"*ngIf="rankingItems">   
+
+<table class="table table-striped mb-2 mt-3">   
     <tbody>
-    @for(rankingItem of rankingItems; track rankingItem.rank){
-      <tr class="pointer"
-          (click)="linkToPoolUser(rankingItem.poolUser, gameRound())">
-
-          @if(!hasAchievement(rankingItem)){          
-              <td class="rankingnr text-end ps-0"><!-- badge text-black -->
-                  <span class="">{{rankingItem.rank}}</span>
+      @for(competitorWithGameRoundsPoints of competitorsWithGameRoundsPoints(); track $index)
+      {
+        @let poolUser = competitorWithGameRoundsPoints.competitor.getPoolUser();
+        <tr class="pointer">            
+            <td class="rankingnr text-end ps-0"><!-- badge text-black -->
+                <span class="">{{competitorWithGameRoundsPoints.rank}}</span>
+            </td>
+            <td class="text-break ps-0" ngClass="{ 'favitem': false}" (click)="linkToPoolUser(poolUser, undefined)">
+                <span>{{poolUser.getUser().getName()}}</span>
+                <!-- <app-superelf-icon *ngIf="rankingItem.poolUser.getUser().getName() === 'storm'" 
+                class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon> -->
+            </td>
+            @for(gameRoundPoints of competitorWithGameRoundsPoints.gameRoundsPoints; track $index)
+            {
+              <td class="text-end ps-0 pointer" (click)="linkToPoolUser(poolUser, gameRoundPoints.number)">
+                  <span class="badge {{getPointsBadgeClass(poolUser)}}">
+                      {{gameRoundPoints.points}}</span>
               </td>
-          } @else {          
-              <td class="rankingnr text-end ps-0 pointer" (click)="openModal(worldcupModal, badgeCategoryModal); $event.stopPropagation()">
-                  <span class="badge text-bg-success text-decoration-underline">{{rankingItem.rank}}</span>
-              </td>
-          }
-
-          <td class="text-break ps-0" ngClass="{ 'favitem': false}">
-              <span>{{rankingItem.poolUser.getUser().getName()}}</span>
-              <!-- <app-superelf-icon *ngIf="rankingItem.poolUser.getUser().getName() === 'storm'" 
-              class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon> -->
-          </td>
-          <td *ngIf="gameRound()" class="text-end ps-0 pointer">
-              <span class="badge {{getPointsBadgeClass(rankingItem)}}">
-                  {{getGameRoundPoints(rankingItem.poolUser)}}</span>
-          </td>
-          <td class="text-end ps-0">
-              <span class="badge bg-totals">{{getTotalPoints(rankingItem.poolUser)}}</span>
-          </td>
-      </tr>
-    }
+            }
+            <td class="text-end ps-0" (click)="linkToPoolUser(poolUser, undefined)">
+                <span class="badge bg-totals">{{competitorWithGameRoundsPoints.viewPeriodsPoints}}</span>
+            </td>
+        </tr>
+      }
     </tbody>
 </table>
-
-<ng-template #worldcupModal let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">
-        <app-superelf-icon [icon]=facWorldCup></app-superelf-icon> wereldbeker
-      </h4>
-      <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
-    </div>
-    <div class="modal-body">
-      <p>De nummers 1 en 2 van elke pool plaatsen zich voor de wereldbeker-competitie voor het daaropvolgende seizoen</p>
-    </div>
-    <div class="modal-footer d-flex justify-content-reverse border-top-0">
-      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.dismiss()">
-        sluiten</button>
-    </div>
-</ng-template>
 
 <ng-template #badgeCategoryModal let-modal>
     @let tmpBadgeCategory = badgeCategory();

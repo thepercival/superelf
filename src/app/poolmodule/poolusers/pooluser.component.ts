@@ -50,7 +50,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   nameService = new NameService();
   public viewPeriod!: ViewPeriod;
   public formation: S11Formation | undefined;
-  public gameRounds: (GameRound | undefined)[] = [];
+  public gameRounds: GameRound[] = [];
   public currentGameRound: GameRound | undefined;
   public gameRoundCacheMap = new Map<number, true>();
   public statisticsGetter = new StatisticsGetter();
@@ -87,7 +87,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       next: (pool: Pool) => {
         this.setPool(pool);
 
-        const currentViewPeriod = this.getCurrentViewPeriod(pool);
+        const currentViewPeriod = pool.getCurrentViewPeriod();
         if (currentViewPeriod === undefined) {
           return;
         }

@@ -30,10 +30,7 @@ export class PoolTotalsRepository extends APIRepository {
     return "public/pools";
   }
 
-  getGameRoundUrl(
-    pool: Pool,
-    gameRound: GameRound
-  ): string {
+  getGameRoundUrl(pool: Pool, gameRound: GameRound): string {
     return (
       this.url +
       "/" +
@@ -66,28 +63,32 @@ export class PoolTotalsRepository extends APIRepository {
       .get<JsonPoolUserTotals[]>(url, { headers: super.getHeaders() })
       .pipe(
         map((jsonGameRoundPoolUsersTotals: JsonPoolUserTotals[]) => {
-          return this.mapPoolUsersTotals(jsonGameRoundPoolUsersTotals);
+          return this.mapPoolUsersTotals(jsonGameRoundPoolUsersTotals, 0);
         }),
         catchError((err) => this.handleError(err))
       );
   }
 
-  getGameRoundPoolUsersMap(pool: Pool, gameRound: GameRound): Observable<PoolUsersTotalsMap> {
+  getGameRoundPoolUsersMap(
+    pool: Pool,
+    gameRound: GameRound
+  ): Observable<PoolUsersTotalsMap> {
     const url = this.getGameRoundUrl(pool, gameRound);
     return this.http
       .get<JsonPoolUserTotals[]>(url, { headers: super.getHeaders() })
       .pipe(
         map((jsonGameRoundPoolUsersTotals: JsonPoolUserTotals[]) => {
-          return this.mapPoolUsersTotals(jsonGameRoundPoolUsersTotals);
+          return this.mapPoolUsersTotals(jsonGameRoundPoolUsersTotals, gameRound.number);
         }),
         catchError((err) => this.handleError(err))
       );
   }
 
   protected mapPoolUsersTotals(
-    jsonGameRoundPoolUsersTotals: JsonPoolUserTotals[]
+    jsonGameRoundPoolUsersTotals: JsonPoolUserTotals[],
+    gameRoundNr: number
   ): PoolUsersTotalsMap {
-    const map = new PoolUsersTotalsMap();
+    const map = new PoolUsersTotalsMap(gameRoundNr);
     //console.log('pre gameRoundPoolUsersTotals');
     jsonGameRoundPoolUsersTotals.forEach(
       (jsonPoolUserTotals: JsonPoolUserTotals) => {
@@ -115,6 +116,10 @@ export class GameRoundTotalsMap extends Map<string, PoolUsersTotalsMap> {
 
 // string|number is poolUserId
 export class PoolUsersTotalsMap extends Map<string|number, FormationLineTotalsMap> {    
+    constructor(public gameRoundNr: number) {
+        super();
+    }
+    
     add(poolUsersTotalsMap: PoolUsersTotalsMap): void {
         poolUsersTotalsMap.forEach((formationLineTotalsMap: FormationLineTotalsMap, poolUserId: string|number) => {
             const thisFormationLineTotalsMap = this.get(poolUserId);

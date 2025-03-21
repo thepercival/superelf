@@ -1,13 +1,18 @@
-import { GameState, Period } from 'ngx-sport';
+import { Period } from 'ngx-sport';
 import { ViewPeriod } from './periods/viewPeriod';
 
 export class GameRound {
+  public readonly totalNrOfGames: number;
+
   constructor(
     public readonly viewPeriod: ViewPeriod,
     public readonly number: number,
     public readonly period: Period,
-    public readonly state: GameState) {
-    // viewPeriod.getGameRounds().push(this);
+    public readonly created: number,
+    public readonly inProgress: number,
+    public readonly finished: number
+  ) {
+    this.totalNrOfGames = created + inProgress + finished
   }
 
   //   protected againstGames: AgainstGame[] | undefined;

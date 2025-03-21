@@ -26,7 +26,7 @@
             <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
         </h2>
 
-        @if(!processing() && pool && currentViewPeriod && poolPoule){
+        @if(!processing() && pool && currentGameRound && currentViewPeriod && poolPoule){
         <div>
             <h2 class="d-flex justify-content-center mt-3">
                 <app-poule-title [poule]="poolPoule" [poolCompetitors]="pool.getCompetitors(leagueName)"
@@ -35,9 +35,11 @@
             </h2>
 
             <div class="d-flex justify-content-center mt-2">
-                <app-gameround-scroller [gameRounds]="gameRounds" [current]="currentGameRound"
-                    [currentViewPeriod]="currentViewPeriod"
-                    (update)="setGameRoundAndGetStatistics(pool,$event)">
+                <app-gameround-scroller 
+                    [gameRounds]="gameRounds" [current]="currentGameRound"
+                    [competitionConfig]="pool.getCompetitionConfig()" 
+                    
+                    >
                 </app-gameround-scroller>
             </div>
 

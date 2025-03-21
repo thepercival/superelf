@@ -3,7 +3,6 @@ import { GameRound } from '../gameRound';
 
 export class ViewPeriod extends Period {
     protected id: number = 0;
-    // protected gameRounds: GameRound[] = [];
     constructor(startDateTime: Date, endDateTime: Date) {
         super(startDateTime, endDateTime);
     }

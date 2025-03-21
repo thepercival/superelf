@@ -17,7 +17,7 @@ export class ActiveGameRoundsCalculator {
   constructor(
     public readonly nrOfGamesBefore: number,
     private readonly nrOfGamesAfter: number,
-    private readonly gameRoundRepository: GameRoundRepository
+    readonly gameRoundRepository: GameRoundRepository
   ) {
     if (nrOfGamesBefore < 0 || nrOfGamesAfter < 0) {
       throw new Error();
@@ -35,7 +35,7 @@ export class ActiveGameRoundsCalculator {
       .pipe(
         concatMap((gameRoundMap: Map<number, GameRound>) => {
           const gameRounds = Array.from(gameRoundMap.values());
-          const minGameRoundNr: number = Math.max(
+          const minGameRoundNr: number = Math.min(
             ...gameRounds.map((gameRound) => gameRound.number)
           );
           const maxGameRoundNr: number = Math.max(
@@ -69,7 +69,7 @@ export class ActiveGameRoundsCalculator {
             activeGameRound.number - deltaBefore >= minGameRoundNr
           ) {
             const gameRoundBefore = gameRoundMap.get(
-              activeGameRound.number + deltaAfter
+              activeGameRound.number - deltaBefore
             );
             if (gameRoundBefore) {
               gameRoundsBefore.push(gameRoundBefore);
@@ -113,17 +113,19 @@ export class ActiveGameRoundsCalculator {
       .getGameRoundMap(competitionConfig, viewPeriod)
       .pipe(
         concatMap((gameRoundMap: Map<number, GameRound>) => {
-          return this.gameRoundRepository
-            .getActive(competitionConfig, viewPeriod, viewType)
-            .pipe(
-              concatMap((activeGameRoundNr: number) => {
-                const activeGameRound = gameRoundMap.get(activeGameRoundNr);
-                if (activeGameRound === undefined) {
-                  throw new Error("gameRound not found");
-                }
-                return of(activeGameRound);
-              })
-            );
+          return this.gameRoundRepository.getActive(
+            competitionConfig,
+            viewPeriod,
+            viewType
+          ).pipe(
+            concatMap((activeGameRoundNr: number) => {
+              const activeGameRound = gameRoundMap.get(activeGameRoundNr);
+              if (activeGameRound === undefined) {
+                throw new Error("gameRound not found");
+              }
+              return of(activeGameRound);
+            })
+          );
         })
       );
   }

@@ -40,6 +40,7 @@ import { ActiveGameRoundsCalculator } from '../../lib/gameRound/activeGameRounds
 import { GameRoundRepository } from '../../lib/gameRound/repository';
 import { CompetitionConfig } from '../../lib/competitionConfig';
 import { GameRoundViewType } from '../../lib/gameRound/viewType';
+import { ViewPeriod } from '../../lib/periods/viewPeriod';
 
 
 @Component({
@@ -63,7 +64,10 @@ export class PoolAllInOneGameScheduleComponent
   extends PoolComponent
   implements OnInit
 {
-  public currentGameRound: WritableSignal<GameRound | undefined> = signal(undefined);
+  public currentGameRound: WritableSignal<GameRound | undefined> =
+    signal(undefined);
+  public currentViewPeriod: WritableSignal<ViewPeriod | undefined> =
+    signal(undefined);
   public viewGameRounds: WritableSignal<GameRound[]> = signal([]);
 
   public sourceGameRoundGames: AgainstGame[] = [];
@@ -170,7 +174,7 @@ export class PoolAllInOneGameScheduleComponent
                         this.activeGameRoundsCalculator
                           .determineActiveGameRound(
                             pool.getCompetitionConfig(),
-                            this.getCurrentViewPeriod(pool),
+                            pool.getCurrentViewPeriod(),
                             GameRoundViewType.Games
                           )
                           .pipe(
@@ -178,14 +182,14 @@ export class PoolAllInOneGameScheduleComponent
                               this.currentGameRound.set(activeGameRound);
                               return this.activeGameRoundsCalculator.getActiveGameRounds(
                                 pool.getCompetitionConfig(),
-                                this.getCurrentViewPeriod(pool),
+                                pool.getCurrentViewPeriod(),
                                 activeGameRound
                               );
                             })
                           )
                           .subscribe({
                             next: (activeGameRounds: GameRound[]) => {
-                              this.viewGameRounds.set(activeGameRounds);                              
+                              this.viewGameRounds.set(activeGameRounds);
                               this.processing.set(false);
                             },
                           });
