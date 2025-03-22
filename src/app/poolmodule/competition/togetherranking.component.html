@@ -16,7 +16,7 @@
             @for(gameRoundPoints of competitorWithGameRoundsPoints.gameRoundsPoints; track $index)
             {
               <td class="text-end ps-0 pointer" (click)="linkToPoolUser(poolUser, gameRoundPoints.number)">
-                  <span class="badge {{getPointsBadgeClass(poolUser)}}">
+                  <span class="badge {{getBestWorstBadgeClass(poolUser, gameRoundPoints.number)}}">
                       {{gameRoundPoints.points}}</span>
               </td>
             }
