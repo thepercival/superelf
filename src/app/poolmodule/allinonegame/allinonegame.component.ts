@@ -68,6 +68,9 @@ export class PoolAllInOneGameScheduleComponent
     signal(undefined);
   public currentViewPeriod: WritableSignal<ViewPeriod | undefined> =
     signal(undefined);
+  public previousGameRound: WritableSignal<GameRound | undefined> =
+    signal(undefined);
+  public nextGameRound: WritableSignal<GameRound | undefined> = signal(undefined);
   public viewGameRounds: WritableSignal<GameRound[]> = signal([]);
 
   public sourceGameRoundGames: AgainstGame[] = [];

@@ -7,14 +7,19 @@
       }
       @let tmplCurrentGameRound = currentGameRound();
       @if(pool && poolUsers && tmplCurrentGameRound){
+        @let tmplViewPeriod = tmplCurrentGameRound.viewPeriod;        
         <div>
           <div class="d-flex flex-nowrap justify-content-between mt-2">
             
-            <app-gameround-scroller [gameRounds]="viewGameRounds()" [current]="tmplCurrentGameRound"
+            <app-gameround-scroller 
+                      [viewPeriod]="tmplCurrentGameRound.viewPeriod"
+                      [gameRounds]="viewGameRounds()"
+                      [previousGameRound]="previousGameRound()"
+                      [nextGameRound]="nextGameRound()"         
                       [competitionConfig]="pool.getCompetitionConfig()"
                       (selectViewPeriod)="selectViewPeriod(pool, poolUsers, $event)"
                       (selectGameRound)="selectGameRound(pool, poolUsers, $event)"
-                      (selectTransferPeriod)="showTransferPeriodModal(pool.getCompetitionConfig(), $event)"
+                      (selectTransferPeriod)="showTransfers.set(!showTransfers())"
             ></app-gameround-scroller>
             
             <div>
@@ -49,20 +54,24 @@
         }
     
         
-        @if(viewGameRounds() && poolUsersWithGameRoundsPoints()){
-          @let tmplViewPeriod  = tmplCurrentGameRound.viewPeriod;          
+        @if(viewGameRounds() && poolUsersWithGameRoundsPoints()){          
           <app-together-ranking 
             [competitorsWithGameRoundsPoints]="poolUsersWithGameRoundsPoints()"
             [viewPeriod]="tmplViewPeriod"
             [badgeCategory]="tmplBadgeCategory"
-            [header]="true" >
+            [showTransfers]="showTransfers()"
+            (showCompetitorTransfers)="openPoolUserTransfersModal($event)"            
+            [header]="true">
           </app-together-ranking>
         }
       }
+    } @else {
+      <h2 class="text-center">
+        <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+      </h2>
     }
   </div>
 </div>
-
 
 <div class="competitionsNavBarHeight"></div>
 @if(!processing() && pool){

@@ -36,8 +36,10 @@
 
             <div class="d-flex justify-content-center mt-2">
                 <app-gameround-scroller 
-                    [gameRounds]="gameRounds" [current]="currentGameRound"
-                    [competitionConfig]="pool.getCompetitionConfig()" 
+                    [viewPeriod]="currentViewPeriod"
+                    [previousGameRound]="previousGameRound()"
+                    [nextGameRound]="nextGameRound()"
+                    [gameRounds]="gameRounds" [competitionConfig]="pool.getCompetitionConfig()" 
                     
                     >
                 </app-gameround-scroller>

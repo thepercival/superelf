@@ -1,10 +1,4 @@
-hier zo maken dat wanneer je bijv 1 week na de transfer periode zit dan tonen als : <br/>
-    <= T 21 22 23<br/>
-    op pijltje naar andere viewperiod  <br />
-    op t transfers tonen <br />
-    active ronde duidelijk aangeven <br />
-    voor wedstrijdenscherm kan meer vooruit kijken handig zijn <br />
-    swipen voor tonen eerdere/recentere ronden 
+
     
 <div class="d-flex justify-content-center">    
     <div class="btn-group" role="group" aria-label="aantal">
@@ -29,6 +23,18 @@ hier zo maken dat wanneer je bijv 1 week na de transfer periode zit dan tonen al
             </div>
         }
         
+        <!-- previous -->
+        <div>
+            <button type="button" [disabled]="previousGameRound() == undefined" 
+                class="btn btn-outline-{{previousGameRound() == undefined ? 'secondary' : 'primary'}} me-2" (click)="selectGameRound.emit(previousGameRound())">
+                <fa-icon [icon]=faChevronLeft></fa-icon>
+            </button>
+            <div class="me-2">
+                <ngb-progressbar class="d-none" [value]="0" [max]="100"></ngb-progressbar>
+            </div>
+        </div>
+
+        <!-- gamerounds -->
         @for (gameRound of gameRounds(); track $index) {
             <div>
                 <button type="button" class="btn btn-outline-primary me-2 mb-1" (click)="selectGameRound.emit(gameRound)">
@@ -41,33 +47,40 @@ hier zo maken dat wanneer je bijv 1 week na de transfer periode zit dan tonen al
                         <ngb-progressbar type="danger" [value]="this.getPercentageCreated(gameRound)"></ngb-progressbar>                        
                     </ngb-progressbar-stacked>
                 </div>
+            </div>            
+        }
+        <!-- next -->
+        <div>
+            <button type="button" [disabled]="nextGameRound() == undefined" 
+                class="btn btn-outline-{{nextGameRound() == undefined ? 'secondary' : 'primary'}} me-2" (click)="selectGameRound.emit(nextGameRound())">
+                <fa-icon [icon]=faChevronRight></fa-icon>
+            </button>
+            <div class="me-2">
+                <ngb-progressbar class="d-none" [value]="0" [max]="100"></ngb-progressbar>
+            </div>
+        </div>
+
+        @if(isCurrentBeforeTransferPeriod()){
+            <div>
+                <button type="button" class="btn btn-outline-primary ms-4" (click)="selectTransferPeriod.emit(TransferPeriod)">
+                    T
+                </button>
+                <div class="ms-4">
+                    <ngb-progressbar class="d-none" [value]="0" [max]="100"></ngb-progressbar>
+                </div>
             </div>
             
-        }
-        <!-- <button type="button" class="btn btn-outline-primary" (click)="previous()">
-            <fa-icon [icon]=faChevronLeft></fa-icon>
-        </button>
-        <button [disabled]="true" type="button" class="btn btn-outline-primary btn-fixed-width">
-            {{getCurrentLabel()}}
-        </button>
-        <button type="button" class="btn btn-outline-primary" (click)="next()">
-            <fa-icon [icon]=faChevronRight></fa-icon>
-        </button> -->
-        @if(isCurrentBeforeTransferPeriod()){
-            <button type="button" class="btn btn-outline-primary ms-4" (click)="selectTransferPeriod.emit(TransferPeriod)">
-                T
-            </button>
-            <div class="me-2">
-                <ngb-progressbar [value]="0"  [max]="100"></ngb-progressbar>
+            <div>
+                <button type="button" class="btn btn-outline-primary ms-2" (click)="selectViewPeriod.emit(TransferViewPeriod)">
+                    <fa-icon [icon]=faChevronRight></fa-icon>
+                    <fa-icon [icon]=faChevronRight></fa-icon>
+                </button>
+                <div class="ms-2">
+                    <ngb-progressbar class="d-none" [value]="0" [max]="100"></ngb-progressbar>
+                </div>
             </div>
 
-            <button type="button" class="btn btn-outline-primary ms-2 text-nowrap" 
-                (click)="selectViewPeriod.emit(TransferViewPeriod)">
-                <fa-icon [icon]=faChevronRight></fa-icon><fa-icon [icon]=faChevronRight></fa-icon>
-            </button>
-            <div class="me-2">
-                <ngb-progressbar [value]="0"  [max]="100"></ngb-progressbar>
-            </div>
+            
         }
         
     </div>

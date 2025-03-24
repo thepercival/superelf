@@ -113,21 +113,39 @@ export class ActiveGameRoundsCalculator {
       .getGameRoundMap(competitionConfig, viewPeriod)
       .pipe(
         concatMap((gameRoundMap: Map<number, GameRound>) => {
-          return this.gameRoundRepository.getActive(
-            competitionConfig,
-            viewPeriod,
-            viewType
-          ).pipe(
-            concatMap((activeGameRoundNr: number) => {
-              const activeGameRound = gameRoundMap.get(activeGameRoundNr);
-              if (activeGameRound === undefined) {
-                throw new Error("gameRound not found");
-              }
-              return of(activeGameRound);
-            })
-          );
+          return this.gameRoundRepository
+            .getActive(competitionConfig, viewPeriod, viewType)
+            .pipe(
+              concatMap((activeGameRoundNr: number) => {
+                const activeGameRound = gameRoundMap.get(activeGameRoundNr);
+                if (activeGameRound === undefined) {
+                  throw new Error("gameRound not found");
+                }
+                return of(activeGameRound);
+              })
+            );
         })
       );
+  }
+
+  public getPreviousGameRound(
+    competitionConfig: CompetitionConfig,
+    viewPeriod: ViewPeriod,
+    gameRound: GameRound
+  ): Observable<GameRound | undefined> {
+    return this.gameRoundGetter.getPreviousGameRound(competitionConfig, viewPeriod, gameRound);
+  }
+
+  public getNextGameRound(
+    competitionConfig: CompetitionConfig,
+    viewPeriod: ViewPeriod,
+    gameRound: GameRound
+  ): Observable<GameRound | undefined> {
+    return this.gameRoundGetter.getNextGameRound(
+      competitionConfig,
+      viewPeriod,
+      gameRound
+    );
   }
 
   // public calculateFinished(

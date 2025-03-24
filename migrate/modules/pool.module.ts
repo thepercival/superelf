@@ -69,7 +69,7 @@ import { FormationPlaceReplaceComponent } from '../../src/app/poolmodule/formati
 import { FormationPlaceTransferComponent } from '../../src/app/poolmodule/formation/place/transfer.component';
 import { FormationSubstituteComponent } from '../../src/app/poolmodule/formation/substitute.component';
 import { FormationLineSubstitutionsComponent } from '../../src/app/poolmodule/formation/line/substitutions.component';
-import { FormationActionOverviewComponent } from '../../src/app/poolmodule/formation/actionoverview.component';
+import { FormationActionOverviewComponent } from '../../src/app/poolmodule/formation/actionoverview.modal.component';
 import { PoolPouleAgainstGamesComponent } from '../../src/app/poolmodule/poule/againstgames.component';
 import { PouleTitleComponent } from '../../src/app/poolmodule/poule/title.component';
 import { PoolAllInOneGameScheduleComponent } from '../../src/app/poolmodule/allinonegame/allinonegame.component';

@@ -16,12 +16,17 @@ import { NgbProgressbar, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap
 })
 export class GameRoundScrollerComponent implements OnInit {
   readonly competitionConfig = input.required<CompetitionConfig>();
+  readonly viewPeriod = input.required<ViewPeriod>();
   readonly gameRounds = input.required<GameRound[]>();
-  readonly current = input.required<GameRound>();
+  readonly previousGameRound = input.required<GameRound | undefined>();
+  readonly nextGameRound = input.required<GameRound | undefined>();
+
+  // readonly current = input.required<GameRound>();
   @Output() selectGameRound = new EventEmitter<GameRound>();
   @Output() selectViewPeriod = new EventEmitter<ViewPeriod>();
   @Output() selectTransferPeriod = new EventEmitter<EditPeriod>();
-  public segments: number[] | undefined;
+
+  // public segments: number[] | undefined;
   public faChevronLeft = faChevronLeft;
   public faChevronRight = faChevronRight;
 
@@ -31,17 +36,18 @@ export class GameRoundScrollerComponent implements OnInit {
     const nrOfCompetitors: number = this.competitionConfig()
       .getSourceCompetition()
       .getTeamCompetitors().length;
-    const nrOfSegments = Math.floor(nrOfCompetitors / 2);
-    this.segments = Array.from({ length: nrOfSegments }, (_, i) => i + 1);
+    // const nrOfSegments = Math.floor(nrOfCompetitors / 2);
+    // this.segments = Array.from({ length: nrOfSegments }, (_, i) => i + 1);
   }
 
   isCurrentBeforeTransferPeriod(): boolean {
     return this.CurrentViewPeriod != this.TransferPeriod.getViewPeriod();
   }
 
-  get CurrentViewPeriod(): ViewPeriod {
-    return this.current().viewPeriod;
+  get CurrentViewPeriod(): ViewPeriod | undefined {
+    return this.gameRounds()[0]?.viewPeriod ?? undefined;
   }
+
   get AssembleViewPeriod(): ViewPeriod {
     return this.competitionConfig().getAssemblePeriod().getViewPeriod();
   }
@@ -52,48 +58,22 @@ export class GameRoundScrollerComponent implements OnInit {
     return this.competitionConfig().getTransferPeriod();
   }
 
-  // ngOnChanges(changes: SimpleChanges) {
-  //   // console.log('cdk', changes.current, this.gameRounds.slice());
-
-  //   const gameRounds = this.gameRounds();
-  //   if (changes.current && changes.current.firstChange && changes.current.currentValue && gameRounds) {
-  //     while (this.current() !== gameRounds[0]) {
-  //       const gameRound = gameRounds.shift();
-  //       if (gameRound !== undefined) {
-  //         gameRounds.push(gameRound);
-  //       }
-  //     }
-  //     // console.log('cdk2', changes.current.currentValue, this.gameRounds.slice());
+  // hasPreviousGameRounds(): boolean {
+  //   const firstGameRound = this.firstGameRound();
+  //   if (firstGameRound === undefined) {
+  //     return false;
   //   }
+  //   const smallestGameRound: GameRound = this.gameRounds()[0];
+  //   return firstGameRound.number < smallestGameRound.number;
   // }
 
-  // previous(): void {
-  //   // console.log('scroller->previous pre', this.gameRounds.slice());
-  //   this.current.set(this.gameRounds().pop());
+  // getCurrentLabel(): string {
   //   const current = this.current();
-  //   this.gameRounds().unshift(current);
-  //   // console.log('scroller->previous post', this.gameRounds.slice());
-  //   this.update.emit(current);
+  //   if (current === undefined) {
+  //     return "alle speelronden";
+  //   }
+  //   return "speelronde " + current.number;
   // }
-
-  // next(): void {
-  //   // console.log('scroller->next pre', this.gameRounds.slice());
-  //   const gameRounds = this.gameRounds();
-  //   this.gameRounds().push(gameRounds.shift());
-  //   const gameRound = gameRounds.shift();
-  //   this.current.set(gameRound);
-  //   gameRounds.unshift(gameRound);
-  //   // console.log('scroller->next post', this.gameRounds.slice());
-  //   this.update.emit(this.current());
-  // }
-
-  getCurrentLabel(): string {
-    const current = this.current();
-    if (current === undefined) {
-      return "alle speelronden";
-    }
-    return "speelronde " + current.number;
-  }
 
   // inAssembleViewPeriod(): boolean {
   //   return this.assembleViewPeriod()?.isIn() ?? false;

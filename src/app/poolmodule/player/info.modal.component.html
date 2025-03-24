@@ -24,8 +24,11 @@
                                 <app-player-basics [player]="player" class="text-center">
                                 </app-player-basics>
         
-                                <!-- <app-gameround-scroller [gameRounds]="sliderGameRounds" [current]="currentGameRound"
-                                    [currentViewPeriod]="currentViewPeriod"
+                                <!-- <app-gameround-scroller 
+                                [viewPeriod]="currentGameRound.viewPeriod"
+                                [previousGameRound]="previousGameRound()"
+                                [nextGameRound]="nextGameRound()"
+                                [gameRounds]="sliderGameRounds"
                                     (update)="updateGameRound($event)"></app-gameround-scroller> -->
         
                                 <!-- <div class="text-center mt-3 mb-2">

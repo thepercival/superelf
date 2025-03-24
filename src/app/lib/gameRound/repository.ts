@@ -53,21 +53,22 @@ export class GameRoundRepository extends APIRepository {
     return this.http.get<CurrentGameRoundNumbers>(url, this.getOptions()).pipe(
       map((json: CurrentGameRoundNumbers): number => {
         let activeGameRoundNr: number|undefined;
-
+        console.log(json);
         if( viewType == GameRoundViewType.Games ) {
             if (typeof json.firstCreatedOrInProgress === "number") {
                 activeGameRoundNr = json.firstCreatedOrInProgress;
             }
-            else if (typeof json.lastFinishedOrInProgresss === "number") {
-                activeGameRoundNr = json.lastFinishedOrInProgresss;
+            else if (typeof json.lastFinishedOrInProgress === "number") {
+                activeGameRoundNr = json.lastFinishedOrInProgress;
             }
-        } if( viewType == GameRoundViewType.Ranking) {
-             if (typeof json.lastFinishedOrInProgresss === "number") {
-                activeGameRoundNr = json.lastFinishedOrInProgresss;
-            }
-            else if (typeof json.firstCreatedOrInProgress === "number") {
-                activeGameRoundNr = json.firstCreatedOrInProgress;
-            } 
+        } 
+        if( viewType == GameRoundViewType.Ranking) {
+          if ((typeof json.lastFinishedOrInProgress) === "number") {
+              activeGameRoundNr = json.lastFinishedOrInProgress;
+          }
+          else if (typeof json.firstCreatedOrInProgress === "number") {
+              activeGameRoundNr = json.firstCreatedOrInProgress;
+          } 
         }
         if (activeGameRoundNr === undefined) {
             throw new Error("no gameRoundNr could be calculated");
@@ -80,6 +81,6 @@ export class GameRoundRepository extends APIRepository {
 }
 
 export interface CurrentGameRoundNumbers {
-    firstCreatedOrInProgress: number | undefined,
-    lastFinishedOrInProgresss: number | undefined
+    firstCreatedOrInProgress?: number | undefined,
+    lastFinishedOrInProgress?: number | undefined
 }

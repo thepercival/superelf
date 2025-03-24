@@ -59,6 +59,10 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   public totalGameRoundPoints: number = 0;
   public processingFormation: WritableSignal<boolean> = signal(true);
   public processingStatistics: WritableSignal<boolean> = signal(false);
+  public previousGameRound: WritableSignal<GameRound | undefined> =
+    signal(undefined);
+  public nextGameRound: WritableSignal<GameRound | undefined> =
+    signal(undefined);
 
   public faRightLeft = faRightLeft;
   public faUsers = faUsers;

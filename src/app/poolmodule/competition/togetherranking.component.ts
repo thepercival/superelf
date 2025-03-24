@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges, TemplateRef, input } from '@angular/core';
+import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BadgeCategory } from '../../lib/achievement/badge/category';
@@ -22,6 +22,9 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
   readonly viewPeriod = input.required<ViewPeriod>();
   readonly header = input.required<boolean>();
   readonly badgeCategory = input<BadgeCategory>();
+  readonly showTransfers = input<boolean>(false);
+
+  @Output() showCompetitorTransfers = new EventEmitter<PoolUser>();
 
   protected bestWorstGameRoundMap = new Map<number, MinMaxItem>();
   public faSpinner = faSpinner;
@@ -49,7 +52,6 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
     this.competitorsWithGameRoundsPoints().forEach( (competitor: CompetitorWithGameRoundsPoints) => {
 
       const poolUser = competitor.competitor.getPoolUser();
-      console.log("pooluserit", poolUser.getId());
       
       competitor.gameRoundsPoints.forEach( (gameRoundsPoints: GameRoundsPoints) => {        
         let gameRoundMinMax = minMaxGameRoundMap.get(gameRoundsPoints.number);
@@ -67,7 +69,6 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
             poolUsersMap: poolUserMapMax,
           }; 
           const minMaxItem: MinMaxItem = { min, max };
-          console.log("set initialmax",gameRoundsPoints.number, minMaxItem.max);         
           minMaxGameRoundMap.set(gameRoundsPoints.number, minMaxItem);
         } else if( gameRoundsPoints.points <= gameRoundMinMax.min.value  ) {            
           if( gameRoundsPoints.points < gameRoundMinMax.min.value ) {
@@ -81,13 +82,6 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
             gameRoundMinMax.max.poolUsersMap.clear();
           }
           gameRoundMinMax.max.poolUsersMap.set(poolUser.getId(), poolUser);
-          console.log(
-            "set max",
-            gameRoundsPoints.number,
-            gameRoundMinMax.max,
-            poolUser.getUser().getName(),
-            poolUser.getId()
-          );
         }
       })
     });

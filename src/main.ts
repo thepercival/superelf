@@ -1,4 +1,4 @@
-import { enableProdMode, provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { enableProdMode, importProvidersFrom, provideExperimentalZonelessChangeDetection } from '@angular/core';
 // import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 // import { AuthService } from './app/lib/auth/auth.service';
@@ -18,7 +18,7 @@ import { environment } from './environments/environment';
 // import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 // import { LayoutSharedModule } from './app/shared/layoutmodule/layout.module';
 import { AppComponent } from './app/app.component';
-import { bootstrapApplication } from '@angular/platform-browser';
+import { bootstrapApplication, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule } from '@angular/platform-browser';
 import { AuthService } from './app/lib/auth/auth.service';
 import { AuthUserGuardService } from './app/lib/auth/guard/userguard.service';
 import { PoolShellRepository } from './app/lib/pool/shell/repository';
@@ -76,6 +76,6 @@ bootstrapApplication(AppComponent, {
     GlobalEventsManager,
     StartSessionService,
     WorldCupPreviousService,
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptorsFromDi())
   ],
 }).catch((e) => console.error(e));

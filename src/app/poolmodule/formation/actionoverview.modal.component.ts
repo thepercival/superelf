@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
@@ -16,13 +16,14 @@ import { S11Formation } from '../../lib/formation';
 import { TransferPeriodActionList } from '../../lib/editAction';
 import { FormationRepository } from '../../lib/formation/repository';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TeamNameComponent } from '../team/name.component';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { faChevronLeft, faRightLeft, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { IAlert } from '../../shared/commonmodule/alert';
 
 @Component({
-  selector: "app-pool-actionoverview",
+  selector: "app-pool-actionoverview-modal",
   standalone: true,
   imports: [
     FontAwesomeModule,
@@ -30,14 +31,15 @@ import { faChevronLeft, faRightLeft, faUserCircle, faUsers } from '@fortawesome/
     TeamNameComponent,
     LineIconComponent,
   ],
-  templateUrl: "./actionoverview.component.html",
-  styleUrls: ["./actionoverview.component.scss"],
+  templateUrl: "./actionoverview.modal.component.html",
+  styleUrls: ["./actionoverview.modal.component.scss"],
 })
-export class FormationActionOverviewComponent
-  extends PoolComponent
-  implements OnInit
-{
-  poolUser!: PoolUser;
+export class FormationActionOverviewModalComponent implements OnInit {
+  public poolUser!: PoolUser;
+
+  public alert: IAlert | undefined;
+  public processing: WritableSignal<boolean> = signal(true);
+
   list!: TransferPeriodActionList;
   nameService = new NameService();
   replacements: Replacement[] | undefined;
@@ -50,57 +52,32 @@ export class FormationActionOverviewComponent
   public faUserCircle = faUserCircle;
 
   constructor(
-    route: ActivatedRoute,
-    router: Router,
-    poolRepository: PoolRepository,
-    globalEventsManager: GlobalEventsManager,
+    public modal: NgbActiveModal,
     protected poolUserRepository: PoolUserRepository,
     protected formationRepository: FormationRepository
-  ) {
-    super(route, router, poolRepository, globalEventsManager);
+  ) {    
   }
 
   ngOnInit() {
-    super.parentNgOnInit().subscribe({
-      next: (pool: Pool) => {
-        this.setPool(pool);
-        this.route.params.subscribe((params) => {
-          this.poolUserRepository
-            .getObject(pool, +params.poolUserId)
-            .subscribe({
-              next: (poolUser: PoolUser) => {
-                this.poolUser = poolUser;
-                this.list = poolUser.getTransferPeriodActionList();
-                this.formationRepository
-                  .getObject(poolUser, pool.getAssembleViewPeriod())
-                  .subscribe({
-                    next: (assembleFormation: S11Formation) => {
-                      const calculator = new S11FormationCalculator();
-                      this.calcFormation = calculator.getCurrentFormation(
-                        assembleFormation,
-                        this.list
-                      );
-                    },
-                    error: (e: string) => {
-                      this.setAlert("danger", e);
-                      this.processing.set(false);
-                    },
-                    complete: () => this.processing.set(false),
-                  });
-              },
-              error: (e: string) => {
-                this.setAlert("danger", e);
-                this.processing.set(false);
-              },
-              complete: () => this.processing.set(false),
-            });
-        });
-      },
-      error: (e) => {
-        this.setAlert("danger", e);
-        this.processing.set(false);
-      },
-    });
+    this.list = this.poolUser.getTransferPeriodActionList();
+    this.formationRepository
+      .getObject(this.poolUser, this.poolUser.getPool().getAssembleViewPeriod())
+      .subscribe({
+        next: (assembleFormation: S11Formation) => {
+          const calculator = new S11FormationCalculator();
+          this.calcFormation = calculator.getCurrentFormation(
+            assembleFormation,
+            this.list
+          );
+        },
+        error: (e: string) => {
+          this.alert = { type: "danger", message: e };          
+          this.processing.set(false);
+        },
+        complete: () => {
+          this.processing.set(false)
+        },
+      });
   }
 
   getPlayerIn(calcFormation: S11Formation, substitution: Substitution): Player {

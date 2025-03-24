@@ -1,4 +1,4 @@
-import { Component, effect, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, effect, OnChanges, OnInit, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
@@ -8,7 +8,7 @@ import { NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { Pool } from '../../lib/pool';
-import { Competition, Poule, Structure, StructureEditor } from 'ngx-sport';
+import { Competition, StructureEditor } from 'ngx-sport';
 import { LeagueName } from '../../lib/leagueName';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
@@ -36,11 +36,12 @@ import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { facTrophy } from '../../shared/poolmodule/icons';
 import { ActiveGameRoundsCalculator } from '../../lib/gameRound/activeGameRoundsCalculator';
 import { GameRoundViewType } from '../../lib/gameRound/viewType';
-import { combineLatest, concatMap, forkJoin, Observable, of } from 'rxjs';
+import { concatMap, forkJoin, Observable, of } from 'rxjs';
 import { PoolUsersTotalsGetter } from '../../lib/pool/user/totalsGetter';
 import { EditPeriod } from '../../lib/periods/editPeriod';
 import { CompetitorWithGameRoundsPoints, GameRoundsPoints } from '../../lib/views/togetherRankingView/competitorWithGameRoundsPoints';
 import { PoolCompetitor } from '../../lib/pool/competitor';
+import { FormationActionOverviewModalComponent } from '../formation/actionoverview.modal.component';
 
 
 @Component({
@@ -65,11 +66,18 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   public currentGameRound: WritableSignal<GameRound | undefined> =
     signal(undefined);
   public viewGameRounds: WritableSignal<GameRound[]> = signal([]);
+
+  public previousGameRound: WritableSignal<GameRound | undefined> =
+    signal(undefined);
+  public nextGameRound: WritableSignal<GameRound | undefined> =
+    signal(undefined);
   public poolUsersWithGameRoundsPoints: WritableSignal<
     CompetitorWithGameRoundsPoints[]
   > = signal([]);
   public badgeCategory: WritableSignal<BadgeCategory | undefined> =
     signal(undefined);
+  public showTransfers: WritableSignal<boolean> =
+    signal(false);
 
   public poolUsers: PoolUser[] | undefined = [];
 
@@ -82,6 +90,23 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   public faMessage = faMessage;
   public faSpinner = faSpinner;
   public facTrophy = facTrophy;
+
+  public number: number = 0;
+
+  public increase() {
+    console.log(123);
+    this.number++;
+  }
+
+  public decrease() {
+    console.log(98);
+    if (this.number === 0) return;
+    this.number--;
+  }
+
+  onSwipe(event: any) {
+    console.log("Swiped!", event);
+  }
 
   constructor(
     route: ActivatedRoute,
@@ -107,6 +132,15 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     this.poolUsersTotalsGetter = new PoolUsersTotalsGetter(
       poolTotalsRepository
     );
+    effect(() => {
+      const pool = this.pool;
+      const poolUsers = this.poolUsers;
+      const currentGameRound = this.currentGameRound();
+
+      if (currentGameRound && pool && poolUsers) {
+        this.selectGameRound(pool, poolUsers, currentGameRound);
+      }
+    });
   }
 
   ngOnInit() {
@@ -137,11 +171,8 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
               currentViewPeriod
             ).subscribe({
               next: (activeGameRound: GameRound) => {
-                this.selectGameRound(
-                  pool,
-                  poolUsers,
-                  activeGameRound
-                );
+                console.log("currentGameRound sewt");
+                this.currentGameRound.set(activeGameRound);
               },
             });
 
@@ -186,6 +217,20 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     return LeagueName.WorldCup;
   }
 
+  openPoolUserTransfersModal(poolUser: PoolUser) {
+    console.log(123);
+    const modalRef = this.modalService.open(
+      FormationActionOverviewModalComponent,
+      { size: 'xl' }
+    );
+    modalRef.componentInstance.poolUser = poolUser;
+    modalRef.result.then(
+      () => {       
+      },
+      (reason) => {}
+    );
+  }
+
   setLeagueName(competitions: Competition[]): void {
     const hasWorldCup =
       false; /*competitions.some((competition: Competition): boolean => {
@@ -205,24 +250,31 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     const scorePointsMap = pool.getCompetitionConfig().getScorePointsMap();
     // const totals: Observable<PoolUsersTotalsMap[]> = [];
 
-    // get gameround totals    
+    // get gameround totals
     const totals = gameRounds.map((gameRound: GameRound) => {
       return this.poolUsersTotalsGetter.getGameRoundTotals(pool, gameRound);
     });
     totals.push(
       this.poolUsersTotalsGetter.getViewPeriodTotals(pool, viewPeriod)
     );
-    
+
     // get viewPeriod totals
     {
       const competitionConfig = pool.getCompetitionConfig();
-      if(viewPeriod === competitionConfig.getTransferPeriod().getViewPeriod() ){ 
-        const assembleViewPeriod = competitionConfig.getAssemblePeriod().getViewPeriod();
+      if (
+        viewPeriod === competitionConfig.getTransferPeriod().getViewPeriod()
+      ) {
+        const assembleViewPeriod = competitionConfig
+          .getAssemblePeriod()
+          .getViewPeriod();
         totals.push(
-          this.poolUsersTotalsGetter.getViewPeriodTotals(pool, assembleViewPeriod)
+          this.poolUsersTotalsGetter.getViewPeriodTotals(
+            pool,
+            assembleViewPeriod
+          )
         );
-      };
-    }    
+      }
+    }
 
     return forkJoin(totals).pipe(
       concatMap((poolUsersTotalsMaps: PoolUsersTotalsMap[], index: number) => {
@@ -232,36 +284,43 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
         const viewPeriodsPoolUserTotals = poolUsersTotalsMaps.filter(
           (poolUsersTotalsMap) => poolUsersTotalsMap.gameRoundNr === 0
         );
-        
-        const competitorsWithGameRoundPoints = poolUsers.map((poolUser: PoolUser): CompetitorWithGameRoundsPoints => {
-            const viewPeriodPoints: GameRoundsPoints[] = viewPeriodsPoolUserTotals.map(
-              (poolUserTotalsMap: PoolUsersTotalsMap): GameRoundsPoints => {
-                return {
-                  number: poolUserTotalsMap.gameRoundNr,
-                  points:
-                    poolUserTotalsMap
-                      .get(poolUser.getId())
-                      ?.getPoints(scorePointsMap, this.badgeCategory()) ??
-                    0,
-                };
-              }
-            );
-            const totalPoints = viewPeriodPoints.map((viewPeriodPoints: GameRoundsPoints) => viewPeriodPoints.points).reduce((a, b) => a + b, 0);
 
-            const gameRoundsPoints: GameRoundsPoints[] = gameRoundsPoolUserTotals.map(
-              (poolUserTotalsMap: PoolUsersTotalsMap): GameRoundsPoints => {  
-                return {
-                  number: poolUserTotalsMap.gameRoundNr,
-                  points:
-                    poolUserTotalsMap
-                      .get(poolUser.getId())
-                      ?.getPoints(scorePointsMap, this.badgeCategory()) ??
-                    0,
-                };
-              }
-            );
-            const competitors = poolUser.getPool().getCompetitors(LeagueName.Competition);
-            const competitor: PoolCompetitor|undefined = competitors.find(
+        const competitorsWithGameRoundPoints = poolUsers.map(
+          (poolUser: PoolUser): CompetitorWithGameRoundsPoints => {
+            const viewPeriodPoints: GameRoundsPoints[] =
+              viewPeriodsPoolUserTotals.map(
+                (poolUserTotalsMap: PoolUsersTotalsMap): GameRoundsPoints => {
+                  return {
+                    number: poolUserTotalsMap.gameRoundNr,
+                    points:
+                      poolUserTotalsMap
+                        .get(poolUser.getId())
+                        ?.getPoints(scorePointsMap, this.badgeCategory()) ?? 0,
+                  };
+                }
+              );
+            const totalPoints = viewPeriodPoints
+              .map(
+                (viewPeriodPoints: GameRoundsPoints) => viewPeriodPoints.points
+              )
+              .reduce((a, b) => a + b, 0);
+
+            const gameRoundsPoints: GameRoundsPoints[] =
+              gameRoundsPoolUserTotals.map(
+                (poolUserTotalsMap: PoolUsersTotalsMap): GameRoundsPoints => {
+                  return {
+                    number: poolUserTotalsMap.gameRoundNr,
+                    points:
+                      poolUserTotalsMap
+                        .get(poolUser.getId())
+                        ?.getPoints(scorePointsMap, this.badgeCategory()) ?? 0,
+                  };
+                }
+              );
+            const competitors = poolUser
+              .getPool()
+              .getCompetitors(LeagueName.Competition);
+            const competitor: PoolCompetitor | undefined = competitors.find(
               (competitor) => competitor.getPoolUser() === poolUser
             );
             if (competitor == undefined) {
@@ -270,10 +329,11 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
             return {
               rank: 0,
               competitor: competitor,
-              viewPeriodsPoints: totalPoints,                  
+              viewPeriodsPoints: totalPoints,
               gameRoundsPoints: gameRoundsPoints,
             };
-          });
+          }
+        );
 
         competitorsWithGameRoundPoints.sort((a, b) => {
           return b.viewPeriodsPoints - a.viewPeriodsPoints;
@@ -281,15 +341,21 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
         // set rank
         {
           let rank = 0;
-          let currentPoints = -1; 
+          let currentPoints = -1;
           let nrWithSamePoints = 0;
           competitorsWithGameRoundPoints.forEach(
-            (competitorWithGameRoundsPoints: CompetitorWithGameRoundsPoints) => {
+            (
+              competitorWithGameRoundsPoints: CompetitorWithGameRoundsPoints
+            ) => {
               if (currentPoints == -1) {
-                currentPoints = competitorWithGameRoundsPoints.viewPeriodsPoints;
+                currentPoints =
+                  competitorWithGameRoundsPoints.viewPeriodsPoints;
                 rank++;
-              } else if (competitorWithGameRoundsPoints.viewPeriodsPoints < currentPoints) {
-                currentPoints = competitorWithGameRoundsPoints.viewPeriodsPoints;
+              } else if (
+                competitorWithGameRoundsPoints.viewPeriodsPoints < currentPoints
+              ) {
+                currentPoints =
+                  competitorWithGameRoundsPoints.viewPeriodsPoints;
                 rank += 1 + nrWithSamePoints;
                 nrWithSamePoints = 0;
               } else {
@@ -303,7 +369,6 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
       })
     );
   }
-
 
   // ON CHANGE CURRENT GAMEROUND
   // this.currentGameRoundPoolUsersTotalsMap = this.poolUsersTotalsGetter.getPoolUserTotals(, gameRound);
@@ -354,9 +419,8 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   ): void {
     this.processing.set(true);
 
-    console.log("selectGameRound");
+    console.log("selectGameRound", gameRound.number, gameRound.viewPeriod.getStartDateTime());
 
-    this.currentGameRound.set(gameRound);
 
     this.activeGameRoundsCalculator
       .getActiveGameRounds(
@@ -367,6 +431,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
       .subscribe({
         next: (activeGameRounds: GameRound[]) => {
           this.viewGameRounds.set(activeGameRounds);
+
           this.getPoolUsersWithGameRoundsPoints(
             pool,
             poolUsers,
@@ -379,10 +444,36 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
               this.poolUsersWithGameRoundsPoints.set(
                 poolUsersWithGameRoundsPoints
               );
-              console.log(poolUsersWithGameRoundsPoints);
               this.processing.set(false);
             },
           });
+
+          // set previous gameRound async
+          this.activeGameRoundsCalculator
+            .getPreviousGameRound(
+              pool.getCompetitionConfig(),
+              gameRound.viewPeriod,
+              activeGameRounds[0]
+            )
+            .subscribe({
+              next: (gameRound: GameRound | undefined) => {
+                console.log();
+                this.previousGameRound.set(gameRound);
+              },
+            });
+
+          // set next gameRound async
+          this.activeGameRoundsCalculator
+            .getNextGameRound(
+              pool.getCompetitionConfig(),
+              gameRound.viewPeriod,
+              activeGameRounds[activeGameRounds.length - 1]
+            )
+            .subscribe({
+              next: (gameRound: GameRound | undefined) => {
+                this.nextGameRound.set(gameRound);
+              },
+            });
         },
       });
   }
@@ -392,92 +483,18 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     poolUsers: PoolUser[],
     viewPeriod: ViewPeriod
   ): void {
-    this.processing.set(true);
-    this.determineActiveGameRound(pool.getCompetitionConfig(), viewPeriod).subscribe({
+    // this.processing.set(true);
+    this.previousGameRound.set(undefined);
+    this.nextGameRound.set(undefined);
+    console.log('reset prev next');
+    this.determineActiveGameRound(
+      pool.getCompetitionConfig(),
+      viewPeriod
+    ).subscribe({
       next: (activeGameRound: GameRound) => {
-        this.selectGameRound(pool, poolUsers, activeGameRound);
+        this.currentGameRound.set(activeGameRound);
       },
     });
-  }
-
-  showTransferPeriodModal(
-    competitionConfig: CompetitionConfig,
-    transferPeriod: EditPeriod
-  ) {}
-
-  initCurrentGameRound(pool: Pool, viewPeriod: ViewPeriod): void {
-    // @TODO CDK
-    // const competitionConfig: CompetitionConfig = pool.getCompetitionConfig();
-    // this.gameRoundService.calculateFinished(competitionConfig, viewPeriod, undefined)
-    //   .subscribe({
-    //     next: (currentGameRound: GameRound) => {
-    //       const gameRounds: (GameRound | undefined)[] = viewPeriod
-    //         .getGameRounds()
-    //         .slice();
-    //       this.gameRounds = gameRounds;
-    //       const idx = this.gameRounds.indexOf(currentGameRound);
-    //       if (idx >= 0) {
-    //         this.gameRounds = this.gameRounds
-    //           .splice(idx)
-    //           .concat([], this.gameRounds);
-    //       }
-    //       this.updateGameRound(pool, currentGameRound);
-    //     },
-    //     error: (e: string) => {
-    //       this.setAlert("danger", e);
-    //       this.processing.set(false);
-    //     },
-    //   });
-  }
-
-  // public updateViewPeriodFromScroller(
-  //   pool: Pool,
-  //   viewPeriod: ViewPeriod
-  // ): void {
-  //   this.processing.set(true);
-  //   this.currentViewPeriod = viewPeriod;
-  //   // this.initPoolUsersTotals(pool, viewPeriod);
-  //   // this.initCurrentGameRound(pool, viewPeriod);
-  // }
-
-  // updateGameRoundFromScroller(
-  //   pool: Pool,
-  //   viewPeriod: ViewPeriod,
-  //   gameRound: GameRound | undefined
-  // ): void {
-  //   //   if (gameRound === undefined) {
-  //   //     this.currentGameRound = gameRound;
-  //   //     this.currentGameRoundPoolUsersTotalsMap = undefined;
-  //   //     return;
-  //   //   }
-  //   //   this.updateGameRound(pool, viewPeriod, gameRound);
-  // }
-
-  updateGameRound(
-    pool: Pool,
-    viewPeriod: ViewPeriod,
-    gameRound: GameRound
-  ): void {
-    // @TODO CDK
-    // this.processing.set(true);
-    // this.poolTotalsRepository
-    //   .getGameRoundPoolUsersMap(pool, viewPeriod, gameRound)
-    //   .subscribe({
-    //     next: (gameRoundPoolUsersTotals: PoolUsersTotalsMap) => {
-    //       this.currentGameRound = gameRound;
-    //       // HIER KIJKEN HOE JE DEZE MOET OPBOUWEN, ALS AL BESTAAT DAN NIET NOG EENS OPHALEN VAN SERVER
-    //       this.gameRoundTotalsMap.set(
-    //         this.getGameRoundIndex(gameRound),
-    //         gameRoundPoolUsersTotals
-    //       );
-    //       this.currentGameRoundPoolUsersTotalsMap = gameRoundPoolUsersTotals;
-    //       this.processing.set(false);
-    //     },
-    //     error: (e: string) => {
-    //       this.setAlert("danger", e);
-    //       this.processing.set(false);
-    //     },
-    //   });
   }
 
   navigateToChat(pool: Pool, pouleId: string | number): void {

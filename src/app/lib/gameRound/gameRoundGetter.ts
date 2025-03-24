@@ -38,8 +38,8 @@ export class GameRoundGetter {
       .getObjects(competitionConfig, viewPeriod)
       .pipe(
         concatMap((gameRounds: GameRound[]) => {
-          const gameRoundMap = new Map(gameRounds.map((gr) => [gr.number, gr]));;
-          this.gameRoundsMaps.set(viewPeriod.getId(), gameRoundMap);          
+          const gameRoundMap = new Map(gameRounds.map((gr) => [gr.number, gr]));
+          this.gameRoundsMaps.set(viewPeriod.getId(), gameRoundMap);
           return of(gameRoundMap);
         })
       );
@@ -60,6 +60,42 @@ export class GameRoundGetter {
       })
     );
   }
+
+  public getPreviousGameRound(
+    competitionConfig: CompetitionConfig,
+    viewPeriod: ViewPeriod,
+    gameRound: GameRound
+  ): Observable<GameRound | undefined> {
+    return this.getGameRounds(competitionConfig, viewPeriod).pipe(
+      concatMap((gameRounds: GameRound[]) => {
+        const idx = gameRounds.findIndex((g: GameRound) => (g === gameRound));
+        if (idx <= 0 ) {
+          return of(undefined);
+        }
+        return of(gameRounds.splice(idx - 1, 1).pop());
+      })
+    );
+  }
+
+  public getNextGameRound(
+    competitionConfig: CompetitionConfig,
+    viewPeriod: ViewPeriod,
+    gameRound: GameRound
+  ): Observable<GameRound | undefined> {
+    return this.getGameRounds(competitionConfig, viewPeriod).pipe(
+      concatMap((gameRounds: GameRound[]) => {
+        console.log(
+          "gameroundgetter->getNextGR", gameRounds
+        );
+        const idx = gameRounds.findIndex(g => (g === gameRound));
+        if (idx >= gameRounds.length - 1) {
+          return of(undefined);
+        }
+        return of(gameRounds.splice(idx + 1, 1).pop());
+      })
+    );
+  }
+
 
   // public calculateFinished(
   //   competitionConfig: CompetitionConfig,

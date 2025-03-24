@@ -39,10 +39,7 @@ export class PoolRepository extends APIRepository {
         
         return this.http.get<JsonPool>(url, { headers: super.getHeaders() }).pipe(
             map((jsonPool: JsonPool) => {
-                console.log(jsonPool);
-                const t = this.mapper.toObject(jsonPool);
-                console.log(t);
-                return t;
+                return this.mapper.toObject(jsonPool);
             }),
             catchError((err) => this.handleError(err))
         );

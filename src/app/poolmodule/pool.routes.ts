@@ -26,7 +26,6 @@ import { FormationPlaceReplaceComponent } from './formation/place/replace.compon
 import { FormationTransferComponent } from './formation/transfer.component';
 import { FormationPlaceTransferComponent } from './formation/place/transfer.component';
 import { FormationSubstituteComponent } from './formation/substitute.component';
-import { FormationActionOverviewComponent } from './formation/actionoverview.component';
 import { PoolPouleAgainstGamesComponent } from './poule/againstgames.component';
 import { PoolAllInOneGameScheduleComponent } from './allinonegame/allinonegame.component';
 
@@ -74,11 +73,6 @@ export const poolRoutes: Routes = [
   {
     path: "pool/formation/substitutions/:id",
     component: FormationSubstituteComponent,
-    canActivate: [AuthUserGuardService],
-  },
-  {
-    path: "pool/formation/actions/:id/:poolUserId",
-    component: FormationActionOverviewComponent,
     canActivate: [AuthUserGuardService],
   },
   {

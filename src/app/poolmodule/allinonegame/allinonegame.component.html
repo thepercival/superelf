@@ -43,8 +43,11 @@
                 <div class="d-flex mt-2 ms-1">
                     @let tmplCurrentGameRound = currentGameRound();                    
                     @if(tmplCurrentGameRound) {
-                        <app-gameround-scroller [gameRounds]="viewGameRounds()" 
-                            [current]="tmplCurrentGameRound"
+                        <app-gameround-scroller 
+                            [gameRounds]="viewGameRounds()" 
+                            [viewPeriod]="tmplCurrentGameRound.viewPeriod"
+                            [previousGameRound]="previousGameRound()"
+                            [nextGameRound]="nextGameRound()"
                             [competitionConfig]="pool.getCompetitionConfig()">
                         </app-gameround-scroller>
                     }

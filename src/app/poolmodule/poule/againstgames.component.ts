@@ -66,7 +66,10 @@ export class PoolPouleAgainstGamesComponent
   public gameRounds: GameRound[] = [];
   public currentGameRound: GameRound | undefined;
   public currentViewPeriod: ViewPeriod | undefined;
-
+  public previousGameRound: WritableSignal<GameRound | undefined> =
+    signal(undefined);
+  public nextGameRound: WritableSignal<GameRound | undefined> =
+    signal(undefined);
   public homeCompetitor: PoolCompetitor | undefined;
   public awayCompetitor: PoolCompetitor | undefined;
 

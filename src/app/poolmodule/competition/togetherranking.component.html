@@ -6,7 +6,15 @@
         @let poolUser = competitorWithGameRoundsPoints.competitor.getPoolUser();
         <tr class="pointer">            
             <td class="rankingnr text-end ps-0"><!-- badge text-black -->
+              @if(showTransfers()) {
+                <button type="button"
+                  class="btn btn-sm btn-outline-info me-2"
+                  (click)="showCompetitorTransfers.emit(poolUser)">
+                  T
+                </button>
+              } @else {
                 <span class="">{{competitorWithGameRoundsPoints.rank}}</span>
+              } 
             </td>
             <td class="text-break ps-0" ngClass="{ 'favitem': false}" (click)="linkToPoolUser(poolUser, undefined)">
                 <span>{{poolUser.getUser().getName()}}</span>
@@ -16,12 +24,15 @@
             @for(gameRoundPoints of competitorWithGameRoundsPoints.gameRoundsPoints; track $index)
             {
               <td class="text-end ps-0 pointer" (click)="linkToPoolUser(poolUser, gameRoundPoints.number)">
-                  <span class="badge {{getBestWorstBadgeClass(poolUser, gameRoundPoints.number)}}">
-                      {{gameRoundPoints.points}}</span>
+                <button type="button" class="btn btn-sm text-white {{getBestWorstBadgeClass(poolUser, gameRoundPoints.number)}}">
+                  {{gameRoundPoints.points}}
+                </button>
               </td>
             }
             <td class="text-end ps-0" (click)="linkToPoolUser(poolUser, undefined)">
-                <span class="badge bg-totals">{{competitorWithGameRoundsPoints.viewPeriodsPoints}}</span>
+                <button type="button" class="btn btn-sm bg-totals text-white">
+                  {{competitorWithGameRoundsPoints.viewPeriodsPoints}}
+                </button>
             </td>
         </tr>
       }
