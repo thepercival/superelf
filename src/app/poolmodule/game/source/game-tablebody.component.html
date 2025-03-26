@@ -1,19 +1,20 @@
-@for(sportRankingItem of sportRankingItems(); track sportRankingItem.getPlaceLocation()) 
+@for(competitorWithGameRoundsPoints of competitorsWithGameRoundsPoints(); track $index) 
 {
+    @let poolUser = competitorWithGameRoundsPoints.competitor.getPoolUser();
     <tr>
         <td>
-            @let homeFormationPlaces = getFormationPlaces(HomeSide, sportRankingItem);
+            @let homeFormationPlaces = getFormationPlaces(HomeSide, poolUser);
             <ng-container
                 *ngTemplateOutlet="contentSideForamtionPlaces; context:{formationPlaces: homeFormationPlaces, side: HomeSide}">
             </ng-container>
         </td>
         <td class="text-center">
-            <a routerLink="getRouterLink(sportRankingItem())">
-                {{getPoolUser(sportRankingItem).getName()}}
+            <a routerLink="getRouterLink(poolUser)">
+                {{poolUser.getName()}}
             </a>
         </td>
         <td>
-            @let awayFormationPlaces = getFormationPlaces(AwaySide, sportRankingItem);
+            @let awayFormationPlaces = getFormationPlaces(AwaySide, poolUser);
             <ng-container *ngTemplateOutlet="contentSideForamtionPlaces; context:{formationPlaces: awayFormationPlaces, side: AwaySide}">
             </ng-container>
         </td>

@@ -19,6 +19,7 @@ import { S11PlayerModalComponent } from '../../player/info.modal.component';
 import { SportExtensions } from '../../../lib/sportExtensions';
 import { CompetitionConfig } from '../../../lib/competitionConfig';
 import { ActiveGameRoundsCalculator } from '../../../lib/gameRound/activeGameRoundsCalculator';
+import { CompetitorWithGameRoundsPoints } from '../../../lib/views/togetherRankingView/competitorWithGameRoundsPoints';
 
 @Component({
   selector: "tbody[s11-game-tablerow]",
@@ -38,9 +39,8 @@ export class GameTableRowComponent implements OnInit {
   public readonly competitonConfig = input.required<CompetitionConfig>();
   public readonly gameRound = input.required<GameRound>();
   public readonly formationMap = input.required<S11FormationMap>();
-  public readonly sportRankingItems = input.required<SportRoundRankingItem[]>();
-  public readonly poolUsersStartLocationMap =
-    input.required<StartLocationMap>();
+  public readonly competitorsWithGameRoundsPoints =
+    input.required<CompetitorWithGameRoundsPoints[]>();
 
   private teamsStartLocationMap: StartLocationMap | undefined;
 
@@ -76,12 +76,8 @@ export class GameTableRowComponent implements OnInit {
 
   public getFormationPlaces(
     side: AgainstSide,
-    sportRankingItem: SportRoundRankingItem
+    poolUser: PoolUser
   ): S11FormationPlace[] {
-    const poolUser = this.getPoolUser(sportRankingItem);
-    if (poolUser === undefined) {
-      return [];
-    }
     const formation = this.formationMap().get(+poolUser.getId());
     const team = this.getTeam(this.againstGame().getSidePlaces(side));
     if (formation === undefined || team === undefined) {
@@ -92,25 +88,6 @@ export class GameTableRowComponent implements OnInit {
       .filter((formationPlace: S11FormationPlace): boolean => {
         return formationPlace.getPlayer()?.getPlayer(team) !== undefined;
       });
-  }
-
-  getPoolUser(sportRankingItem: SportRoundRankingItem): PoolUser {
-    // console.log(sportRankingItem, this.startLocationMap);
-    const startLocation = sportRankingItem
-      .getPerformance()
-      .getPlace()
-      .getStartLocation();
-    if (startLocation === undefined) {
-      throw new Error("could not find pooluser");
-    }
-    const competitor = <PoolCompetitor>(
-      this.poolUsersStartLocationMap().getCompetitor(startLocation)
-    );
-    const poolUser = competitor?.getPoolUser();
-    if (poolUser === undefined) {
-      throw new Error("could not find pooluser");
-    }
-    return poolUser;
   }
 
   isTeamCompetitor(sideCompetitor: Competitor | undefined): boolean {
@@ -177,15 +154,7 @@ export class GameTableRowComponent implements OnInit {
     // );
   }
 
-  getRouterLink(
-    sportRankingItem: SportRoundRankingItem,
-    gameRound: GameRound | undefined
-  ): (string | number)[] {
-    const poolUser = this.getPoolUser(sportRankingItem);
-    if (poolUser == undefined) {
-      throw new Error("could not find pooluser");
-    }
-
+  getRouterLink(poolUser: PoolUser,gameRound: GameRound | undefined ): (string | number)[] {    
     return [
       "/pool/user",
       poolUser.getPool().getId(),

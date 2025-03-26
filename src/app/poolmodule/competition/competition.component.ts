@@ -76,12 +76,11 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   > = signal([]);
   public badgeCategory: WritableSignal<BadgeCategory | undefined> =
     signal(undefined);
-  public showTransfers: WritableSignal<boolean> =
-    signal(false);
+  public showTransfers: WritableSignal<boolean> = signal(false);
 
   public poolUsers: PoolUser[] | undefined = [];
 
-  public pouleId: string | number | undefined;
+  public poolPouleId: string | number | undefined;
   public leagueName!: LeagueName;
   public activeGameRoundsCalculator: ActiveGameRoundsCalculator;
   public poolUsersTotalsGetter: PoolUsersTotalsGetter;
@@ -178,17 +177,17 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
 
             if (this.poolUserFromSession) {
               this.structureRepository.getFirstPouleId(competition).subscribe({
-                next: (pouleId: string | number) => {
-                  if (pouleId) {
+                next: (poolPouleId: string | number | undefined) => {
+                  if (poolPouleId) {
                     this.chatMessageRepository
-                      .getNrOfUnreadObjects(pouleId, pool)
+                      .getNrOfUnreadObjects(poolPouleId, pool)
                       .subscribe({
                         next: (nrOfUnreadMessages: number) => {
                           this.nrOfUnreadMessages = nrOfUnreadMessages;
                         },
                       });
                   }
-                  this.pouleId = pouleId;
+                  this.poolPouleId = poolPouleId;
                 },
               });
             }
@@ -221,12 +220,11 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     console.log(123);
     const modalRef = this.modalService.open(
       FormationActionOverviewModalComponent,
-      { size: 'xl' }
+      { size: "xl" }
     );
     modalRef.componentInstance.poolUser = poolUser;
     modalRef.result.then(
-      () => {       
-      },
+      () => {},
       (reason) => {}
     );
   }
@@ -419,8 +417,11 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   ): void {
     this.processing.set(true);
 
-    console.log("selectGameRound", gameRound.number, gameRound.viewPeriod.getStartDateTime());
-
+    console.log(
+      "selectGameRound",
+      gameRound.number,
+      gameRound.viewPeriod.getStartDateTime()
+    );
 
     this.activeGameRoundsCalculator
       .getActiveGameRounds(
@@ -486,7 +487,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     // this.processing.set(true);
     this.previousGameRound.set(undefined);
     this.nextGameRound.set(undefined);
-    console.log('reset prev next');
+    console.log("reset prev next");
     this.determineActiveGameRound(
       pool.getCompetitionConfig(),
       viewPeriod

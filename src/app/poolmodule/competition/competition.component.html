@@ -23,8 +23,8 @@
             ></app-gameround-scroller>
             
             <div>
-              @if(pouleId){
-                <button (click)="navigateToChat(pool,pouleId)" type="button"
+              @if(poolPouleId){
+                <button (click)="navigateToChat(pool,poolPouleId)" type="button"
                   class="btn btn-outline-dark me-1 position-relative">
                   <fa-icon [icon]=faMessage></fa-icon>
                   <span class="ms-1 d-none d-sm-inline"> chat</span>
