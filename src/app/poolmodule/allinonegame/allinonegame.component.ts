@@ -116,8 +116,8 @@ export class PoolAllInOneGameScheduleComponent
   ) {
     super(route, router, poolRepository, globalEventsManager);
     this.activeGameRoundsCalculator = new ActiveGameRoundsCalculator(
-      1,
       0,
+      1,
       gameRoundRepository
     );
     this.poolUsersTotalsGetter = new PoolUsersTotalsGetter(
@@ -173,7 +173,6 @@ export class PoolAllInOneGameScheduleComponent
               currentViewPeriod
             ).subscribe({
               next: (activeGameRound: GameRound) => {
-                console.log("currentGameRound sewt");
                 this.currentGameRound.set(activeGameRound);
               },
             });
@@ -194,7 +193,6 @@ export class PoolAllInOneGameScheduleComponent
                 },
               });
             }
-            // this.initCurrentGameRound(pool, currentViewPeriod);
           },
           error: (e: string) => {
             this.setAlert("danger", e);
@@ -325,6 +323,44 @@ export class PoolAllInOneGameScheduleComponent
     return GameState.Finished;
   }
 
+  selectPreviousGameRound(
+    competitionConfig: CompetitionConfig,
+    currentGameRound: GameRound
+  ): void {
+    this.activeGameRoundsCalculator
+      .getPreviousGameRound(
+        competitionConfig,
+        currentGameRound.viewPeriod,
+        currentGameRound
+      )
+      .subscribe({
+        next: (nextGameRound: GameRound | undefined) => {
+          if (nextGameRound) {
+            this.currentGameRound.set(nextGameRound);
+          }
+        },
+      });
+  }
+
+  selectNextGameRound(
+    competitionConfig: CompetitionConfig,
+    currentGameRound: GameRound
+  ): void {
+    this.activeGameRoundsCalculator
+      .getNextGameRound(
+        competitionConfig,
+        currentGameRound.viewPeriod,
+        currentGameRound
+      )
+      .subscribe({
+        next: (nextGameRound: GameRound | undefined) => {
+          if (nextGameRound) {
+            this.currentGameRound.set(nextGameRound);
+          }
+        },
+      });
+  }
+
   setLeagueName(competitions: Competition[]): void {
     const hasWorldCup =
       false; /*competitions.some((competition: Competition): boolean => {
@@ -453,7 +489,7 @@ export class PoolAllInOneGameScheduleComponent
     return this.activeGameRoundsCalculator.determineActiveGameRound(
       competitionConfig,
       viewPeriod,
-      GameRoundViewType.Ranking
+      GameRoundViewType.Games
     );
   }
 
@@ -465,7 +501,6 @@ export class PoolAllInOneGameScheduleComponent
     // this.processing.set(true);
     this.previousGameRound.set(undefined);
     this.nextGameRound.set(undefined);
-    console.log("reset prev next");
     this.determineActiveGameRound(
       pool.getCompetitionConfig(),
       viewPeriod

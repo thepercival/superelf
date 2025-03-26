@@ -18,11 +18,14 @@ export class GameRoundScrollerComponent implements OnInit {
   readonly competitionConfig = input.required<CompetitionConfig>();
   readonly viewPeriod = input.required<ViewPeriod>();
   readonly gameRounds = input.required<GameRound[]>();
+  readonly activeGameRound = input<GameRound | undefined>();
   readonly previousGameRound = input.required<GameRound | undefined>();
   readonly nextGameRound = input.required<GameRound | undefined>();
 
   // readonly current = input.required<GameRound>();
   @Output() selectGameRound = new EventEmitter<GameRound>();
+  @Output() previous = new EventEmitter();
+  @Output() next = new EventEmitter();
   @Output() selectViewPeriod = new EventEmitter<ViewPeriod>();
   @Output() selectTransferPeriod = new EventEmitter<EditPeriod>();
 

@@ -20,44 +20,56 @@
       </div>
     </div>
 
-    <h2 *ngIf="processing()" class="text-center">
-      <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
-    </h2>
-    @if(alert) {
-    <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
-    }
-    
-    @if(!processing() && !processingStatistics() && pool && poolUser && formation && currentGameRound){
-    <div>
-      <div class="d-flex justify-content-between mt-3 mb-1 mx-1">
-        <app-gameround-scroller 
-          [viewPeriod]="currentGameRound.viewPeriod" 
-          [previousGameRound]="previousGameRound()"
-          [nextGameRound]="nextGameRound()"
-          [gameRounds]="gameRounds" [competitionConfig]="pool.getCompetitionConfig()"
-      >
-        </app-gameround-scroller>
-        <!-- <div class="ms-1">
-          <span *ngIf="totalPointsAssemble" class="badge bg-totals">{{totalPointsAssemble}}</span>
-          <span *ngIf="totalPointsAssemble && totalPointsTransfer"> + </span>
-          <span *ngIf="totalPointsAssemble && totalPointsTransfer" class="badge bg-totals">{{totalPointsTransfer}}</span>
-        </div> -->
-      </div>
-
-      <!-- lines-->
-       @if(currentGameRound && formation){
-      <table class="table">
-        @for(line of formation.getLines();track line.getNumber()) {
-          <tbody app-pool-formationline-view [line]="line"
-              [statisticsGetter]="statisticsGetter" [gameRound]="currentGameRound" 
-              [totalPoints]="line.getNumber() === GoalKeeper ? totalPoints : undefined"
-              [totalGameRoundPoints]="line.getNumber() === GoalKeeper ? totalGameRoundPoints : undefined"
-              (linkToPlayer)="linkToPlayer(pool,$event)">
-          </tbody>
-        }
-      </table>
+    @if(!processing()) {
+      @if(alert) {
+        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
       }
-    </div>
+
+      @let tmplCurrentGameRound = currentGameRound();
+      @if(pool && poolUsers && tmplCurrentGameRound){
+        <div class="d-flex justify-content-between mt-3 mb-1 mx-1">
+          <app-gameround-scroller 
+            [viewPeriod]="tmplCurrentGameRound.viewPeriod"
+            [gameRounds]="viewGameRounds()"
+            [activeGameRound]="tmplCurrentGameRound"
+            [previousGameRound]="previousGameRound()"
+            (previous)="selectPreviousGameRound(pool.getCompetitionConfig(), tmplCurrentGameRound)"
+            [nextGameRound]="nextGameRound()"                               
+            (next)="selectNextGameRound(pool.getCompetitionConfig(), tmplCurrentGameRound)"         
+            [competitionConfig]="pool.getCompetitionConfig()"
+            (selectViewPeriod)="selectViewPeriod(pool, poolUsers, $event)"
+            (selectGameRound)="selectGameRound(pool, poolUsers, $event)"
+            (selectTransferPeriod)="showTransfers.set(!showTransfers())"
+          ></app-gameround-scroller>
+        </div>
+      } 
+    } @else {
+      <h2 *ngIf="processing()" class="text-center">
+        <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+      </h2>
+    }
+
+    
+    
+    
+    @if(!processingStatistics()){
+      <div>
+
+
+        <!-- lines-->
+        @if(currentGameRound && formation){
+        <table class="table">
+          @for(line of formation.getLines();track line.getNumber()) {
+            <tbody app-pool-formationline-view [line]="line"
+                [statisticsGetter]="statisticsGetter" [gameRound]="currentGameRound" 
+                [totalPoints]="line.getNumber() === GoalKeeper ? totalPoints : undefined"
+                [totalGameRoundPoints]="line.getNumber() === GoalKeeper ? totalGameRoundPoints : undefined"
+                (linkToPlayer)="linkToPlayer(pool,$event)">
+            </tbody>
+          }
+        </table>
+        }
+      </div>
     }
     <h2 *ngIf="processingFormation() || processingStatistics()" class="text-center">
       <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>

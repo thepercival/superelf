@@ -1,5 +1,5 @@
 <div class="row justify-content-center g-0">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
 
         
         <!-- <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
@@ -46,19 +46,22 @@
                     <app-gameround-scroller 
                         [viewPeriod]="tmplCurrentGameRound.viewPeriod"
                         [gameRounds]="viewGameRounds()"
+                        [activeGameRound]="tmplCurrentGameRound"
                         [previousGameRound]="previousGameRound()"
-                        [nextGameRound]="nextGameRound()"         
+                        (previous)="selectPreviousGameRound(pool.getCompetitionConfig(), tmplCurrentGameRound)"
+                        [nextGameRound]="nextGameRound()"                               
+                        (next)="selectNextGameRound(pool.getCompetitionConfig(), tmplCurrentGameRound)"         
                         [competitionConfig]="pool.getCompetitionConfig()"
                         (selectViewPeriod)="selectViewPeriod(pool, poolUsers, $event)"
-                        (selectGameRound)="selectGameRound(pool, poolUsers, $event)"
+                        (selectGameRound)="currentGameRound.set($event)"
                         (selectTransferPeriod)="showTransfers.set(!showTransfers())"
                     ></app-gameround-scroller>                    
                     
                     <div>
                         @if(poolPouleId){
-                            <button (click)="navigateToChat(pool, poolPouleId)" type="button" class="btn btn-outline-dark ms-3 position-relative">
+                            <button (click)="navigateToChat(pool, poolPouleId)" type="button" class="btn btn-outline-dark text-nowrap ms-3 position-relative">
                                 <fa-icon [icon]=faMessage></fa-icon>
-                                <span class="ms-1"> chat</span>
+                                <span class="ms-1 d-none d-sm-inline"> chat</span>
                                 @if(nrOfUnreadMessages > 0) {
                                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                         {{nrOfUnreadMessages}}
@@ -77,7 +80,11 @@
                         <table class="table">
                             <thead>
                                 <tr class="bg-secondary">
-                                    <th colspan="3" class="ps-3 py-0 fw-light text-end"
+                                    <th class="ps-3 py-0 fw-light">
+                                        speelronde {{tmplCurrentGameRound.number}}
+                                    </th>
+                                    <th></th>
+                                    <th class="ps-3 py-0 fw-light text-end"
                                         ngClass="{'text-decoration-line-through': againstGame().getState() === Finished}">
                                         @let dateTitle = dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.date());
                                         @let timeTitle = dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.time());

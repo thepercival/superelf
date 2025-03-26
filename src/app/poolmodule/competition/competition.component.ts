@@ -368,6 +368,44 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     );
   }
 
+  selectPreviousGameRound(
+    competitionConfig: CompetitionConfig,
+    currentGameRound: GameRound
+  ): void {
+    this.activeGameRoundsCalculator
+      .getPreviousGameRound(
+        competitionConfig,
+        currentGameRound.viewPeriod,
+        currentGameRound
+      )
+      .subscribe({
+        next: (nextGameRound: GameRound | undefined) => {
+          if (nextGameRound) {
+            this.currentGameRound.set(nextGameRound);
+          }
+        },
+      });
+  }
+
+  selectNextGameRound(
+    competitionConfig: CompetitionConfig,
+    currentGameRound: GameRound
+  ): void {
+    this.activeGameRoundsCalculator
+      .getNextGameRound(
+        competitionConfig,
+        currentGameRound.viewPeriod,
+        currentGameRound
+      )
+      .subscribe({
+        next: (nextGameRound: GameRound | undefined) => {
+          if (nextGameRound) {
+            this.currentGameRound.set(nextGameRound);
+          }
+        },
+      });
+  }
+
   // ON CHANGE CURRENT GAMEROUND
   // this.currentGameRoundPoolUsersTotalsMap = this.poolUsersTotalsGetter.getPoolUserTotals(, gameRound);
 

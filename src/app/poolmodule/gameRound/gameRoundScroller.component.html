@@ -1,10 +1,12 @@
 
     
 <div class="d-flex justify-content-center">    
+
     <div class="btn-group" role="group" aria-label="aantal">
+ 
         @if(!isCurrentBeforeTransferPeriod()){
             <div>
-                <button type="button" class="btn btn-outline-primary me-2" (click)="selectViewPeriod.emit(AssembleViewPeriod)">
+                <button type="button" class="btn text-nowrap btn-outline-primary me-2" (click)="selectViewPeriod.emit(AssembleViewPeriod)">
                     <fa-icon [icon]=faChevronLeft></fa-icon>
                     <fa-icon [icon]=faChevronLeft></fa-icon>
                 </button>
@@ -26,7 +28,7 @@
         <!-- previous -->
         <div>
             <button type="button" [disabled]="previousGameRound() == undefined" 
-                class="btn btn-outline-{{previousGameRound() == undefined ? 'secondary' : 'primary'}} me-2" (click)="selectGameRound.emit(previousGameRound())">
+                class="btn btn-outline-{{previousGameRound() == undefined ? 'secondary' : 'primary'}} me-2" (click)="previous.emit()">
                 <fa-icon [icon]=faChevronLeft></fa-icon>
             </button>
             <div class="me-2">
@@ -37,7 +39,7 @@
         <!-- gamerounds -->
         @for (gameRound of gameRounds(); track $index) {
             <div>
-                <button type="button" class="btn btn-outline-primary me-2 mb-1" (click)="selectGameRound.emit(gameRound)">
+                <button type="button" class="btn btn-{{ activeGameRound() !== gameRound ? 'outline-primary' : 'outline-info' }} me-2 mb-1" (click)="selectGameRound.emit(gameRound)">
                     {{gameRound.number}}
                 </button>
                 <div class="me-2">
@@ -52,7 +54,7 @@
         <!-- next -->
         <div>
             <button type="button" [disabled]="nextGameRound() == undefined" 
-                class="btn btn-outline-{{nextGameRound() == undefined ? 'secondary' : 'primary'}} me-2" (click)="selectGameRound.emit(nextGameRound())">
+                class="btn btn-outline-{{nextGameRound() == undefined ? 'secondary' : 'primary'}} me-2" (click)="next.emit()">
                 <fa-icon [icon]=faChevronRight></fa-icon>
             </button>
             <div class="me-2">
@@ -71,7 +73,7 @@
             </div>
             
             <div>
-                <button type="button" class="btn btn-outline-primary ms-2" (click)="selectViewPeriod.emit(TransferViewPeriod)">
+                <button type="button" class="btn btn-outline-primary text-nowrap ms-2" (click)="selectViewPeriod.emit(TransferViewPeriod)">
                     <fa-icon [icon]=faChevronRight></fa-icon>
                     <fa-icon [icon]=faChevronRight></fa-icon>
                 </button>
