@@ -1,79 +1,82 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
 
-    <div *ngIf="!processing() && pool && poolUser" class="d-flex justify-content-between mt-3 mb-1 mx-1">
-      <h2 class="me-2 text-truncate">
-        <fa-icon [icon]=faUsers></fa-icon> {{getPoolUserName()}}
-      </h2>
-      <div>
-        <!-- <button *ngIf="pool.getAssemblePeriod().isIn()" class="btn btn-secondary mx-2"
-          [routerLink]="['/pool/scouting/list', pool.getId()]">
-          <fa-icon [icon]=faUserSecret></fa-icon> <span class="ms-1 d-none d-sm-inline">
-            scoutingslijst</span>
-        </button> -->
-        <button *ngIf="inAfterTransfer(pool)" class="btn btn-outline-info me-1">
-          <fa-icon [icon]=faRightLeft></fa-icon>
-        </button>
-        <button class="btn btn-secondary" disabled>
-          {{getFormationName()}}
-        </button>
-      </div>
-    </div>
-
     @if(!processing()) {
+      @if(pool && poolUser){
+        <div class="d-flex justify-content-between mb-1 mx-1">
+          <h2 class="me-2 mt-3 text-truncate">
+            <fa-icon [icon]=faUsers></fa-icon> {{getHeaderForPoolUser(poolUser)}}
+          </h2>
+          <div class="mt-0">
+            <!-- <button *ngIf="pool.getAssemblePeriod().isIn()" class="btn btn-secondary mx-2"
+              [routerLink]="['/pool/scouting/list', pool.getId()]">
+              <fa-icon [icon]=faUserSecret></fa-icon> <span class="ms-1 d-none d-sm-inline">
+                scoutingslijst</span>
+            </button> -->
+            <!-- @if(inAfterTransfer(pool)) {
+              <button class="btn btn-outline-info me-1">
+                <fa-icon [icon]=faRightLeft></fa-icon>
+              </button>            
+            }
+            <button class="btn btn-secondary" disabled>
+              {{getFormationName()}}
+            </button> -->
+
+            @let tmplCurrentGameRound = currentGameRound();
+            @if(tmplCurrentGameRound){
+              <div class="d-flex justify-content-between mt-3 mb-1 mx-1">
+                <app-gameround-scroller 
+                  [viewPeriod]="tmplCurrentGameRound.viewPeriod"
+                  [gameRounds]="viewGameRounds()"
+                  [activeGameRound]="tmplCurrentGameRound"
+                  [previousGameRound]="previousGameRound()"
+                  (previous)="selectPreviousGameRound(pool.getCompetitionConfig(), tmplCurrentGameRound)"
+                  [nextGameRound]="nextGameRound()"                               
+                  (next)="selectNextGameRound(pool.getCompetitionConfig(), tmplCurrentGameRound)"         
+                  [competitionConfig]="pool.getCompetitionConfig()"
+                  (selectViewPeriod)="selectViewPeriod(pool, $event)"
+                  (selectGameRound)="selectGameRound(poolUser, $event)"
+                  (selectTransferPeriod)="openPoolUserTransfersModal()"
+                ></app-gameround-scroller>
+              </div>
+            } 
+          </div>
+        </div>
+      }
+
       @if(alert) {
         <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
       }
-
-      @let tmplCurrentGameRound = currentGameRound();
-      @if(pool && poolUsers && tmplCurrentGameRound){
-        <div class="d-flex justify-content-between mt-3 mb-1 mx-1">
-          <app-gameround-scroller 
-            [viewPeriod]="tmplCurrentGameRound.viewPeriod"
-            [gameRounds]="viewGameRounds()"
-            [activeGameRound]="tmplCurrentGameRound"
-            [previousGameRound]="previousGameRound()"
-            (previous)="selectPreviousGameRound(pool.getCompetitionConfig(), tmplCurrentGameRound)"
-            [nextGameRound]="nextGameRound()"                               
-            (next)="selectNextGameRound(pool.getCompetitionConfig(), tmplCurrentGameRound)"         
-            [competitionConfig]="pool.getCompetitionConfig()"
-            (selectViewPeriod)="selectViewPeriod(pool, poolUsers, $event)"
-            (selectGameRound)="selectGameRound(pool, poolUsers, $event)"
-            (selectTransferPeriod)="showTransfers.set(!showTransfers())"
-          ></app-gameround-scroller>
-        </div>
-      } 
     } @else {
-      <h2 *ngIf="processing()" class="text-center">
+      <h2 class="text-center">
+        <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+      </h2>
+    }    
+    
+    @if(!processingStatistics()){
+      @let tmplCurrentGameRound = currentGameRound();
+      <div>
+        <!-- lines-->
+        @let tmplFormation = formation();
+        @if(tmplCurrentGameRound && tmplFormation && pool){
+          <table class="table">
+            @for(line of tmplFormation.getLines();track line.getNumber()) {
+              <tbody app-pool-formationline-view [line]="line"
+                  [statisticsGetter]="statisticsGetter" [gameRounds]="viewGameRounds()" 
+                  [totalPoints]="line.getNumber() === GoalKeeper ? tmplFormation.getTotalPoints(undefined) : undefined"
+                  [totalGameRoundPoints]="line.getNumber() === GoalKeeper ? calculateTotalGameRoundPoints(tmplFormation, tmplCurrentGameRound) : undefined"
+                  (linkToPlayer)="linkToPlayer(pool,$event, tmplCurrentGameRound.number)">
+              </tbody>
+            }
+          </table>
+        }
+      </div>
+    } @else {
+      <h2 class="text-center">
         <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
       </h2>
     }
-
     
-    
-    
-    @if(!processingStatistics()){
-      <div>
-
-
-        <!-- lines-->
-        @if(currentGameRound && formation){
-        <table class="table">
-          @for(line of formation.getLines();track line.getNumber()) {
-            <tbody app-pool-formationline-view [line]="line"
-                [statisticsGetter]="statisticsGetter" [gameRound]="currentGameRound" 
-                [totalPoints]="line.getNumber() === GoalKeeper ? totalPoints : undefined"
-                [totalGameRoundPoints]="line.getNumber() === GoalKeeper ? totalGameRoundPoints : undefined"
-                (linkToPlayer)="linkToPlayer(pool,$event)">
-            </tbody>
-          }
-        </table>
-        }
-      </div>
-    }
-    <h2 *ngIf="processingFormation() || processingStatistics()" class="text-center">
-      <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
-    </h2>
   </div>
 </div>
 @if(!processing() && pool){

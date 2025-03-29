@@ -6,7 +6,7 @@
         <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
       }
       @let tmplCurrentGameRound = currentGameRound();
-      @if(pool && poolUsers && tmplCurrentGameRound){
+      @if(pool && tmplCurrentGameRound){
         @let tmplViewPeriod = tmplCurrentGameRound.viewPeriod;        
         <div>
           <div class="d-flex flex-nowrap justify-content-between mt-2">

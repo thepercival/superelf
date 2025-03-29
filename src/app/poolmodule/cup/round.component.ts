@@ -10,7 +10,7 @@ import { NgIf, NgTemplateOutlet } from '@angular/common';
 @Component({
   selector: "app-superelf-cup-round",
   standalone: true,
-  imports: [EscapeHtmlPipe, NgIf, NgTemplateOutlet],
+  imports: [EscapeHtmlPipe, NgTemplateOutlet],
   templateUrl: "./round.component.html",
   styleUrls: ["./round.component.scss"],
 })

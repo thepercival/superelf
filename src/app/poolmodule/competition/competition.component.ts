@@ -34,7 +34,7 @@ import { TogetherRankingComponent } from './togetherranking.component';
 import { NgIf } from '@angular/common';
 import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { facTrophy } from '../../shared/poolmodule/icons';
-import { ActiveGameRoundsCalculator } from '../../lib/gameRound/activeGameRoundsCalculator';
+import { ActiveViewGameRoundsCalculator } from '../../lib/gameRound/activeViewGameRoundsCalculator';
 import { GameRoundViewType } from '../../lib/gameRound/viewType';
 import { concatMap, forkJoin, Observable, of } from 'rxjs';
 import { PoolUsersTotalsGetter } from '../../lib/pool/user/totalsGetter';
@@ -42,6 +42,7 @@ import { EditPeriod } from '../../lib/periods/editPeriod';
 import { CompetitorWithGameRoundsPoints, GameRoundsPoints } from '../../lib/views/togetherRankingView/competitorWithGameRoundsPoints';
 import { PoolCompetitor } from '../../lib/pool/competitor';
 import { FormationActionOverviewModalComponent } from '../formation/actionoverview.modal.component';
+import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
 
 
 @Component({
@@ -78,11 +79,11 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     signal(undefined);
   public showTransfers: WritableSignal<boolean> = signal(false);
 
-  public poolUsers: PoolUser[] | undefined = [];
+  public poolUsers: PoolUser[] = [];
 
   public poolPouleId: string | number | undefined;
   public leagueName!: LeagueName;
-  public activeGameRoundsCalculator: ActiveGameRoundsCalculator;
+  public activeGameRoundsCalculator: ActiveViewGameRoundsCalculator;
   public poolUsersTotalsGetter: PoolUsersTotalsGetter;
 
   public nrOfUnreadMessages = 0;
@@ -123,10 +124,8 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     private modalService: NgbModal
   ) {
     super(route, router, poolRepository, globalEventsManager);
-    this.activeGameRoundsCalculator = new ActiveGameRoundsCalculator(
-      1,
-      0,
-      gameRoundRepository
+    this.activeGameRoundsCalculator = new ActiveViewGameRoundsCalculator(
+      new GameRoundGetter(gameRoundRepository)
     );
     this.poolUsersTotalsGetter = new PoolUsersTotalsGetter(
       poolTotalsRepository
@@ -217,7 +216,6 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   }
 
   openPoolUserTransfersModal(poolUser: PoolUser) {
-    console.log(123);
     const modalRef = this.modalService.open(
       FormationActionOverviewModalComponent,
       { size: "xl" }
@@ -441,7 +439,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     competitionConfig: CompetitionConfig,
     viewPeriod: ViewPeriod
   ): Observable<GameRound> {
-    return this.activeGameRoundsCalculator.determineActiveGameRound(
+    return this.activeGameRoundsCalculator.determineActiveViewGameRound(
       competitionConfig,
       viewPeriod,
       GameRoundViewType.Ranking
@@ -455,17 +453,13 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   ): void {
     this.processing.set(true);
 
-    console.log(
-      "selectGameRound",
-      gameRound.number,
-      gameRound.viewPeriod.getStartDateTime()
-    );
-
     this.activeGameRoundsCalculator
-      .getActiveGameRounds(
+      .getActiveViewGameRounds(
         pool.getCompetitionConfig(),
         gameRound.viewPeriod,
-        gameRound
+        gameRound,
+        1,
+        0
       )
       .subscribe({
         next: (activeGameRounds: GameRound[]) => {

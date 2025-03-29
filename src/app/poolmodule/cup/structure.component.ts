@@ -12,10 +12,7 @@ import { CompetitionSport, Poule, StartLocationMap, Structure, StructureEditor, 
 import { LeagueName } from '../../lib/leagueName';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { GameRound } from '../../lib/gameRound';
-import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
-import { CompetitionConfig } from '../../lib/competitionConfig';
-import { ViewPeriod } from '../../lib/periods/viewPeriod';
+import { GameRoundRepository } from '../../lib/gameRound/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
@@ -23,8 +20,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolCupRoundComponent } from './round.component';
 import { PoolCompetitionsNavBarComponent } from '../../shared/poolmodule/competitionsNavBar/competitionsNavBar.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
-import { NgIf } from '@angular/common';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
 
 
 @Component({
@@ -34,8 +31,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     FontAwesomeModule,
     PoolCupRoundComponent,
     PoolCompetitionsNavBarComponent,
-    PoolNavBarComponent,
-    NgIf,
+    PoolNavBarComponent
   ],
   templateUrl: "./structure.component.html",
   styleUrls: ["./structure.component.scss"],
@@ -47,8 +43,7 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
   public competitionSport!: CompetitionSport;
   public startLocationMap!: StartLocationMap;
   protected structureNameService!: StructureNameService;
-  public currentGameRound: GameRound | undefined;
-  public gameRounds: GameRound[] = [];
+  
   public leagueName = LeagueName.Cup;
   public faSpinner = faSpinner;
 
@@ -61,8 +56,6 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
     protected poolUserRepository: PoolUserRepository,
     protected structureRepository: StructureRepository,
     protected authService: AuthService,
-    private gameRoundRepository: GameRoundRepository,
-    private modalService: NgbModal,
     private myNavigation: MyNavigation
   ) {
     super(route, router, poolRepository, globalEventsManager);
@@ -72,14 +65,12 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
-        const competitionConfig = pool.getCompetitionConfig();
         const currentViewPeriod = pool.getCurrentViewPeriod();
         if (currentViewPeriod === undefined) {
           return;
         }
         const user = this.authService.getUser();
-        // @TODO CDK
-        // this.gameRounds = currentViewPeriod.getGameRounds();
+
         this.poolUserRepository.getObjects(pool).subscribe({
           next: (poolUsers: PoolUser[]) => {
             this.poolUsers = poolUsers;
@@ -107,11 +98,7 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
                 this.structureNameService = new StructureNameService(
                   this.startLocationMap
                 );
-
-                // gameRoundScores voor competitors of poolCompetitions
-                // getGAMES!!
-
-                this.initCurrentGameRound(competitionConfig, currentViewPeriod);
+                this.processing.set(false);
               },
               error: (e: string) => {
                 this.setAlert("danger", e);
@@ -137,45 +124,6 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
   }
   get CupStructure(): CompetitionsNavBarItem {
     return CompetitionsNavBarItem.CupStructure;
-  }
-
-  initCurrentGameRound(
-    competitionConfig: CompetitionConfig,
-    viewPeriod: ViewPeriod
-  ): void {
-    // @TODO CDK
-    // this.gameRoundRepository
-    //   .getCurrentNumbers(competitionConfig, viewPeriod)
-    //   .subscribe({
-    //     next: (currentGameRoundNumbers: CurrentGameRoundNumbers) => {
-    //       let currentGameRound;
-    //       if (currentGameRoundNumbers.lastFinishedOrInProgresss) {
-    //         currentGameRound = viewPeriod.getGameRound(
-    //           currentGameRoundNumbers.lastFinishedOrInProgresss
-    //         );
-    //       }
-    //       this.currentGameRound = currentGameRound;
-    //       if (this.currentGameRound !== undefined) {
-    //         // console.log('CDK', this.currentGameRound, this.gameRounds[0]);
-    //         while (this.currentGameRound !== this.gameRounds[0]) {
-    //           const gameRound = this.gameRounds.shift();
-    //           if (gameRound !== undefined) {
-    //             this.gameRounds.push(gameRound);
-    //           }
-    //         }
-    //       }
-    //       this.updateGameRound(currentGameRound);
-    //     },
-    //     error: (e: string) => {
-    //       this.setAlert("danger", e);
-    //       this.processing.set(false);
-    //     },
-    //     complete: () => this.processing.set(false),
-    //   });
-  }
-
-  updateGameRound(gameRound: GameRound | undefined): void {
-    this.currentGameRound = gameRound;
   }
 
   navigateBack() {

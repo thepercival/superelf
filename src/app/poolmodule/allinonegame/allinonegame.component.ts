@@ -29,7 +29,7 @@ import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { GameTableHeaderComponent } from '../game/source/game-tableheader.component';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { GameTableRowComponent } from "../game/source/game-tablebody.component";
-import { ActiveGameRoundsCalculator } from '../../lib/gameRound/activeGameRoundsCalculator';
+import { ActiveViewGameRoundsCalculator } from '../../lib/gameRound/activeViewGameRoundsCalculator';
 import { GameRoundRepository } from '../../lib/gameRound/repository';
 import { CompetitionConfig } from '../../lib/competitionConfig';
 import { GameRoundViewType } from '../../lib/gameRound/viewType';
@@ -39,6 +39,7 @@ import { PoolUsersTotalsGetter } from '../../lib/pool/user/totalsGetter';
 import { PoolTotalsRepository, PoolUsersTotalsMap } from '../../lib/totals/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { SourceAgainstGamesGetter } from '../../lib/gameRound/sourceAgainstGamesGetter';
+import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
 
 
 @Component({
@@ -77,7 +78,7 @@ export class PoolAllInOneGameScheduleComponent
 
   public poolUsers: PoolUser[] | undefined = [];
 
-  public activeGameRoundsCalculator: ActiveGameRoundsCalculator;
+  public activeGameRoundsCalculator: ActiveViewGameRoundsCalculator;
   public poolUsersTotalsGetter: PoolUsersTotalsGetter;
   public sourceAgainstGamesGetter: SourceAgainstGamesGetter;
   // public poule: Poule | undefined;
@@ -115,10 +116,8 @@ export class PoolAllInOneGameScheduleComponent
     public dateFormatter: DateFormatter
   ) {
     super(route, router, poolRepository, globalEventsManager);
-    this.activeGameRoundsCalculator = new ActiveGameRoundsCalculator(
-      0,
-      1,
-      gameRoundRepository
+    this.activeGameRoundsCalculator = new ActiveViewGameRoundsCalculator(
+      new GameRoundGetter(gameRoundRepository)
     );
     this.poolUsersTotalsGetter = new PoolUsersTotalsGetter(
       poolTotalsRepository
@@ -419,19 +418,15 @@ export class PoolAllInOneGameScheduleComponent
   ): void {
     this.processing.set(true);
 
-    console.log(
-      "selectGameRound",
-      gameRound.number,
-      gameRound.viewPeriod.getStartDateTime()
-    );
-
     this.setSourceGameRoundGames(pool.getCompetitionConfig(), gameRound);
 
     this.activeGameRoundsCalculator
-      .getActiveGameRounds(
+      .getActiveViewGameRounds(
         pool.getCompetitionConfig(),
         gameRound.viewPeriod,
-        gameRound
+        gameRound,
+        0,
+        1
       )
       .subscribe({
         next: (activeGameRounds: GameRound[]) => {
@@ -486,7 +481,7 @@ export class PoolAllInOneGameScheduleComponent
     competitionConfig: CompetitionConfig,
     viewPeriod: ViewPeriod
   ): Observable<GameRound> {
-    return this.activeGameRoundsCalculator.determineActiveGameRound(
+    return this.activeGameRoundsCalculator.determineActiveViewGameRound(
       competitionConfig,
       viewPeriod,
       GameRoundViewType.Games
@@ -538,7 +533,7 @@ export class PoolAllInOneGameScheduleComponent
             .getFirstPoule();
 
           this.sourceAgainstGamesGetter
-            .getGameRoundGames(poule, gameRound.number)
+            .getGameRoundGames(poule, gameRound)
             .subscribe({
               next: (games: AgainstGame[]) => {
                 this.sourceGameRoundGames = games;

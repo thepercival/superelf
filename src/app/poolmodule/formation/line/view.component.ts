@@ -18,15 +18,21 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../../lib/sportExtensions';
 
 @Component({
-  selector: '[app-pool-formationline-view]',
+  selector: "[app-pool-formationline-view]",
   standalone: true,
-  imports: [NgTemplateOutlet,FontAwesomeModule,TeamNameComponent, LineIconComponent,NgIf],
-  templateUrl: './view.component.html',
-  styleUrls: ['./view.component.scss']
+  imports: [
+    NgTemplateOutlet,
+    FontAwesomeModule,
+    TeamNameComponent,
+    LineIconComponent,
+    NgIf,
+  ],
+  templateUrl: "./view.component.html",
+  styleUrls: ["./view.component.scss"],
 })
 export class FormationLineViewComponent implements OnInit {
   readonly line = input.required<S11FormationLine>();
-  readonly gameRound = input.required<GameRound>();
+  readonly gameRounds = input.required<GameRound[]>();
   readonly statisticsGetter = input.required<StatisticsGetter>();
   readonly processing = model<boolean>(true);
   readonly totalPoints = input<number>();
@@ -42,36 +48,34 @@ export class FormationLineViewComponent implements OnInit {
     private modalService: NgbModal,
     private cssService: CSSService,
     public sportExtensions: SportExtensions
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
     this.processing.set(false);
   }
 
-  get GoalKeeper(): FootballLine { return FootballLine.GoalKeeper; }
-  
+  get GoalKeeper(): FootballLine {
+    return FootballLine.GoalKeeper;
+  }
+
   completed() {
-    return this.line().getPlaces().every((place: S11FormationPlace) => place.getPlayer());
+    return this.line()
+      .getPlaces()
+      .every((place: S11FormationPlace) => place.getPlayer());
   }
 
-  getTeamImageUrl(s11Player: S11Player): string {
-    const team = this.getCurrentTeam(s11Player);
-    return team ? this.imageRepository.getTeamUrl(team) : '';
-  }
+  // getTeamImageUrl(team: Team | undefined): string {
+  //   return team ? this.imageRepository.getTeamUrl(team) : "";
+  // }
 
-  getCurrentTeam(s11Player: S11Player | undefined): Team | undefined {
-    if (s11Player === undefined ) {
+  getCurrentTeam(s11Player: S11Player | undefined, date: Date|undefined): Team | undefined {
+    if (s11Player === undefined) {
       return undefined;
     }
-    let date;
-    const gameRound = this.gameRound();
-    if( gameRound !== undefined ) {
-      const stats = this.statisticsGetter().getStatistics(s11Player, gameRound);
-      date = stats?.getGameStartDate();
-    }
-    const player = this.sportExtensions.getPlayer(s11Player, date ?? new Date());
+    const player = this.sportExtensions.getPlayer(
+      s11Player,
+      date ?? new Date()
+    );
     if (!player) {
       return undefined;
     }
@@ -95,7 +99,7 @@ export class FormationLineViewComponent implements OnInit {
   // }
 
   getLineClass(prefix: string): string {
-    return this.cssService.getLine(this.line().getNumber(), prefix + '-');
+    return this.cssService.getLine(this.line().getNumber(), prefix + "-");
   }
 
   maybeLinkToPlayer(place: S11FormationPlace): void {
@@ -107,6 +111,6 @@ export class FormationLineViewComponent implements OnInit {
   }
 
   getSubstituteClass(isSubstitute: boolean): string {
-    return isSubstitute ? 'table-no-bottom-border' : '';
+    return isSubstitute ? "table-no-bottom-border" : "";
   }
 }

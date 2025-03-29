@@ -18,7 +18,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { S11PlayerModalComponent } from '../../player/info.modal.component';
 import { SportExtensions } from '../../../lib/sportExtensions';
 import { CompetitionConfig } from '../../../lib/competitionConfig';
-import { ActiveGameRoundsCalculator } from '../../../lib/gameRound/activeGameRoundsCalculator';
+import { ActiveViewGameRoundsCalculator } from '../../../lib/gameRound/activeViewGameRoundsCalculator';
 import { CompetitorWithGameRoundsPoints } from '../../../lib/views/togetherRankingView/competitorWithGameRoundsPoints';
 
 @Component({

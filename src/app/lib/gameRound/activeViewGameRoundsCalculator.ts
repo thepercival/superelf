@@ -7,29 +7,24 @@ import { GameRound } from "../gameRound";
 import { GameRoundViewType } from "./viewType";
 import { GameRoundGetter } from "./gameRoundGetter";
 
-export class ActiveGameRoundsCalculator {
-  private gameRoundGetter: GameRoundGetter;
-
-  // = new Map(
-  //     gameRounds.map((gr) => [gr.number, gr])
-  //   );
+export class ActiveViewGameRoundsCalculator {  
 
   constructor(
-    public readonly nrOfGamesBefore: number,
-    private readonly nrOfGamesAfter: number,
-    readonly gameRoundRepository: GameRoundRepository
-  ) {
+    private gameRoundGetter: GameRoundGetter) {
+    
+  }
+
+  public getActiveViewGameRounds(
+    competitionConfig: CompetitionConfig,
+    viewPeriod: ViewPeriod,
+    activeViewGameRound: GameRound,
+    nrOfGamesBefore: number,
+    nrOfGamesAfter: number
+  ): Observable<GameRound[]> {
     if (nrOfGamesBefore < 0 || nrOfGamesAfter < 0) {
       throw new Error();
     }
-    this.gameRoundGetter = new GameRoundGetter(gameRoundRepository);
-  }
 
-  public getActiveGameRounds(
-    competitionConfig: CompetitionConfig,
-    viewPeriod: ViewPeriod,
-    activeGameRound: GameRound
-  ): Observable<GameRound[]> {
     return this.gameRoundGetter
       .getGameRoundMap(competitionConfig, viewPeriod)
       .pipe(
@@ -44,14 +39,15 @@ export class ActiveGameRoundsCalculator {
 
           const gameRoundsBefore = [];
           const gameRoundsAfter = [];
+          const activeGameRoundNr = activeViewGameRound.number;
 
           let deltaAfter = 1;
           while (
-            gameRoundsAfter.length < this.nrOfGamesAfter &&
-            activeGameRound.number + deltaAfter <= maxGameRoundNr
+            gameRoundsAfter.length < nrOfGamesAfter &&
+            activeGameRoundNr + deltaAfter <= maxGameRoundNr
           ) {
             const gameRoundAfter = gameRoundMap.get(
-              activeGameRound.number + deltaAfter
+              activeGameRoundNr + deltaAfter
             );
             if (gameRoundAfter) {
               gameRoundsAfter.push(gameRoundAfter);
@@ -60,16 +56,16 @@ export class ActiveGameRoundsCalculator {
           }
 
           const nrOfGamesAfterShortage =
-            this.nrOfGamesAfter - gameRoundsAfter.length;
-          const nrOfGamesBefore = this.nrOfGamesBefore + nrOfGamesAfterShortage;
+            nrOfGamesAfter - gameRoundsAfter.length;
 
           let deltaBefore = 1;
           while (
-            gameRoundsBefore.length < this.nrOfGamesBefore &&
-            activeGameRound.number - deltaBefore >= minGameRoundNr
+            gameRoundsBefore.length <
+              nrOfGamesBefore + nrOfGamesAfterShortage &&
+            activeGameRoundNr - deltaBefore >= minGameRoundNr
           ) {
             const gameRoundBefore = gameRoundMap.get(
-              activeGameRound.number - deltaBefore
+              activeGameRoundNr - deltaBefore
             );
             if (gameRoundBefore) {
               gameRoundsBefore.push(gameRoundBefore);
@@ -80,15 +76,13 @@ export class ActiveGameRoundsCalculator {
           if (deltaAfter === 1) {
             const nrOfGamesBeforeShortage =
               nrOfGamesBefore - gameRoundsBefore.length;
-            const nrOfGamesAfter =
-              this.nrOfGamesAfter + nrOfGamesBeforeShortage;
-
             while (
-              gameRoundsAfter.length < nrOfGamesAfter &&
-              activeGameRound.number + deltaAfter <= maxGameRoundNr
+              gameRoundsAfter.length <
+                nrOfGamesAfter + nrOfGamesBeforeShortage &&
+              activeGameRoundNr + deltaAfter <= maxGameRoundNr
             ) {
               const gameRoundAfter = gameRoundMap.get(
-                activeGameRound.number + deltaAfter
+                activeGameRoundNr + deltaAfter
               );
               if (gameRoundAfter) {
                 gameRoundsAfter.push(gameRoundAfter);
@@ -98,32 +92,25 @@ export class ActiveGameRoundsCalculator {
           }
 
           return of(
-            gameRoundsBefore.concat([activeGameRound], gameRoundsAfter)
+            gameRoundsBefore.concat([activeViewGameRound], gameRoundsAfter)
           );
         })
       );
   }
 
-  public determineActiveGameRound(
+  public determineActiveViewGameRound(
     competitionConfig: CompetitionConfig,
     viewPeriod: ViewPeriod,
     viewType: GameRoundViewType
   ): Observable<GameRound> {
     return this.gameRoundGetter
-      .getGameRoundMap(competitionConfig, viewPeriod)
+      .getActiveViewGameRound(competitionConfig, viewPeriod, viewType)
       .pipe(
-        concatMap((gameRoundMap: Map<number, GameRound>) => {
-          return this.gameRoundRepository
-            .getActive(competitionConfig, viewPeriod, viewType)
-            .pipe(
-              concatMap((activeGameRoundNr: number) => {
-                const activeGameRound = gameRoundMap.get(activeGameRoundNr);
-                if (activeGameRound === undefined) {
-                  throw new Error("gameRound not found");
-                }
-                return of(activeGameRound);
-              })
-            );
+        concatMap((gameRound: GameRound | undefined) => {
+          if (gameRound === undefined) {
+            throw new Error("active gameround could not be determined");
+          }
+          return of(gameRound);
         })
       );
   }
@@ -133,7 +120,11 @@ export class ActiveGameRoundsCalculator {
     viewPeriod: ViewPeriod,
     gameRound: GameRound
   ): Observable<GameRound | undefined> {
-    return this.gameRoundGetter.getPreviousGameRound(competitionConfig, viewPeriod, gameRound);
+    return this.gameRoundGetter.getPreviousGameRound(
+      competitionConfig,
+      viewPeriod,
+      gameRound
+    );
   }
 
   public getNextGameRound(

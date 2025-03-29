@@ -1,4 +1,4 @@
-import { concatMap, map, Observable, of } from "rxjs";
+import { catchError, concatMap, map, Observable, of } from "rxjs";
 import { CompetitionConfig } from "../competitionConfig";
 import { ViewPeriod } from "../periods/viewPeriod";
 import { CurrentGameRoundNumbers, GameRoundRepository } from "./repository";
@@ -7,6 +7,7 @@ import { GameRound } from "../gameRound";
 import { GameRoundViewType } from "./viewType";
 
 export class GameRoundGetter {
+  // viewPeriod and gameRoundNr indexes
   private gameRoundsMaps: Map<number, Map<number, GameRound>> = new Map();
 
   // = new Map(
@@ -68,8 +69,8 @@ export class GameRoundGetter {
   ): Observable<GameRound | undefined> {
     return this.getGameRounds(competitionConfig, viewPeriod).pipe(
       concatMap((gameRounds: GameRound[]) => {
-        const idx = gameRounds.findIndex((g: GameRound) => (g === gameRound));
-        if (idx <= 0 ) {
+        const idx = gameRounds.findIndex((g: GameRound) => g === gameRound);
+        if (idx <= 0) {
           return of(undefined);
         }
         return of(gameRounds.splice(idx - 1, 1).pop());
@@ -84,10 +85,8 @@ export class GameRoundGetter {
   ): Observable<GameRound | undefined> {
     return this.getGameRounds(competitionConfig, viewPeriod).pipe(
       concatMap((gameRounds: GameRound[]) => {
-        console.log(
-          "gameroundgetter->getNextGR", gameRounds
-        );
-        const idx = gameRounds.findIndex(g => (g === gameRound));
+        // console.log("gameroundgetter->getNextGR", gameRounds);
+        const idx = gameRounds.findIndex((g) => g === gameRound);
         if (idx >= gameRounds.length - 1) {
           return of(undefined);
         }
@@ -96,6 +95,28 @@ export class GameRoundGetter {
     );
   }
 
+  getActiveViewGameRound(
+    competitionConfig: CompetitionConfig,
+    viewPeriod: ViewPeriod,
+    viewType: GameRoundViewType
+  ): Observable<GameRound|undefined> {
+    return this.getGameRoundMap(competitionConfig, viewPeriod).pipe(
+      concatMap((gameRoundMap: Map<number, GameRound>): Observable<GameRound|undefined> => {
+        return this.gameRoundRepository
+          .getActiveViewGameRoundNr(competitionConfig, viewPeriod, viewType)
+          .pipe(
+            concatMap(
+              (
+                activeGameRoundNr: number
+              ): Observable<GameRound | undefined> => {
+                return of(gameRoundMap.get(activeGameRoundNr));
+              }
+            )
+          );
+      })
+    );
+    
+  }
 
   // public calculateFinished(
   //   competitionConfig: CompetitionConfig,

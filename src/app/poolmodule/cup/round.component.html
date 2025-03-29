@@ -13,7 +13,9 @@
               <button type="button" class="btn btn-outline-primary ps-1">{{structureNameService().getPouleName(poule,false)}}</button>
               <button type="button" class="btn btn-outline-primary px-1 text-start">
                 <ng-container *ngTemplateOutlet="place; context: {poule, side: Home}"></ng-container>
-                <div *ngIf="poule.getPlaces().length === 1">bye</div>
+                @if(poule.getPlaces().length === 1) {
+                  <div>bye</div>
+                }
                 @if(poule.getPlaces().length === 2) {
                   <ng-container *ngTemplateOutlet="place; context: {poule, side: Away}"></ng-container>
                 }
@@ -41,8 +43,10 @@
 
 <ng-template #place let-poule="poule" let-side="side">
   <div class="d-flex flex-wrap justify-content-between" 
-  ngClass="{'favitem': isCurrentUser(poule, side), 'bg-success': hasQualified(poule, side) }">
+    [class]="{'favitem': isCurrentUser(poule, side), 'bg-success': hasQualified(poule, side) }">
     <span>{{getCompetitorName(poule, side)}}</span>
-    <span *ngIf="showScore(poule)" class="ms-1">{{getScore(poule, side)}}</span>
+    @if(showScore(poule)){
+      <span class="ms-1">{{getScore(poule, side)}}</span>
+    }
   </div>       
   </ng-template>

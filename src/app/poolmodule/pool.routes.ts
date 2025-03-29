@@ -30,10 +30,17 @@ import { PoolPouleAgainstGamesComponent } from './poule/againstgames.component';
 import { PoolAllInOneGameScheduleComponent } from './allinonegame/allinonegame.component';
 
 export const poolRoutes: Routes = [
-  { path: "pool/new", component: NewComponent, canActivate: [AuthUserGuardService] },
+  {
+    path: "pool/new",
+    component: NewComponent,
+    canActivate: [AuthUserGuardService],
+  },
   { path: "pool/prenew", component: PreNewComponent },
   { path: "pool/achievements/:id", component: AchievementsComponent },
-  { path: "pool/allinonegame/:id", component: PoolAllInOneGameScheduleComponent },
+  {
+    path: "pool/allinonegame/:id",
+    component: PoolAllInOneGameScheduleComponent,
+  },
   { path: "pool/chat/:id/:leagueName/:pouleId", component: PoolChatComponent },
   {
     path: "pool/competition/:id",
@@ -93,7 +100,7 @@ export const poolRoutes: Routes = [
   { path: "pool/join/:id/:key", component: JoinComponent },
   // { path: "pool/player/:id/:playerId/:gameRound", component: S11PlayerComponent },
   {
-    path: "pool/poule-againstgames/:id/:leagueName/:pouleId",
+    path: "pool/poule-againstgames/:id/:leagueName/:poolPouleId",
     component: PoolPouleAgainstGamesComponent,
   },
   { path: "pool/rules/:id", component: RulesComponent },
@@ -108,7 +115,10 @@ export const poolRoutes: Routes = [
     component: ScoutedPlayerAddComponent,
     canActivate: [AuthUserGuardService],
   },
-  { path: "pool/sourcegame/:id/:gameRound/:gameId", component: SourceGameComponent },
+  {
+    path: "pool/sourcegame/:id/:gameRound/:gameId",
+    component: SourceGameComponent,
+  },
 
   {
     path: "pool/users/:id",
@@ -120,7 +130,10 @@ export const poolRoutes: Routes = [
     component: PoolUserComponent,
     canActivate: [AuthUserGuardService],
   },
-  { path: "pool/worldcup/:seasonId/:originPoolId", component: WorldCupComponent },
+  {
+    path: "pool/worldcup/:seasonId/:originPoolId",
+    component: WorldCupComponent,
+  },
   /*{ path: 'chooseplayers/:id', component: ChooseS11PlayersComponent, canActivate: [AuthUserGuardService] },*/
   { path: "pool/:id", redirectTo: "pool/competition/:id", pathMatch: "full" },
 ];

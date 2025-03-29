@@ -44,37 +44,35 @@ export class GameRoundRepository extends APIRepository {
     );
   }
 
-  getActive(
+  getActiveViewGameRoundNr(
     competitionConfig: CompetitionConfig,
     viewPeriod: ViewPeriod,
     viewType: GameRoundViewType
   ): Observable<number> {
-    const url = this.getUrl(competitionConfig, viewPeriod) + "/gamerounds/active";
+    const url =
+      this.getUrl(competitionConfig, viewPeriod) + "/gamerounds/active";
     return this.http.get<CurrentGameRoundNumbers>(url, this.getOptions()).pipe(
       map((json: CurrentGameRoundNumbers): number => {
-        let activeGameRoundNr: number|undefined;
-        console.log(json);
-        if( viewType == GameRoundViewType.Games ) {
-            if (typeof json.firstCreatedOrInProgress === "number") {
-                activeGameRoundNr = json.firstCreatedOrInProgress;
-            }
-            else if (typeof json.lastFinishedOrInProgress === "number") {
-                activeGameRoundNr = json.lastFinishedOrInProgress;
-            }
-        } 
-        if( viewType == GameRoundViewType.Ranking) {
-          if ((typeof json.lastFinishedOrInProgress) === "number") {
-              activeGameRoundNr = json.lastFinishedOrInProgress;
+        let activeGameRoundNr: number | undefined;
+        if (viewType == GameRoundViewType.Games) {
+          if (typeof json.firstCreatedOrInProgress === "number") {
+            activeGameRoundNr = json.firstCreatedOrInProgress;
+          } else if (typeof json.lastFinishedOrInProgress === "number") {
+            activeGameRoundNr = json.lastFinishedOrInProgress;
           }
-          else if (typeof json.firstCreatedOrInProgress === "number") {
-              activeGameRoundNr = json.firstCreatedOrInProgress;
-          } 
+        }
+        if (viewType == GameRoundViewType.Ranking) {
+          if (typeof json.lastFinishedOrInProgress === "number") {
+            activeGameRoundNr = json.lastFinishedOrInProgress;
+          } else if (typeof json.firstCreatedOrInProgress === "number") {
+            activeGameRoundNr = json.firstCreatedOrInProgress;
+          }
         }
         if (activeGameRoundNr === undefined) {
-            throw new Error("no gameRoundNr could be calculated");
+          throw new Error("no gameRoundNr could be calculated");
         }
         return activeGameRoundNr;
-    }),
+      }),
       catchError((err) => this.handleError(err))
     );
   }

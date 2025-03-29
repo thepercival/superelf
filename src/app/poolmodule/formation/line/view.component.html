@@ -11,12 +11,14 @@
     <span *ngIf="totalPoints()" class="badge bg-totals">{{totalPoints()}}</span>    
   </td>
 </tr>
-  
+
+@let firstGameRound = gameRounds()[0];
+@let teamMembershipDate = firstGameRound?.period?.getStartDateTime();
 @for(place of line().getStartingPlaces(); track place.getId()){  
-  <ng-container *ngTemplateOutlet="placeRow; context: {place:place, s11Player: place.getPlayer(), currentTeam: getCurrentTeam(place.getPlayer())}">
+  <ng-container *ngTemplateOutlet="placeRow; context: {place:place, s11Player: place.getPlayer(), currentTeam: getCurrentTeam(place.getPlayer(), teamMembershipDate)}">
   </ng-container>
 }
-<ng-container *ngTemplateOutlet="placeRow; context: {place:line().getSubstitute(), s11Player: line().getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line().getSubstitute().getPlayer())}">
+<ng-container *ngTemplateOutlet="placeRow; context: {place:line().getSubstitute(), s11Player: line().getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line().getSubstitute().getPlayer(), teamMembershipDate)}">
 </ng-container>  
 
 <ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentTeam="currentTeam">
@@ -37,28 +39,29 @@
       <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
     </td>
     
-    <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
-      @if(statisticsGetter().placeHasStatistics(place,gameRound())){
-        @if(!place.isSubstitute()){        
-          @if(statisticsGetter().hasAppeared(place, gameRound())){          
-            <span class="badge bg-points">
-              {{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound(), undefined)}}</span>
-          }
-          @else {
-            <span class="badge bg-nopoints">x</span>
-          }
-        } @else {
-          <div *ngIf="place.getFormationLine().hasSubstituteAppareance(gameRound())">
-            @if(statisticsGetter().hasAppeared(place,gameRound())) {
-              <span class="badge bg-points">{{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound(), undefined)}}</span>
-            } @else {            
+    @for(gameRound of gameRounds(); track $index ) {
+      <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
+        @if(statisticsGetter().placeHasStatistics(place,gameRound)){
+          @if(!place.isSubstitute()){        
+            @if(statisticsGetter().hasAppeared(place, gameRound)){          
+              <span class="badge bg-points">
+                {{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound, undefined)}}</span>
+            }
+            @else {
               <span class="badge bg-nopoints">x</span>
             }
-          </div>
+          } @else {
+            <div *ngIf="place.getFormationLine().hasSubstituteAppareance(gameRound)">
+              @if(statisticsGetter().hasAppeared(place,gameRound)) {
+                <span class="badge bg-points">{{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound, undefined)}}</span>
+              } @else {            
+                <span class="badge bg-nopoints">x</span>
+              }
+            </div>
+          }
         }
-      }
-
-    </td>
+      </td>
+    }
     
     <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
       <span class="badge bg-totals">
