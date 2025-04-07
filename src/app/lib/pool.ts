@@ -1,4 +1,4 @@
-import { Association, Competition, CompetitionSport, Identifiable, PlaceRange, Season } from 'ngx-sport';
+import { Competition, CompetitionSport, Identifiable, PlaceRange, Season } from 'ngx-sport';
 
 import { PoolCollection } from './pool/collection';
 import { AssemblePeriod } from './periods/assemblePeriod';
@@ -11,7 +11,6 @@ import { LeagueName } from './leagueName';
 
 export class Pool extends Identifiable {
   protected competitions: Competition[] = [];
-  protected users: PoolUser[] = [];
 
   static readonly PlaceRanges: PlaceRange[] = [
     { min: 1, max: 1, placesPerPoule: { min: 2, max: 40 } },
@@ -22,10 +21,6 @@ export class Pool extends Identifiable {
     protected competitionConfig: CompetitionConfig
   ) {
     super();
-  }
-
-  public getUsers(): PoolUser[] {
-    return this.users;
   }
 
   public getCollection(): PoolCollection {
@@ -174,9 +169,9 @@ export class Pool extends Identifiable {
     return competitionSport;
   }
 
-  public getCompetitors(leagueName: LeagueName): PoolCompetitor[] {
+  public static getCompetitors(poolUsers: PoolUser[], leagueName: LeagueName): PoolCompetitor[] {
     const poolCompetitors: PoolCompetitor[] = [];
-    this.getUsers().forEach((poolUser: PoolUser) => {
+    poolUsers.forEach((poolUser: PoolUser) => {
       poolUser.getCompetitors().forEach((poolCompetitor: PoolCompetitor) => {
         if (
           poolCompetitor.getCompetition().getLeague().getName() === leagueName

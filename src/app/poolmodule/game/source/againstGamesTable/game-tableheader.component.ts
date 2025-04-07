@@ -2,11 +2,11 @@ import { Component, OnInit, input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AgainstGame, AgainstSide, Competitor, CompetitorBase, GameState, NameService, Team, TeamCompetitor } from 'ngx-sport';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { SportExtensions } from '../../../lib/sportExtensions';
-import { DateFormatter } from '../../../lib/dateFormatter';
-import { TeamNameComponent } from '../../team/name.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { SuperElfNameService } from '../../../lib/nameservice';
+import { SportExtensions } from '../../../../lib/sportExtensions';
+import { DateFormatter } from '../../../../lib/dateFormatter';
+import { SuperElfNameService } from '../../../../lib/nameservice';
+import { TeamNameComponent } from '../../../team/name.component';
 
 @Component({
   selector: "[s11-game-tableheader]",

@@ -16,6 +16,7 @@ import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineico
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../../lib/sportExtensions';
+import { S11Formation } from '../../../lib/formation';
 
 @Component({
   selector: "[app-pool-formationline-view]",
@@ -35,8 +36,7 @@ export class FormationLineViewComponent implements OnInit {
   readonly gameRounds = input.required<GameRound[]>();
   readonly statisticsGetter = input.required<StatisticsGetter>();
   readonly processing = model<boolean>(true);
-  readonly totalPoints = input<number>();
-  readonly totalGameRoundPoints = input<number>();
+  readonly totalPoints = input<number>();  
   @Output() linkToPlayer = new EventEmitter<S11Player>();
 
   public faSpinner = faSpinner;
@@ -88,6 +88,14 @@ export class FormationLineViewComponent implements OnInit {
       next: () => {},
       complete: () => this.processing.set(false),
     });
+  }
+
+  calculateTotalGameRoundPoints(formation: S11Formation, gameRound: GameRound): number {
+    return this.statisticsGetter().getFormationGameRoundPoints(
+          formation,
+          gameRound.number,
+          undefined
+        );
   }
 
   // getBorderClass(): string {

@@ -4,9 +4,13 @@
       <app-lineicon [line]="line().getNumber()" [abbreviate]="false"></app-lineicon>
     </h5>
   </td>
-  <td class="table-no-bottom-border text-end">
-    <span *ngIf="totalGameRoundPoints()" class="badge bg-totals">{{totalGameRoundPoints()}}</span>    
-  </td>
+  @for(gameRound of gameRounds(); track $index ) {
+    <td class="table-no-bottom-border text-end">
+      @if( line().getNumber() === GoalKeeper ) {
+        <span class="badge bg-totals">{{calculateTotalGameRoundPoints(line().getFormation(), gameRound)}}</span>    
+      }      
+    </td>
+  }
   <td class="table-no-bottom-border text-end">
     <span *ngIf="totalPoints()" class="badge bg-totals">{{totalPoints()}}</span>    
   </td>
@@ -45,7 +49,7 @@
           @if(!place.isSubstitute()){        
             @if(statisticsGetter().hasAppeared(place, gameRound)){          
               <span class="badge bg-points">
-                {{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound, undefined)}}</span>
+                {{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound.number, undefined)}}</span>
             }
             @else {
               <span class="badge bg-nopoints">x</span>
@@ -53,7 +57,7 @@
           } @else {
             <div *ngIf="place.getFormationLine().hasSubstituteAppareance(gameRound)">
               @if(statisticsGetter().hasAppeared(place,gameRound)) {
-                <span class="badge bg-points">{{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound, undefined)}}</span>
+                <span class="badge bg-points">{{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound.number, undefined)}}</span>
               } @else {            
                 <span class="badge bg-nopoints">x</span>
               }

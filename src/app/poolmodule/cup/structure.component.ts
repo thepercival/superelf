@@ -88,7 +88,7 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
               next: (structure: Structure) => {
                 // -----------  JE TOONT VOOR EEN BEPAALDE VIEWPERIODE -------------- //
                 // DE GAMEROUNDS ZIJN DAN DE WEDSTRIJDEN EN DE POOLUSERS MET HUN PUNTEN PER GAMEROUND ZIJN DAN DE GAMEROUND-SCORE
-                const poolCompetitors = pool.getCompetitors(this.leagueName);
+                const poolCompetitors = Pool.getCompetitors(poolUsers,this.leagueName);
                 const round = structure.getSingleCategory().getRootRound();
                 this.poule = round.getFirstPoule(); // ?? GET FROM BACKEND ?? this.pool.getCompetition(PoolCollection.League_Default).get;
                 this.competitionSport = pool.getCompetitionSport(

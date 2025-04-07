@@ -126,7 +126,7 @@ export const poolRoutes: Routes = [
     canActivate: [AuthUserGuardService],
   },
   {
-    path: "pool/user/:id/:poolUserId/:gameRound",
+    path: "pool/user/:id/:poolUserId/:gameRoundNr",
     component: PoolUserComponent,
     canActivate: [AuthUserGuardService],
   },

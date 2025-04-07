@@ -1,0 +1,73 @@
+
+    
+<table class="table">
+    <thead>
+    <tr>
+        <th class="text-end fs-3 pb-0">
+            <a href="javascript:void(0)" (click)="linkToPoolUser(homeCompetitorPoolUserAndFormation(), activeGameRound())">
+                <span class="" [class]="{'bg-success': hasQualified(HomeSide)}">{{homeCompetitorPoolUserAndFormation().competitor.getName()}}</span>
+            </a>  
+        </th>
+        <th class="text-end">
+            <button type="button" class="btn btn-sm bg-totals text-white fs-3 text">
+              {{getScore(HomeSide, homeCompetitorPoolUserAndFormation())}}
+            </button>
+        </th>
+        <th class="text-center">-</th>
+        <th class=" ">
+            <button type="button" class="btn btn-sm bg-totals text-white  fs-3 text">
+              {{getScore(AwaySide, awayCompetitorPoolUserAndFormation())}}
+            </button>
+        </th>
+        <th class=" fs-3 text pb-0">
+            <a href="javascript:void(0)" (click)="linkToPoolUser(awayCompetitorPoolUserAndFormation(), activeGameRound())">
+                <span [class]="{'bg-success': hasQualified(AwaySide)}">{{awayCompetitorPoolUserAndFormation().competitor.getName()}}</span>
+            </a>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+        @for (gameRound of gameRounds(); track $index) {
+            <tr>
+                @let homeScore = statisticsGetter().getFormationGameRoundPoints(homeCompetitorPoolUserAndFormation().formation, gameRound.number, undefined);
+                @let awayScore = statisticsGetter().getFormationGameRoundPoints(awayCompetitorPoolUserAndFormation().formation, gameRound.number, undefined);
+                <td class="text-end pt-3">
+                    @if(100 === getPercentageFinished(gameRound) ) {
+                        <button type="button" class="btn btn-sm bg-points text-white">{{homeScore}}</button>                        
+                    }
+                </td>
+                <td class="text-end pt-3">
+                    @if(100 === getPercentageFinished(gameRound) ) {
+                        <button type="button" class="btn btn-sm bg-totals text-white">
+                            {{homeScore >= awayScore ? '1' : '0'}}  
+                        </button>  
+                    }
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-{{ activeGameRound() !== gameRound ? 'outline-primary' : 'outline-info' }} me-2 mb-1" (click)="selectGameRound.emit(gameRound)">
+                        {{gameRound.number}}
+                    </button>
+                    <div class="me-2">
+                        <ngb-progressbar-stacked>
+                            <ngb-progressbar type="success" [value]="this.getPercentageFinished(gameRound)"></ngb-progressbar>
+                            <ngb-progressbar type="warning" [value]="this.getPercentageInProgress(gameRound)"></ngb-progressbar>
+                            <ngb-progressbar type="danger" [value]="this.getPercentageCreated(gameRound)"></ngb-progressbar>                        
+                        </ngb-progressbar-stacked>
+                    </div>
+                </td>
+                <td class=" pt-3">
+                    @if(100 === getPercentageFinished(gameRound) ) {
+                        <button type="button" class="btn btn-sm bg-totals text-white">
+                            {{awayScore >= homeScore ? '1' : '0'}}  
+                        </button>                        
+                    }
+                </td>
+                <td class=" pt-3">
+                    @if(100 === getPercentageFinished(gameRound) ) {
+                        <button type="button" class="btn btn-sm bg-points text-white">{{awayScore}}</button>                        
+                    }
+                </td>   
+            </tr>   
+        }
+    </tbody>
+</table>

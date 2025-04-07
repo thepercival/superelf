@@ -313,9 +313,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
                   };
                 }
               );
-            const competitors = poolUser
-              .getPool()
-              .getCompetitors(LeagueName.Competition);
+            const competitors = Pool.getCompetitors(poolUsers, LeagueName.Competition);
             const competitor: PoolCompetitor | undefined = competitors.find(
               (competitor) => competitor.getPoolUser() === poolUser
             );

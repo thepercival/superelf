@@ -63,8 +63,7 @@
             @for(line of tmplFormation.getLines();track line.getNumber()) {
               <tbody app-pool-formationline-view [line]="line"
                   [statisticsGetter]="statisticsGetter" [gameRounds]="viewGameRounds()" 
-                  [totalPoints]="line.getNumber() === GoalKeeper ? tmplFormation.getTotalPoints(undefined) : undefined"
-                  [totalGameRoundPoints]="line.getNumber() === GoalKeeper ? calculateTotalGameRoundPoints(tmplFormation, tmplCurrentGameRound) : undefined"
+                  [totalPoints]="line.getNumber() === GoalKeeper ? tmplFormation.getTotalPoints(undefined) : undefined"                  
                   (linkToPlayer)="linkToPlayer(pool,$event, tmplCurrentGameRound.number)">
               </tbody>
             }

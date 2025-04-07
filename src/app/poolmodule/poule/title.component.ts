@@ -63,9 +63,5 @@ export class PouleTitleComponent implements OnInit {
     // }
     return new AgainstPoule(this.poule(), new StartLocationMap(this.poolCompetitors()));
   }
-
-  emitLinkToPoolUser(poolUser: PoolUser): void {
-    this.linkToPoolUser.emit(poolUser);
-  }
 }
 

@@ -26,9 +26,7 @@ import { GameRoundScrollerComponent } from '../gameRound/gameRoundScroller.compo
 import { WorldCupNavBarComponent } from '../../shared/poolmodule/poolNavBar/worldcupNavBar.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { GameTableHeaderComponent } from '../game/source/game-tableheader.component';
 import { DateFormatter } from '../../lib/dateFormatter';
-import { GameTableRowComponent } from "../game/source/game-tablebody.component";
 import { ActiveViewGameRoundsCalculator } from '../../lib/gameRound/activeViewGameRoundsCalculator';
 import { GameRoundRepository } from '../../lib/gameRound/repository';
 import { CompetitionConfig } from '../../lib/competitionConfig';
@@ -40,6 +38,8 @@ import { PoolTotalsRepository, PoolUsersTotalsMap } from '../../lib/totals/repos
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { SourceAgainstGamesGetter } from '../../lib/gameRound/sourceAgainstGamesGetter';
 import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
+import { FormationGetter } from '../../lib/formation/formationGetter';
+import { StatisticsGetter } from '../../lib/statistics/getter';
 
 
 @Component({
@@ -51,8 +51,6 @@ import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
     GameRoundScrollerComponent,
     WorldCupNavBarComponent,
     PoolNavBarComponent,
-    GameTableHeaderComponent,
-    GameTableRowComponent,
     NgbNavModule,
   ],
   templateUrl: "./allinonegame.component.html",
@@ -73,20 +71,22 @@ export class PoolAllInOneGameScheduleComponent
   public poolUsersWithGameRoundsPoints: WritableSignal<
     CompetitorWithGameRoundsPoints[]
   > = signal([]);
+  public formationMap: WritableSignal<S11FormationMap | undefined> = signal(undefined);
   public showTransfers: WritableSignal<boolean> = signal(false);
   public processingGames: WritableSignal<boolean> = signal(true);
 
-  public poolUsers: PoolUser[] | undefined = [];
+  public poolUsers: PoolUser[] = [];
+  public statisticsGetter = new StatisticsGetter();
 
   public activeGameRoundsCalculator: ActiveViewGameRoundsCalculator;
   public poolUsersTotalsGetter: PoolUsersTotalsGetter;
+  public formationGetter: FormationGetter;
   public sourceAgainstGamesGetter: SourceAgainstGamesGetter;
   // public poule: Poule | undefined;
   public leagueName!: LeagueName;
 
   public sourceStructure: Structure | undefined;
   public sourceGameRoundGames: AgainstGame[] = [];
-  public formationMap: Map<number, S11Formation> | undefined;
 
   public sourceAgainstGamesMap: Map<number, AgainstGame[]> = new Map();
 
@@ -102,7 +102,7 @@ export class PoolAllInOneGameScheduleComponent
     router: Router,
     poolRepository: PoolRepository,
     globalEventsManager: GlobalEventsManager,
-    private formationRepository: FormationRepository,
+    formationRepository: FormationRepository,
     private poolUserRepository: PoolUserRepository,
     private structureRepository: StructureRepository,
     poolTotalsRepository: PoolTotalsRepository,
@@ -125,6 +125,7 @@ export class PoolAllInOneGameScheduleComponent
     this.sourceAgainstGamesGetter = new SourceAgainstGamesGetter(
       gameRepository
     );
+    this.formationGetter = new FormationGetter(formationRepository);
     effect(() => {
       const pool = this.pool;
       const poolUsers = this.poolUsers;
@@ -158,14 +159,6 @@ export class PoolAllInOneGameScheduleComponent
               // this.processing.set(false);
               throw Error("competitionSport not found");
             }
-
-            this.formationRepository
-              .getObjectMap(pool, currentViewPeriod)
-              .subscribe({
-                next: (formationMap: S11FormationMap) => {
-                  this.formationMap = formationMap;
-                },
-              });
 
             this.determineActiveGameRound(
               competitionConfig,
@@ -266,9 +259,7 @@ export class PoolAllInOneGameScheduleComponent
               )
               .reduce((a, b) => a + b, 0);
 
-            const competitors = poolUser
-              .getPool()
-              .getCompetitors(LeagueName.Competition);
+            const competitors = Pool.getCompetitors(poolUsers, LeagueName.Competition);
             const competitor: PoolCompetitor | undefined = competitors.find(
               (competitor) => competitor.getPoolUser() === poolUser
             );
@@ -418,6 +409,14 @@ export class PoolAllInOneGameScheduleComponent
   ): void {
     this.processing.set(true);
 
+      this.formationGetter
+        .getFormationMap(pool, poolUsers, gameRound.viewPeriod)
+        .subscribe({
+          next: (formationMap: S11FormationMap) => {
+            this.formationMap.set(formationMap);
+          },
+        });
+
     this.setSourceGameRoundGames(pool.getCompetitionConfig(), gameRound);
 
     this.activeGameRoundsCalculator
@@ -494,6 +493,7 @@ export class PoolAllInOneGameScheduleComponent
     viewPeriod: ViewPeriod
   ): void {
     // this.processing.set(true);
+    this.formationMap.set(undefined);
     this.previousGameRound.set(undefined);
     this.nextGameRound.set(undefined);
     this.determineActiveGameRound(

@@ -1,0 +1,45 @@
+<table class="table">
+  <colgroup>
+      <col><!--homePlayer.sub -->
+      <col><!--homePlayer.name -->
+      <col><!--homePlayer.line -->
+      <col><!--homePlayer.points -->
+      <col><!--poolUserName -->
+      <col><!--awayPlayer.points -->
+      <col><!--awayPlayer.line -->
+      <col><!--awayPlayer.name -->
+      <col><!--awayPlayer.sub -->
+  </colgroup>
+
+<!-- maak eerst een data-structuur (json-interface) zoals hierboven en itereer hier doorheen -->
+  @for(againstGame of sourceAgainstGames(); track againstGame.getId()){
+    <thead>
+        <!-- <tr class="bg-secondary">
+            <th colspan=4 class="ps-3 py-0 fw-light">
+                speelronde {{againstGame.getGameRoundNumber()}}
+            </th>
+            <th></th>
+            <th colspan=4 class="ps-3 py-0 fw-light text-end"
+                ngClass="{'text-decoration-line-through': againstGame().getState() === Finished}">
+                @let dateTitle = dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.date());
+                @let timeTitle = dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.time());
+                {{dateTitle}} {{timeTitle}}
+            </th>
+        </tr> -->
+        <tr s11-game-tableheader [againstGame]="againstGame">
+        </tr>
+    </thead>    
+    <tbody class="table-group-divider" >
+      @let poolUserRows = createPoolUserRows(againstGame, competitorPoolUserAndFormations());
+      @for(poolUserRow of poolUserRows; track $index) 
+      {
+        
+        <!-- maak hier rijen van zodat er makkelijk doorheen gelopen kan worden -->  
+        <tr s11-game-tablerow
+          [poolUserRow]="poolUserRow" [gameRound]="gameRound()"
+          [statisticsGetter] ="statisticsGetter()">
+        </tr>
+      }
+    </tbody>
+}
+</table>

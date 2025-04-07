@@ -62,12 +62,12 @@ export class PoolUserMapper {
     }
 
     private getPoolUser(pool: Pool, json: JsonPoolUser): PoolUser {
-        const existingPoolUser = pool.getUsers().find((poolUser: PoolUser): boolean => {
-            return poolUser.getId() === json.id;
-        });
-        if (existingPoolUser !== undefined) {
-            return existingPoolUser;
-        }
+        // const existingPoolUser = pool.getUsers().find((poolUser: PoolUser): boolean => {
+        //     return poolUser.getId() === json.id;
+        // });
+        // if (existingPoolUser !== undefined) {
+        //     return existingPoolUser;
+        // }
         const poolUser = new PoolUser(pool, this.userMapper.toObject(json.user));
         poolUser.setAdmin(json.admin);
         poolUser.setId(json.id);

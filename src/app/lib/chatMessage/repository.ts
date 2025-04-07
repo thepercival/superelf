@@ -47,7 +47,8 @@ export class ChatMessageRepository extends APIRepository {
   createObject(
     message: string,
     poule: Poule,
-    pool: Pool
+    pool: Pool,
+    poolUsers: PoolUser[]
   ): Observable<ChatMessage> {
     const json = { message };
     return this.http
@@ -57,14 +58,12 @@ export class ChatMessageRepository extends APIRepository {
         { headers: super.getHeaders() }
       )
       .pipe(
-        map((json: JsonChatMessage) =>
-          this.mapper.toObject(json, pool.getUsers())
-        ),
+        map((json: JsonChatMessage) => this.mapper.toObject(json, poolUsers)),
         catchError((err) => this.handleError(err))
       );
   }
 
-  getObjects(poule: Poule, pool: Pool): Observable<ChatMessage[]> {
+  getObjects(poule: Poule, pool: Pool, poolUsers: PoolUser[]): Observable<ChatMessage[]> {
     return this.http
       .get<JsonChatMessage[]>(
         this.getUrl(pool, poule.getId(), "messages"),
@@ -73,7 +72,7 @@ export class ChatMessageRepository extends APIRepository {
       .pipe(
         map((jsonMessages: JsonChatMessage[]) =>
           jsonMessages.map((jsonMessage: JsonChatMessage): ChatMessage => {
-            return this.mapper.toObject(jsonMessage, pool.getUsers());
+            return this.mapper.toObject(jsonMessage, poolUsers);
           })
         ),
         catchError((err) => this.handleError(err))

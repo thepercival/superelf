@@ -18,7 +18,7 @@ import { S11FormationPlace } from '../../lib/formation/place';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { AuthService } from '../../lib/auth/auth.service';
 import { GameRound } from '../../lib/gameRound';
-import { concatMap, Observable, of } from 'rxjs';
+import { concatMap, forkJoin, Observable, of } from 'rxjs';
 import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
 import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { StatisticsRepository } from '../../lib/statistics/repository';
@@ -36,7 +36,6 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
 import { CompetitionConfig } from '../../lib/competitionConfig';
 import { FormationActionOverviewModalComponent } from '../formation/actionoverview.modal.component';
-import { S11FormationMap } from '../allinonegame/allinonegame.component';
 import { ActiveViewGameRoundsCalculator } from '../../lib/gameRound/activeViewGameRoundsCalculator';
 import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
 
@@ -71,8 +70,8 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   public poolUser: PoolUser | undefined;
   public leagueName!: LeagueName;
 
-  public gameRoundCacheMap = new Map<number, true>();
-  public statisticsGetter = new StatisticsGetter();
+  public gameRoundGetter: GameRoundGetter;
+  public statisticsGetter = new StatisticsGetter();  
   public nameService = new NameService();
 
   public activeGameRoundsCalculator: ActiveViewGameRoundsCalculator;
@@ -103,8 +102,9 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     private modalService: NgbModal
   ) {
     super(route, router, poolRepository, globalEventsManager);
+    this.gameRoundGetter = new GameRoundGetter(gameRoundRepository);
     this.activeGameRoundsCalculator = new ActiveViewGameRoundsCalculator(
-      new GameRoundGetter(gameRoundRepository)
+      this.gameRoundGetter
     );
     effect(() => {
       const poolUser = this.poolUser;
@@ -142,7 +142,8 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
 
                 this.determineActiveGameRound(
                   competitionConfig,
-                  currentViewPeriod
+                  currentViewPeriod,
+                  +params.gameRoundNr
                 ).subscribe({
                   next: (activeGameRound: GameRound) => {
                     this.currentGameRound.set(activeGameRound);
@@ -251,7 +252,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
 
     const competitionConfig = poolUser.getPool().getCompetitionConfig();
 
-    const formationObservable = this.getFormationObservable(
+    const formationObservable = this.getFormationAsObservable(
       poolUser,
       gameRound.viewPeriod
     );
@@ -323,7 +324,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       });
   }
 
-  getFormationObservable(
+  getFormationAsObservable(
     poolUser: PoolUser,
     viewPeriod: ViewPeriod
   ): Observable<S11Formation> {
@@ -379,8 +380,15 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
 
   determineActiveGameRound(
     competitionConfig: CompetitionConfig,
-    viewPeriod: ViewPeriod
+    viewPeriod: ViewPeriod,
+    gameRoundNr: number
   ): Observable<GameRound> {
+    if( gameRoundNr > 0 ) {
+      return this.gameRoundGetter.getGameRound(
+        competitionConfig, viewPeriod,
+        gameRoundNr
+      );
+    }
     return this.activeGameRoundsCalculator.determineActiveViewGameRound(
       competitionConfig,
       viewPeriod,
@@ -395,7 +403,8 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     this.nextGameRound.set(undefined);
     this.determineActiveGameRound(
       pool.getCompetitionConfig(),
-      viewPeriod
+      viewPeriod,
+      0
     ).subscribe({
       next: (activeGameRound: GameRound) => {
         this.currentGameRound.set(activeGameRound);
@@ -496,45 +505,20 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   //   return gameRounds !== undefined ? gameRounds : [];
   // }
 
-  calculateTotalGameRoundPoints(formation: S11Formation, gameRound: GameRound) {
-    return this.statisticsGetter.getFormationGameRoundPoints(
-          formation,
-          gameRound,
-          undefined
-        );
-  }
-
   setGameRoundsAndGetStatistics(
     formation: S11Formation,
     gameRounds: GameRound[]
   ): void 
   {    
-    gameRounds.forEach((gameRound: GameRound): void => {
-      // if (this.gameRoundCacheMap.has(gameRound.number)) {
-      //   return this.statisticsGetter.getFormationGameRoundPoints(
-      //       formation,
-      //       gameRound,
-      //       undefined
-      //     );
-      // }
-    
-      this.statisticsRepository
-        .getGameRoundObjects(formation, gameRound, this.statisticsGetter)
-        .subscribe({
-          next: () => {
-            this.statisticsGetter.getFormationGameRoundPoints(
-              formation,
-              gameRound,
-              undefined
-            );
-            this.gameRoundCacheMap.set(gameRound.number, true);
-            this.processingStatistics.set(false);
-          },
-          error: (e) => {
-            this.setAlert("danger", e);            
-          },
-        });      
-    })
+    const getGameRoundStats = gameRounds.map(gameRound => this.statisticsRepository.getGameRoundObjects(formation, gameRound, this.statisticsGetter));
+    forkJoin(getGameRoundStats).subscribe({
+      next: () => {
+        this.processingStatistics.set(false);
+      },
+      error: (e) => {
+        this.setAlert("danger", e);            
+      },        
+    });
   }
 
   getHeaderForPoolUser(poolUser: PoolUser): string {

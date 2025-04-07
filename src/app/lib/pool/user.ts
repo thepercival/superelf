@@ -1,15 +1,8 @@
 import { PoolCompetitor } from './competitor';
 import { Pool } from '../pool';
 import { User } from '../user';
-import { S11Formation } from '../formation';
 import { Identifiable } from 'ngx-sport';
-import { AssemblePeriod } from '../periods/assemblePeriod';
-import { TransferPeriod } from '../periods/transferPeriod';
 import { LeagueName } from '../leagueName';
-import { Replacement } from '../editAction/replacement';
-import { Substitution } from '../editAction/substitution';
-import { Transfer } from '../editAction/transfer';
-import { ViewPeriod } from '../periods/viewPeriod';
 import { TransferPeriodActionList } from '../editAction';
 
 export class PoolUser extends Identifiable {
@@ -23,7 +16,6 @@ export class PoolUser extends Identifiable {
 
     constructor(protected pool: Pool, protected user: User) {
         super();
-        this.pool.getUsers().push(this);
     }
 
     getPool(): Pool {

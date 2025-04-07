@@ -74,10 +74,11 @@
                 </div>
             }
             @if( !processingGames()) {
-                @if(pool && tmplCurrentGameRound && sourceGameRoundGames.length > 0 && formationMap && poolUsersWithGameRoundsPoints()){
+                @let tmplFormationMap = formationMap();
+                @if(pool && poolUsers && tmplCurrentGameRound && sourceGameRoundGames.length > 0 && tmplFormationMap && poolUsersWithGameRoundsPoints()){
                     <div class="mt-3">
                     @for(againstGame of sourceGameRoundGames; track againstGame.getId()){
-                        <table class="table">
+                        <!-- <table class="table">
                             <thead>
                                 <tr class="bg-secondary">
                                     <th class="ps-3 py-0 fw-light">
@@ -95,11 +96,11 @@
                                 </tr>
                             </thead>
                             
-                            <tbody s11-game-tablerow class="table-group-divider" [competitonConfig]="pool.getCompetitionConfig()"
-                                [gameRound]="tmplCurrentGameRound" [againstGame]="againstGame" [formationMap]="formationMap"
-                                [competitorsWithGameRoundsPoints]="poolUsersWithGameRoundsPoints()">
+                            <tbody s11-game-tablebody class="table-group-divider" [competitonConfig]="pool.getCompetitionConfig()"
+                                [gameRound]="tmplCurrentGameRound" [againstGame]="againstGame" [formationMap]="tmplFormationMap"
+                                [poolUsers]="poolUsers" [statisticsGetter]="statisticsGetter">
                             </tbody>
-                        </table>
+                        </table> -->
                     }
                     </div>
                 }

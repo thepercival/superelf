@@ -39,6 +39,7 @@ export class StatisticsRepository extends APIRepository {
                 jsonStatistics.forEach((jsonStatistics: JsonStatistics) => {
                     const personId = jsonStatistics.person?.id;
                     if( personId !== undefined ) {
+                        console.log("addStatistics");
                         getter.addStatistics(gameRound, personId, this.mapper.toObject(jsonStatistics));
                     }
                 });
@@ -54,6 +55,7 @@ export class StatisticsRepository extends APIRepository {
                 jsonStatistics.forEach((jsonStatistics: JsonStatistics) => {
                     const gameRoundNr = jsonStatistics.gameRound?.number;
                     if( gameRoundNr !== undefined ) {
+                        console.log("addStatistics");
                         getter.addStatistics(gameRoundNr, personId, this.mapper.toObject(jsonStatistics));
                     }
                 });

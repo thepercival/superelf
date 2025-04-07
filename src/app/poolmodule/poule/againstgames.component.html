@@ -5,13 +5,15 @@
         <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
       }
       @let tmplCurrentGameRound = currentGameRound();      
-      @if(pool && poolPoule && poolUserFromSession){
-        <div class="d-flex justify-content-{{poolPoule && poolUserFromSession ? 'between' : 'center'}} mt-2">
+      @if(pool && poolPoule){
+        <div class="d-flex justify-content-{{poolPoule ? 'between' : 'center'}} mt-2">
             <h2 class="ms-3" ngClass="{'pointer': pool}" (click)="navigateToStructure()">
-                <app-superelf-icon [icon]="leagueName === Cup ? facCup : facSuperCup"></app-superelf-icon>
-                <span class="ms-1">{{nameService.getLeagueName(leagueName)}}</span>
+              <app-superelf-icon [icon]="leagueName === Cup ? facCup : facSuperCup"></app-superelf-icon>
+              <span class="">{{nameService.getLeagueName(leagueName)}}</span>
+              <span> - </span>
+              <span class="small ms-1" [innerHTML]="structureNameService.getRoundName(poolPoule.getRound(), true) | keepHtml"></span>
             </h2>
-            <div>                
+            <div>                 
               <button (click)="navigateToChat(pool,poolPoule)" type="button"
                   class="btn btn-outline-dark me-3 position-relative">
                   <fa-icon [icon]=faMessage></fa-icon>
@@ -28,84 +30,57 @@
         </div>
       }
 
-      @if(pool && tmplCurrentGameRound && poolPoule) {
+      @let tmplHome = homeItem();
+      @let tmplAway = awayItem();      
+      @if(pool && tmplCurrentGameRound && poolPoule && tmplHome && tmplAway) {
         <div>          
-          <h2 class="d-flex justify-content-center mt-3">
-              <app-poule-title [poule]="poolPoule" [poolCompetitors]="pool.getCompetitors(leagueName)"
-              (linkToPoolUser)="linkToPoolUser($event, tmplCurrentGameRound)">
-              </app-poule-title>
-          </h2>
+         
+          @if( !processingGames() && !processingStatistics()) {
 
-          @let tmplViewGameRounds = viewGameRounds();
-          @if(tmplViewGameRounds.length > 0) {
-            <div class="d-flex justify-content-center mt-2">
-              @for(tmplViewGameRound of tmplViewGameRounds; track $index) {
-                <div>
-                  
-                </div>
-              }
-              <!-- <app-gameround-scroller 
-                  [viewPeriod]="tmplCurrentGameRound.viewPeriod"
-                  [previousGameRound]="previousGameRound()"
-                  [nextGameRound]="nextGameRound()"
-                  [gameRounds]="gameRounds" [competitionConfig]="pool.getCompetitionConfig()" 
-                  
-                  >
-              </app-gameround-scroller> -->
+            <div class="d-flex justify-content-center mt-3">
+              <app-title-againstgame-pool 
+                [poolPoule]="poolPoule"
+                [homeCompetitorPoolUserAndFormation]="tmplHome"
+                [awayCompetitorPoolUserAndFormation]="tmplAway"
+                [viewPeriod]="tmplCurrentGameRound.viewPeriod"
+                [gameRounds]="viewGameRounds()"
+                [activeGameRound]="tmplCurrentGameRound"
+                [competitionConfig]="pool.getCompetitionConfig()"
+                (selectGameRound)="currentGameRound.set($event)"
+                [statisticsGetter]="statisticsGetter">
+              </app-title-againstgame-pool>              
             </div>
-          }
-
-          <!-- @if( !processingGames()) {
-            @if(pool && tmplCurrentGameRound && sourceGameRoundGames.length > 0 && formationMap && poolUsersWithGameRoundsPoints()){
-                <div class="mt-3">
-                @for(againstGame of sourceGameRoundGames; track againstGame.getId()){
-                    <table class="table">
-                        <thead>
-                            <tr class="bg-secondary">
-                                <th class="ps-3 py-0 fw-light">
-                                    speelronde {{tmplCurrentGameRound.number}}
-                                </th>
-                                <th></th>
-                                <th class="ps-3 py-0 fw-light text-end"
-                                    ngClass="{'text-decoration-line-through': againstGame().getState() === Finished}">
-                                    @let dateTitle = dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.date());
-                                    @let timeTitle = dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.time());
-                                    {{dateTitle}} {{timeTitle}}
-                                </th>
-                            </tr>
-                            <tr s11-game-tableheader [againstGame]=againstGame>
-                            </tr>
-                        </thead>
-                        
-                        <tbody s11-game-tablerow class="table-group-divider" [competitonConfig]="pool.getCompetitionConfig()"
-                            [gameRound]="tmplCurrentGameRound" [againstGame]="againstGame" [formationMap]="formationMap"
-                            [competitorsWithGameRoundsPoints]="poolUsersWithGameRoundsPoints()">
-                        </tbody>
-                    </table>
-                }
-                </div>
+            
+            @if(pool && tmplCurrentGameRound && sourceGameRoundGames.length > 0){
+              <div class="mt-3">                
+                <againstgames-table
+                  [sourceAgainstGames]="sourceGameRoundGames"
+                  [gameRound]="tmplCurrentGameRound"
+                  [competitorPoolUserAndFormations]="[tmplHome,tmplAway]"
+                  [statisticsGetter]="statisticsGetter">
+                </againstgames-table>
+              </div>
             }
           } @else {
             <h2 class="text-center">
                 <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
             </h2>
-          }           -->
+          }
 
-          @if(!processingGameRound()){          
+          <!-- @if(!processingGameRound()){          
             @if(homeCompetitor && awayCompetitor && sourceStartLocationMap){
             <table class="table">
                 <tbody>
-                    <!-- GameRoundPoints -->
                     <tr class="fs-5">
                         <td class="border-bottom-0"></td>
-                        <td class="border-bottom-0 text-end pt-3 pb-0 ps-0"> <!-- Home -->
+                        <td class="border-bottom-0 text-end pt-3 pb-0 ps-0"> 
                           @if(getCurrentPoolGame(tmplCurrentGameRound)?.getState() !== Created) {
                             <a routerLink="['/pool/user', homeCompetitor.getPoolUser().getPool().getId(), homeCompetitor.getPoolUser().getId(), tmplCurrentGameRound.number]"
                                class="badge bg-totals">{{getPoolGamePoints(tmplCurrentGameRound, homeCompetitor)}}</a>
                           }                            
                         </td>
                         <td class="border-bottom-0"></td>
-                        <td class="border-bottom-0 pt-3 pb-0 pe-0"> <!-- Away -->
+                        <td class="border-bottom-0 pt-3 pb-0 pe-0"> 
                             @if(getCurrentPoolGame(tmplCurrentGameRound)?.getState() !== Created) {
                               <a routerLink="['/pool/user', awayCompetitor.getPoolUser().getPool().getId(), awayCompetitor.getPoolUser().getId(), tmplCurrentGameRound.number]"
                                 class="badge bg-totals">{{getPoolGamePoints(tmplCurrentGameRound, awayCompetitor)}}</a>
@@ -114,14 +89,14 @@
                         <td class="border-bottom-0"></td>
                     </tr>
                 </tbody>
-                <!-- Source Against Games -->                
+                        
                 @for(sourceGame of sourceGameRoundGames; track sourceGame.getId()){
                 <tbody>                                        
-                    <tr class="sourceGameHome"> <!-- Home Team Row -->
+                    <tr class="sourceGameHome"> 
                         <td class="">                            
                         </td>
                         <td colspan="3" class="text-center py-1 rounded sourceGame" (click)="navigateToSourceGame(pool,sourceGame)">
-                            @for(sideCompetitor of getCompetitors(sourceGame, HomeSide, sourceStartLocationMap); track sideCompetitor?.getId() ?? ''){
+                            @for(sideCompetitor of getCompetitors2(sourceGame, HomeSide, sourceStartLocationMap); track sideCompetitor?.getId() ?? ''){
                             <span>
                                 @let team = getTeam(sideCompetitor);
                                 @if(team && isTeamCompetitor(sideCompetitor)) {
@@ -171,7 +146,7 @@
                         </tr>
                         }
                     }
-                    <ng-template #notFinished> <!-- Not Finished -->
+                    <ng-template #notFinished> 
                         <tr (click)="navigateToSourceGame(pool,sourceGame)"> 
                             <td></td>
                             <td colspan="3" class="text-center sourceGame underline">
@@ -186,11 +161,11 @@
                         </tr>
                     </ng-template>
                     
-                    <tr> <!-- Away Team Row -->
+                    <tr> <
                         <td>                            
                         </td>
                         <td colspan="3" class="text-center py-1 rounded sourceGame" (click)="navigateToSourceGame(pool,sourceGame)">
-                            @for(sideCompetitor of getCompetitors(sourceGame, AwaySide,sourceStartLocationMap); track sideCompetitor){
+                            @for(sideCompetitor of getCompetitors2(sourceGame, AwaySide,sourceStartLocationMap); track sideCompetitor){
                             <span>
                                 @let team = getTeam(sideCompetitor);
                                 @if(team && isTeamCompetitor(sideCompetitor)) {
@@ -212,7 +187,7 @@
             <h2 class="text-center">
               <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
             </h2>            
-          }           
+          }            -->
         </div>
       }
     }

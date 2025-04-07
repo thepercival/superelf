@@ -1,0 +1,120 @@
+
+<ng-container
+    *ngTemplateOutlet="contentHome; context:{poolUserRow: poolUserRow(), gameRound: gameRound()}">
+</ng-container>
+<td class="text-center">
+    <a routerLink="getRouterLink(poolUser)">
+        {{poolUserRow().poolUser.getName()}}
+    </a>
+</td>
+<ng-container
+    *ngTemplateOutlet="contentAway; context:{poolUserRow: poolUserRow(), gameRound: gameRound()}">
+</ng-container>
+
+<ng-template #contentHome let-poolUserRow="poolUserRow" let-gameRound="gameRound">
+  @let formationPlace = poolUserRow.homeFormationPlace;
+  @let s11Player = formationPlace?.getPlayer();  
+  <!-- sub -->
+  <td>              
+    @if(formationPlace?.isSubstitute()){
+      <span class="badge badge-reserve ms-1">r</span>
+    }
+  </td>
+
+  <!-- name -->
+  <td class="text-end">
+      @if(s11Player){
+        <a href="javascript:void(0)" (click)="openPlayerModal(s11Player)">
+            <span class="px-1 text-break">{{s11Player.getPerson().getName()}}</span>
+        </a>                    
+      }
+  </td>
+
+  <!-- line -->
+  <td>
+      @if(s11Player){
+          <app-lineicon [line]="s11Player.getLine()"></app-lineicon>
+      }
+  </td>
+  
+  <!-- points -->
+  <td>
+
+    @if(formationPlace && statisticsGetter().placeHasStatistics(formationPlace,gameRound)){
+      @if(!formationPlace.isSubstitute()){        
+        @if(statisticsGetter().hasAppeared(formationPlace, gameRound)){          
+            <button type="button" class="btn btn-sm text-white bg-points">
+              {{statisticsGetter().getFormationPlaceGameRoundPoints(formationPlace,gameRound.number, undefined)}}
+            </button>
+        }
+        @else {
+          <span class="badge bg-nopoints">x</span>
+        }
+      } @else if( formationPlace.getFormationLine().hasSubstituteAppareance(gameRound) ) {
+        <div>
+          @if(statisticsGetter().hasAppeared(formationPlace,gameRound)) {
+            <span class="badge bg-points">{{statisticsGetter().getFormationPlaceGameRoundPoints(formationPlace,gameRound.number, undefined)}}</span>
+          } @else {            
+            <span class="badge bg-nopoints">x</span>
+          }
+        </div>            
+      }
+    }
+
+  </td>
+</ng-template>
+
+<ng-template #contentAway let-poolUserRow="poolUserRow" let-gameRound="gameRound">
+  @let formationPlace = poolUserRow.awayFormationPlace;
+  @let s11Player = formationPlace?.getPlayer();  
+  
+  <!-- points -->
+  <td>
+
+    @if(formationPlace && statisticsGetter().placeHasStatistics(formationPlace,gameRound)){
+      @if(!formationPlace.isSubstitute()){        
+        @if(statisticsGetter().hasAppeared(formationPlace, gameRound)){          
+            <button type="button" class="btn btn-sm text-white bg-points">
+              {{statisticsGetter().getFormationPlaceGameRoundPoints(formationPlace,gameRound.number, undefined)}}
+            </button>
+        }
+        @else {
+          <span class="badge bg-nopoints">x</span>
+        }
+      } @else if( formationPlace.getFormationLine().hasSubstituteAppareance(gameRound) ) {
+        <div>
+          @if(statisticsGetter().hasAppeared(formationPlace,gameRound)) {
+            <span class="badge bg-points">{{statisticsGetter().getFormationPlaceGameRoundPoints(formationPlace,gameRound.number, undefined)}}</span>
+          } @else {            
+            <span class="badge bg-nopoints">x</span>
+          }
+        </div>            
+      }
+    }
+
+  </td>
+
+  <!-- line -->
+  <td>
+      @if(s11Player){
+          <app-lineicon [line]="s11Player.getLine()"></app-lineicon>
+      }
+  </td>
+
+    <!-- name -->
+  <td>
+      @if(s11Player){
+        <a href="javascript:void(0)" (click)="openPlayerModal(s11Player)">
+            <span class="px-1 text-break">{{s11Player.getPerson().getName()}}</span>
+        </a>                    
+      }
+  </td>
+
+      <!-- sub -->
+  <td>              
+    @if(formationPlace?.isSubstitute()){
+      <span class="badge badge-reserve ms-1">r</span>
+    }
+  </td>
+
+</ng-template>

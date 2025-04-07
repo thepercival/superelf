@@ -48,7 +48,7 @@
                                     <!-- ga uit van nu als tijd, 
                                     kijk niet naar de speelronde-nummers maar liefst chronologisch-->
                                     @if(currentGameRound){
-                                        @let statistics = statisticsGetter.getStatistics(s11Player,currentGameRound);
+                                        @let statistics = statisticsGetter.getStatistics(s11Player,currentGameRound.number);
                                         @if(statistics){
                                         <s11-player-statistics [gameRound]="currentGameRound" [statistics]="statistics"
                                             [line]="s11Player.getLine()"

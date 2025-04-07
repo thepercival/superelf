@@ -27,6 +27,7 @@ import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavB
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { facSuperCup } from '../../shared/poolmodule/icons';
 import { faListOl, faSpinner, faPaperPlane, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { PoolCompetitor } from '../../lib/pool/competitor';
 
 @Component({
   selector: "app-pool-chat",
@@ -129,12 +130,14 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
                 this.sportRankingItems =
                   rankingCalculator.getItemsForPoule(poule);
 
-                this.chatMessageRepository.getObjects(poule, pool).subscribe({
-                  next: (chatMessages: ChatMessage[]) => {
-                    this.chatMessages = chatMessages;
-                    this.processing.set(false);
-                  },
-                });
+                this.chatMessageRepository
+                  .getObjects(poule, pool, poolUsers)
+                  .subscribe({
+                    next: (chatMessages: ChatMessage[]) => {
+                      this.chatMessages = chatMessages;
+                      this.processing.set(false);
+                    },
+                  });
 
                 // this.initCurrentGameRound(competitionConfig, currentViewPeriod);
               },
@@ -169,20 +172,29 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
     );
   }
 
-  sendMessage(pool: Pool, poule: Poule): void {
+  getCompetitors(
+      poolUsers: PoolUser[],
+      leagueName: LeagueName
+    ): PoolCompetitor[] {
+      return Pool.getCompetitors(poolUsers,leagueName);
+    }
+
+  sendMessage(pool: Pool, poolUsers: PoolUser[], poule: Poule): void {
     this.processingMessage = true;
     const message = this.form.controls.message.value;
-    this.chatMessageRepository.createObject(message, poule, pool).subscribe({
-      next: (chatMessage: ChatMessage) => {
-        this.chatMessages?.unshift(chatMessage);
-        this.form.controls.message.reset();
-        this.processingMessage = false;
-      },
-      error: (e: string) => {
-        this.setAlert("danger", e);
-        this.processingMessage = false;
-      },
-    });
+    this.chatMessageRepository
+      .createObject(message, poule, pool, poolUsers)
+      .subscribe({
+        next: (chatMessage: ChatMessage) => {
+          this.chatMessages?.unshift(chatMessage);
+          this.form.controls.message.reset();
+          this.processingMessage = false;
+        },
+        error: (e: string) => {
+          this.setAlert("danger", e);
+          this.processingMessage = false;
+        },
+      });
   }
 
   linkToPoolUser(poolUser: PoolUser): void {
