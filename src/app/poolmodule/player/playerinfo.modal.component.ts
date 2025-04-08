@@ -1,36 +1,29 @@
-import { Component, Input, input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash';
-import { AgainstGame, AgainstGamePlace, Competition, Player, StartLocationMap, Structure } from 'ngx-sport';
-import { concatMap, map, Observable, of } from 'rxjs';
-import { GameRound } from '../../lib/gameRound';
-import { GamePicker } from '../../lib/gameRound/gamePicker';
+import { AgainstGame } from 'ngx-sport';
 import { ImageRepository } from '../../lib/image/repository';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { S11Player } from '../../lib/player';
 import { S11PlayerRepository } from '../../lib/player/repository';
 import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
-import { Statistics } from '../../lib/statistics';
 import { StatisticsGetter } from '../../lib/statistics/getter';
 import { StatisticsRepository } from '../../lib/statistics/repository';
 
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
-import { PoolComponent } from '../../shared/poolmodule/component';
-import { GameRoundScrollerComponent } from '../gameRound/gameRoundScroller.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbActiveModal, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { PlayerBasicsComponent } from './basics.component';
-import { AgainstGameTitleComponent } from '../game/source/title.component';
-import { NgIf } from '@angular/common';
-import { faChevronLeft, faLevelUpAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { S11PlayerStatisticsComponent } from './statistics/gameround.component';
 import { SportExtensions } from '../../lib/sportExtensions';
-import { CompetitionConfig } from '../../lib/competitionConfig';
+import { ScorePointsMap } from '../../lib/score/points';
+import { AgainstGameTitleComponent } from '../game/source/title.component';
+import { facSofaScore } from '../../shared/poolmodule/icons';
 
 @Component({
   selector: "s11-player-info",
@@ -40,17 +33,20 @@ import { CompetitionConfig } from '../../lib/competitionConfig';
     NgbAlertModule,
     PlayerBasicsComponent,
     S11PlayerStatisticsComponent,
+    AgainstGameTitleComponent,
   ],
-  templateUrl: "./info.modal.component.html",
-  styleUrls: ["./info.modal.component.scss"],
+  templateUrl: "./playerinfo.modal.component.html",
+  styleUrls: ["./playerinfo.modal.component.scss"],
 })
 export class S11PlayerModalComponent implements OnInit {
-  // public readonly s11Player = input.required<S11Player>();
   @Input() s11Player: S11Player | undefined;
-  @Input() currentGameRound: GameRound | undefined;
-  @Input() competitionConfig: CompetitionConfig | undefined;
+  @Input() sourceAgainstGame: AgainstGame | undefined;
+  @Input() scorePointsMap: ScorePointsMap | undefined;
 
-  public processing = true;
+  public sofaScoreLink: WritableSignal<string | undefined> = signal(undefined);
+
+  public processing: WritableSignal<boolean> = signal(true);
+
   public statisticsGetter = new StatisticsGetter();
 
   // // @Input() team: Team | undefined;
@@ -65,7 +61,7 @@ export class S11PlayerModalComponent implements OnInit {
 
   // public faLevelUpAlt = faLevelUpAlt;
   public faSpinner = faSpinner;
-  // public faChevronLeft = faChevronLeft;
+  public facSofaScore = facSofaScore;
 
   constructor(
     route: ActivatedRoute,
@@ -75,7 +71,7 @@ export class S11PlayerModalComponent implements OnInit {
     private playerRepository: S11PlayerRepository,
     private statisticsRepository: StatisticsRepository,
     private structureRepository: StructureRepository,
-    private gameRepository: GameRepository,
+    private againstGameRepository: GameRepository,
     public imageRepository: ImageRepository,
     public cssService: CSSService,
     private myNavigation: MyNavigation,
@@ -92,7 +88,6 @@ export class S11PlayerModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    pool: Pool;
     //   this.setPool(pool);
     //   const competitionConfig = this.pool.getCompetitionConfig();
     //   this.route.params.subscribe((params) => {
@@ -107,35 +102,24 @@ export class S11PlayerModalComponent implements OnInit {
     //     } else {
     //       viewPeriod = this.getCurrentViewPeriod(pool);
     //     }
-    //     this.playerRepository
-    //       .getObject(
-    //         +params.playerId,
-    //         competitionConfig.getSourceCompetition(),
-    //         viewPeriod
-    //       )
-    //       .subscribe({
-    //         next: (s11Player: S11Player) => {
-    //           this.s11Player = s11Player;
-    //           this.statisticsRepository
-    //             .getPlayerObjects(this.s11Player, this.statisticsGetter)
-    //             .subscribe({
-    //               next: () => {
-    //                 this.startLocationMap = new StartLocationMap(
-    //                   this.pool.getSourceCompetition().getTeamCompetitors()
-    //                 );
-    //                 this.initSliderGameRounds(currentGameRound);
-    //                 this.updateGameRound(currentGameRound, true);
-    //               },
-    //             });
-    //         },
-    //         error: (e: string) => {
-    //           this.setAlert("danger", e);
-    //           this.processing.set(false);
-    //         },
-    //       });
-    //   });
-    // });
-    this.processing = false;
+    if (this.s11Player !== undefined) {
+      this.statisticsRepository
+        .getPlayerObjects(this.s11Player, this.statisticsGetter)
+        .subscribe({
+          next: () => {
+            this.processing.set(false);
+          },
+        });
+    }
+    if (this.sourceAgainstGame !== undefined) {
+      this.againstGameRepository
+        .getSourceObjectExternalLink(this.sourceAgainstGame)
+        .subscribe({
+          next: (link: string) => {
+            this.sofaScoreLink.set(link);
+          },
+        });
+    }
   }
 
   getLineClass(s11Player: S11Player): string {
@@ -257,4 +241,8 @@ export class S11PlayerModalComponent implements OnInit {
   // navigateBack() {
   //   this.myNavigation.back();
   // }
+
+  openExternalLink(url: string) {
+    window.open(url, "_blank");
+  }
 }

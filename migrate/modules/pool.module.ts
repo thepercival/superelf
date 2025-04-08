@@ -36,7 +36,7 @@ import { JoinComponent } from '../../src/app/poolmodule/join/join.component';
 import { PoolUsersComponent } from '../../src/app/poolmodule/poolusers/poolusers.component';
 import { InviteComponent } from '../../src/app/poolmodule/invite/invite.component';
 import { ScoutedPlayerListComponent } from '../../src/app/poolmodule/scoutedPlayer/list.component';
-import { S11PlayerComponent } from '../../src/app/poolmodule/player/info.modal.component';
+import { S11PlayerComponent } from '../../src/app/poolmodule/player/playerinfo.modal.component';
 import { S11PlayerAddRemoveModalComponent } from '../../src/app/poolmodule/player/addremovemodal.component';
 import { TeamNameComponent } from '../../src/app/poolmodule/team/name.component';
 import { S11PlayerGameRoundStatisticsComponent } from '../../src/app/poolmodule/player/statistics/gameround.component';

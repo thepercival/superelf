@@ -1,7 +1,6 @@
 import { Component, OnChanges, OnInit, SimpleChanges, input } from '@angular/core';
 import { FootballLine } from 'ngx-sport';
 import { BadgeCategory } from '../../../lib/achievement/badge/category';
-import { GameRound } from '../../../lib/gameRound';
 import { ImageRepository } from '../../../lib/image/repository';
 import { FootballCard, FootballGoal } from '../../../lib/score';
 import { ScorePointsMap } from '../../../lib/score/points';
@@ -12,14 +11,13 @@ import { SuperElfIconComponent } from '../../../shared/poolmodule/icon/icon.comp
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgIf } from '@angular/common';
 import { facCard, facCleanSheet, facPenalty, facSpottySheet } from '../../../shared/poolmodule/icons';
-import { faCheckCircle, faFutbol } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faFutbol, faHandshakeAngle } from '@fortawesome/free-solid-svg-icons';
 import { S11PlayerStatisticsBaseComponent } from './base.component';
-import { CompetitionConfig } from '../../../lib/competitionConfig';
 
 @Component({
   selector: "s11-player-statistics",
   standalone: true,
-  imports: [NgIf, SuperElfIconComponent, FontAwesomeModule],
+  imports: [NgIf,SuperElfIconComponent, FontAwesomeModule],
   templateUrl: "./gameround.component.html",
   styleUrls: ["./gameround.component.scss"],
 })
@@ -29,9 +27,8 @@ export class S11PlayerStatisticsComponent
 {
   public readonly statistics = input.required<Statistics>();
   public readonly line = input.required<FootballLine>();
-  public readonly gameRound = input.required<GameRound>();
-  public readonly competitionConfig = input.required<CompetitionConfig>();
-  
+  public readonly scorePointsMap = input.required<ScorePointsMap>();
+
   // public oneTeamSimultaneous = new OneTeamSimultaneous();
   // public player: Player | undefined;
   public facCleanSheet = facCleanSheet;
@@ -40,6 +37,7 @@ export class S11PlayerStatisticsComponent
   public facCard = facCard;
   public faFutbol = faFutbol;
   public faCheckCircle = faCheckCircle;
+  public faHandshakeAngle = faHandshakeAngle;
 
   constructor(imageRepository: ImageRepository, cssService: CSSService) {
     super(imageRepository, cssService);
@@ -80,7 +78,7 @@ export class S11PlayerStatisticsComponent
       changes.statistics.currentValue !== undefined
     ) {
       const statistics: Statistics = changes.statistics.currentValue;
-      const scorePointsMap = this.competitionConfig().getScorePointsMap();
+      console.log(statistics, this.scorePointsMap());
 
       // console.log('first changes statistics', changes.statistics.currentValue);
       const sheetLines =
@@ -90,31 +88,31 @@ export class S11PlayerStatisticsComponent
         sheetLines > 0
           ? statistics.getPoints(
               this.line(),
-              scorePointsMap,
+              this.scorePointsMap(),
               BadgeCategory.Sheet
             )
           : 0;
       this.categoryPoints = {
         result: statistics.getPoints(
           this.line(),
-          scorePointsMap,
+          this.scorePointsMap(),
           BadgeCategory.Result
         ),
         goal:
           statistics.getPoints(
             this.line(),
-            scorePointsMap,
+            this.scorePointsMap(),
             BadgeCategory.Goal
           ) +
           statistics.getPoints(
             this.line(),
-            scorePointsMap,
+            this.scorePointsMap(),
             BadgeCategory.Assist
           ),
         sheet: sheetPoints,
         card: statistics.getPoints(
           this.line(),
-          scorePointsMap,
+          this.scorePointsMap(),
           BadgeCategory.Card
         ),
       };

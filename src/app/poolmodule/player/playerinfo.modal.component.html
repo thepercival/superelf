@@ -1,4 +1,4 @@
-@if(!processing && s11Player) {
+@if(!processing() && s11Player) {
     <div class="modal-header border-bottom-0 text-white {{getLineClass(s11Player)}}">
         <h5 class="">{{s11Player.getPerson().getName()}}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
@@ -7,29 +7,25 @@
 }
 
 <div class="modal-body">
-    @if( !processing ) {
+    @if( !processing() ) {
         <div class="row justify-content-center">                    
             <!-- @if(alert){
                 <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
-            } -->
-            
-            @if(s11Player && competitionConfig ){
-                @let player = this.sportExtensions.getCurrentPlayer(s11Player);
-                @if (player) {   
+            } -->                            
+            @if(s11Player){
+                @let player = this.sportExtensions.getCurrentPlayer(s11Player);                                
+                @if (player && sourceAgainstGame && scorePointsMap) {                       
                     <div class="card card-person border-0">
-                        <div class="card-body py-1 px-2">
+                        <div class="card-body py-1 px-2">    
                             <div class="d-flex flex-column">
         
-                            
-                                <app-player-basics [player]="player" class="text-center">
+                                @let statistics = statisticsGetter.getStatistics(s11Player,sourceAgainstGame.getGameRoundNumber());                                        
+                                @let tmplPoints = statistics?.getPoints(player.getLine(), scorePointsMap, undefined);
+                                <app-player-basics [player]="player"
+                                    [points]="tmplPoints" class="text-center">
                                 </app-player-basics>
-        
-                                <!-- <app-gameround-scroller 
-                                [viewPeriod]="currentGameRound.viewPeriod"
-                                [previousGameRound]="previousGameRound()"
-                                [nextGameRound]="nextGameRound()"
-                                [gameRounds]="sliderGameRounds"
-                                    (update)="updateGameRound($event)"></app-gameround-scroller> -->
+                                
+                                <app-againstgame-title class="mt-3" [againstGame]="sourceAgainstGame"></app-againstgame-title>
         
                                 <!-- <div class="text-center mt-3 mb-2">
                                     <h2 *ngIf="processingGames" class="text-center">
@@ -38,7 +34,7 @@
                                     @if(!processingGames && currentGame && currentGameRound){
                                     <button type="button" class="btn btn-outline-primary"
                                         routerLink="['/pool/sourcegame', pool.getId(), currentGameRound.getNumber(), currentGame.getId()]">
-                                        <app-againstgame-title [againstGame]="currentGame"></app-againstgame-title>
+                                        
                                     </button>
                                     }
                                 </div>
@@ -47,15 +43,13 @@
                                     <!-- toon laatste 3 gespeelde wedstrijden en 1e wegstrijd op het programma -->
                                     <!-- ga uit van nu als tijd, 
                                     kijk niet naar de speelronde-nummers maar liefst chronologisch-->
-                                    @if(currentGameRound){
-                                        @let statistics = statisticsGetter.getStatistics(s11Player,currentGameRound.number);
-                                        @if(statistics){
-                                        <s11-player-statistics [gameRound]="currentGameRound" [statistics]="statistics"
+                                    @if(statistics) {
+                                        <s11-player-statistics 
+                                            [statistics]="statistics"
                                             [line]="s11Player.getLine()"
-                                            [competitionConfig]="competitionConfig">
+                                            [scorePointsMap]="scorePointsMap">
                                         </s11-player-statistics>
-                                        }
-                                    } 
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -63,6 +57,16 @@
                 }
             }
         </div>
+        <!-- @let tmplSofaScoreLink = sofaScoreLink();
+        @if(tmplSofaScoreLink) {
+            <div class="text-center mt-3 mb-2">
+                <button type="button" class="btn btn-outline-primary"
+                    (click)="openExternalLink(tmplSofaScoreLink)">
+                    <fa-icon [icon]=facSofaScore></fa-icon>
+                    <span class="ms-1 d-none d-sm-inline"> SofaScore</span>
+                </button>
+            </div>
+        } -->
     } @else {
         <h2 class="text-center">
             <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>

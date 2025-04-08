@@ -75,9 +75,17 @@
             }
             @if( !processingGames()) {
                 @let tmplFormationMap = formationMap();
-                @if(pool && poolUsers && tmplCurrentGameRound && sourceGameRoundGames.length > 0 && tmplFormationMap && poolUsersWithGameRoundsPoints()){
-                    <div class="mt-3">
-                    @for(againstGame of sourceGameRoundGames; track againstGame.getId()){
+                @if(pool && poolUsers && tmplCurrentGameRound && sourceGameRoundGames.length > 0 && tmplFormationMap && competitorPoolUserAndFormations()){                    
+                    <div class="mt-3">                
+                        <againstgames-table
+                        [sourceAgainstGames]="sourceGameRoundGames"
+                        [gameRound]="tmplCurrentGameRound"
+                        [competitorPoolUserAndFormations]="competitorPoolUserAndFormations()"
+                        [statisticsGetter]="statisticsGetter">
+                        </againstgames-table>
+                    </div>
+                    
+                    
                         <!-- <table class="table">
                             <thead>
                                 <tr class="bg-secondary">
@@ -101,8 +109,7 @@
                                 [poolUsers]="poolUsers" [statisticsGetter]="statisticsGetter">
                             </tbody>
                         </table> -->
-                    }
-                    </div>
+                    
                 }
             } @else {
                 <h2 class="text-center">

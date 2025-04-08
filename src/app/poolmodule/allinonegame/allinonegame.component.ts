@@ -1,6 +1,6 @@
 import { Component, effect, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgainstGame, AgainstSide, Competition, Competitor, CompetitorBase, GameState, SportRoundRankingItem, StartLocationMap, Structure, TeamCompetitor } from 'ngx-sport';
+import { AgainstGame, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Poule, SportRoundRankingItem, StartLocationMap, Structure, TeamCompetitor } from 'ngx-sport';
 import { concatMap, forkJoin, Observable, of } from 'rxjs';
 import { AuthService } from '../../lib/auth/auth.service';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
@@ -40,6 +40,8 @@ import { SourceAgainstGamesGetter } from '../../lib/gameRound/sourceAgainstGames
 import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
 import { FormationGetter } from '../../lib/formation/formationGetter';
 import { StatisticsGetter } from '../../lib/statistics/getter';
+import { AgainstGamesTableComponent } from '../game/source/againstGamesTable/againstgames-table.component';
+import { CompetitorPoolUserAndFormation } from '../poule/againstgames.component';
 
 
 @Component({
@@ -52,6 +54,7 @@ import { StatisticsGetter } from '../../lib/statistics/getter';
     WorldCupNavBarComponent,
     PoolNavBarComponent,
     NgbNavModule,
+    AgainstGamesTableComponent,
   ],
   templateUrl: "./allinonegame.component.html",
   styleUrls: ["./allinonegame.component.scss"],
@@ -71,7 +74,11 @@ export class PoolAllInOneGameScheduleComponent
   public poolUsersWithGameRoundsPoints: WritableSignal<
     CompetitorWithGameRoundsPoints[]
   > = signal([]);
-  public formationMap: WritableSignal<S11FormationMap | undefined> = signal(undefined);
+  public competitorPoolUserAndFormations: WritableSignal<
+    CompetitorPoolUserAndFormation[]
+  > = signal([]);
+  public formationMap: WritableSignal<S11FormationMap | undefined> =
+    signal(undefined);
   public showTransfers: WritableSignal<boolean> = signal(false);
   public processingGames: WritableSignal<boolean> = signal(true);
 
@@ -259,7 +266,10 @@ export class PoolAllInOneGameScheduleComponent
               )
               .reduce((a, b) => a + b, 0);
 
-            const competitors = Pool.getCompetitors(poolUsers, LeagueName.Competition);
+            const competitors = Pool.getCompetitors(
+              poolUsers,
+              LeagueName.Competition
+            );
             const competitor: PoolCompetitor | undefined = competitors.find(
               (competitor) => competitor.getPoolUser() === poolUser
             );
@@ -409,13 +419,13 @@ export class PoolAllInOneGameScheduleComponent
   ): void {
     this.processing.set(true);
 
-      this.formationGetter
-        .getFormationMap(pool, poolUsers, gameRound.viewPeriod)
-        .subscribe({
-          next: (formationMap: S11FormationMap) => {
-            this.formationMap.set(formationMap);
-          },
-        });
+    this.formationGetter
+      .getFormationMap(pool, poolUsers, gameRound.viewPeriod)
+      .subscribe({
+        next: (formationMap: S11FormationMap) => {
+          this.formationMap.set(formationMap);
+        },
+      });
 
     this.setSourceGameRoundGames(pool.getCompetitionConfig(), gameRound);
 
@@ -443,6 +453,22 @@ export class PoolAllInOneGameScheduleComponent
               this.poolUsersWithGameRoundsPoints.set(
                 poolUsersWithGameRoundsPoints
               );
+
+              const competitorPoolUserAndFormations = poolUsersWithGameRoundsPoints.map((poolUserWithGameRoundsPoints: CompetitorWithGameRoundsPoints): CompetitorPoolUserAndFormation => {
+                const competitor = poolUserWithGameRoundsPoints.competitor;
+                const poolUser = competitor.getPoolUser();
+                const formation = this.formationMap()?.get(+poolUser.getId());
+                if (formation === undefined) {
+                  throw new Error("formation not found");
+                }
+                return {
+                  competitor: competitor,
+                  poolUser: poolUser,
+                  formation: formation,
+                };
+              });
+              this.competitorPoolUserAndFormations.set(competitorPoolUserAndFormations);
+
               this.processing.set(false);
             },
           });
@@ -554,9 +580,97 @@ export class PoolAllInOneGameScheduleComponent
     );
   }
 
-  // updateGameRounds(gameRoundsourceGame: AgainstGame): void {
-  //   this.currentSourceGame = sourceGame;
-  // }
+  //  forkJoin(
+  //                         this.getHomeAwayCompetitorPoolUserAndFormations(
+  //                           activeViewPeriod,
+  //                           poolUsers,
+  //                           poolPoule
+  //                         )
+  //                       ).subscribe({
+  //                         next: (
+  //                           competitorPoolUserAndFormations: CompetitorPoolUserAndFormation[]
+  //                         ) => {
+  //                           const formations =
+  //                             competitorPoolUserAndFormations.map(
+  //                               (
+  //                                 competitorPoolUserAndFormation: CompetitorPoolUserAndFormation
+  //                               ) => {
+  //                                 if (
+  //                                   competitorPoolUserAndFormation.side ===
+  //                                   AgainstSide.Home
+  //                                 ) {
+  //                                   this.homeItem.set(
+  //                                     competitorPoolUserAndFormation
+  //                                   );
+  //                                 }
+  //                                 if (
+  //                                   competitorPoolUserAndFormation.side ===
+  //                                   AgainstSide.Away
+  //                                 ) {
+  //                                   this.awayItem.set(
+  //                                     competitorPoolUserAndFormation
+  //                                   );
+  //                                 }
+  //                                 return competitorPoolUserAndFormation.formation;
+  //                               }
+  //                             );
+  //                           this.setStatistics(formations, gameRounds);
+  //                         },
+  //                       });
+
+  getCompetitorPoolUserAndFormations(
+    activeViewPeriod: ViewPeriod,
+    poolUsers: PoolUser[],
+    poolPoule: Poule
+  ): Observable<CompetitorPoolUserAndFormation>[] {
+    const poolCompetitors = Pool.getCompetitors(poolUsers, this.leagueName);
+
+    const homeStartLocation = poolPoule.getPlace(1).getStartLocation();
+    const awayStartLocation = poolPoule.getPlace(2).getStartLocation();
+    if (homeStartLocation === undefined || awayStartLocation === undefined) {
+      throw new Error("startLocation not found");
+    }
+
+    const homeCompetitor = poolCompetitors.find(
+      (competitor: PoolCompetitor) => {
+        return competitor.getStartLocation().equals(homeStartLocation);
+      }
+    );
+    const awayCompetitor = poolCompetitors.find(
+      (competitor: PoolCompetitor) => {
+        return competitor.getStartLocation().equals(awayStartLocation);
+      }
+    );
+
+    if (homeCompetitor === undefined || awayCompetitor === undefined) {
+      throw new Error("startLocation not found");
+    }
+
+    const homePoolUser = homeCompetitor.getPoolUser();
+    const awayPoolUser = awayCompetitor.getPoolUser();
+    return [
+      this.formationGetter.getFormation(activeViewPeriod, homePoolUser).pipe(
+        concatMap((formation: S11Formation) => {
+          return of({
+            competitor: homeCompetitor,
+            poolUser: homePoolUser,
+            formation: formation,
+            side: AgainstSide.Home,
+          });
+        })
+      ),
+      this.formationGetter.getFormation(activeViewPeriod, awayPoolUser).pipe(
+        concatMap((formation: S11Formation) => {
+          return of({
+            competitor: awayCompetitor,
+            poolUser: awayPoolUser,
+            formation: formation,
+            side: AgainstSide.Away,
+          });
+        })
+      ),
+    ];
+  }
 
   isTeamCompetitor(sideCompetitor: Competitor | undefined): boolean {
     return sideCompetitor instanceof TeamCompetitor;

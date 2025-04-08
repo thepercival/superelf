@@ -252,30 +252,18 @@ export class PoolPouleAgainstGamesComponent
                           next: (
                             competitorPoolUserAndFormations: CompetitorPoolUserAndFormation[]
                           ) => {
-                            const formations =
-                              competitorPoolUserAndFormations.map(
-                                (
-                                  competitorPoolUserAndFormation: CompetitorPoolUserAndFormation
-                                ) => {
-                                  if (
-                                    competitorPoolUserAndFormation.side ===
-                                    AgainstSide.Home
-                                  ) {
-                                    this.homeItem.set(
-                                      competitorPoolUserAndFormation
-                                    );
-                                  }
-                                  if (
-                                    competitorPoolUserAndFormation.side ===
-                                    AgainstSide.Away
-                                  ) {
-                                    this.awayItem.set(
-                                      competitorPoolUserAndFormation
-                                    );
-                                  }
-                                  return competitorPoolUserAndFormation.formation;
-                                }
-                              );
+                            const awayCompetitorPoolUserAndFormation = competitorPoolUserAndFormations.pop();
+                            const homeCompetitorPoolUserAndFormation = competitorPoolUserAndFormations.pop();
+                            if (homeCompetitorPoolUserAndFormation === undefined
+                              || awayCompetitorPoolUserAndFormation === undefined) {
+                                throw new Error("home or away competitor not found");
+                            }
+                            this.homeItem.set(homeCompetitorPoolUserAndFormation);
+                            this.awayItem.set(awayCompetitorPoolUserAndFormation);                            
+                            const formations = [
+                              homeCompetitorPoolUserAndFormation.formation,
+                              awayCompetitorPoolUserAndFormation.formation
+                            ];
                             this.setStatistics(formations, gameRounds);
                           },
                         });
@@ -1112,8 +1100,7 @@ export class PoolPouleAgainstGamesComponent
 export interface CompetitorPoolUserAndFormation {
   competitor: PoolCompetitor,
   poolUser: PoolUser,
-  formation: S11Formation,
-  side: AgainstSide
+  formation: S11Formation
 }
 
 interface FormationPlacesLine {

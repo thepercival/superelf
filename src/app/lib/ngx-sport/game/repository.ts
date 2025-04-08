@@ -29,6 +29,7 @@ export class GameRepository extends APIRepository {
           this.getUrl(poule.getCompetition()) + "/gamerounds/" + gameRoundNr;
         return this.http.get<JsonAgainstGame[]>(url, this.getOptions()).pipe(
             map((jsonAgainstGames: JsonAgainstGame[]) => {
+                console.log(jsonAgainstGames);
                 return jsonAgainstGames.map((jsonAgainstGame: JsonAgainstGame) => {
                     return this.mapper.toNewAgainst(jsonAgainstGame, poule, poule.getCompetition().getSingleSport());
                 });
@@ -61,6 +62,18 @@ export class GameRepository extends APIRepository {
         );
     }
 
+    getSourceObjectExternalLink(game: AgainstGame): Observable<string> {
+        const competition = game.getPoule().getCompetition();
+        const url = this.getUrl(competition) + '/sourcegames/' + game.getId() + '/sofascore';
+
+        return this.http.get<JsonExternalLink>(url, this.getOptions()).pipe(
+          map((json: JsonExternalLink): string => {
+            return json.link;
+          }),
+          catchError((err) => this.handleError(err))
+        );
+    }
+
     // getPoolCompetitionObjects(poule: Poule, viewPeriod: ViewPeriod): Observable<TogetherGame[]> {
     //     // if (poule.getTogetherGames().length > 0) {
     //     //     return of(gameRound.getAgainstGames());
@@ -75,4 +88,8 @@ export class GameRepository extends APIRepository {
     //         catchError((err) => this.handleError(err))
     //     );
     // }
+}
+
+interface JsonExternalLink{
+    link: string;
 }

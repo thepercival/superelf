@@ -8,18 +8,22 @@
             </div>
             <div class="card-body">
                 <div>
-                    <span ngClass="{'text-decoration-line-through': !statistics().isStarting()}">basis</span>
+                    <span [class]="{'text-decoration-line-through': !statistics().isStarting()}">basis</span>
                 </div>
                 <div>
-                    <span ngClass="{'text-decoration-line-through': !statistics().isSubstitute()}">ingevallen</span>
-                    <span *ngIf="statistics().isSubstitute()" class="float-end ms-1">{{statistics().getBeginMinute()}}"</span>
+                    <span [class]="{'text-decoration-line-through': !statistics().isSubstitute()}">ingevallen</span>
+                    @if(statistics().isSubstitute()) {
+                        <span class="float-end ms-1">{{statistics().getBeginMinute()}}"</span>
+                    }
                 </div>
                 <div>
-                    <span ngClass="{'text-decoration-line-through': statistics().hasAppeared()}">bank</span>
+                    <span [class]="{'text-decoration-line-through': statistics().hasAppeared()}">bank</span>
                 </div>
                 <div>
-                    <span ngClass="{'text-decoration-line-through': !statistics().isSubstituted()}">gewisseld</span>
-                    <span *ngIf="statistics().isSubstituted()" class="float-end ms-1">{{statistics().getEndMinute()}}"</span>
+                    <span [class]="{'text-decoration-line-through': !statistics().isSubstituted()}">gewisseld</span>
+                    @if(statistics().isSubstituted()) {
+                        <span class="float-end ms-1">{{statistics().getEndMinute()}}"</span>
+                    }
                 </div>
             </div>
         </div>
@@ -33,15 +37,20 @@
                 <div>
                     <app-superelf-icon [icon]=faFutbol [gameEvent]="Goal"></app-superelf-icon>                
                     <span class="ms-1">veld</span>
-                    <span *ngIf="statistics().getNrOfFieldGoals() > 0"
-                        class="float-end ms-1">{{statistics().getNrOfFieldGoals()}}x</span>
-                        <span *ngIf="statistics().getNrOfFieldGoals() === 0"
-                            class="float-end ms-1">-</span>
+                    @if(statistics().getNrOfFieldGoals() > 0) {
+                        <span class="float-end ms-1">{{statistics().getNrOfFieldGoals()}}x</span>
+                    } @else {
+                        <span class="float-end ms-1">-</span>
+                    }
                 </div>
-                <div>
-                    <span ngClass="{'text-decoration-line-through': statistics().getNrOfAssists() === 0}">assist</span>
-                    <span *ngIf="statistics().getNrOfAssists() > 0"
-                        class="float-end ms-1">{{statistics().getNrOfAssists()}}x</span>
+                <div>          
+                    <fa-icon [icon]=faHandshakeAngle></fa-icon>          
+                    <span class="ms-1">assist</span>
+                    @if(statistics().getNrOfAssists() > 0) {
+                        <span class="float-end ms-1">{{statistics().getNrOfAssists()}}x</span>
+                    } @else {
+                        <span class="float-end ms-1">-</span>
+                    }                    
                 </div>
                 <div>
                     <app-superelf-icon [icon]=faFutbol [gameEvent]="OwnGoal"></app-superelf-icon>                
@@ -97,17 +106,23 @@
                 <div>
                     <app-superelf-icon [icon]=facCard [gameEvent]="YellowCard"></app-superelf-icon>
                     <span class="mx-1">geel</span>
-                    <span *ngIf="statistics().getNrOfYellowCards() > 0"
-                        class="float-end ms-1">{{statistics().getNrOfYellowCards()}}x</span>
-                    <span *ngIf="statistics().getNrOfYellowCards() === 0" class="float-end ms-1">-</span>
+                    @if(statistics().getNrOfYellowCards() > 0) {
+                        <span class="float-end ms-1">{{statistics().getNrOfYellowCards()}}x</span>
+                    }
+                    @if (statistics().getNrOfYellowCards() === 0) {
+                        <span class="float-end ms-1">-</span>
+                    }
                 </div>
                 <div>
                     <app-superelf-icon [icon]=facCard [gameEvent]="RedCard"></app-superelf-icon>
                     <span class="mx-1">rood</span>
-                    <fa-icon *ngIf="statistics().gotDirectRedCard()" [icon]=faCheckCircle
-                        class="float-end ms-1 text-red">
-                    </fa-icon>
-                    <span *ngIf="!statistics().gotDirectRedCard()" class="float-end ms-1">-</span>
+                    @if(statistics().gotDirectRedCard()) {
+                        <fa-icon *ngIf="statistics().gotDirectRedCard()" [icon]=faCheckCircle
+                            class="float-end ms-1 text-red">
+                        </fa-icon>
+                    } @else {
+                        <span class="float-end ms-1">-</span>
+                    }
                 </div>
             </div>
         </div>

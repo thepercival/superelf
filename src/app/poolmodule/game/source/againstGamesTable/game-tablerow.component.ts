@@ -15,7 +15,7 @@ import { GameRound } from '../../../../lib/gameRound';
 import { PoolCompetitor } from '../../../../lib/pool/competitor';
 import { PoolUser } from '../../../../lib/pool/user';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { S11PlayerModalComponent } from '../../../player/info.modal.component';
+import { S11PlayerModalComponent } from '../../../player/playerinfo.modal.component';
 import { SportExtensions } from '../../../../lib/sportExtensions';
 import { CompetitionConfig } from '../../../../lib/competitionConfig';
 import { ActiveViewGameRoundsCalculator } from '../../../../lib/gameRound/activeViewGameRoundsCalculator';
@@ -33,7 +33,8 @@ import { PoolUserRow } from './againstgames-table.component';
 })
 export class GameTableRowComponent implements OnInit {
   public readonly gameRound = input.required<GameRound>();
-  public readonly poolUserRow = input.required<PoolUserRow>();
+  public readonly sourceAgainstGame = input.required<AgainstGame>();
+  public readonly poolUserRow = input.required<PoolUserRow>();  
 
   public readonly statisticsGetter = input.required<StatisticsGetter>();
 
@@ -67,21 +68,16 @@ export class GameTableRowComponent implements OnInit {
     // });
   }
 
-
-
   isCompetitor(sideCompetitor: Competitor | undefined): boolean {
     return sideCompetitor instanceof CompetitorBase;
   }
-
-
-
-
 
   // maak hier een modal van
   openPlayerModal(s11Player: S11Player): void {
     const activeModal = this.modalService.open(S11PlayerModalComponent);
     activeModal.componentInstance.s11Player = s11Player;
-    activeModal.componentInstance.currentGameRound = this.gameRound();
+    activeModal.componentInstance.sourceAgainstGame = this.sourceAgainstGame();
+    activeModal.componentInstance.scorePointsMap = this.poolUserRow().poolUser.getPool().getCompetitionConfig().getScorePointsMap();
     activeModal.result.then(
       () => {},
       (reason) => {}
