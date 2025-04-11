@@ -29,7 +29,6 @@ export class GameRepository extends APIRepository {
           this.getUrl(poule.getCompetition()) + "/gamerounds/" + gameRoundNr;
         return this.http.get<JsonAgainstGame[]>(url, this.getOptions()).pipe(
             map((jsonAgainstGames: JsonAgainstGame[]) => {
-                console.log(jsonAgainstGames);
                 return jsonAgainstGames.map((jsonAgainstGame: JsonAgainstGame) => {
                     return this.mapper.toNewAgainst(jsonAgainstGame, poule, poule.getCompetition().getSingleSport());
                 });

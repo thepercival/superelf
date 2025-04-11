@@ -31,7 +31,7 @@
       <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
     </td>
   </tr>
-  <tr *ngIf="!processing()" (click)="maybeLinkToPlayer(place)" ngClass="{'pointer': s11Player}">   
+  <tr *ngIf="!processing()" ngClass="{'pointer': s11Player}">   
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
       <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
       <!-- <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="editPlace.emit(place)">
@@ -44,7 +44,7 @@
     </td>
     
     @for(gameRound of gameRounds(); track $index ) {
-      <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
+      <td class="pointer text-end {{getSubstituteClass(place.isSubstitute())}}" (click)="maybeLinkToPlayer(place, gameRound)">
         @if(statisticsGetter().placeHasStatistics(place,gameRound)){
           @if(!place.isSubstitute()){        
             @if(statisticsGetter().hasAppeared(place, gameRound)){          

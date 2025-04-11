@@ -49,59 +49,20 @@ export class S11PlayerModalComponent implements OnInit {
 
   public statisticsGetter = new StatisticsGetter();
 
-  // // @Input() team: Team | undefined;
-  // public processingGames = false;
-  // public currentGame: AgainstGame | undefined;
-  // public currentStatistics: Statistics | undefined;
-  // public currentPoints: number | undefined;
-  // public sourceStructure: Structure | undefined;
-  // public startLocationMap!: StartLocationMap;
-
-  // public sliderGameRounds: (GameRound | undefined)[] = [];
-
-  // public faLevelUpAlt = faLevelUpAlt;
   public faSpinner = faSpinner;
   public facSofaScore = facSofaScore;
 
   constructor(
-    route: ActivatedRoute,
-    router: Router,
-    poolRepository: PoolRepository,
-    globalEventsManager: GlobalEventsManager,
-    private playerRepository: S11PlayerRepository,
     private statisticsRepository: StatisticsRepository,
-    private structureRepository: StructureRepository,
     private againstGameRepository: GameRepository,
     public imageRepository: ImageRepository,
     public cssService: CSSService,
-    private myNavigation: MyNavigation,
     public sportExtensions: SportExtensions,
     public modal: NgbActiveModal
   ) {
-    // super(route, router, poolRepository, globalEventsManager);
-    // const state = this.router.getCurrentNavigation()?.extras.state ?? undefined;
-    // if (state !== undefined) {
-    //   this.s11Player = state.s11Player;
-    //   this.pool = state.pool;
-    //   this.currentGameRound = state.gcurrentGameRound ?? undefined;
-    // }
   }
 
   ngOnInit() {
-    //   this.setPool(pool);
-    //   const competitionConfig = this.pool.getCompetitionConfig();
-    //   this.route.params.subscribe((params) => {
-    //     let viewPeriod: ViewPeriod | undefined = undefined;
-    //     let currentGameRound: GameRound | undefined;
-    //     const gameRoundNumber = +params.gameRound;
-    //     if (gameRoundNumber > 1) {
-    //       viewPeriod = pool.getViewPeriodByRoundNumber(gameRoundNumber);
-    //       if (viewPeriod !== undefined) {
-    //         currentGameRound = viewPeriod.getGameRound(gameRoundNumber);
-    //       }
-    //     } else {
-    //       viewPeriod = this.getCurrentViewPeriod(pool);
-    //     }
     if (this.s11Player !== undefined) {
       this.statisticsRepository
         .getPlayerObjects(this.s11Player, this.statisticsGetter)
@@ -111,6 +72,7 @@ export class S11PlayerModalComponent implements OnInit {
           },
         });
     }
+
     if (this.sourceAgainstGame !== undefined) {
       this.againstGameRepository
         .getSourceObjectExternalLink(this.sourceAgainstGame)
@@ -125,122 +87,6 @@ export class S11PlayerModalComponent implements OnInit {
   getLineClass(s11Player: S11Player): string {
     return this.cssService.getLine(s11Player.getLine());
   }
-
-  // private initSliderGameRounds(currentGameRound: GameRound | undefined): void {
-  //   this.sliderGameRounds = this.s11Player
-  //     .getViewPeriod()
-  //     .getGameRounds()
-  //     .slice();
-  //   if (currentGameRound !== undefined) {
-  //     const idx = this.sliderGameRounds.indexOf(currentGameRound);
-  //     if (idx >= 0) {
-  //       const secondPart = this.sliderGameRounds.splice(idx);
-  //       secondPart.push(undefined);
-  //       this.sliderGameRounds = secondPart.concat(this.sliderGameRounds);
-  //     }
-  //   } else {
-  //     this.sliderGameRounds.unshift(undefined);
-  //   }
-  // }
-
-  // getTeamImageUrl(player: Player): string {
-  //   return this.imageRepository.getTeamUrl(player.getTeam());
-  // }
-
-  // getPlayerImageUrl(player: Player): string {
-  //   return this.imageRepository.getPlayerUrl(player);
-  // }
-
-  // updateGameRound(
-  //   currentGameRound: GameRound | undefined,
-  //   disableProcessing?: boolean
-  // ): void {
-  //   this.currentGameRound = currentGameRound;
-  //   if (currentGameRound === undefined) {
-  //     this.player = this.s11SportExtensions.getCurrentPlayer(this.s11Player);
-  //     this.currentStatistics = undefined;
-  //     this.currentGame = undefined;
-  //     if (disableProcessing) {
-  //       this.processing.set(false);
-  //     }
-  //     return;
-  //   }
-  //   this.currentStatistics = this.statisticsGetter.getStatistics(
-  //     this.s11Player,
-  //     currentGameRound
-  //   );
-
-  //   if (currentGameRound.hasAgainstGames()) {
-  //     this.currentGame = new GamePicker(
-  //       this.pool.getSourceCompetition(),
-  //       currentGameRound
-  //     ).getGame(this.s11Player);
-  //     if (disableProcessing) {
-  //       this.processing.set(false);
-  //     }
-  //     return;
-  //   }
-  //   this.processingGames = true;
-  //   this.getSourceStructure(this.pool.getSourceCompetition()).subscribe({
-  //     next: (structure: Structure) => {
-  //       this.sourceStructure = structure;
-  //       const sourcePoule = structure
-  //         .getSingleCategory()
-  //         .getRootRound()
-  //         .getFirstPoule();
-
-  //       this.gameRepository
-  //         .getSourceObjects(sourcePoule, currentGameRound)
-  //         .subscribe({
-  //           next: (againstGames: AgainstGame[]) => {
-  //             this.currentGame = new GamePicker(
-  //               this.pool.getSourceCompetition(),
-  //               currentGameRound
-  //             ).getGame(this.s11Player);
-  //             // const out = this.currentGame?.getAgainstPlaces().map((gp: AgainstGamePlace) => {
-  //             //   return '' + gp.getPlace().getPlaceNr();
-  //             // }).join('&');
-  //             // console.log(out);
-  //           },
-  //           complete: () => {
-  //             if (disableProcessing) {
-  //               this.processing.set(false);
-  //             }
-  //             this.processingGames = false;
-  //           },
-  //         });
-  //     },
-  //   });
-  // }
-
-  // getSourceStructure(competition: Competition): Observable<Structure> {
-  //   if (this.sourceStructure !== undefined) {
-  //     return of(this.sourceStructure);
-  //   }
-  //   return this.structureRepository.getObject(competition);
-  // }
-
-  // getCurrentGameRoundPoints(): number {
-  //   if (this.currentGameRound === undefined) {
-  //     return this.s11Player.getTotalPoints(
-  //       this.pool.getCompetitionConfig().getScorePointsMap(),
-  //       undefined
-  //     );
-  //   }
-  //   if (this.currentStatistics === undefined) {
-  //     return 0;
-  //   }
-  //   const map = this.pool.getCompetitionConfig().getScorePointsMap();
-  //   return this.currentStatistics.getPoints(
-  //     this.s11Player.getLine(),
-  //     map,
-  //     undefined
-  //   );
-  // }
-
-  // navigateBack() {
-  //   this.myNavigation.back();
-  // }
 
   openExternalLink(url: string) {
     window.open(url, "_blank");

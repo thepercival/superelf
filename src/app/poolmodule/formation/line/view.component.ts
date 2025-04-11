@@ -37,7 +37,7 @@ export class FormationLineViewComponent implements OnInit {
   readonly statisticsGetter = input.required<StatisticsGetter>();
   readonly processing = model<boolean>(true);
   readonly totalPoints = input<number>();  
-  @Output() linkToPlayer = new EventEmitter<S11Player>();
+  @Output() linkToPlayer = new EventEmitter<PlayerLink>();
 
   public faSpinner = faSpinner;
 
@@ -110,15 +110,20 @@ export class FormationLineViewComponent implements OnInit {
     return this.cssService.getLine(this.line().getNumber(), prefix + "-");
   }
 
-  maybeLinkToPlayer(place: S11FormationPlace): void {
+  maybeLinkToPlayer(place: S11FormationPlace, gameRound: GameRound): void {
     const s11Player = place.getPlayer();
     if (s11Player === undefined) {
       return;
     }
-    this.linkToPlayer.emit(s11Player);
+    this.linkToPlayer.emit({ s11Player, gameRound });
   }
 
   getSubstituteClass(isSubstitute: boolean): string {
     return isSubstitute ? "table-no-bottom-border" : "";
   }
+}
+
+export interface PlayerLink {
+  s11Player: S11Player;
+  gameRound: GameRound
 }

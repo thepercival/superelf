@@ -2,7 +2,7 @@
     <ng-container *ngTemplateOutlet="side; context: {side: HomeSide}"></ng-container>
 </th>
 
-<th class="text-center px-2">    
+<th class="text-center px-0">    
     @if(againstGame().getState() === Finished) {        
         {{s11NameService.getAgainstScore(againstGame())}}
     } @else {

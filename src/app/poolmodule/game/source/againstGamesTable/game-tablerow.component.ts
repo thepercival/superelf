@@ -82,13 +82,6 @@ export class GameTableRowComponent implements OnInit {
       () => {},
       (reason) => {}
     );
-
-    // const gameRound = this.currentGameRound?.getNumber() ?? 0;
-    // this.router.navigate(
-    //   ["/pool/player/", pool.getId(), s11Player.getId(), gameRound] , {
-    //   state: { s11Player, "pool": this.pool, currentGameRound: undefined }
-    // }
-    // );
   }
 
   getRouterLink(

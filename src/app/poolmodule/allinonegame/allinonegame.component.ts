@@ -454,18 +454,19 @@ export class PoolAllInOneGameScheduleComponent
                 poolUsersWithGameRoundsPoints
               );
 
-              const competitorPoolUserAndFormations = poolUsersWithGameRoundsPoints.map((poolUserWithGameRoundsPoints: CompetitorWithGameRoundsPoints): CompetitorPoolUserAndFormation => {
-                const competitor = poolUserWithGameRoundsPoints.competitor;
-                const poolUser = competitor.getPoolUser();
-                const formation = this.formationMap()?.get(+poolUser.getId());
-                if (formation === undefined) {
-                  throw new Error("formation not found");
-                }
-                return {
-                  competitor: competitor,
-                  poolUser: poolUser,
-                  formation: formation,
-                };
+              const competitorPoolUserAndFormations = poolUsersWithGameRoundsPoints.map(
+                (poolUserWithGameRoundsPoints: CompetitorWithGameRoundsPoints): CompetitorPoolUserAndFormation => {
+                  const competitor = poolUserWithGameRoundsPoints.competitor;
+                  const poolUser = competitor.getPoolUser();
+                  const formation = this.formationMap()?.get(+poolUser.getId());
+                  if (formation === undefined) {
+                    throw new Error("formation not found");
+                  }
+                  return {
+                    competitor: competitor,
+                    poolUser: poolUser,
+                    formation: formation,
+                  };
               });
               this.competitorPoolUserAndFormations.set(competitorPoolUserAndFormations);
 
@@ -569,54 +570,9 @@ export class PoolAllInOneGameScheduleComponent
               },
             });
         },
-
-        // if (gameRound.hasAgainstGames()) {
-        //   this.updateSourceGame(this.getDefaultGame(gameRound.getAgainstGames()));
-        //   this.processing.set(false);
-        //   this.processingGames.set(false);
-        //   return;
-        // }
       }
     );
   }
-
-  //  forkJoin(
-  //                         this.getHomeAwayCompetitorPoolUserAndFormations(
-  //                           activeViewPeriod,
-  //                           poolUsers,
-  //                           poolPoule
-  //                         )
-  //                       ).subscribe({
-  //                         next: (
-  //                           competitorPoolUserAndFormations: CompetitorPoolUserAndFormation[]
-  //                         ) => {
-  //                           const formations =
-  //                             competitorPoolUserAndFormations.map(
-  //                               (
-  //                                 competitorPoolUserAndFormation: CompetitorPoolUserAndFormation
-  //                               ) => {
-  //                                 if (
-  //                                   competitorPoolUserAndFormation.side ===
-  //                                   AgainstSide.Home
-  //                                 ) {
-  //                                   this.homeItem.set(
-  //                                     competitorPoolUserAndFormation
-  //                                   );
-  //                                 }
-  //                                 if (
-  //                                   competitorPoolUserAndFormation.side ===
-  //                                   AgainstSide.Away
-  //                                 ) {
-  //                                   this.awayItem.set(
-  //                                     competitorPoolUserAndFormation
-  //                                   );
-  //                                 }
-  //                                 return competitorPoolUserAndFormation.formation;
-  //                               }
-  //                             );
-  //                           this.setStatistics(formations, gameRounds);
-  //                         },
-  //                       });
 
   getCompetitorPoolUserAndFormations(
     activeViewPeriod: ViewPeriod,

@@ -192,7 +192,6 @@ export class StatisticsGetter {
   ): void {
     const gameRoundNr =
       gameRound instanceof GameRound ? gameRound.number : gameRound;
-    // console.log('addStats-' + gameRoundNr + '-' + personId);
     let gameRoundStatsMap = this.personMap.get(personId);
     if (gameRoundStatsMap === undefined) {
       gameRoundStatsMap = new StatisticsMap();

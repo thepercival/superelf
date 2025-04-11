@@ -2,7 +2,7 @@
 <ng-container
     *ngTemplateOutlet="contentHome; context:{poolUserRow: poolUserRow(), gameRound: gameRound()}">
 </ng-container>
-<td class="text-center">
+<td class="text-center px-0">
     <a routerLink="getRouterLink(poolUser)">
         {{poolUserRow().poolUser.getName()}}
     </a>
@@ -15,14 +15,14 @@
   @let formationPlace = poolUserRow.homeFormationPlace;
   @let s11Player = formationPlace?.getPlayer();  
   <!-- sub -->
-  <td>              
+  <td class="px-0">              
     @if(formationPlace?.isSubstitute()){
       <span class="badge badge-reserve ms-1">r</span>
     }
   </td>
 
   <!-- name -->
-  <td class="text-end">
+  <td class="text-end px-0">
       @if(s11Player){
         <a href="javascript:void(0)" (click)="openPlayerModal(s11Player)">
             <span class="px-1 text-break">{{s11Player.getPerson().getName()}}</span>
@@ -102,7 +102,7 @@
   </td>
 
     <!-- name -->
-  <td>
+  <td class="px-0">
       @if(s11Player){    
         <a href="javascript:void(0)" (click)="openPlayerModal(s11Player)">
             <span class="px-1 text-break">{{s11Player.getPerson().getName()}}</span>
@@ -111,7 +111,7 @@
   </td>
 
       <!-- sub -->
-  <td>              
+  <td class="px-0">
     @if(formationPlace?.isSubstitute()){
       <span class="badge badge-reserve ms-1">r</span>
     }

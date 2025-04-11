@@ -78,7 +78,6 @@ export class S11PlayerStatisticsComponent
       changes.statistics.currentValue !== undefined
     ) {
       const statistics: Statistics = changes.statistics.currentValue;
-      console.log(statistics, this.scorePointsMap());
 
       // console.log('first changes statistics', changes.statistics.currentValue);
       const sheetLines =

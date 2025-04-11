@@ -77,9 +77,7 @@ export class SourceGameComponent extends PoolComponent implements OnInit {
       this.setPool(pool);
 
       this.route.params.subscribe((params) => {
-        // @TODO CDK
-        // const gameRound = this.getGameRoundByNumber(pool, +params["gameRound"]);
-
+      
         this.getSourceStructure(pool.getSourceCompetition()).subscribe({
           next: (structure: Structure) => {
             const poule = structure

@@ -42,39 +42,43 @@
             } 
           </div>
         </div>
-      }
+
+        @if(!processingStatistics()){
+          @let tmplCurrentGameRound = currentGameRound();
+          @let competitionConfig = pool.getCompetitionConfig();
+          <div>
+            <!-- lines-->
+            @let tmplFormation = formation();
+            @if(tmplCurrentGameRound && tmplFormation && pool){
+              <table class="table">
+                @for(line of tmplFormation.getLines();track line.getNumber()) {
+                  <tbody app-pool-formationline-view [line]="line"
+                      [statisticsGetter]="statisticsGetter" [gameRounds]="viewGameRounds()" 
+                      [totalPoints]="line.getNumber() === GoalKeeper ? tmplFormation.getTotalPoints(undefined) : undefined"                  
+                      (linkToPlayer)="openPlayerModal($event, competitionConfig)">
+                  </tbody>
+                }
+              </table>
+            }
+          </div>
+        } @else {
+          <h2 class="text-center">
+            <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+          </h2>
+        }
+      }      
 
       @if(alert) {
         <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
       }
+
+
+
     } @else {
       <h2 class="text-center">
         <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
       </h2>
     }    
-    
-    @if(!processingStatistics()){
-      @let tmplCurrentGameRound = currentGameRound();
-      <div>
-        <!-- lines-->
-        @let tmplFormation = formation();
-        @if(tmplCurrentGameRound && tmplFormation && pool){
-          <table class="table">
-            @for(line of tmplFormation.getLines();track line.getNumber()) {
-              <tbody app-pool-formationline-view [line]="line"
-                  [statisticsGetter]="statisticsGetter" [gameRounds]="viewGameRounds()" 
-                  [totalPoints]="line.getNumber() === GoalKeeper ? tmplFormation.getTotalPoints(undefined) : undefined"                  
-                  (linkToPlayer)="linkToPlayer(pool,$event, tmplCurrentGameRound.number)">
-              </tbody>
-            }
-          </table>
-        }
-      </div>
-    } @else {
-      <h2 class="text-center">
-        <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
-      </h2>
-    }
     
   </div>
 </div>
