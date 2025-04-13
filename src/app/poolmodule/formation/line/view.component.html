@@ -1,29 +1,31 @@
-<tr class="mt-3">
-  <td colspan="2" class="table-no-bottom-border">
-    <h5 class="card-title">
-      <app-lineicon [line]="line().getNumber()" [abbreviate]="false"></app-lineicon>
-    </h5>
-  </td>
-  @for(gameRound of gameRounds(); track $index ) {
-    <td class="table-no-bottom-border text-end">
-      @if( line().getNumber() === GoalKeeper ) {
-        <span class="badge bg-totals">{{calculateTotalGameRoundPoints(line().getFormation(), gameRound)}}</span>    
-      }      
+@if(!processing()) {
+  <tr class="mt-3">
+    <td colspan="2" class="table-no-bottom-border">
+      <h5 class="card-title">
+        <app-lineicon [line]="line().getNumber()" [abbreviate]="false"></app-lineicon>
+      </h5>
     </td>
-  }
-  <td class="table-no-bottom-border text-end">
-    <span *ngIf="totalPoints()" class="badge bg-totals">{{totalPoints()}}</span>    
-  </td>
-</tr>
+    @for(gameRound of gameRounds(); track $index ) {
+      <td class="table-no-bottom-border text-end">
+        @if( line().getNumber() === GoalKeeper ) {
+          <span class="badge bg-totals">{{calculateTotalGameRoundPoints(line().getFormation(), gameRound)}}</span>    
+        }      
+      </td>
+    }
+    <td class="table-no-bottom-border text-end">
+      <span *ngIf="totalPoints()" class="badge bg-totals">{{totalPoints()}}</span>    
+    </td>
+  </tr>
 
-@let firstGameRound = gameRounds()[0];
-@let teamMembershipDate = firstGameRound?.period?.getStartDateTime();
-@for(place of line().getStartingPlaces(); track place.getId()){  
-  <ng-container *ngTemplateOutlet="placeRow; context: {place:place, s11Player: place.getPlayer(), currentTeam: getCurrentTeam(place.getPlayer(), teamMembershipDate)}">
-  </ng-container>
+  @let firstGameRound = gameRounds()[0];
+  @let teamMembershipDate = firstGameRound?.period?.getStartDateTime();
+  @for(place of line().getStartingPlaces(); track place.getId()){  
+    <ng-container *ngTemplateOutlet="placeRow; context: {place:place, s11Player: place.getPlayer(), currentTeam: getCurrentTeam(place.getPlayer(), teamMembershipDate)}">
+    </ng-container>
+  }
+  <ng-container *ngTemplateOutlet="placeRow; context: {place:line().getSubstitute(), s11Player: line().getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line().getSubstitute().getPlayer(), teamMembershipDate)}">
+  </ng-container>  
 }
-<ng-container *ngTemplateOutlet="placeRow; context: {place:line().getSubstitute(), s11Player: line().getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line().getSubstitute().getPlayer(), teamMembershipDate)}">
-</ng-container>  
 
 <ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentTeam="currentTeam">
   <tr *ngIf="processing()">
@@ -61,9 +63,9 @@
               } @else {            
                 <span class="badge bg-nopoints">x</span>
               }
-            </div>
+            </div>            
           }
-        }
+        }        
       </td>
     }
     

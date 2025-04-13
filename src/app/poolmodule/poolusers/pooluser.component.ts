@@ -71,7 +71,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   public assembleFormation: WritableSignal<S11Formation | undefined> = signal(undefined);
   public transferFormation: WritableSignal<S11Formation | undefined> = signal(undefined);
 
-  public processingStatistics: WritableSignal<boolean> = signal(false);
+  public processingStatistics: WritableSignal<boolean> = signal(true);
 
   public poolUser: PoolUser | undefined;
   public leagueName!: LeagueName;
@@ -274,6 +274,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
 
   selectGameRound(poolUser: PoolUser, gameRound: GameRound): void {
     this.processing.set(true);
+    this.processingStatistics.set(true);
 
     const competitionConfig = poolUser.getPool().getCompetitionConfig();
 
