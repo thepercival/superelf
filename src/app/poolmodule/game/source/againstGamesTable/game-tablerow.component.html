@@ -41,7 +41,7 @@
       @if(formationPlace && statisticsGetter().placeHasStatistics(formationPlace,gameRound)){
         @if(!formationPlace.isSubstitute()){        
           @if(statisticsGetter().hasAppeared(formationPlace, gameRound)){          
-              <button type="button" class="btn btn-sm text-white bg-points" (click)="openPlayerModal(s11Player)">
+              <button type="button" class="btn btn-sm btn-points" (click)="openPlayerModal(s11Player)">
                 {{statisticsGetter().getFormationPlaceGameRoundPoints(formationPlace,gameRound.number, undefined)}}
               </button>              
           }
@@ -51,7 +51,7 @@
         } @else if( formationPlace.getFormationLine().hasSubstituteAppareance(gameRound) ) {
           
           @if(statisticsGetter().hasAppeared(formationPlace,gameRound)) {
-            <button type="button" class="btn btn-sm text-white bg-points" (click)="openPlayerModal(s11Player)">
+            <button type="button" class="btn btn-sm btn-points" (click)="openPlayerModal(s11Player)">
               {{statisticsGetter().getFormationPlaceGameRoundPoints(formationPlace,gameRound.number, undefined)}}
             </button>
           } @else {            
@@ -73,7 +73,7 @@
       @if(formationPlace && statisticsGetter().placeHasStatistics(formationPlace,gameRound)){
         @if(!formationPlace.isSubstitute()){        
           @if(statisticsGetter().hasAppeared(formationPlace, gameRound)){          
-            <button type="button" class="btn btn-sm text-white bg-points" (click)="openPlayerModal(s11Player)">
+            <button type="button" class="btn btn-sm btn-points" (click)="openPlayerModal(s11Player)">
               {{statisticsGetter().getFormationPlaceGameRoundPoints(formationPlace,gameRound.number, undefined)}}
             </button>
           }
@@ -82,7 +82,7 @@
           }
         } @else if( formationPlace.getFormationLine().hasSubstituteAppareance(gameRound) ) {          
           @if(statisticsGetter().hasAppeared(formationPlace,gameRound)) {
-            <button type="button" class="btn btn-sm text-white bg-points" (click)="openPlayerModal(s11Player)">
+            <button type="button" class="btn btn-sm btn-points" (click)="openPlayerModal(s11Player)">
               {{statisticsGetter().getFormationPlaceGameRoundPoints(formationPlace,gameRound.number, undefined)}}
             </button>
           } @else {            

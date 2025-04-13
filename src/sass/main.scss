@@ -16,6 +16,27 @@ $enable-responsive-font-sizes: true !default;
   @extend .font-weight-bold !optional;
 }
 
+.btn-points {
+  @extend .text-white;
+  @extend .text-end;
+  @extend .bg-points;
+  width: 1.7rem;
+}
+
+.btn-small-totals {
+  @extend .text-white;
+  @extend .text-end;
+  @extend .bg-totals;
+  width: 1.7rem;
+}
+
+.btn-large-totals {  
+  @extend .text-white;
+  @extend .text-end;
+  @extend .bg-totals;
+  width: 2.2rem;
+}
+
 .text-gold {
   color: gold;
 }

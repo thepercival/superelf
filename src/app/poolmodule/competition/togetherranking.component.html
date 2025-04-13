@@ -4,7 +4,7 @@
       @for(competitorWithGameRoundsPoints of competitorsWithGameRoundsPoints(); track $index)
       {
         @let poolUser = competitorWithGameRoundsPoints.competitor.getPoolUser();
-        <tr class="pointer" (click)="linkToCompetitor.emit(competitorWithGameRoundsPoints)">            
+        <tr class="pointer">            
             <td class="rankingnr text-end ps-0"><!-- badge text-black -->
               @if(showTransfers()) {
                 <button type="button"
@@ -16,21 +16,22 @@
                 <span class="">{{competitorWithGameRoundsPoints.rank}}</span>
               } 
             </td>
-            <td class="text-break ps-0" ngClass="{ 'favitem': false}">
+            <td class="text-break ps-0" [class]="{ 'favitem': false}"
+                (click)="linkToCompetitor.emit(competitorWithGameRoundsPoints)">
                 <span>{{poolUser.getUser().getName()}}</span>
                 <!-- <app-superelf-icon *ngIf="rankingItem.poolUser.getUser().getName() === 'storm'" 
                 class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon> -->
             </td>
             @for(gameRoundPoints of competitorWithGameRoundsPoints.gameRoundsPoints; track $index; let last=$last)
             {
-              <td class="text-end ps-0 pointer">
-                <button type="button" class="btn btn-sm text-white {{getBestWorstBadgeClass(poolUser, gameRoundPoints.number)}}">
+              <td class="text-end ps-0 pointer" (click)="linkToCompetitor.emit(competitorWithGameRoundsPoints)">
+                <button type="button" class="btn btn-points btn-sm {{getBestWorstBadgeClass(poolUser, gameRoundPoints.number)}}">
                   {{gameRoundPoints.points}}
                 </button>
               </td>
             }
-            <td class="text-end ps-0">
-                <button type="button" class="btn btn-sm bg-totals text-white">
+            <td class="text-end ps-0" (click)="linkToCompetitor.emit(competitorWithGameRoundsPoints)">
+                <button type="button" class="btn btn-sm btn-large-totals">
                   {{competitorWithGameRoundsPoints.viewPeriodsPoints}}
                 </button>
             </td>
