@@ -48,13 +48,16 @@
           @let competitionConfig = pool.getCompetitionConfig();
           <div>
             <!-- lines-->
-            @let tmplFormation = formation();
-            @if(tmplCurrentGameRound && tmplFormation && pool){
+            @let tmplAssembleFormation = assembleFormation();
+            @let tmplTransferFormation = transferFormation();
+            @let viewFormation = tmplTransferFormation ?? tmplAssembleFormation;
+            @if(tmplCurrentGameRound && viewFormation && pool){
               <table class="table">
-                @for(line of tmplFormation.getLines();track line.getNumber()) {
+                @for(line of viewFormation.getLines();track line.getNumber()) {                  
                   <tbody app-pool-formationline-view [line]="line"
                       [statisticsGetter]="statisticsGetter" [gameRounds]="viewGameRounds()" 
-                      [totalPoints]="line.getNumber() === GoalKeeper ? tmplFormation.getTotalPoints(undefined) : undefined"                  
+                      [totalPoints]="line.getNumber() === GoalKeeper ? viewFormation.getTotalPoints(undefined) : undefined"
+                      [previousFormation]="viewFormation === tmplTransferFormation ? tmplAssembleFormation : undefined"
                       (linkToPlayer)="openPlayerModal($event, competitionConfig)">
                   </tbody>
                 }

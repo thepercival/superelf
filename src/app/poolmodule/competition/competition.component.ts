@@ -257,17 +257,10 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     // get viewPeriod totals
     {
       const competitionConfig = pool.getCompetitionConfig();
-      if (
-        viewPeriod === competitionConfig.getTransferPeriod().getViewPeriod()
-      ) {
-        const assembleViewPeriod = competitionConfig
-          .getAssemblePeriod()
-          .getViewPeriod();
+      if (viewPeriod === competitionConfig.getTransferPeriod().getViewPeriod()) {
+        const assembleViewPeriod = competitionConfig.getAssemblePeriod().getViewPeriod();
         totals.push(
-          this.poolUsersTotalsGetter.getViewPeriodTotals(
-            pool,
-            assembleViewPeriod
-          )
+          this.poolUsersTotalsGetter.getViewPeriodTotals(pool,assembleViewPeriod)
         );
       }
     }
@@ -534,6 +527,15 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
       pool.getId(),
       this.leagueName,
       pouleId,
+    ]);
+  }
+
+  linkToPoolUser(competitor: CompetitorWithGameRoundsPoints): void {
+    this.router.navigate([
+      "/pool/user",
+      competitor.competitor.getPoolUser().getPool().getId(),
+      competitor.competitor.getPoolUser().getId(),
+      this.viewGameRounds()[this.viewGameRounds().length - 1].number,
     ]);
   }
 

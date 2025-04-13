@@ -1,8 +1,9 @@
-import { Period } from 'ngx-sport';
+import { GameState, Period } from 'ngx-sport';
 import { ViewPeriod } from './periods/viewPeriod';
 
 export class GameRound {
   public readonly totalNrOfGames: number;
+  public readonly state: GameState;
 
   constructor(
     public readonly viewPeriod: ViewPeriod,
@@ -13,6 +14,13 @@ export class GameRound {
     public readonly finished: number
   ) {
     this.totalNrOfGames = created + inProgress + finished
+    if( this.inProgress > 0 || ( this.created > 0 && this.finished > 0 ) ) {
+      this.state = GameState.InProgress;
+    } else if( this.finished > 0) {
+      this.state = GameState.Finished;
+    } else {
+      this.state = GameState.Created;    
+    }
   }
 
   //   protected againstGames: AgainstGame[] | undefined;

@@ -161,12 +161,12 @@ export class StatisticsGetter {
     return GameState.Created;
   }
 
-  private playerHasStatistics(
-    s11Player: S11Player,
-    gameRoundNr: number
-  ): boolean {
-    return this.getStatistics(s11Player, gameRoundNr) !== undefined;
-  }
+  // private playerHasStatistics(
+  //   s11Player: S11Player,
+  //   gameRoundNr: number
+  // ): boolean {
+  //   return this.getStatistics(s11Player, gameRoundNr) !== undefined;
+  // }
 
   // public hasSomeStatistics(): boolean {
   //     return this.statistics !== undefined && this.statistics.size > 0;

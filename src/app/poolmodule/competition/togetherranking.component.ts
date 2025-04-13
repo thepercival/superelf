@@ -25,6 +25,7 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
   readonly showTransfers = input<boolean>(false);
 
   @Output() showCompetitorTransfers = new EventEmitter<PoolUser>();
+  @Output() linkToCompetitor = new EventEmitter<CompetitorWithGameRoundsPoints>();
 
   protected bestWorstGameRoundMap = new Map<number, MinMaxItem>();
   public faSpinner = faSpinner;
@@ -119,15 +120,6 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
   //   }
   //   return rank <= 1;
   // }
-
-  linkToPoolUser(poolUser: PoolUser, gameRoundNr: number | undefined): void {
-    this.router.navigate([
-      "/pool/user",
-      poolUser.getPool().getId(),
-      poolUser.getId(),
-      gameRoundNr ? gameRoundNr : 0,
-    ]);
-  }
 
   // getGameRoundPoints(poolUser: PoolUser): number {
   //   const gameRoundPoolUserTotalsMap = this.gameRoundPoolUserTotalsMap();

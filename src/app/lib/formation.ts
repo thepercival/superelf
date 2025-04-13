@@ -40,6 +40,12 @@ export class S11Formation extends Identifiable {
         return this.getLine(lineNumber).getPlace(placeNumber);
     }
 
+    public getPlaceByPerson(person: Person): S11FormationPlace | undefined {
+        return this.getPlaces().find((place: S11FormationPlace): boolean => {
+            return place.getPlayer()?.getPerson() === person;
+        });
+    }
+
     public getPlaces(): S11FormationPlace[] {
         let places: S11FormationPlace[] = [];
         this.lines.forEach(line => {

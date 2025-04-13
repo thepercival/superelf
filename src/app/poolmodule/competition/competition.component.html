@@ -64,6 +64,7 @@
             [badgeCategory]="tmplBadgeCategory"
             [showTransfers]="showTransfers()"
             (showCompetitorTransfers)="openPoolUserTransfersModal($event)"            
+            (linkToCompetitor)="linkToPoolUser($event)"
             [header]="true">
           </app-together-ranking>
         }

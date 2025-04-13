@@ -43,6 +43,7 @@ import { ScorePointsMap } from '../../lib/score/points';
 import { SourceAgainstGamesGetter } from '../../lib/gameRound/sourceAgainstGamesGetter';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { TeamFinder } from '../../lib/teamFinder';
+import { BadgeCategory } from '../../lib/achievement/badge/category';
 
 @Component({
   selector: "app-pool-user",
@@ -67,8 +68,8 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   public nextGameRound: WritableSignal<GameRound | undefined> =
     signal(undefined);
 
-  public formation: WritableSignal<S11Formation | undefined> =
-    signal(undefined);
+  public assembleFormation: WritableSignal<S11Formation | undefined> = signal(undefined);
+  public transferFormation: WritableSignal<S11Formation | undefined> = signal(undefined);
 
   public processingStatistics: WritableSignal<boolean> = signal(false);
 
@@ -152,17 +153,27 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
                 if (competition === undefined) {
                   // this.processing.set(false);
                   throw Error("competitionSport not found");
-                }                
-
-                this.determineActiveGameRound(
-                  competitionConfig,
-                  currentViewPeriod,
-                  +params.gameRoundNr
-                ).subscribe({
-                  next: (activeGameRound: GameRound) => {
-                    this.currentGameRound.set(activeGameRound);
+                }      
+                
+                forkJoin(this.setFormations(poolUser)).subscribe({
+                  next: (formations: S11Formation[]) => {
+                    this.determineActiveGameRound(
+                      competitionConfig,
+                      currentViewPeriod,
+                      +params.gameRoundNr
+                    ).subscribe({
+                      next: (activeGameRound: GameRound) => {
+                        this.currentGameRound.set(activeGameRound);
+                      },
+                    });
+                  },
+                  error: (e) => {
+                    this.setAlert("danger", e);
                   },
                 });
+                
+
+                
 
                 if (this.poolUserFromSession) {
                   this.structureRepository
@@ -266,10 +277,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
 
     const competitionConfig = poolUser.getPool().getCompetitionConfig();
 
-    const formationObservable = this.getFormationAsObservable(
-      poolUser,
-      gameRound.viewPeriod
-    );
+
 
     // this.setSourceGameRoundGames(pool.getCompetitionConfig(), gameRound);
 
@@ -285,10 +293,12 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
         next: (activeGameRounds: GameRound[]) => {
           this.viewGameRounds.set(activeGameRounds);
 
-          this.processingStatistics.set(true);
-          formationObservable.subscribe({
-            next: (formation: S11Formation) => {
-              this.setGameRoundsAndGetStatistics(formation, activeGameRounds);
+          forkJoin(this.setGameRoundsAndGetStatistics(activeGameRounds)).subscribe({
+            next: () => {
+              this.processingStatistics.set(false);
+            },
+            error: (e) => {
+              this.setAlert("danger", e);
             },
           });
 
@@ -338,20 +348,35 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       });
   }
 
-  getFormationAsObservable(
-    poolUser: PoolUser,
-    viewPeriod: ViewPeriod
-  ): Observable<S11Formation> {
-    const formation = this.formation();
-    if (formation != undefined) {
-      return of(formation);
+  setFormations(poolUser: PoolUser): Observable<S11Formation>[] {
+    const competitonConfig = poolUser.getPool().getCompetitionConfig();
+    const formations: Observable<S11Formation>[] = [];
+
+    if(this.assembleFormation() === undefined) {
+      formations.push( 
+        this.formationRepository.getObject(poolUser, competitonConfig.getAssemblePeriod().getViewPeriod()).pipe(
+          concatMap((formation: S11Formation) => {
+            this.assembleFormation.set(formation);
+            return of(formation);
+          })
+        )
+      );
     }
-    return this.formationRepository.getObject(poolUser, viewPeriod).pipe(
-      concatMap((formation: S11Formation) => {
-        this.formation.set(formation);
-        return of(formation);
-      })
-    );
+    
+    const transferViewPeriod = competitonConfig.getTransferPeriod().getViewPeriod();
+    if(this.transferFormation() === undefined
+      && (new Date()).getTime() > transferViewPeriod.getStartDateTime().getTime() ) {
+      formations.push( 
+        this.formationRepository.getObject(poolUser, transferViewPeriod).pipe(
+          concatMap((formation: S11Formation) => {
+            this.transferFormation.set(formation);
+            return of(formation);
+          })
+        )
+      );
+    }
+
+    return formations;
   }
 
   selectPreviousGameRound(
@@ -413,7 +438,8 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
 
   selectViewPeriod(pool: Pool, viewPeriod: ViewPeriod): void {
     // this.processing.set(true);
-    this.formation.set(undefined);
+    this.assembleFormation.set(undefined);
+    this.transferFormation.set(undefined);
     this.previousGameRound.set(undefined);
     this.nextGameRound.set(undefined);
     this.determineActiveGameRound(
@@ -427,25 +453,29 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     });
   }
 
-  setGameRoundsAndGetStatistics(
-    formation: S11Formation,
-    gameRounds: GameRound[]
-  ): void {
-    const getGameRoundStats = gameRounds.map((gameRound) =>
-      this.statisticsRepository.getGameRoundObjects(
+  setGameRoundsAndGetStatistics(gameRounds: GameRound[]): Observable<void>[] {
+    const assembleFormation = this.assembleFormation();
+    const transferFormation = this.transferFormation();
+
+    return gameRounds.map((gameRound) => {
+    
+      let formation: S11Formation | undefined = undefined;
+      if( assembleFormation?.getViewPeriod() === gameRound.viewPeriod ) {
+        formation = assembleFormation;
+      } else if( transferFormation?.getViewPeriod() === gameRound.viewPeriod ) {
+        formation = transferFormation;
+      }
+      if( formation === undefined) {
+        throw new Error('formation not found form gameRound ' + gameRound.number);
+      }
+    
+      return this.statisticsRepository.getGameRoundObjects(
         formation,
         gameRound,
         this.statisticsGetter
       )
-    );
-    forkJoin(getGameRoundStats).subscribe({
-      next: () => {
-        this.processingStatistics.set(false);
-      },
-      error: (e) => {
-        this.setAlert("danger", e);
-      },
-    });
+      
+    });    
   }
 
   getHeaderForPoolUser(poolUser: PoolUser): string {
@@ -462,18 +492,6 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   getTeamId(place: S11FormationPlace): number | undefined {
     return place.getPlayer()?.getLine() ?? undefined;
   }
-
-  // linkToPlayer(
-  //   pool: Pool,
-  //   s11Player: S11Player,
-  //   gameRoundNr: number | undefined
-  // ): void {
-  //   this.router.navigate(
-  //     ["/pool/player/", pool.getId(), s11Player.getId(), gameRoundNr ?? 0] /*, {
-  //     state: { s11Player, "pool": pool, currentGameRound: undefined }
-  //   }*/
-  //   );
-  // }
 
   openPlayerModal(link: PlayerLink, competitionConfig: CompetitionConfig): void {
     

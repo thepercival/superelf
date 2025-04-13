@@ -193,12 +193,7 @@ export class PoolPouleAgainstGamesComponent
 
             // -- determine gameRoundNumbers
             const sportVariant = poolCompetition.getSingleSport().getVariant();
-            const currentGameRoundNr =
-              this.getCurrentSourceGameRoundNrFromPoolPoule(
-                poolPoule,
-                sportVariant
-              );
-
+            
             const poolGameRoundNrs: number[] = this.getGameRoundNumbers(
               poolPoule,
               poolCompetition.getSingleSport().getVariant()
@@ -210,7 +205,7 @@ export class PoolPouleAgainstGamesComponent
 
             this.determineActiveViewPeriod(
               competitionConfig,
-              currentGameRoundNr
+              poolGameRoundNrs[0]
             ).subscribe({
               next: (activeViewPeriod: ViewPeriod | undefined) => {
                 if (activeViewPeriod === undefined) {
@@ -240,7 +235,9 @@ export class PoolPouleAgainstGamesComponent
 
                     forkJoin(getPoolGameRounds).subscribe({
                       next: (gameRounds: GameRound[]) => {
-                        this.viewGameRounds.set(gameRounds);
+                        this.viewGameRounds.set(gameRounds);            
+
+                        const activeGameRound = this.determineActiveGameRound(gameRounds);
 
                         forkJoin(
                           this.getHomeAwayCompetitorPoolUserAndFormations(
@@ -267,13 +264,7 @@ export class PoolPouleAgainstGamesComponent
                             this.setStatistics(formations, gameRounds);
                           },
                         });
-
-                        const activeGameRound = gameRounds.find(
-                          (gameRound) => gameRound.number == currentGameRoundNr
-                        );
-                        if (activeGameRound == undefined) {
-                          throw new Error("active gameRound not found");
-                        }
+                        
                         this.currentGameRound.set(activeGameRound);
                       },
                       error: (e) => {
@@ -543,6 +534,14 @@ export class PoolPouleAgainstGamesComponent
             .getGameRoundGames(poule, gameRound)
             .subscribe({
               next: (games: AgainstGame[]) => {
+                games.sort((a: AgainstGame,b: AgainstGame)=> {
+                  if( a.getState() === GameState.Created && b.getState() === GameState.Created  ) {
+                    return b.getStartDateTime().getTime() - b.getStartDateTime().getTime();
+                  } else if( a.getState() === GameState.Created && b.getState() !== GameState.Created  ) {
+                    return -1;
+                  } 
+                  return b.getStartDateTime().getTime() - a.getStartDateTime().getTime();                  
+                });
                 this.sourceGameRoundGames = games;
               },
               complete: () => {
@@ -602,61 +601,81 @@ export class PoolPouleAgainstGamesComponent
     return startLocations;
   }
 
-  getCurrentSourceGameRoundNrFromPoolPoule(
-    poolPoule: Poule,
-    sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame
-  ): number {
-    if (
-      sportVariant instanceof AgainstH2h ||
-      sportVariant instanceof AgainstGpp
-    ) {
-      const firstInPogress = poolPoule
-        .getAgainstGames()
-        .find((game: AgainstGame) => game.getState() === GameState.InProgress);
-      if (firstInPogress !== undefined) {
-        return firstInPogress.getGameRoundNumber();
-      }
+  // getCurrentSourceGameRoundNrFromPoolPoule(
+  //   poolPoule: Poule,
+  //   sportVariant: Single | AgainstH2h | AgainstGpp | AllInOneGame
+  // ): number {
+  //   if (
+  //     sportVariant instanceof AgainstH2h ||
+  //     sportVariant instanceof AgainstGpp
+  //   ) {
+  //     const firstInPogress = poolPoule.getAgainstGames().find(
+  //       (game: AgainstGame) => game.getState() === GameState.InProgress);
+  //     console.log(firstInPogress, poolPoule.getAgainstGames());
+  //     if (firstInPogress !== undefined) {
+  //       return firstInPogress.getGameRoundNumber();
+  //     }
+      
+  //     const lastFinished = poolPoule
+  //       .getAgainstGames()
+  //       .slice()
+  //       .reverse()
+  //       .find((game: AgainstGame) => game.getState() === GameState.Finished);
+  //     if (lastFinished !== undefined) {
+  //       return lastFinished.getGameRoundNumber();
+  //     }
+  //     const firstCreated = poolPoule
+  //       .getAgainstGames()
+  //       .find((game: AgainstGame) => game.getState() === GameState.Created);
+  //     if (firstCreated !== undefined) {
+  //       return firstCreated.getGameRoundNumber();
+  //     }
+  //   } else {
+  //     const firstInPogress = poolPoule
+  //       .getTogetherGames()
+  //       .find((game: TogetherGame) => game.getState() === GameState.InProgress);
+  //     if (firstInPogress !== undefined) {
+  //       return firstInPogress.getTogetherPlaces()[0].getGameRoundNumber();
+  //     }
 
-      const lastFinished = poolPoule
-        .getAgainstGames()
-        .slice()
-        .reverse()
-        .find((game: AgainstGame) => game.getState() === GameState.Finished);
-      if (lastFinished !== undefined) {
-        return lastFinished.getGameRoundNumber();
-      }
-      const firstCreated = poolPoule
-        .getAgainstGames()
-        .find((game: AgainstGame) => game.getState() === GameState.Created);
-      if (firstCreated !== undefined) {
-        return firstCreated.getGameRoundNumber();
-      }
-    } else {
-      const firstInPogress = poolPoule
-        .getTogetherGames()
-        .find((game: TogetherGame) => game.getState() === GameState.InProgress);
-      if (firstInPogress !== undefined) {
-        return firstInPogress.getTogetherPlaces()[0].getGameRoundNumber();
-      }
+  //     const lastFinished = poolPoule
+  //       .getTogetherGames()
+  //       .slice()
+  //       .reverse()
+  //       .find((game: TogetherGame) => game.getState() === GameState.Finished);
+  //     if (lastFinished !== undefined) {
+  //       return lastFinished.getTogetherPlaces()[0].getGameRoundNumber();
+  //     }
+  //     const firstCreated = poolPoule
+  //       .getTogetherGames()
+  //       .find((game: TogetherGame) => game.getState() === GameState.Created);
+  //     if (firstCreated !== undefined) {
+  //       return firstCreated.getTogetherPlaces()[0].getGameRoundNumber();
+  //     }
+  //   }
 
-      const lastFinished = poolPoule
-        .getTogetherGames()
-        .slice()
-        .reverse()
-        .find((game: TogetherGame) => game.getState() === GameState.Finished);
-      if (lastFinished !== undefined) {
-        return lastFinished.getTogetherPlaces()[0].getGameRoundNumber();
+  //   throw new Error("should be a gameroundnumber");
+  // }
+
+  private determineActiveGameRound(p_gameRounds: GameRound[]): GameRound {
+    const gameRounds = p_gameRounds.slice();
+    gameRounds.sort((g1, g2) => g1.number - g2.number );
+    let gameRound: GameRound|undefined = gameRounds.shift();
+    let nextGameRound: GameRound|undefined = gameRounds.shift();
+    while( gameRound ) {
+      if( gameRound.state == GameState.Created || gameRound.state == GameState.InProgress ) {
+          return gameRound;
       }
-      const firstCreated = poolPoule
-        .getTogetherGames()
-        .find((game: TogetherGame) => game.getState() === GameState.Created);
-      if (firstCreated !== undefined) {
-        return firstCreated.getTogetherPlaces()[0].getGameRoundNumber();
-      }
+      if( gameRound.state == GameState.Finished 
+        && ( nextGameRound === undefined || nextGameRound.state == GameState.Created ) ) {
+        return gameRound;
+      }      
+      gameRound = nextGameRound;
+      nextGameRound = gameRounds.shift()
     }
-
-    throw new Error("should be a gameroundnumber");
+    throw new Error("active gameRound not found");
   }
+    
 
   getGameRoundNumbers(
     poule: Poule,

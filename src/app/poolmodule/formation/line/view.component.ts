@@ -36,6 +36,7 @@ export class FormationLineViewComponent implements OnInit {
   readonly gameRounds = input.required<GameRound[]>();
   readonly statisticsGetter = input.required<StatisticsGetter>();
   readonly processing = model<boolean>(true);
+  readonly previousFormation = input<S11Formation|undefined>();
   readonly totalPoints = input<number>();  
   @Output() linkToPlayer = new EventEmitter<PlayerLink>();
 
@@ -97,6 +98,19 @@ export class FormationLineViewComponent implements OnInit {
           undefined
         );
   }
+
+  // getTotalPoints(place: S11FormationPlace): number {
+  //   const previousFormation = this.previousFormation();
+  //   const points = place.getTotalPoints(undefined);
+  //   const person = place.getPlayer()?.getPerson();
+  //   if( previousFormation !== undefined && person !== undefined ) {      
+  //     const previousPlace = previousFormation.getPlaceByPerson(person);
+  //     if( previousPlace !== undefined ) {
+  //       return points + previousPlace.getTotalPoints(undefined);
+  //     }
+  //   }
+  //   return points;
+  // }
 
   // getBorderClass(): string {
   //   return 'border-line-' + this.line.getNumber();

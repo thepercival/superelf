@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, WritableSignal, model, input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, WritableSignal, model, input, effect } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase, GameState, NameService, SportRoundRankingItem, StartLocation, StartLocationMap, StructureNameService, Team, TeamCompetitor } from 'ngx-sport';
 import { DateFormatter } from '../../../../lib/dateFormatter';
@@ -36,7 +36,9 @@ export class AgainstGamesTableComponent implements OnInit {
     public sportExtensions: SportExtensions,
     public dateFormatter: DateFormatter,
     public s11NameService: SuperElfNameService
-  ) {}
+  ) {
+    
+  }
 
   get Finished(): GameState {
     return GameState.Finished;

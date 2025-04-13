@@ -42,6 +42,7 @@ import { FormationGetter } from '../../lib/formation/formationGetter';
 import { StatisticsGetter } from '../../lib/statistics/getter';
 import { AgainstGamesTableComponent } from '../game/source/againstGamesTable/againstgames-table.component';
 import { CompetitorPoolUserAndFormation } from '../poule/againstgames.component';
+import { StatisticsRepository } from '../../lib/statistics/repository';
 
 
 @Component({
@@ -81,6 +82,7 @@ export class PoolAllInOneGameScheduleComponent
     signal(undefined);
   public showTransfers: WritableSignal<boolean> = signal(false);
   public processingGames: WritableSignal<boolean> = signal(true);
+  public processingStatistics: WritableSignal<boolean> = signal(true);
 
   public poolUsers: PoolUser[] = [];
   public statisticsGetter = new StatisticsGetter();
@@ -115,6 +117,7 @@ export class PoolAllInOneGameScheduleComponent
     poolTotalsRepository: PoolTotalsRepository,
     gameRoundRepository: GameRoundRepository,
     gameRepository: GameRepository,
+    private statisticsRepository: StatisticsRepository,
     public imageRepository: ImageRepository,
     protected chatMessageRepository: ChatMessageRepository,
     public cssService: CSSService,
@@ -253,23 +256,15 @@ export class PoolAllInOneGameScheduleComponent
                 (poolUserTotalsMap: PoolUsersTotalsMap): GameRoundsPoints => {
                   return {
                     number: poolUserTotalsMap.gameRoundNr,
-                    points:
-                      poolUserTotalsMap
-                        .get(poolUser.getId())
-                        ?.getPoints(scorePointsMap, undefined) ?? 0,
+                    points: poolUserTotalsMap.get(poolUser.getId())?.getPoints(scorePointsMap, undefined) ?? 0,
                   };
                 }
               );
             const totalPoints = viewPeriodPoints
-              .map(
-                (viewPeriodPoints: GameRoundsPoints) => viewPeriodPoints.points
-              )
+              .map((viewPeriodPoints: GameRoundsPoints) => viewPeriodPoints.points)
               .reduce((a, b) => a + b, 0);
 
-            const competitors = Pool.getCompetitors(
-              poolUsers,
-              LeagueName.Competition
-            );
+            const competitors = Pool.getCompetitors(poolUsers,LeagueName.Competition);
             const competitor: PoolCompetitor | undefined = competitors.find(
               (competitor) => competitor.getPoolUser() === poolUser
             );
@@ -469,6 +464,7 @@ export class PoolAllInOneGameScheduleComponent
                   };
               });
               this.competitorPoolUserAndFormations.set(competitorPoolUserAndFormations);
+              this.setStatistics(competitorPoolUserAndFormations, activeGameRounds);
 
               this.processing.set(false);
             },
@@ -563,6 +559,14 @@ export class PoolAllInOneGameScheduleComponent
             .getGameRoundGames(poule, gameRound)
             .subscribe({
               next: (games: AgainstGame[]) => {
+                games.sort((a: AgainstGame,b: AgainstGame)=> {
+                  if( a.getState() === GameState.Created && b.getState() === GameState.Created  ) {
+                    return b.getStartDateTime().getTime() - b.getStartDateTime().getTime();
+                  } else if( a.getState() === GameState.Created && b.getState() !== GameState.Created  ) {
+                    return -1;
+                  } else 
+                    return b.getStartDateTime().getTime() - a.getStartDateTime().getTime();
+                  });
                 this.sourceGameRoundGames = games;
               },
               complete: () => {
@@ -572,6 +576,47 @@ export class PoolAllInOneGameScheduleComponent
         },
       }
     );
+  }
+
+  setStatistics(competitorPoolUserAndFormations: CompetitorPoolUserAndFormation[], gameRounds: GameRound[]): void {
+    this.processingStatistics.set(true);
+
+    // if (this.gameRoundCacheMap.has(gameRound.number)) {
+    //   return this.statisticsGetter.getFormationGameRoundPoints(
+    //       formation,
+    //       gameRound,
+    //       undefined
+    //     );
+    // }
+
+    const getGameRoundStatistics: Observable<void>[] = [];
+    gameRounds.forEach((gameRound: GameRound) => {
+      competitorPoolUserAndFormations.forEach((competitorPoolUserAndFormation: CompetitorPoolUserAndFormation) => {
+        getGameRoundStatistics.push(
+          this.statisticsRepository.getGameRoundObjects(
+            competitorPoolUserAndFormation.formation,
+            gameRound,
+            this.statisticsGetter
+          )
+        );
+      });
+    });
+
+    forkJoin(getGameRoundStatistics).subscribe({
+      next: () => {
+        // this.statisticsGetter.getFormationGameRoundPoints(
+        //   formation,
+        //   gameRound,
+        //   undefined
+        // );
+        // this.gameRoundCacheMap.set(gameRound.number, true);
+
+        this.processingStatistics.set(false);
+      },
+      error: (e) => {
+        this.setAlert("danger", e);
+      },
+    });
   }
 
   getCompetitorPoolUserAndFormations(

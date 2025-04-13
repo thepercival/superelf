@@ -73,7 +73,7 @@
                     </div>
                 </div>
             }
-            @if( !processingGames()) {
+            @if( !processingGames() && !processingStatistics()) {
                 @let tmplFormationMap = formationMap();
                 @if(pool && poolUsers && tmplCurrentGameRound && sourceGameRoundGames.length > 0 && tmplFormationMap && competitorPoolUserAndFormations()){                    
                     <div class="mt-3">                
