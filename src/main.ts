@@ -30,6 +30,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { WorldCupPreviousService } from './app/shared/commonmodule/worldCupPreviousService';
 import { provideRouter, Router, RouterOutlet } from '@angular/router';
 import { routes } from './app/app.routes';
+import { provideServiceWorker } from '@angular/service-worker';
 
 if (environment.production) {
   enableProdMode();

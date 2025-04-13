@@ -69,7 +69,7 @@
                 "fonts": true
               },
               "outputHashing": "all",
-              "serviceWorker": true
+              "serviceWorker": "ngsw-config.json"
             },
             "prod-nl": {
               "budgets": [
