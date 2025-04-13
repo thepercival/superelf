@@ -74,8 +74,7 @@
                 </div>
             }
             @if( !processingGames() && !processingStatistics()) {
-                @let tmplFormationMap = formationMap();
-                @if(pool && poolUsers && tmplCurrentGameRound && sourceGameRoundGames.length > 0 && tmplFormationMap && competitorPoolUserAndFormations()){                    
+                @if(pool && poolUsers && tmplCurrentGameRound && sourceGameRoundGames.length > 0 && competitorPoolUserAndFormations()){                    
                     <div class="mt-3">                
                         <againstgames-table
                         [sourceAgainstGames]="sourceGameRoundGames"
@@ -84,32 +83,6 @@
                         [statisticsGetter]="statisticsGetter">
                         </againstgames-table>
                     </div>
-                    
-                    
-                        <!-- <table class="table">
-                            <thead>
-                                <tr class="bg-secondary">
-                                    <th class="ps-3 py-0 fw-light">
-                                        speelronde {{tmplCurrentGameRound.number}}
-                                    </th>
-                                    <th></th>
-                                    <th class="ps-3 py-0 fw-light text-end"
-                                        ngClass="{'text-decoration-line-through': againstGame().getState() === Finished}">
-                                        @let dateTitle = dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.date());
-                                        @let timeTitle = dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.time());
-                                        {{dateTitle}} {{timeTitle}}
-                                    </th>
-                                </tr>
-                                <tr s11-game-tableheader [againstGame]=againstGame>
-                                </tr>
-                            </thead>
-                            
-                            <tbody s11-game-tablebody class="table-group-divider" [competitonConfig]="pool.getCompetitionConfig()"
-                                [gameRound]="tmplCurrentGameRound" [againstGame]="againstGame" [formationMap]="tmplFormationMap"
-                                [poolUsers]="poolUsers" [statisticsGetter]="statisticsGetter">
-                            </tbody>
-                        </table> -->
-                    
                 }
             } @else {
                 <h2 class="text-center">

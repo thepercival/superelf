@@ -77,9 +77,7 @@ export class PoolAllInOneGameScheduleComponent
   > = signal([]);
   public competitorPoolUserAndFormations: WritableSignal<
     CompetitorPoolUserAndFormation[]
-  > = signal([]);
-  public formationMap: WritableSignal<S11FormationMap | undefined> =
-    signal(undefined);
+  > = signal([]);  
   public showTransfers: WritableSignal<boolean> = signal(false);
   public processingGames: WritableSignal<boolean> = signal(true);
   public processingStatistics: WritableSignal<boolean> = signal(true);
@@ -417,86 +415,83 @@ export class PoolAllInOneGameScheduleComponent
     this.formationGetter
       .getFormationMap(pool, poolUsers, gameRound.viewPeriod)
       .subscribe({
-        next: (formationMap: S11FormationMap) => {
-          this.formationMap.set(formationMap);
-        },
-      });
+        next: (formationMap: S11FormationMap) => {          
 
-    this.setSourceGameRoundGames(pool.getCompetitionConfig(), gameRound);
+          this.setSourceGameRoundGames(pool.getCompetitionConfig(), gameRound);
 
-    this.activeGameRoundsCalculator
-      .getActiveViewGameRounds(
-        pool.getCompetitionConfig(),
-        gameRound.viewPeriod,
-        gameRound,
-        0,
-        1
-      )
-      .subscribe({
-        next: (activeGameRounds: GameRound[]) => {
-          this.viewGameRounds.set(activeGameRounds);
-
-          this.getPoolUsersWithGameRoundsPoints(
-            pool,
-            poolUsers,
-            gameRound.viewPeriod,
-            activeGameRounds
-          ).subscribe({
-            next: (
-              poolUsersWithGameRoundsPoints: CompetitorWithGameRoundsPoints[]
-            ) => {
-              this.poolUsersWithGameRoundsPoints.set(
-                poolUsersWithGameRoundsPoints
-              );
-
-              const competitorPoolUserAndFormations = poolUsersWithGameRoundsPoints.map(
-                (poolUserWithGameRoundsPoints: CompetitorWithGameRoundsPoints): CompetitorPoolUserAndFormation => {
-                  const competitor = poolUserWithGameRoundsPoints.competitor;
-                  const poolUser = competitor.getPoolUser();
-                  const formation = this.formationMap()?.get(+poolUser.getId());
-                  if (formation === undefined) {
-                    throw new Error("formation not found");
-                  }
-                  return {
-                    competitor: competitor,
-                    poolUser: poolUser,
-                    formation: formation,
-                  };
-              });
-              this.competitorPoolUserAndFormations.set(competitorPoolUserAndFormations);
-              this.setStatistics(competitorPoolUserAndFormations, activeGameRounds);
-
-              this.processing.set(false);
-            },
-          });
-
-          // set previous gameRound async
           this.activeGameRoundsCalculator
-            .getPreviousGameRound(
+            .getActiveViewGameRounds(
               pool.getCompetitionConfig(),
               gameRound.viewPeriod,
-              activeGameRounds[0]
+              gameRound,
+              0,
+              1
             )
             .subscribe({
-              next: (gameRound: GameRound | undefined) => {
-                this.previousGameRound.set(gameRound);
-              },
-            });
+              next: (activeGameRounds: GameRound[]) => {
+                this.viewGameRounds.set(activeGameRounds);
 
-          // set next gameRound async
-          this.activeGameRoundsCalculator
-            .getNextGameRound(
-              pool.getCompetitionConfig(),
-              gameRound.viewPeriod,
-              activeGameRounds[activeGameRounds.length - 1]
-            )
-            .subscribe({
-              next: (gameRound: GameRound | undefined) => {
-                this.nextGameRound.set(gameRound);
+                this.getPoolUsersWithGameRoundsPoints(
+                  pool,
+                  poolUsers,
+                  gameRound.viewPeriod,
+                  activeGameRounds
+                ).subscribe({
+                  next: (poolUsersWithGameRoundsPoints: CompetitorWithGameRoundsPoints[]) => {
+                    this.poolUsersWithGameRoundsPoints.set(poolUsersWithGameRoundsPoints);
+
+                    const competitorPoolUserAndFormations = poolUsersWithGameRoundsPoints.map(
+                      (poolUserWithGameRoundsPoints: CompetitorWithGameRoundsPoints): CompetitorPoolUserAndFormation => {
+                        const competitor = poolUserWithGameRoundsPoints.competitor;
+                        const poolUser = competitor.getPoolUser();
+                        const formation = formationMap.get(+poolUser.getId());
+                        if (formation === undefined) {
+                          throw new Error("formation not found");
+                        }
+                        return {
+                          competitor: competitor,
+                          poolUser: poolUser,
+                          formation: formation,
+                        };
+                    });
+                    this.competitorPoolUserAndFormations.set(competitorPoolUserAndFormations);
+                    this.setStatistics(competitorPoolUserAndFormations, activeGameRounds);
+
+                    this.processing.set(false);
+                  },
+                });
+
+                // set previous gameRound async
+                this.activeGameRoundsCalculator
+                  .getPreviousGameRound(
+                    pool.getCompetitionConfig(),
+                    gameRound.viewPeriod,
+                    activeGameRounds[0]
+                  )
+                  .subscribe({
+                    next: (gameRound: GameRound | undefined) => {
+                      this.previousGameRound.set(gameRound);
+                    },
+                  });
+
+                // set next gameRound async
+                this.activeGameRoundsCalculator
+                  .getNextGameRound(
+                    pool.getCompetitionConfig(),
+                    gameRound.viewPeriod,
+                    activeGameRounds[activeGameRounds.length - 1]
+                  )
+                  .subscribe({
+                    next: (gameRound: GameRound | undefined) => {
+                      this.nextGameRound.set(gameRound);
+                    },
+                  });
               },
             });
         },
       });
+
+    
   }
 
   determineActiveGameRound(
@@ -516,7 +511,6 @@ export class PoolAllInOneGameScheduleComponent
     viewPeriod: ViewPeriod
   ): void {
     // this.processing.set(true);
-    this.formationMap.set(undefined);
     this.previousGameRound.set(undefined);
     this.nextGameRound.set(undefined);
     this.determineActiveGameRound(
