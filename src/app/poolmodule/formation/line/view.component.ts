@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
 import { NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FootballLine, Person, Team } from 'ngx-sport';
+import { FootballLine, Period, Person, Team } from 'ngx-sport';
 import { S11FormationLine } from '../../../lib/formation/line';
 import { S11FormationPlace } from '../../../lib/formation/place';
 import { FormationRepository } from '../../../lib/formation/repository';
@@ -69,13 +69,13 @@ export class FormationLineViewComponent implements OnInit {
   //   return team ? this.imageRepository.getTeamUrl(team) : "";
   // }
 
-  getCurrentTeam(s11Player: S11Player | undefined, date: Date|undefined): Team | undefined {
+  getCurrentTeam(s11Player: S11Player | undefined, period: Period|undefined): Team | undefined {
     if (s11Player === undefined) {
       return undefined;
     }
     const player = this.sportExtensions.getPlayer(
       s11Player,
-      date ?? new Date()
+      period?.getStartDateTime() ?? new Date()
     );
     if (!player) {
       return undefined;

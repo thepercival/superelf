@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, WritableSignal } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { IAlert } from '../../shared/commonmodule/alert';
@@ -20,7 +20,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-pool-new',
   standalone: true,
-  imports: [NgIf,FontAwesomeModule,NgbAlertModule,TitleComponent],
+  imports: [NgIf,FontAwesomeModule,NgbAlertModule,TitleComponent, ReactiveFormsModule],
   templateUrl: './new.component.html',
   styleUrls: ['./new.component.scss']
 })

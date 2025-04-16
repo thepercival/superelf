@@ -5,7 +5,7 @@
         <app-user-title title="inloggen" [icon]="faSignInAlt">
         </app-user-title>
 
-        @if(!processing) {
+        @if(!processing()) {
           <div class="card-body card-body-auth">
             @if(alert) {
               <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
@@ -33,8 +33,8 @@
                 </button>
               </div>
               <div class="row g-0">
-                <button routerLink="/user/register" class="btn btn-secondary me-2 mt-4">registreren</button>
-                <button routerLink="/user/passwordreset" class="btn btn-secondary mt-4">wachtwoord vergeten</button>
+                <a [routerLink]="['/user/register']" type="button" class="btn btn-secondary me-2 mt-4">registreren</a>
+                <button [routerLink]="['/user/passwordreset']" class="btn btn-secondary mt-4">wachtwoord vergeten</button>
               </div>
             </form>
           </div>          

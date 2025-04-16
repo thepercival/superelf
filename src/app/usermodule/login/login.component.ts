@@ -6,7 +6,7 @@ import {
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { User } from '../../lib/user';
@@ -21,7 +21,7 @@ import { faEnvelope, faKey, faSignInAlt, faSpinner } from '@fortawesome/free-sol
 @Component({
   standalone: true,
   selector: "app-login",
-  imports: [UserTitleComponent, FontAwesomeModule, NgbAlertModule,ReactiveFormsModule],
+  imports: [UserTitleComponent, FontAwesomeModule, NgbAlertModule,ReactiveFormsModule,RouterLink],
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
 })

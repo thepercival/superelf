@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { IAlert } from '../../shared/commonmodule/alert';
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolCollection } from '../../lib/pool/collection';
 import { PoolComponent } from '../../shared/poolmodule/component';
@@ -14,14 +13,13 @@ import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgIf } from '@angular/common';
 import { faSpinner, faClipboardCheck, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
   selector: "app-pool-invite",
   standalone: true,
-  imports: [FontAwesomeModule, PoolNavBarComponent, NgbAlertModule, NgIf],
+  imports: [FontAwesomeModule, PoolNavBarComponent, NgbAlertModule, ReactiveFormsModule],
   templateUrl: "./invite.component.html",
   styleUrls: ["./invite.component.scss"],
 })

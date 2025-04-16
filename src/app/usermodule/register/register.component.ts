@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { User } from '../../lib/user';
@@ -14,7 +14,7 @@ import { faEnvelope, faKey, faUserCircle } from '@fortawesome/free-solid-svg-ico
 @Component({
   standalone: true,
   selector: "app-register",
-  imports: [NgbAlertModule, UserTitleComponent, FontAwesomeModule],
+  imports: [NgbAlertModule, UserTitleComponent, FontAwesomeModule, ReactiveFormsModule],
   templateUrl: "./register.component.html",
   styleUrls: ["./register.component.scss"],
 })
@@ -37,7 +37,7 @@ export class RegisterComponent extends AuthComponent implements OnInit {
   constructor(
     authService: AuthService,
     eventsManager: GlobalEventsManager,
-    @Inject("fb") fb: UntypedFormBuilder
+    fb: UntypedFormBuilder
   ) {
     super(authService, eventsManager);
     this.form = fb.group(

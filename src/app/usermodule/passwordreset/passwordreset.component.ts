@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from '../../lib/auth/auth.service';
-import { IAlert } from '../../shared/commonmodule/alert';
 import { User } from '../../lib/user';
 import { AuthComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
@@ -11,11 +9,12 @@ import { UserTitleComponent } from '../title/title.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { faEnvelope, faKey } from '@fortawesome/free-solid-svg-icons';
+import { RouterLink } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-passwordreset',
-  imports: [UserTitleComponent,FontAwesomeModule,NgbAlertModule],
+  imports: [UserTitleComponent,FontAwesomeModule,NgbAlertModule,ReactiveFormsModule, RouterLink],
   templateUrl: './passwordreset.component.html',
   styleUrls: ['./passwordreset.component.css']
 })

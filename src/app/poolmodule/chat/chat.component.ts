@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { AgainstGame, AgainstGamePlace, AgainstSide, AgainstSportRoundRankingCalculator, Competition, CompetitionSport, Competitor, CompetitorBase, GameState, Poule, SportRoundRankingItem, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
+import { AgainstSide, AgainstSportRoundRankingCalculator, GameState, Poule, SportRoundRankingItem, Structure } from 'ngx-sport';
 import { Observable } from 'rxjs';
 import { ChatMessage } from '../../lib/chatMessage';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
@@ -37,7 +37,7 @@ import { PoolCompetitor } from '../../lib/pool/competitor';
     SuperElfIconComponent,
     PouleTitleComponent,
     PoolNavBarComponent,
-    NgIf,
+    ReactiveFormsModule,
     NgTemplateOutlet
   ],
   templateUrl: "./chat.component.html",

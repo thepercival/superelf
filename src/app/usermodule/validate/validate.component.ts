@@ -24,8 +24,8 @@ export class ValidateComponent extends AuthComponent implements OnInit {
   public validated = false;
 
   constructor(
-    @Inject("route") protected route: ActivatedRoute,
-    @Inject("router") private router: Router,
+    protected route: ActivatedRoute,
+    private router: Router,
     private startSessionService: StartSessionService,
     authService: AuthService,
     eventsManager: GlobalEventsManager

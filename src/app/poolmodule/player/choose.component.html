@@ -9,54 +9,64 @@
   </button>
 </div> -->
 
-<h2 *ngIf="processing" class="text-center">
-  <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
-</h2>
+
 
 <!-- <ngb-alert *ngIf="alert" [type]="alert.type">
   {{ alert.message }}</ngb-alert> -->
 
-<form *ngIf="!processing() && viewPeriod()" name="form" (ngSubmit)="false" formGroup="form" novalidate>
-  <div class="d-flex justify-content-around">
-    <select class="form-control me-1" formControlName="searchTeam" (change)="updateFilter()">
-      <option ngValue="undefined" selected>
-        alle clubs
-      </option>
-      @for (team of selectableTeams(); track team.getId()) {
-      <option ngValue="team">{{team.getName()}}</option>
-      }
-    </select>
-    <select class="form-control ms-1" formControlName="searchLine" (change)="updateFilter()">
-      @for (line of selectableLines(); track line) {
-      <option ngValue="line">{{nameService.getFormationLineName(line)}}</option>
-      }
-    </select>
-  </div>
-</form>
-
-<table *ngIf="!processing() && viewPeriod()" class="table">
-  <tbody>
-    @for (choosePersonItem of choosePersonItems; track choosePersonItem) {    
-      <tr *ngIf="showAll() || isChoosable(choosePersonItem.player)" (click)="linkToPlayer(choosePersonItem)" class="pointer">
-        <td>
-          <app-lineicon [line]="choosePersonItem.player.getLine()"></app-lineicon>
-        </td>
-        <td>
-          {{choosePersonItem.player.getPerson().getName()}}
-        </td>
-        <td>
-          <app-team-name [team]="choosePersonItem.player.getTeam()"></app-team-name>
-        </td>
-        <td class="text-end">
-          <span class="badge bg-totals">{{getTotalPoints(choosePersonItem.s11Player)}}</span>
-        </td>
-        <td class="text-end" (click)="$event.stopPropagation()">
-          <button *ngIf="isChoosable(choosePersonItem.player)" type="button" class="btn btn-primary btn-sm"
-            (click)="select(choosePersonItem.s11Player,choosePersonItem.player)">
-            <fa-icon [icon]=faChevronRight></fa-icon>
-          </button>
-        </td>
-      </tr>
-    }
-  </tbody>
-</table>
+@if(!processing()) {
+  @if(viewPeriod()) {
+    <form name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
+      <div class="d-flex justify-content-around">
+        <select class="form-control me-1" formControlName="searchTeam" (change)="updateFilter()">
+          <option ngValue="undefined" selected>
+            alle clubs
+          </option>
+          @for (team of selectableTeams(); track team.getId()) {
+          <option ngValue="team">{{team.getName()}}</option>
+          }
+        </select>
+        <select class="form-control ms-1" formControlName="searchLine" (change)="updateFilter()">
+          @for (line of selectableLines(); track line) {
+          <option ngValue="line">{{nameService.getFormationLineName(line)}}</option>
+          }
+        </select>
+      </div>
+    </form>
+  
+    <table class="table">
+      <tbody>
+        @for (choosePersonItem of choosePersonItems; track choosePersonItem) {    
+          @if(showAll() || isChoosable(choosePersonItem.player)) {
+            <tr (click)="linkToPlayer(choosePersonItem)" class="pointer">
+              <td>
+                <app-lineicon [line]="choosePersonItem.player.getLine()"></app-lineicon>
+              </td>
+              <td>
+                {{choosePersonItem.player.getPerson().getName()}}
+              </td>
+              <td>
+                <app-team-name [team]="choosePersonItem.player.getTeam()"></app-team-name>
+              </td>
+              <td class="text-end">
+                <span class="badge bg-totals">{{getTotalPoints(choosePersonItem.s11Player)}}</span>
+              </td>
+              <td class="text-end" (click)="$event.stopPropagation()">
+                @if(isChoosable(choosePersonItem.player)) {
+                  <button type="button" class="btn btn-primary btn-sm"
+                    (click)="select(choosePersonItem.s11Player,choosePersonItem.player)">
+                    <fa-icon [icon]=faChevronRight></fa-icon>
+                  </button>
+                }
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  }
+} @else {
+  <h2 class="text-center">
+    <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+  </h2>
+}

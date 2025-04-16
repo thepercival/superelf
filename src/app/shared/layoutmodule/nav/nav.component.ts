@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit, signal, WritableSignal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
 import { DateFormatter } from '../../../lib/dateFormatter';
@@ -29,7 +29,7 @@ export class NavComponent implements OnInit {
     private dateFormatter: DateFormatter,
     private globalEventsManager: GlobalEventsManager,
     public navigation: MyNavigation,
-    @Inject(Router) private router: Router
+    private router: Router
   ) {
     this.globalEventsManager.navHeaderInfo.subscribe(
       (headerInfo: NavHeaderInfo | undefined) => {
@@ -58,7 +58,19 @@ export class NavComponent implements OnInit {
   }
 
   navigateToPoolHome(id: number): void {
-    this.router.navigate(["/pool", id]);
+    this.router.navigate(["pool", id]);
+  }
+
+  navigateToLogin(): void {
+    this.router.navigate(["user/login"]);
+  }
+
+  navigateToProfile(){
+    const userId = this.authService.getUser()?.getId();
+    console.log(userId);
+    if( userId !== undefined) {
+      this.router.navigate(['user/profile', userId]);
+    }
   }
 }
 

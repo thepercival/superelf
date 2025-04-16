@@ -21,13 +21,11 @@
   }
 
   @if(authService.isLoggedIn()) {
-    <button routerLink="['/user/profile', authService.getUser()?.getId()]"
-      class="btn text-light border-0 p-0 pt-1" role="button" tabindex="-1" aria-label="account">
+    <button (click)="navigateToProfile()" class="btn text-light border-0 p-0 pt-1" role="button" tabindex="-1" aria-label="account">
       <fa-icon [icon]="faUserCircle" size="3x"></fa-icon>
     </button>
   } @else {
-    <button routerLink="/user/login" class="btn text-light" role="button"
-      aria-label="inloggen " tabindex="-1">
+    <button class="btn text-light" role="button" aria-label="inloggen " tabindex="-1" (click)="navigateToLogin()">
       <fa-icon [icon]="faSignInAlt"></fa-icon>
       <span class="ms-1">inloggen</span>
     </button>

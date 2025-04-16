@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -16,7 +16,7 @@ import { faKey } from '@fortawesome/free-solid-svg-icons';
 @Component({
   standalone: true,
   selector: 'app-passwordchange',
-  imports: [UserTitleComponent,FontAwesomeModule,NgbAlertModule],
+  imports: [UserTitleComponent,FontAwesomeModule,NgbAlertModule, ReactiveFormsModule],
   templateUrl: './passwordchange.component.html',
   styleUrls: ['./passwordchange.component.css']
 })

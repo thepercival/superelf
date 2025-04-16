@@ -5,13 +5,13 @@
         <app-user-title title="{{ user ? user.getName() : 'profiel'}}" [icon]="faUserCirlce">
         </app-user-title>
 
-        @if(!processing) {
+        @if(!processing()) {
           <div class="card-body card-body-auth">
             @if(alert) {
               <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
             }
             <div class="card-body card-body-auth">
-              <form name="form" (ngSubmit)="save()" formGroup="form" novalidate>
+              <form name="form" (ngSubmit)="save()" [formGroup]="form" novalidate>
                 @if(user) {                  
                   <div class="form-group row">
                     <div class="col-3">
@@ -33,7 +33,7 @@
                 }
                 <div class="form-group row justify-content-end mt-3">
                   <div class="col-9">
-                    <button routerLink="/user/logout" routerLinkActive="active" class="btn btn-secondary" role="button"
+                    <button (click)="navigateToLogout()" class="btn btn-secondary" role="button"
                       aria-label="uitloggen">
                       uitloggen
                     </button>

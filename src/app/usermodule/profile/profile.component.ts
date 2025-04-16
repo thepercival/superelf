@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { User } from '../../lib/user';
@@ -17,7 +17,7 @@ import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 @Component({
   standalone: true,
   selector: "app-profile",
-  imports: [NgbAlertModule, UserTitleComponent, FontAwesomeModule],
+  imports: [NgbAlertModule, UserTitleComponent, FontAwesomeModule, ReactiveFormsModule],
   templateUrl: "./profile.component.html",
   styleUrls: ["./profile.component.scss"],
 })
@@ -32,13 +32,13 @@ export class ProfileComponent extends AuthComponent implements OnInit {
   };
 
   constructor(
-    @Inject("route") private route: ActivatedRoute,
-    @Inject("router") private router: Router,
+    private route: ActivatedRoute,
+    private router: Router,
     authService: AuthService,
     eventsManager: GlobalEventsManager,
     private userRepository: UserRepository,
     public myNavigation: MyNavigation,
-    @Inject("fb") fb: UntypedFormBuilder
+    fb: UntypedFormBuilder
   ) {
     super(authService, eventsManager);
     this.form = fb.group(
@@ -114,6 +114,10 @@ export class ProfileComponent extends AuthComponent implements OnInit {
       },
       complete: () => (this.processing.set(false)),
     });
+  }
+
+  navigateToLogout(): void {
+    this.router.navigate(["user/logout"]);
   }
 }
 

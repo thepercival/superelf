@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, WritableSignal, input, model, signal } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 import { Competition, FootballLine, NameService, Person, PersonMap, Player, Team, TeamMap } from 'ngx-sport';
 import { ScoutedPlayerRepository } from '../../lib/scoutedPlayer/repository';
@@ -20,7 +20,7 @@ import { SportExtensions } from '../../lib/sportExtensions';
 @Component({
   selector: "app-pool-player-choose",
   standalone: true,
-  imports: [FontAwesomeModule,LineIconComponent,TeamNameComponent,NgIf],
+  imports: [FontAwesomeModule,LineIconComponent,TeamNameComponent,ReactiveFormsModule],
   templateUrl: "./choose.component.html",
   styleUrls: ["./choose.component.scss"],
 })

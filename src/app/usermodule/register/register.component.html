@@ -5,7 +5,7 @@
         <app-user-title title="registreren" [icon]="faUserCircle">
         </app-user-title>
 
-        @if(!processing) {
+        @if(!processing()) {
           <div class="card-body card-body-auth">
             @if(alert) {            
               <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
@@ -24,7 +24,7 @@
                 <ngb-alert type="warning">Je bent al ingelogd.</ngb-alert>
               </div>
               } @else {
-                <form name="form" (ngSubmit)="register()" formGroup="form" novalidate>
+                <form name="form" (ngSubmit)="register()" [formGroup]="form" novalidate>
                   <!-- emailadres -->
                   <div class="row">
                     <div class="input-group">

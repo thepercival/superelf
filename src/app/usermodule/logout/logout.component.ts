@@ -5,6 +5,8 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { AuthComponent } from '../component';
 
 @Component({
+  standalone: true,
+  imports: [],
   selector: 'app-logout',
   templateUrl: './logout.component.html',
   styleUrls: ['./logout.component.css']
