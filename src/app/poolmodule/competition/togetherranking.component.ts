@@ -102,14 +102,14 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
   getBestWorstBadgeClass(poolUser: PoolUser, gameRoundNr: number): string {    
     const bestWorstGameRoundMap = this.bestWorstGameRoundMap.get(gameRoundNr);    
     if (bestWorstGameRoundMap) {      
-      if (bestWorstGameRoundMap.max.poolUsersMap.has(poolUser.getId())) {
-        return "bg-success";
+      if (bestWorstGameRoundMap.max.poolUsersMap.has(+poolUser.getId())) {
+        return "btn-points-success";
       }
-      if (bestWorstGameRoundMap.min.poolUsersMap.has(poolUser.getId())) {
-        return "bg-danger";
+      if (bestWorstGameRoundMap.min.poolUsersMap.has(+poolUser.getId())) {
+        return "btn-points-danger";
       }
     }
-    return "bg-points";
+    return "btn-points";
   }
 
   // hasAchievement(rank: number): boolean {

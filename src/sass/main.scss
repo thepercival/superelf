@@ -16,23 +16,34 @@ $enable-responsive-font-sizes: true !default;
   @extend .font-weight-bold !optional;
 }
 
-.btn-points {
+.btn-points-base {
   @extend .text-white;
   @extend .text-end;
-  @extend .bg-points;
   width: 1.7rem;
+}
+
+.btn-points {
+  @extend .btn-points-base;
+  @extend .bg-points;
+}
+
+.btn-points-success {
+  @extend .btn-points-base;
+  @extend .bg-success;
+}
+
+.btn-points-danger {
+  @extend .btn-points-base;
+  @extend .bg-danger;
 }
 
 .btn-small-totals {
-  @extend .text-white;
-  @extend .text-end;
+  @extend .btn-points-base;
   @extend .bg-totals;
-  width: 1.7rem;
 }
 
 .btn-large-totals {  
-  @extend .text-white;
-  @extend .text-end;
+  @extend .btn-points-base;
   @extend .bg-totals;
   width: 2.2rem;
 }

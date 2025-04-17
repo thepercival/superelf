@@ -25,7 +25,7 @@
             @for(gameRoundPoints of competitorWithGameRoundsPoints.gameRoundsPoints; track $index; let last=$last)
             {
               <td class="text-end ps-0 pointer" (click)="linkToCompetitor.emit(competitorWithGameRoundsPoints)">
-                <button type="button" class="btn btn-points btn-sm {{getBestWorstBadgeClass(poolUser, gameRoundPoints.number)}}">
+                <button type="button" class="btn btn-sm {{getBestWorstBadgeClass(poolUser, gameRoundPoints.number)}}">
                   {{gameRoundPoints.points}}
                 </button>
               </td>
