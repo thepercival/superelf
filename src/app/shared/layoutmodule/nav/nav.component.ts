@@ -12,7 +12,7 @@ import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   standalone: true,
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule,RouterLink],
   selector: "app-nav",
   templateUrl: "./nav.component.html",
   styleUrls: ["./nav.component.css"],

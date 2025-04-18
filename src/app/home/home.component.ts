@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, signal, WritableSignal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
 import { IAlert } from '../shared/commonmodule/alert';
@@ -13,7 +13,7 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: "app-home",
   standalone: true,
-  imports: [FontAwesomeModule, NgbAlertModule],
+  imports: [FontAwesomeModule, NgbAlertModule,RouterLink],
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.scss"],
 })

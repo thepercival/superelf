@@ -4,7 +4,7 @@
       <div class="alert alert-{{alert.type}}">{{alert.message}}</div>
     }    
 
-    @if(!processing){
+    @if(!processing()){
       <form name="form" (ngSubmit)="false" formGroup="typedForm" novalidate>
         <div class="d-flex justify-content-between">
           <h1>pools</h1>
@@ -18,11 +18,11 @@
       </form>
     } @else {
       <h2 class="text-center">
-        <fa-icon icon=faSpinner spin=true></fa-icon>
+        <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
       </h2>
     }
     
-    @if(!searching){
+    @if(!searching()){
       <div class="mt-3">
         <table class="table mt-2">
           <tbody>
@@ -37,7 +37,7 @@
       </div>
     } @else {
       <h2 class="text-center">
-        <fa-icon icon=faSpinner spin=true></fa-icon>
+        <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
       </h2>
     }  
 </div>

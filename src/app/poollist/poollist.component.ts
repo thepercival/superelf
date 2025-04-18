@@ -1,16 +1,16 @@
-import { Component, input, OnInit } from '@angular/core';
+import { Component, input, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AuthService } from '../../src/app/lib/auth/auth.service';
-import { IAlert } from '../../src/app/shared/commonmodule/alert';
-import { PoolShell,  PoolShellRepository } from '../../src/app/lib/pool/shell/repository';
-import { GlobalEventsManager } from '../../src/app/shared/commonmodule/eventmanager';
+import { AuthService } from '../lib/auth/auth.service';
+import { IAlert } from '../shared/commonmodule/alert';
+import { PoolShell,  PoolShellRepository } from '../lib/pool/shell/repository';
+import { GlobalEventsManager } from '../shared/commonmodule/eventmanager';
 import { Season } from 'ngx-sport';
-import { SeasonRepository } from '../../src/app/lib/season/repository';
+import { SeasonRepository } from '../lib/season/repository';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { User } from '../lib/user';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { User } from '../../src/app/lib/user';
 
 @Component({
   selector: "app-pools",
@@ -20,9 +20,9 @@ import { User } from '../../src/app/lib/user';
   styleUrls: ["./poollist.component.scss"],
 })
 export class PoolListComponent implements OnInit {
-  public user = input.required<User>();
-  public processing = true;
-  public searching = false;
+  // public user: WritableSignal<boolean> = signal(true);  
+  public processing: WritableSignal<boolean> = signal(true);
+  public searching: WritableSignal<boolean> = signal(true);
   // linethroughDate: Date;
   public selectableSeasons: Season[] | undefined;
   public poolShells: PoolShell[] = [];
@@ -30,7 +30,7 @@ export class PoolListComponent implements OnInit {
   public typedForm: FormGroup<{
     season: FormControl<Season | null>;
   }>;
-  public faSpinnter = faSpinner;
+  public faSpinner = faSpinner;
 
   constructor(
     private router: Router,
@@ -64,11 +64,11 @@ export class PoolListComponent implements OnInit {
         this.typedForm.controls.season.setValue(this.selectableSeasons[0]);
         this.updatePools();
 
-        this.processing = false;
+        this.processing.set(false);
       },
       error: (e) => {
         this.setAlert("danger", e);
-        this.processing = false;
+        this.processing.set(false);
       },
     });
   }
@@ -79,19 +79,19 @@ export class PoolListComponent implements OnInit {
     if (season === null) {
       return;
     }
-    this.searching = true;
+    this.searching.set(true);
     // console.log(this.selectedSeason);
 
     const filter = { seasonId: season.getId() };
-    this.poolShellRepos.getObjects(this.user(), filter).subscribe({
+    this.poolShellRepos.getObjects(undefined, filter).subscribe({
       next: (shells: PoolShell[]) => {
         this.poolShells = shells.filter((shell) => shell.seasonName > "2021");
       },
       error: (e) => {
         this.setAlert("danger", e);
-        this.searching = false;
+        this.searching.set(false);
       },
-      complete: () => (this.searching = false),
+      complete: () => (this.searching.set(false)),
     });
   }
 
