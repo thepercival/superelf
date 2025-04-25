@@ -13,7 +13,9 @@
       </td>
     }
     <td class="table-no-bottom-border text-end">
-      <span *ngIf="totalPoints()" class="badge bg-totals">{{totalPoints()}}</span>    
+      @if(totalPoints()) {
+        <span class="badge bg-totals">{{totalPoints()}}</span>
+      }
     </td>
   </tr>
 
@@ -31,14 +33,20 @@
   @if(!processing()) { 
     <tr [class]="{'pointer': s11Player}">   
       <td class="{{getSubstituteClass(place.isSubstitute())}}">
-        <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
+        @if(s11Player) {
+          <span>{{s11Player.getPerson().getName()}}</span>
+        }
         <!-- <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="editPlace.emit(place)">
           kies een {{place.isSubstitute() ? 'wissel' : 'speler'}}
         </button> -->
-        <span *ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
+        @if(place.isSubstitute()) {
+          <span class="badge badge-reserve ms-1">r</span>
+        }
       </td>
-      <td class="{{getSubstituteClass(place.isSubstitute())}} text-nowrap">
-        <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
+      <td class="text-nowrap" [class]="getSubstituteClass(place.isSubstitute())">
+        @if(currentTeam) {
+          <app-team-name [team]="currentTeam" [fullName]="false"></app-team-name>
+        }
       </td>
       
       @for(gameRound of gameRounds(); track $index ) {
@@ -53,13 +61,15 @@
                 <span class="badge bg-nopoints">x</span>
               }
             } @else {
-              <div *ngIf="place.getFormationLine().hasSubstituteAppareance(gameRound)">
-                @if(statisticsGetter().hasAppeared(place,gameRound)) {
-                  <span class="badge bg-points">{{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound.number, undefined)}}</span>
-                } @else {            
-                  <span class="badge bg-nopoints">x</span>
-                }
-              </div>            
+              @if(place.getFormationLine().hasSubstituteAppareance(gameRound)){
+                <div>
+                  @if(statisticsGetter().hasAppeared(place,gameRound)) {
+                    <span class="badge bg-points">{{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound.number, undefined)}}</span>
+                  } @else {            
+                    <span class="badge bg-nopoints">x</span>
+                  }
+                </div>
+              }
             }
           }        
         </td>

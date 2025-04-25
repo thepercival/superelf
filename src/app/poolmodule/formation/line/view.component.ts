@@ -26,7 +26,6 @@ import { S11Formation } from '../../../lib/formation';
     FontAwesomeModule,
     TeamNameComponent,
     LineIconComponent,
-    NgIf,
   ],
   templateUrl: "./view.component.html",
   styleUrls: ["./view.component.scss"],
