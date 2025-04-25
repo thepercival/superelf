@@ -69,7 +69,6 @@ export class FormationLineViewComponent implements OnInit {
   // }
 
   getCurrentTeam(s11Player: S11Player | undefined, period: Period|undefined): Team | undefined {
-    console.log(s11Player, period);
     if (s11Player === undefined) {
       return undefined;
     }
