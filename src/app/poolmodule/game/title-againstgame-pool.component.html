@@ -32,7 +32,7 @@
                 @let homeScore = statisticsGetter().getFormationGameRoundPoints(homeCompetitorPoolUserAndFormation().formation, gameRound.number, undefined);
                 @let awayScore = statisticsGetter().getFormationGameRoundPoints(awayCompetitorPoolUserAndFormation().formation, gameRound.number, undefined);
                 <td class="text-end pt-3">
-                    @if(100 === getPercentageFinished(gameRound) ) {
+                    @if(getPercentageFinished(gameRound) > 0 ) {
                         <button type="button" class="btn btn-sm bg-points text-white">{{homeScore}}</button>                        
                     }
                 </td>
@@ -63,7 +63,7 @@
                     }
                 </td>
                 <td class=" pt-3">
-                    @if(100 === getPercentageFinished(gameRound) ) {
+                    @if(getPercentageFinished(gameRound) > 0 ) {
                         <button type="button" class="btn btn-sm bg-points text-white">{{awayScore}}</button>                        
                     }
                 </td>   
