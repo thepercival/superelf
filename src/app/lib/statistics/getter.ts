@@ -13,16 +13,19 @@ export class StatisticsGetter {
 
   public personMap: Map<string | number, StatisticsMap> = new Map();
 
+  // protected readonly substituteAppearances: Map<number, boolean>
+
+
   getFormationGameRoundPoints(
     formation: S11Formation,
-    gameRoundNr: number,
+    gameRound: GameRound,
     badgeCategory: BadgeCategory | undefined
   ): number {
     let points = 0;
     for (let line of formation.getLines()) {
       points += this.getFormationLineGameRoundPoints(
         line,
-        gameRoundNr,
+        gameRound,
         badgeCategory
       );
     }
@@ -31,14 +34,14 @@ export class StatisticsGetter {
 
   getFormationLineGameRoundPoints(
     formationLine: S11FormationLine,
-    gameRoundNr: number,
+    gameRound: GameRound,
     badgeCategory: BadgeCategory | undefined
   ): number {
     let points = 0;
     for (let place of formationLine.getPlaces()) {
       points += this.getFormationPlaceGameRoundPoints(
         place,
-        gameRoundNr,
+        gameRound,
         badgeCategory
       );
     }
@@ -47,7 +50,7 @@ export class StatisticsGetter {
 
   getFormationPlaceGameRoundPoints(
     formationPlace: S11FormationPlace,
-    gameRoundNr: number,
+    gameRound: GameRound,
     badgeCategory: BadgeCategory | undefined
   ): number {
     const player = formationPlace.getPlayer();
@@ -55,14 +58,14 @@ export class StatisticsGetter {
       return 0;
     }
 
-    const statistics = this.getStatistics(player, gameRoundNr);
+    const statistics = this.getStatistics(player, gameRound.number);
     if (statistics === undefined) {
       return 0;
     }
     const formationLine = formationPlace.getFormationLine();
     if (
       formationPlace.isSubstitute() &&
-      !formationLine.hasSubstituteAppareance(gameRoundNr)
+      !this.isSubstituteUsed(formationPlace, gameRound)
     ) {
       return 0;
     }
@@ -79,11 +82,8 @@ export class StatisticsGetter {
     );
   }
 
-  placeHasStatistics(
-    formationPlace: S11FormationPlace,
-    gameRound: GameRound
-  ): boolean {
-    if (formationPlace === undefined) {
+  isSubstituteUsed(formationPlace: S11FormationPlace,gameRound: GameRound): boolean {
+    if (formationPlace === undefined || !formationPlace.isSubstitute()) {
       return false;
     }
     const player = formationPlace.getPlayer();
@@ -95,54 +95,49 @@ export class StatisticsGetter {
       return false;
     }
     const formationLine = formationPlace.getFormationLine();
-    return (
-      !formationPlace.isSubstitute() ||
-      formationLine.hasSubstituteAppareance(gameRound)
-    );
+    return this.shouldSubstituteAppear(formationLine,gameRound) === true;
   }
 
-  hasAppeared(
-    formationPlace: S11FormationPlace | undefined,
-    gameRound?: GameRound | undefined
-  ): boolean {
+
+    // public canSubstituteAppear(gameRound: GameRound): GameState {
+    //     const finishedPlaces = this.getStartingPlaces().filter((formationPlace: S11FormationPlace): boolean => {
+    //         return formationPlace.getPlayer()?.getGameStatistics(gameRound.getNumber()) !== undefined;
+    //     });
+
+    //     if (finishedPlaces.length === this.getStartingPlaces().length) {
+    //         return GameState.Finished;
+    //     }
+    //     if (finishedPlaces.length > 0) {
+    //         return GameState.InProgress;
+    //     }
+    //     return GameState.Created;
+    // }
+
+    
+    
+
+  hasAppeared(formationPlace: S11FormationPlace | undefined,gameRound?: GameRound | undefined): boolean {
     if (formationPlace === undefined) {
       return false;
-    }
+    }    
     const formationLine = formationPlace.getFormationLine();
-    // console.log('formationLine', formationLine.getNumber());
-    if (
-      formationPlace.isSubstitute() &&
-      !formationLine.hasSubstituteAppareance(gameRound)
-    ) {
-      // console.log('hasAppeared 1 false');
-      return false;
-    }
     const s11Player = formationPlace.getPlayer();
     if (s11Player === undefined) {
-      // console.log('hasAppeared 2 false');
       return false;
     }
-    // if( s11Player.getPerson().getLastName() === 'Crooij') {
-    //     console.log('Crooij('+s11Player.getPerson().getId()+')');
-    // }
     if (gameRound === undefined) {
-      // console.log('hasAppeared 3 ', s11Player.hasAppeared());
       return s11Player.hasAppeared();
     }
-    if (s11Player.getPerson().getLastName() === "Lozano") {
-      // console.log('Lozano', gameRound, this.getStatistics(s11Player, gameRound), this.personMap);
+  
+    if (formationPlace.isSubstitute() && this.shouldSubstituteAppear(formationLine, gameRound) !== true ) {
+      return false;
     }
-    // console.log('hasAppeared 4 ', this.getStatistics(s11Player, gameRound)?.hasAppeared() === true);
-    return (
-      this.getStatistics(s11Player, gameRound.number)?.hasAppeared() === true
-    );
+
+    return this.getStatistics(s11Player, gameRound.number)?.hasAppeared() === true;
   }
 
-  public getStartingPlacesState(
-    formationLine: S11FormationLine,
-    gameRound: GameRound
-  ): GameState {
-    const finishedPlaces = formationLine
+  public areStartingPlacesFinished(formationLine: S11FormationLine,gameRound: GameRound): boolean {
+    const appearedPlaces = formationLine
       .getStartingPlaces()
       .filter((formationPlace: S11FormationPlace): boolean => {
         const s11Player = formationPlace.getPlayer();
@@ -152,14 +147,42 @@ export class StatisticsGetter {
         return this.getStatistics(s11Player, gameRound.number) !== undefined;
       });
 
-    if (finishedPlaces.length === formationLine.getStartingPlaces().length) {
-      return GameState.Finished;
-    }
-    if (finishedPlaces.length > 0) {
-      return GameState.InProgress;
-    }
-    return GameState.Created;
+    return appearedPlaces.length === formationLine.getStartingPlaces().length
   }
+
+  
+
+  public shouldSubstituteAppear(
+      formationLine: S11FormationLine, 
+      gameRound: GameRound
+    ): boolean|undefined {             
+
+      if( formationLine.getStartingPlaces().some((startingPlace: S11FormationPlace): boolean => {
+        const s11Player = startingPlace.getPlayer();
+        if( s11Player === undefined) {
+          return false;
+        }
+        const stats = this.getStatistics(s11Player, gameRound.number);
+        return stats !== undefined && !stats.hasAppeared();
+      })) {        
+        return true;
+      }
+
+      if( !this.areStartingPlacesFinished(formationLine,gameRound)){ 
+        return undefined;
+      }
+      return false;
+
+      // }
+        // hier ben je dus per formatie(person) een map nodig per wedstrijdronde en per line
+
+        // if (gameRound === undefined) {
+        //     return this.substituteAppearances.size > 0;
+        // }
+        // const gameRoundNr = gameRound instanceof GameRound ? gameRound.number : gameRound;
+        // // console.log(this.getNumber(), this.substituteAppearances.has(gameRound.getNumber()));
+        // return this.substituteAppearances.has(gameRoundNr);
+    }
 
   // private playerHasStatistics(
   //   s11Player: S11Player,

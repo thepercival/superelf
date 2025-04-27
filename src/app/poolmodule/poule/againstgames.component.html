@@ -231,7 +231,7 @@
                 </ng-container>
             }
         } @else {
-            @if(gameRound && statisticsGetter.getStartingPlacesState(formationPlace.getFormationLine(),gameRound) === Finished){
+            @if(gameRound && statisticsGetter.areStartingPlacesFinished(formationPlace.getFormationLine(),gameRound)){
             
                 @if(formationPlace.getFormationLine().hasSubstituteAppareance(gameRound)){
                     @if(sourceGame.getState() === Finished){
@@ -276,10 +276,6 @@
             </a>
         </span>
     } @else {
-        <span class="badge bg-nopoints">
-            <a routerLink="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
-                x
-            </a>
-        </span>
+        <button type="button" class="btn btn-sm btn-notappeared">x</button>
     }
 </ng-template>

@@ -1,10 +1,10 @@
 @if(categoryPoints){
     <div class="border-0 d-flex justify-content-center">
-        <!-- card-played -->
+        <!-- played -->
         <div class="card m-2 align-self-start {{getBorderClass(categoryPoints.result)}}">
             <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.result)}}">
                 <span>wed. punten</span>
-                <span class="badge {{getBadgeClass(categoryPoints.result)}} float-end ms-1">{{categoryPoints.result}}</span>
+                <span class="badge bg-points float-end ms-1">{{categoryPoints.result}}</span>
             </div>
             <div class="card-body">
                 <div>
@@ -27,11 +27,17 @@
                 </div>
             </div>
         </div>
-        <!-- card-goals -->
+        <!-- goals -->
         <div class="card m-2 align-self-start {{getBorderClass(categoryPoints.goal)}}">
             <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.goal)}}">
                 <span>goals</span>
-                <span class="badge {{getBadgeClass(categoryPoints.goal)}} float-end ms-1">{{categoryPoints.goal}}</span>
+                @if(categoryPoints.goalHasStats) {
+                    <span 
+                        class="badge float-end ms-1"
+                        [class]="categoryPoints.goalHasStats ? 'bg-points' : 'bg-nostats'"
+                    >{{categoryPoints.goal}}</span>
+                }
+                
             </div>
             <div class="card-body">
                 <div>
@@ -71,11 +77,16 @@
     </div>
 
     <div class="border-0 d-flex justify-content-center">
-        <!-- card-defense -->
+        <!-- defense -->
         <div *ngIf="sheetActive" class="card m-2 align-self-start {{getBorderClass(categoryPoints.sheet)}}">
             <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.sheet)}}">
                 <span>tegengoals</span>
-                <span class="badge {{getBadgeClass(categoryPoints.sheet)}} float-end ms-1">{{categoryPoints.sheet}}</span>
+                @if(categoryPoints.sheetHasStats) {
+                    <span 
+                        class="badge float-end ms-1"
+                        [class]="categoryPoints.sheetHasStats ? 'bg-points' : 'bg-nostats'"
+                    >{{categoryPoints.sheet}}</span>
+                }
             </div>
             <div class="card-body">
                 <div>
@@ -96,11 +107,17 @@
                 </div>
             </div>
         </div>
-        <!-- card-cards -->
+        <!-- cards -->
         <div class="card m-2 align-self-start {{getBorderClass(categoryPoints.card)}}">
             <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.card)}}">
                 <span>kaarten</span>
-                <span class="badge {{getBadgeClass(categoryPoints.card)}} float-end ms-1">{{categoryPoints.card}}</span>
+                @if(categoryPoints.cardHasStats) {
+                    <span 
+                        class="badge float-end ms-1"
+                        [class]="categoryPoints.cardHasStats ? 'bg-points' : 'bg-nostats'"
+                    >{{categoryPoints.card}}</span>                
+                }
+                
             </div>
             <div class="card-body">
                 <div>

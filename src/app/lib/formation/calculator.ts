@@ -87,7 +87,7 @@ export class S11FormationCalculator {
         
         const newFormation = new S11Formation(currentFormation.getPoolUser(), currentFormation.getViewPeriod());
         currentFormation.getLines().forEach((currentLine: S11FormationLine) => {
-            const line = new S11FormationLine(newFormation, currentLine.getNumber(), new Map());
+            const line = new S11FormationLine(newFormation, currentLine.getNumber());
             currentLine.getPlaces().forEach((currentPlace: S11FormationPlace) => {
                 let currentS11Player = currentPlace.getPlayer();
                 if( currentS11Player === undefined) {
@@ -111,7 +111,7 @@ export class S11FormationCalculator {
         const playerLineNumber = player.getLine();        
         const newFormation = new S11Formation(currentFormation.getPoolUser(), currentFormation.getViewPeriod());
         currentFormation.getLines().forEach((currentLine: S11FormationLine) => {
-            const line = new S11FormationLine(newFormation, currentLine.getNumber(), new Map());
+            const line = new S11FormationLine(newFormation, currentLine.getNumber());
             currentLine.getPlaces().forEach((currentPlace: S11FormationPlace) => {
                 new S11FormationPlace(
                     line, currentPlace.getPlayer(), currentPlace.getNumber(), 
@@ -141,7 +141,7 @@ export class S11FormationCalculator {
     private removeStartingPlace(currentFormation: S11Formation, lineNumber: FootballLine, placeNumber: number): S11Formation {
         const newFormation = new S11Formation(currentFormation.getPoolUser(), currentFormation.getViewPeriod());
         currentFormation.getLines().forEach((currentLine: S11FormationLine) => {
-            const line = new S11FormationLine(newFormation, currentLine.getNumber(), new Map());
+            const line = new S11FormationLine(newFormation, currentLine.getNumber());
             let removed = false;
             currentLine.getPlaces().forEach((currentPlace: S11FormationPlace) => {
                 if( line.getNumber() === lineNumber && currentPlace.getNumber() === placeNumber ) {
@@ -161,7 +161,7 @@ export class S11FormationCalculator {
     private removeSubstitutePlace(currentFormation: S11Formation, lineNumber: FootballLine): S11Formation {
         const newFormation = new S11Formation(currentFormation.getPoolUser(), currentFormation.getViewPeriod());
         currentFormation.getLines().forEach((currentLine: S11FormationLine) => {
-            const line = new S11FormationLine(newFormation, currentLine.getNumber(), new Map());
+            const line = new S11FormationLine(newFormation, currentLine.getNumber());
             
             let places;
             if( line.getNumber() === lineNumber ) {

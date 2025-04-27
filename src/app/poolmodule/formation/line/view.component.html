@@ -1,6 +1,6 @@
 @if(!processing()) {
   <tr class="mt-3">
-    <td colspan="2" class="table-no-bottom-border">
+    <td colspan="3" class="table-no-bottom-border">
       <h5 class="card-title">
         <app-lineicon [line]="line().getNumber()" [abbreviate]="false"></app-lineicon>
       </h5>
@@ -8,13 +8,17 @@
     @for(gameRound of gameRounds(); track $index ) {
       <td class="table-no-bottom-border text-end">
         @if( line().getNumber() === GoalKeeper ) {
-          <span class="badge bg-totals">{{calculateTotalGameRoundPoints(line().getFormation(), gameRound)}}</span>    
+          <button type="button" class="btn btn-sm btn-small-totals">
+            {{calculateTotalGameRoundPoints(line().getFormation(), gameRound)}}
+          </button>
         }      
       </td>
     }
     <td class="table-no-bottom-border text-end">
       @if(totalPoints()) {
-        <span class="badge bg-totals">{{totalPoints()}}</span>
+        <button type="button" class="btn btn-sm btn-large-totals">
+          {{totalPoints()}}
+        </button>
       }
     </td>
   </tr>
@@ -32,17 +36,19 @@
 <ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentTeam="currentTeam">
   
   <tr [class]="{'pointer': s11Player}">   
-    <td class="{{getSubstituteClass(place.isSubstitute())}}">
+    <td [attr.colspan]="place.isSubstitute() ? 1 : 2" class="{{getSubstituteClass(place.isSubstitute())}}">
       @if(s11Player) {
         <span>{{s11Player.getPerson().getName()}}</span>
       }
       <!-- <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="editPlace.emit(place)">
         kies een {{place.isSubstitute() ? 'wissel' : 'speler'}}
       </button> -->
-      @if(place.isSubstitute()) {
-        <span class="badge badge-reserve ms-1">r</span>
-      }
     </td>
+    @if(place.isSubstitute()) {
+      <td class="{{getSubstituteClass(place.isSubstitute())}}">      
+        <span class="badge badge-substitute-unknown">r</span>
+      </td>
+    }
     <td class="text-nowrap" [class]="getSubstituteClass(place.isSubstitute())">
       @if(currentTeam) {
         <app-team-name [team]="currentTeam" [fullName]="false"></app-team-name>
@@ -50,34 +56,40 @@
     </td>
     
     @for(gameRound of gameRounds(); track $index ) {
-      <td class="pointer text-end {{getSubstituteClass(place.isSubstitute())}}" (click)="maybeLinkToPlayer(place, gameRound)">
-        @if(statisticsGetter().placeHasStatistics(place,gameRound)){
-          @if(!place.isSubstitute()){        
+      <td class="pointer text-end {{getSubstituteClass(place.isSubstitute())}}">
+        @let s11Player = place.getPlayer();
+        @if( statisticsGetter().getStatistics(s11Player, gameRound.number)) {
+          @if(!place.isSubstitute() || statisticsGetter().isSubstituteUsed(place,gameRound)){        
             @if(statisticsGetter().hasAppeared(place, gameRound)){          
-              <span class="badge bg-points">
-                {{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound.number, undefined)}}</span>
+              <ng-container
+                *ngTemplateOutlet="appearedbtn; context:{formationPlace: place, gameRound, s11Player}">
+              </ng-container>            
             }
             @else {
-              <span class="badge bg-nopoints">x</span>
-            }
-          } @else {
-            @if(place.getFormationLine().hasSubstituteAppareance(gameRound)){
-              <div>
-                @if(statisticsGetter().hasAppeared(place,gameRound)) {
-                  <span class="badge bg-points">{{statisticsGetter().getFormationPlaceGameRoundPoints(place,gameRound.number, undefined)}}</span>
-                } @else {            
-                  <span class="badge bg-nopoints">x</span>
-                }
-              </div>
+              <button type="button" class="btn btn-sm btn-notappeared">x</button>
             }
           }
-        }        
+        }
       </td>
     }
     
     <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
-      <span class="badge bg-totals">
-        {{place.getTotalPoints()}}</span>
+      <button type="button" class="btn btn-sm btn-large-totals">
+        {{place.getTotalPoints()}}
+      </button>
     </td>
   </tr>
+</ng-template>
+
+<ng-template #appearedbtn let-formationPlace="formationPlace" let-s11Player="s11Player" let-gameRound="gameRound">
+  @let statistics = statisticsGetter().getStatistics(s11Player, gameRound.number);
+  @if( statistics !== undefined ) {
+    @let appearanceColumns = getAppearanceColumnsAsGradient(statistics);
+    <button type="button" class="btn btn-sm btn-points-base"     
+      (click)="linkToPlayer.emit({ s11Player, gameRound });"
+      [style]="'background: linear-gradient(to right, ' + appearanceColumns + ')'"
+    >
+      {{statisticsGetter().getFormationPlaceGameRoundPoints(formationPlace,gameRound, undefined)}}
+    </button>    
+  }
 </ng-template>

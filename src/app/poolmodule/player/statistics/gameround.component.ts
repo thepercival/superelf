@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges, input } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, WritableSignal, input, signal } from '@angular/core';
 import { FootballLine } from 'ngx-sport';
 import { BadgeCategory } from '../../../lib/achievement/badge/category';
 import { ImageRepository } from '../../../lib/image/repository';
@@ -12,7 +12,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgIf } from '@angular/common';
 import { facCard, facCleanSheet, facPenalty, facSpottySheet } from '../../../shared/poolmodule/icons';
 import { faCheckCircle, faFutbol, faHandshakeAngle } from '@fortawesome/free-solid-svg-icons';
-import { S11PlayerStatisticsBaseComponent } from './base.component';
 
 @Component({
   selector: "s11-player-statistics",
@@ -22,12 +21,15 @@ import { S11PlayerStatisticsBaseComponent } from './base.component';
   styleUrls: ["./gameround.component.scss"],
 })
 export class S11PlayerStatisticsComponent
-  extends S11PlayerStatisticsBaseComponent
   implements OnInit, OnChanges
 {
   public readonly statistics = input.required<Statistics>();
   public readonly line = input.required<FootballLine>();
   public readonly scorePointsMap = input.required<ScorePointsMap>();
+
+  public processing: WritableSignal<boolean> = signal(true);
+  public sheetActive!: boolean;
+  public categoryPoints: CategoryPoints | undefined;
 
   // public oneTeamSimultaneous = new OneTeamSimultaneous();
   // public player: Player | undefined;
@@ -39,8 +41,9 @@ export class S11PlayerStatisticsComponent
   public faCheckCircle = faCheckCircle;
   public faHandshakeAngle = faHandshakeAngle;
 
-  constructor(imageRepository: ImageRepository, cssService: CSSService) {
-    super(imageRepository, cssService);
+  constructor
+    (public imageRepository: ImageRepository, 
+    public cssService: CSSService) {    
   }
 
   ngOnInit() {
@@ -108,14 +111,49 @@ export class S11PlayerStatisticsComponent
             this.scorePointsMap(),
             BadgeCategory.Assist
           ),
+        goalHasStats: this.hasStatisticsGoalStats(statistics),
         sheet: sheetPoints,
+        sheetHasStats: this.hasStatisticsSheetStats(statistics),
         card: statistics.getPoints(
           this.line(),
           this.scorePointsMap(),
           BadgeCategory.Card
         ),
+        cardHasStats: this.hasStatisticsCardStats(statistics),
       };
     }
   }
+
+  private hasStatisticsGoalStats(statistics: Statistics): boolean {
+    return statistics.getNrOfFieldGoals() > 0 ||
+      statistics.getNrOfAssists() > 0 ||
+      statistics.getNrOfPenalties() > 0 ||
+      statistics.getNrOfOwnGoals() > 0;
+  }
+
+  private hasStatisticsSheetStats(statistics: Statistics): boolean {
+    return statistics.hasCleanSheet() === true || statistics.hasSpottySheet() === true;
+  }
+
+  private hasStatisticsCardStats(statistics: Statistics): boolean {
+    return statistics.getNrOfYellowCards() > 0 || statistics.gotDirectRedCard();
+  }
+
+    getBackgroundClass(points: number): string {
+        return points < 0 ? 'bg-negative' : points > 0 ? 'bg-positive' : 'bg-zero';
+    }
+
+    getBorderClass(points: number): string {
+        return points < 0 ? 'border-danger' : points > 0 ? 'border-success' : 'border-zero';
+    }
 }
 
+interface CategoryPoints {
+    result: number,
+    goal: number,
+    goalHasStats: boolean,
+    card: number,
+    cardHasStats: boolean,
+    sheet: number,
+    sheetHasStats: boolean
+}

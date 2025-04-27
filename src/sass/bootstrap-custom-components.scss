@@ -18,26 +18,22 @@ $line-4: $green-500;
 $line-8: $green-400;
 $totals: #673AB7;
 $points: #2211B7;
-$nopoints: #bbb;
+$notappeared: $danger;
 
 @import "../../node_modules/bootstrap/scss/variables";
+
 
 $custom-theme-colors: (
   "totals": $totals,
   "points": $points,
-  "nopoints": $nopoints,
+  "notappeared": $notappeared,
   "line-1": $line-1,
   "line-2": $line-2,
   "line-4": $line-4,
   "line-8": $line-8,
-  "zero": #eee,
-  "positive": $gray-500,
   "negative": $red-100,
-);
-$custom-theme-border-colors: (
-  "zero": #ddd,
-  "positive": $blue,
-  "negative": $red-200,
+  "positive": $green-100,
+  "zero": #ddd
 );
 
 $theme-colors: map-merge($theme-colors, $custom-theme-colors);

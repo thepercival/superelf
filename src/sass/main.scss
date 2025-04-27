@@ -22,6 +22,11 @@ $enable-responsive-font-sizes: true !default;
   width: 1.7rem;
 }
 
+.btn-notappeared {
+  @extend .btn-points-base;
+  @extend .bg-notappeared;
+}
+
 .btn-points {
   @extend .btn-points-base;
   @extend .bg-points;
@@ -142,12 +147,26 @@ select {
   padding: .5rem;
 }
 
-.badge-reserve {
+.badge-substitute {
   vertical-align: text-top;
-  background-color: #98978b;
-  padding-left: 0.2rem;
-  padding-right: 0.2rem;
+  @extend .px-1;
 }
+
+.badge-substitute-used {
+  @extend .bg-success;
+  @extend .badge-substitute;
+}
+
+.badge-substitute-unused {
+  @extend .bg-danger;
+  @extend .badge-substitute;
+}
+
+.badge-substitute-unknown {
+  background-color: #98978b;
+  @extend .badge-substitute;
+}
+
 
 span.badge-rank {
   background-color: inherit;

@@ -15,7 +15,7 @@ export class S11FormationLineMapper {
     constructor(protected placeMapper: FormationPlaceMapper, protected playerMapper: S11PlayerMapper) { }
 
     toObject(json: JsonS11FormationLine, formation: S11Formation, competition: Competition, viewPeriod: ViewPeriod): S11FormationLine {
-        const formationLine = new S11FormationLine(formation, json.number, this.getAppearanceMap(json.substituteAppearances));
+        const formationLine = new S11FormationLine(formation, json.number);
         json.places.forEach((jsonPlace: JsonS11FormationPlace) => {
             this.placeMapper.toObject(jsonPlace, formationLine, competition, viewPeriod);
         });

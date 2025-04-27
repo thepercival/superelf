@@ -17,6 +17,8 @@ import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../../lib/sportExtensions';
 import { S11Formation } from '../../../lib/formation';
+import { MinutesAsGradientsService } from '../../../shared/commonmodule/minutesAsGradientsService';
+import { Statistics } from '../../../lib/statistics';
 
 @Component({
   selector: "[app-pool-formationline-view]",
@@ -93,7 +95,7 @@ export class FormationLineViewComponent implements OnInit {
   calculateTotalGameRoundPoints(formation: S11Formation, gameRound: GameRound): number {
     return this.statisticsGetter().getFormationGameRoundPoints(
           formation,
-          gameRound.number,
+          gameRound,
           undefined
         );
   }
@@ -133,6 +135,10 @@ export class FormationLineViewComponent implements OnInit {
 
   getSubstituteClass(isSubstitute: boolean): string {
     return isSubstitute ? "table-no-bottom-border" : "";
+  }
+
+  getAppearanceColumnsAsGradient(statistics: Statistics): string {
+    return (new MinutesAsGradientsService()).getAppearanceColumnsAsGradient(statistics);
   }
 }
 

@@ -1,33 +1,25 @@
-import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase, GameState, NameService, SportRoundRankingItem, StartLocation, StartLocationMap, StructureNameService, Team, TeamCompetitor } from 'ngx-sport';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { AgainstGame, AgainstSide, Competitor, CompetitorBase, GameState } from 'ngx-sport';
 import { DateFormatter } from '../../../../lib/dateFormatter';
-import { TeamNameComponent } from '../../../team/name.component';
-import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { SuperElfNameService } from '../../../../lib/nameservice';
 import { LineIconComponent } from '../../../../shared/commonmodule/lineicon/lineicon.component';
-import { S11FormationPlace } from '../../../../lib/formation/place';
 import { S11Player } from '../../../../lib/player';
-import { Pool } from '../../../../lib/pool';
-import { S11FormationMap } from '../../../allinonegame/allinonegame.component';
 import { GameRound } from '../../../../lib/gameRound';
-import { PoolCompetitor } from '../../../../lib/pool/competitor';
-import { PoolUser } from '../../../../lib/pool/user';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { S11PlayerModalComponent } from '../../../player/playerinfo.modal.component';
 import { SportExtensions } from '../../../../lib/sportExtensions';
-import { CompetitionConfig } from '../../../../lib/competitionConfig';
-import { ActiveViewGameRoundsCalculator } from '../../../../lib/gameRound/activeViewGameRoundsCalculator';
-import { CompetitorWithGameRoundsPoints } from '../../../../lib/views/togetherRankingView/competitorWithGameRoundsPoints';
 import { StatisticsGetter } from '../../../../lib/statistics/getter';
-import { CompetitorPoolUserAndFormation } from '../../../poule/againstgames.component';
 import { PoolUserRow } from './againstgames-table.component';
+import { RouterLink } from '@angular/router';
+import { Statistics } from '../../../../lib/statistics';
+import { MinutesAsGradientsService } from '../../../../shared/commonmodule/minutesAsGradientsService';
 
 @Component({
   selector: "tr[s11-game-tablerow]",
   standalone: true,
-  imports: [FontAwesomeModule, NgTemplateOutlet, LineIconComponent],
+  imports: [FontAwesomeModule, NgTemplateOutlet, LineIconComponent, RouterLink],
   templateUrl: "./game-tablerow.component.html",
   styleUrls: ["./game-tablerow.component.scss"],
 })
@@ -84,16 +76,7 @@ export class GameTableRowComponent implements OnInit {
     );
   }
 
-  getRouterLink(
-    poolUser: PoolUser,
-    gameRound: GameRound | undefined
-  ): (string | number)[] {
-    return [
-      "/pool/user",
-      poolUser.getPool().getId(),
-      poolUser.getId(),
-      this.gameRound().number,
-    ];
+  getAppearanceColumnsAsGradient(statistics: Statistics): string {
+    return (new MinutesAsGradientsService()).getAppearanceColumnsAsGradient(statistics);
   }
 }
-

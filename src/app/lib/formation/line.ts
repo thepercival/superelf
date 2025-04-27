@@ -1,7 +1,6 @@
-import { FootballLine, GameState, Identifiable, Place } from 'ngx-sport';
+import { FootballLine, Identifiable } from 'ngx-sport';
 import { BadgeCategory } from '../achievement/badge/category';
 import { S11Formation } from '../formation';
-import { GameRound } from '../gameRound';
 import { S11Player } from '../player';
 import { Totals } from '../totals';
 import { S11FormationPlace } from './place';
@@ -10,12 +9,8 @@ export class S11FormationLine extends Identifiable {
     private static readonly SUBSTITUTE_NUMBER = 0;
 
     protected places: S11FormationPlace[] = [];
-    // protected substituteAppearances: Map<number, boolean> = {};
 
-    constructor(
-        protected formation: S11Formation,
-        protected number: FootballLine,
-        protected substituteAppearances: Map<number, boolean>) {
+    constructor(protected readonly formation: S11Formation,protected readonly number: FootballLine) {
         super();
         formation.getLines().push(this);
     }
@@ -38,23 +33,6 @@ export class S11FormationLine extends Identifiable {
         });
     }
 
-    
-
-    // public canSubstituteAppear(gameRound: GameRound): GameState {
-    //     const finishedPlaces = this.getStartingPlaces().filter((formationPlace: S11FormationPlace): boolean => {
-    //         return formationPlace.getPlayer()?.getGameStatistics(gameRound.getNumber()) !== undefined;
-    //     });
-
-    //     if (finishedPlaces.length === this.getStartingPlaces().length) {
-    //         return GameState.Finished;
-    //     }
-    //     if (finishedPlaces.length > 0) {
-    //         return GameState.InProgress;
-    //     }
-    //     return GameState.Created;
-    // }
-
-
     public getSubstitute(): S11FormationPlace {
         return this.getPlace(S11FormationLine.SUBSTITUTE_NUMBER);
     }
@@ -74,22 +52,6 @@ export class S11FormationLine extends Identifiable {
         }
         return place;
     }
-
-    public hasSubstituteAppareance(gameRound: GameRound | number | undefined): boolean {
-        if (gameRound === undefined) {
-            return this.substituteAppearances.size > 0;
-        }
-        const gameRoundNr = gameRound instanceof GameRound ? gameRound.number : gameRound;
-        // console.log(this.getNumber(), this.substituteAppearances.has(gameRound.getNumber()));
-        return this.substituteAppearances.has(gameRoundNr);
-    }
-
-    // public getSubstituteAppearances(): Map<number, boolean> {
-    //     return this.substituteAppearances;
-    // }
-    // public setSubstituteAppearances(substituteAppearances: Map<number, boolean>) {
-    //     this.substituteAppearances = substituteAppearances;
-    // }
 
     public getPlayers(withSubstitute: boolean): S11Player[] {
 
