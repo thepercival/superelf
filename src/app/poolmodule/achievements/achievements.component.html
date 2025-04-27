@@ -30,7 +30,7 @@
                                     </th>
                                 }
                                 
-                                <th class="text-center">
+                                <th class="text-end">
                                     <div><app-superelf-trophy-icon size="2x" [leagueName]="Competition"></app-superelf-trophy-icon></div>
                                     @if(goatToggle){
                                         <div>{{goatPoints.competitionTrophy}}p</div>
@@ -38,7 +38,7 @@
                                         <div class="fw-lighter">comp.</div>
                                     }
                                 </th>
-                                <th class="text-center">
+                                <th class="text-end">
                                     <div><app-superelf-trophy-icon size="2x" [leagueName]="Cup"></app-superelf-trophy-icon></div>
                                     @if(goatToggle){
                                         <div>{{goatPoints.cupTrophy}}p</div>
@@ -46,7 +46,7 @@
                                         <div class="fw-lighter">beker.</div>
                                     }
                                 </th>
-                                <th class="text-center">
+                                <th class="text-end">
                                     <div><app-superelf-trophy-icon size="2x" [leagueName]="SuperCup"></app-superelf-trophy-icon></div>
                                     @if(goatToggle){
                                         <div>{{goatPoints.supercupTrophy}}p</div>
@@ -54,7 +54,7 @@
                                         <div class="fw-lighter">s. cup</div>
                                     }                                    
                                 </th>
-                                <th class="text-center">
+                                <th class="text-end">
                                     <div><app-superelf-badge-icon></app-superelf-badge-icon></div>
                                     @if(goatToggle){
                                         <div>{{goatPoints.badge}}p</div>
@@ -74,35 +74,38 @@
                                     }
                                 </td>
                                 @if(goatToggle){
-                                    <td class="text-nowrap text-center">
+                                    <td class="text-nowrap text-end">
+                                        <span>{{achievementListItem.goatTotalPoints}}</span>
+                                    </td>
+                                    <td class="text-nowrap text-end">
                                         @if(achievementListItem.leagueTrophies.get(Competition)?.length){
                                             <span>{{achievementListItem.leagueTrophies.get(Competition)?.length}}x</span>
                                         }
                                     </td>
-                                    <td class="text-nowrap text-center">
+                                    <td class="text-nowrap text-end">
                                         @if(achievementListItem.leagueTrophies.get(Cup)?.length){
                                         <span>{{achievementListItem.leagueTrophies.get(Cup)?.length}}x</span>
                                         }
                                     </td>
-                                    <td class="text-nowrap text-center">
+                                    <td class="text-nowrap text-end">
                                         @if(achievementListItem.leagueTrophies.get(SuperCup)?.length){
                                         <span>{{achievementListItem.leagueTrophies.get(SuperCup)?.length}}x</span>
                                         }
                                     </td>
                                 } @else {
-                                    <td class="text-center">
+                                    <td class="text-end">
                                         @for(trophy of achievementListItem.leagueTrophies.get(Competition); track trophy) {
                                         <div class="badge bg-secondary mb-1 ms-1 px-1 pointer" (click)="openLinkNewTab(pool, trophy, Competition)">
                                             {{trophy.seasonShortName}}</div>
                                         }
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-end">
                                         @for(trophy of achievementListItem.leagueTrophies.get(Cup); track trophy) {
                                         <div class="badge bg-secondary mb-1 ms-1 px-1 pointer" (click)="openLinkNewTab(pool, trophy, Cup)">
                                             {{trophy.seasonShortName}}</div>
                                         }
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-end">
                                         @for(trophy of achievementListItem.leagueTrophies.get(SuperCup); track trophy) {
                                         <div class="badge bg-secondary mb-1 ms-1 px-1 pointer" (click)="openLinkNewTab(pool, trophy, SuperCup)">
                                             {{trophy.seasonShortName}}</div>
@@ -110,7 +113,7 @@
                                     </td>
                                 }
 
-                                <td class="text-center">
+                                <td class="text-end">
                                     @if(goatToggle && achievementListItem.badges.length){
                                         <div>{{achievementListItem.badges.length}}x</div>
                                     }

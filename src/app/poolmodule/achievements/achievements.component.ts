@@ -92,6 +92,11 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
             this.achievementListItems = this.mapToAchievementListItems(achievements);
             this.processing.set(false);
           },
+          error: (e: string) => {
+            this.setAlert("danger", e);
+            this.processing.set(false);
+          },
+          complete: () => this.processing.set(false),
         });
 
       this.poolUserRepository.getObjectFromSession(pool).subscribe({
@@ -110,12 +115,7 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
                 }
               },
             });
-        },
-        error: (e: string) => {
-          this.setAlert("danger", e);
-          this.processing.set(false);
-        },
-        complete: () => this.processing.set(false),
+        }
       });
     });
   }

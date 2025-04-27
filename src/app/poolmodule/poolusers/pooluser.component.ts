@@ -439,8 +439,6 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
 
   selectViewPeriod(pool: Pool, viewPeriod: ViewPeriod): void {
     // this.processing.set(true);
-    this.assembleFormation.set(undefined);
-    this.transferFormation.set(undefined);
     this.previousGameRound.set(undefined);
     this.nextGameRound.set(undefined);
     this.determineActiveGameRound(
@@ -467,7 +465,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
         formation = transferFormation;
       }
       if( formation === undefined) {
-        throw new Error('formation not found form gameRound ' + gameRound.number);
+        throw new Error('formation not found from gameRoundNr "' + gameRound.number + '"');
       }
     
       return this.statisticsRepository.getGameRoundObjects(
