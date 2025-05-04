@@ -1,14 +1,14 @@
-import { catchError, concatMap, map, Observable, of } from "rxjs";
+import { concatMap, Observable, of } from "rxjs";
 import { CompetitionConfig } from "../competitionConfig";
 import { ViewPeriod } from "../periods/viewPeriod";
-import { CurrentGameRoundNumbers, GameRoundRepository } from "./repository";
-import { GameRoundRange } from "./range";
+import { GameRoundRepository } from "./repository";
 import { GameRound } from "../gameRound";
 import { GameRoundViewType } from "./viewType";
+import { ViewPeriodGameRoundMap } from "./viewPeriodGameRoundMap";
 
 export class GameRoundGetter {
   // viewPeriod and gameRoundNr indexes
-  private gameRoundsMaps: Map<number, Map<number, GameRound>> = new Map();
+  private gameRoundsMaps: Map<number, ViewPeriodGameRoundMap> = new Map();
 
   // = new Map(
   //     gameRounds.map((gr) => [gr.number, gr])
@@ -20,17 +20,17 @@ export class GameRoundGetter {
     competitionConfig: CompetitionConfig,
     viewPeriod: ViewPeriod
   ): Observable<GameRound[]> {
-    return this.getGameRoundMap(competitionConfig, viewPeriod).pipe(
-      concatMap((gameRoundMap: Map<number, GameRound>) => {
+    return this.getViewPeriodGameRoundMap(competitionConfig, viewPeriod).pipe(
+      concatMap((gameRoundMap: ViewPeriodGameRoundMap) => {
         return of(Array.from(gameRoundMap.values()));
       })
     );
   }
 
-  public getGameRoundMap(
+  public getViewPeriodGameRoundMap(
     competitionConfig: CompetitionConfig,
     viewPeriod: ViewPeriod
-  ): Observable<Map<number, GameRound>> {
+  ): Observable<ViewPeriodGameRoundMap> {
     const gameRoundMap = this.gameRoundsMaps.get(viewPeriod.getId());
     if (gameRoundMap !== undefined) {
       return of(gameRoundMap);
@@ -39,20 +39,23 @@ export class GameRoundGetter {
       .getObjects(competitionConfig, viewPeriod)
       .pipe(
         concatMap((gameRounds: GameRound[]) => {
-          const gameRoundMap = new Map(gameRounds.map((gr) => [gr.number, gr]));
+          const gameRoundMap = new ViewPeriodGameRoundMap(
+            viewPeriod, new Map(gameRounds.map((gr) => [gr.number, gr]))
+          );
           this.gameRoundsMaps.set(viewPeriod.getId(), gameRoundMap);
           return of(gameRoundMap);
         })
       );
   }
 
+
   public getGameRound(
     competitionConfig: CompetitionConfig,
     viewPeriod: ViewPeriod,
     gameRoundNr: number
   ): Observable<GameRound> {
-    return this.getGameRoundMap(competitionConfig, viewPeriod).pipe(
-      concatMap((gameRoundMap: Map<number, GameRound>) => {
+    return this.getViewPeriodGameRoundMap(competitionConfig, viewPeriod).pipe(
+      concatMap((gameRoundMap: ViewPeriodGameRoundMap) => {
         const gameRound = gameRoundMap.get(gameRoundNr);
         if (gameRound === undefined) {
           throw new Error("gameround not found");
@@ -100,18 +103,15 @@ export class GameRoundGetter {
     viewPeriod: ViewPeriod,
     viewType: GameRoundViewType
   ): Observable<GameRound|undefined> {
-    return this.getGameRoundMap(competitionConfig, viewPeriod).pipe(
+    return this.getViewPeriodGameRoundMap(competitionConfig, viewPeriod).pipe(
       concatMap((gameRoundMap: Map<number, GameRound>): Observable<GameRound|undefined> => {
         return this.gameRoundRepository
-          .getActiveViewGameRoundNr(competitionConfig, viewPeriod, viewType)
+          .getActiveViewGameRound(competitionConfig, viewPeriod, viewType)
           .pipe(
-            concatMap(
-              (
-                activeGameRoundNr: number
-              ): Observable<GameRound | undefined> => {
-                return of(gameRoundMap.get(activeGameRoundNr));
-              }
-            )
+            concatMap((activeGameRound: GameRound): Observable<GameRound | undefined> => {
+              const gameRound: GameRound|undefined = gameRoundMap.get(activeGameRound.number);
+              return of(gameRound);
+            })
           );
       })
     );

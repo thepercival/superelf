@@ -1,5 +1,4 @@
 import { Period } from 'ngx-sport';
-import { GameRound } from '../gameRound';
 
 export class ViewPeriod extends Period {
     protected id: number = 0;

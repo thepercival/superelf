@@ -1,11 +1,10 @@
-import { concatMap, map, Observable, of } from "rxjs";
+import { concatMap, Observable, of } from "rxjs";
 import { CompetitionConfig } from "../competitionConfig";
 import { ViewPeriod } from "../periods/viewPeriod";
-import { CurrentGameRoundNumbers, GameRoundRepository } from "./repository";
-import { GameRoundRange } from "./range";
 import { GameRound } from "../gameRound";
 import { GameRoundViewType } from "./viewType";
 import { GameRoundGetter } from "./gameRoundGetter";
+import { ViewPeriodGameRoundMap } from "./viewPeriodGameRoundMap";
 
 export class ActiveViewGameRoundsCalculator {  
 
@@ -26,9 +25,9 @@ export class ActiveViewGameRoundsCalculator {
     }
 
     return this.gameRoundGetter
-      .getGameRoundMap(competitionConfig, viewPeriod)
+      .getViewPeriodGameRoundMap(competitionConfig, viewPeriod)
       .pipe(
-        concatMap((gameRoundMap: Map<number, GameRound>) => {
+        concatMap((gameRoundMap: ViewPeriodGameRoundMap) => {
           const gameRounds = Array.from(gameRoundMap.values());
           const minGameRoundNr: number = Math.min(
             ...gameRounds.map((gameRound) => gameRound.number)

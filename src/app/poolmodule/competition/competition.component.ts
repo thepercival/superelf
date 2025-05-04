@@ -13,7 +13,7 @@ import { LeagueName } from '../../lib/leagueName';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GameRound } from '../../lib/gameRound';
-import { CurrentGameRoundNumbers, GameRoundRepository } from '../../lib/gameRound/repository';
+import { GameRoundRepository } from '../../lib/gameRound/repository';
 import { CompetitionConfig } from '../../lib/competitionConfig';
 import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
@@ -169,7 +169,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
               currentViewPeriod
             ).subscribe({
               next: (activeGameRound: GameRound) => {
-                console.log("currentGameRound sewt");
+                console.log("setting currentGameRound ..", activeGameRound);
                 this.currentGameRound.set(activeGameRound);
               },
             });

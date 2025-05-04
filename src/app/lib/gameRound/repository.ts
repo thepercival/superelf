@@ -44,41 +44,41 @@ export class GameRoundRepository extends APIRepository {
     );
   }
 
-  getActiveViewGameRoundNr(
+  getActiveViewGameRound(
     competitionConfig: CompetitionConfig,
     viewPeriod: ViewPeriod,
     viewType: GameRoundViewType
-  ): Observable<number> {
+  ): Observable<GameRound> {
     const url =
       this.getUrl(competitionConfig, viewPeriod) + "/gamerounds/active";
-    return this.http.get<CurrentGameRoundNumbers>(url, this.getOptions()).pipe(
-      map((json: CurrentGameRoundNumbers): number => {
-        let activeGameRoundNr: number | undefined;
+    return this.http.get<CurrentGameRounds>(url, this.getOptions()).pipe(
+      map((json: CurrentGameRounds): GameRound => {
+        let activeGameRound: GameRound | undefined;
         if (viewType == GameRoundViewType.Games) {
-          if (typeof json.firstCreatedOrInProgress === "number") {
-            activeGameRoundNr = json.firstCreatedOrInProgress;
-          } else if (typeof json.lastFinishedOrInProgress === "number") {
-            activeGameRoundNr = json.lastFinishedOrInProgress;
+          if (json.firstCreatedOrInProgress !== undefined) {
+            activeGameRound = json.firstCreatedOrInProgress;
+          } else if (json.lastFinishedOrInProgress !== undefined) {
+            activeGameRound = json.lastFinishedOrInProgress;
           }
         }
         if (viewType == GameRoundViewType.Ranking) {
-          if (typeof json.lastFinishedOrInProgress === "number") {
-            activeGameRoundNr = json.lastFinishedOrInProgress;
-          } else if (typeof json.firstCreatedOrInProgress === "number") {
-            activeGameRoundNr = json.firstCreatedOrInProgress;
+          if (json.lastFinishedOrInProgress !== undefined) {
+            activeGameRound = json.lastFinishedOrInProgress;
+          } else if (json.firstCreatedOrInProgress !== undefined) {
+            activeGameRound = json.firstCreatedOrInProgress;
           }
         }
-        if (activeGameRoundNr === undefined) {
+        if (activeGameRound === undefined) {
           throw new Error("no gameRoundNr could be calculated");
         }
-        return activeGameRoundNr;
+        return activeGameRound;
       }),
       catchError((err) => this.handleError(err))
     );
   }
 }
 
-export interface CurrentGameRoundNumbers {
-    firstCreatedOrInProgress?: number | undefined,
-    lastFinishedOrInProgress?: number | undefined
+export interface CurrentGameRounds {
+    firstCreatedOrInProgress?: GameRound | undefined,
+    lastFinishedOrInProgress?: GameRound | undefined
 }

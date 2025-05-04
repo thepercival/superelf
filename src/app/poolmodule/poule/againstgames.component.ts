@@ -46,13 +46,12 @@ import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
 import { GameRoundRepository } from '../../lib/gameRound/repository';
 import { SourceAgainstGamesGetter } from '../../lib/gameRound/sourceAgainstGamesGetter';
 import { ActiveViewGameRoundsCalculator } from '../../lib/gameRound/activeViewGameRoundsCalculator';
-import { GameRoundMap } from '../../lib/gameRound/gameRoundMap';
-import { SportVariant } from 'ngx-sport/src/sport/variant';
 import { S11FormationMap } from '../allinonegame/allinonegame.component';
 import { FormationGetter } from '../../lib/formation/formationGetter';
 import { AgainstGamesTableComponent } from '../game/source/againstGamesTable/againstgames-table.component';
 import { PouleTitleWithGameRoundsComponent } from '../game/title-againstgame-pool.component';
 import { EscapeHtmlPipe } from '../../shared/commonmodule/escapehtmlpipe';
+import { ViewPeriodGameRoundMap } from '../../lib/gameRound/viewPeriodGameRoundMap';
 
 @Component({
   selector: "app-pool-againstgames",
@@ -388,24 +387,14 @@ export class PoolPouleAgainstGamesComponent
 
     const getGameRoundsMaps = orderedViewPeriods.map(
       (viewPeriod: ViewPeriod) => {
-        return this.gameRoundGetter
-          .getGameRoundMap(competitionConfig, viewPeriod)
-          .pipe(
-            concatMap((map: Map<number, GameRound>) => {
-              const gameRoundMap = new GameRoundMap(viewPeriod);
-              Array.from(map.values()).forEach((gameRound: GameRound) => {
-                gameRoundMap.set(gameRound.number, gameRound);
-              });
-              return of(gameRoundMap);
-            })
-          );
+        return this.gameRoundGetter.getViewPeriodGameRoundMap(competitionConfig, viewPeriod)
       }
     );
 
     return forkJoin(getGameRoundsMaps).pipe(
-      concatMap((gameRoundMaps: GameRoundMap[]) => {
+      concatMap((gameRoundMaps: ViewPeriodGameRoundMap[]) => {
         return of(
-          gameRoundMaps.find((gameRoundMap: GameRoundMap): boolean => {
+          gameRoundMaps.find((gameRoundMap: ViewPeriodGameRoundMap): boolean => {
             return gameRoundMap.has(gameRoundNr);
           })?.viewPeriod
         );
