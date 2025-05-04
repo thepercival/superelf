@@ -16,12 +16,12 @@ export class GameRoundMapper {
           viewPeriod,
           json.number,
           period,
+          json.state,
           json.created,
           json.inProgress,
-          json.finished
+          json.finished,          
+          json.totalNrOfGames
         );
         return gameRound;
     }
 }
-
-

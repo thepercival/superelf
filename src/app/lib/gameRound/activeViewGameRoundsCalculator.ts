@@ -1,10 +1,10 @@
 import { concatMap, Observable, of } from "rxjs";
 import { CompetitionConfig } from "../competitionConfig";
 import { ViewPeriod } from "../periods/viewPeriod";
-import { GameRound } from "../gameRound";
 import { GameRoundViewType } from "./viewType";
 import { GameRoundGetter } from "./gameRoundGetter";
 import { ViewPeriodGameRoundMap } from "./viewPeriodGameRoundMap";
+import { GameRound } from "../gameRound";
 
 export class ActiveViewGameRoundsCalculator {  
 

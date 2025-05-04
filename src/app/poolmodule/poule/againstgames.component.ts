@@ -1,14 +1,13 @@
 import { Component, effect, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgainstGame, AgainstGamePlace, AgainstGpp, AgainstH2h, AgainstSide, AllInOneGame, Competition, Competitor, CompetitorBase, GamePlace, GameState, NameService, Poule, Single, StartLocation, StartLocationMap, Structure, StructureNameService, Team, TeamCompetitor, TogetherGame } from 'ngx-sport';
-import { concatMap, filter, forkJoin, from, Observable, of } from 'rxjs';
+import { AgainstGame, AgainstGamePlace, AgainstGpp, AgainstH2h, AgainstSide, AllInOneGame, Competition, Competitor, CompetitorBase, GamePlace, GameState, Poule, Single, StartLocation, StartLocationMap, Structure, StructureNameService, Team, TeamCompetitor, TogetherGame } from 'ngx-sport';
+import { concatMap, forkJoin, Observable, of } from 'rxjs';
 import { AuthService } from '../../lib/auth/auth.service';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { S11Formation } from '../../lib/formation';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { FormationRepository } from '../../lib/formation/repository';
-import { GameRound } from '../../lib/gameRound';
 import { ImageRepository } from '../../lib/image/repository';
 import { LeagueName } from '../../lib/leagueName';
 import { SuperElfNameService } from '../../lib/nameservice';
@@ -29,14 +28,10 @@ import { PoolComponent } from '../../shared/poolmodule/component';
 import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { PouleTitleComponent } from './title.component';
-import { GameScrollerComponent } from '../game/source/gameScroller.component';
-import { GameRoundScrollerComponent } from '../gameRound/gameRoundScroller.component';
-import { TeamNameComponent } from '../team/name.component';
 import { PoolCompetitionsNavBarComponent } from '../../shared/poolmodule/competitionsNavBar/competitionsNavBar.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { facCup, facSuperCup } from '../../shared/poolmodule/icons';
 import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
@@ -52,6 +47,7 @@ import { AgainstGamesTableComponent } from '../game/source/againstGamesTable/aga
 import { PouleTitleWithGameRoundsComponent } from '../game/title-againstgame-pool.component';
 import { EscapeHtmlPipe } from '../../shared/commonmodule/escapehtmlpipe';
 import { ViewPeriodGameRoundMap } from '../../lib/gameRound/viewPeriodGameRoundMap';
+import { GameRound } from '../../lib/gameRound';
 
 @Component({
   selector: "app-pool-againstgames",
@@ -91,7 +87,7 @@ export class PoolPouleAgainstGamesComponent
   public poolPoule: Poule | undefined;
   public sourceGameRoundGames: AgainstGame[] = [];
 
-  public gameRoundCacheMap = new Map<number, true>();
+  // public gameRoundCacheMap = new Map<number, true>();
   // public homeGameRoundStatistics: StatisticsMap|undefined;
   // public awayGameRoundStatistics: StatisticsMap|undefined;
 

@@ -2,9 +2,9 @@ import { concatMap, Observable, of } from "rxjs";
 import { CompetitionConfig } from "../competitionConfig";
 import { ViewPeriod } from "../periods/viewPeriod";
 import { GameRoundRepository } from "./repository";
-import { GameRound } from "../gameRound";
 import { GameRoundViewType } from "./viewType";
 import { ViewPeriodGameRoundMap } from "./viewPeriodGameRoundMap";
+import { GameRound } from "../gameRound";
 
 export class GameRoundGetter {
   // viewPeriod and gameRoundNr indexes

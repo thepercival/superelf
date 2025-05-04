@@ -17,7 +17,6 @@ import { S11Player } from '../../lib/player';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { AuthService } from '../../lib/auth/auth.service';
-import { GameRound } from '../../lib/gameRound';
 import { concatMap, forkJoin, Observable, of } from 'rxjs';
 import { GameRoundRepository } from '../../lib/gameRound/repository';
 import { ViewPeriod } from '../../lib/periods/viewPeriod';
@@ -44,6 +43,7 @@ import { SourceAgainstGamesGetter } from '../../lib/gameRound/sourceAgainstGames
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { TeamFinder } from '../../lib/teamFinder';
 import { BadgeCategory } from '../../lib/achievement/badge/category';
+import { GameRound } from '../../lib/gameRound';
 
 @Component({
   selector: "app-pool-user",
@@ -282,8 +282,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
 
     // this.setSourceGameRoundGames(pool.getCompetitionConfig(), gameRound);
 
-    this.activeGameRoundsCalculator
-      .getActiveViewGameRounds(
+    this.activeGameRoundsCalculator.getActiveViewGameRounds(
         competitionConfig,
         gameRound.viewPeriod,
         gameRound,
