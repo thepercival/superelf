@@ -1,8 +1,6 @@
 <div class="modal-header text-center">
-    <h4 class="modal-title display-inline-block ">{{getHeader()}}</h4>
-    <button type="button" class="close" aria-label="sluiten" (click)="modal.dismiss('close')">
-        <span aria-hidden="true">&times;</span>
-    </button>
+    <h4 class="modal-title display-inline-block ">{{getHeader(nextAchievements.length)}}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>    
 </div>
 
 <div *ngIf="current" class="modal-body">    

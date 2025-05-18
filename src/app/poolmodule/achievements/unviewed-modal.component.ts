@@ -1,4 +1,4 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, Input, OnInit, input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Container, Engine } from 'tsparticles-engine';
 import { Badge } from '../../lib/achievement/badge';
@@ -19,7 +19,7 @@ import { NgIf } from '@angular/common';
     styleUrls: ['./unviewed-modal.component.scss']
 })
 export class UnviewedAchievementsModalComponent implements OnInit {
-    readonly achievements = input.required<(Trophy | Badge)[]>();
+    @Input() achievements: (Trophy | Badge)[] = [];
     
     public previousAchievements: (Trophy|Badge)[] = [];
     public current: Trophy|Badge|undefined;
@@ -35,9 +35,8 @@ export class UnviewedAchievementsModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        const achievements = this.achievements().slice().reverse();
+        const achievements = this.achievements.slice().reverse();
 
-        // console.log(achievements);
         const current = achievements.pop(); 
         if( current !== undefined) {
             this.setCurrent(current);        
@@ -121,12 +120,14 @@ export class UnviewedAchievementsModalComponent implements OnInit {
         await loadConfettiPreset(engine);
     }
     
-    getHeader(): string {
-        const achievements = this.achievements();
-        if( achievements.length === 1 ) {
+    getHeader(nrOfNewAchievements: number): string {
+        if( nrOfNewAchievements === 0 ) {
+            return 'geen nieuwe prijzen';
+        }
+        if( nrOfNewAchievements === 1 ) {
             return '1 nieuwe prijs';
         }
-        return achievements.length + ' nieuwe prijzen';
+        return nrOfNewAchievements + ' nieuwe prijzen';
     }
 }
 

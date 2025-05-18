@@ -139,11 +139,10 @@
 
 @if(!processing() && pool){
     @if(leagueName === WorldCup) {
-        <app-worldcup-navbar *ngIf="" [current]="Achievements" [pool]="pool" [poolUser]="poolUserFromSession">
+        <app-worldcup-navbar [current]="Achievements" [pool]="pool" [poolUser]="poolUserFromSession">
         </app-worldcup-navbar>
     } @else {
-        <app-pool-navbar [current]="Achievements" [pool]="pool"
-            [poolUser]="poolUserFromSession">
+        <app-pool-navbar [current]="Achievements" [pool]="pool" [poolUser]="poolUserFromSession">
         </app-pool-navbar>
     }
     

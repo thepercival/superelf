@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Badge } from '../../lib/achievement/badge';
@@ -207,6 +207,7 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
   }
 
   openUnviewedModal(achievements: (Trophy | Badge)[]) {
+    console.log(achievements);
     const modalRef = this.modalService.open(
       UnviewedAchievementsModalComponent,
       { backdrop: "static" }
