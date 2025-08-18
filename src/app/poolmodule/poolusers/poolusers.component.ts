@@ -58,12 +58,7 @@ export class PoolUsersComponent extends PoolComponent implements OnInit {
         this.poolUserRepository.getObjectFromSession(pool).subscribe({
           next: (poolUser: PoolUser) => {
             this.poolUserFromSession = poolUser;
-          },
-          error: (e: string) => {
-            this.setAlert("danger", e);
-            this.processing.set(false);
-          },
-          complete: () => this.processing.set(false),
+          }
         });
       },
       error: (e) => {
