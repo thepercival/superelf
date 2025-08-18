@@ -1,5 +1,7 @@
 <div class="d-flex justify-content-between mb-4">
-  <span *ngIf="center()"></span>
+  @if(center()) {
+    <span></span>
+  }
   <h2 class="text-truncate">
     @let tmplIcon = icon();
     @if (tmplIcon) {
@@ -8,7 +10,7 @@
   </h2>
   <div class="ms-3 me-1">
     <button (click)="navigateBack()" type="button" class="btn btn-outline-dark">
-      <fa-icon icon=faLevelUpAlt rotate="270"></fa-icon>
+      <fa-icon [icon]=faLevelUpAlt rotate="270"></fa-icon>
       <span class="ms-1 d-none d-md-inline"> terug</span>
     </button>
   </div>

@@ -53,6 +53,11 @@ $enable-responsive-font-sizes: true !default;
   width: 2.2rem;
 }
 
+.btn-large-totals {  
+  @extend .btn-points-base;
+  @extend .bg-totals;
+  width: 2.2rem;
+}
 .text-gold {
   color: gold;
 }

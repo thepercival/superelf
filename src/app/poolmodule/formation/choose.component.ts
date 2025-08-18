@@ -16,7 +16,6 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TitleComponent } from '../../shared/commonmodule/title/title.component';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
-import { NgIf } from '@angular/common';
 import { faCheckCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -26,8 +25,7 @@ import { faCheckCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
     NgbAlertModule,
     FontAwesomeModule,
     TitleComponent,
-    LineIconComponent,
-    NgIf,
+    LineIconComponent
   ],
   templateUrl: "./choose.component.html",
   styleUrls: ["./choose.component.scss"],
@@ -68,13 +66,12 @@ export class FormationChooseComponent extends PoolComponent implements OnInit {
           .subscribe({
             next: (poolUser: PoolUser) => {
               this.poolUser = poolUser;
-              if (poolUser.hasAssembleFormation()) {
+              if (poolUser.hasAssembleFormationNew()) {
                 this.formationRepository
                   .getObject(poolUser, pool.getAssembleViewPeriod())
                   .subscribe({
                     next: (assembleFormation: S11Formation) => {
-                      this.currentFormation =
-                        assembleFormation.getEqualFormation(this.formations);
+                      this.currentFormation = assembleFormation.getEqualFormation(this.formations);
                       this.processing.set(false);
                     },
                     error: (e) => {

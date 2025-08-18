@@ -101,7 +101,12 @@ export class S11FormationCalculator {
                         currentFormation.getViewPeriod(), playerIn.getPerson(), [playerIn], currentPlace.getTotals()
                     );
                 }                
-                new S11FormationPlace(line, newS11Player, currentPlace.getNumber(), currentPlace.getTotals());                
+                new S11FormationPlace(
+                  line,
+                  newS11Player,
+                  currentPlace.getNumber(),
+                  currentPlace.marketValue, currentPlace.getTotals()
+                );                
             });    
         });
         return newFormation;
@@ -114,7 +119,7 @@ export class S11FormationCalculator {
             const line = new S11FormationLine(newFormation, currentLine.getNumber());
             currentLine.getPlaces().forEach((currentPlace: S11FormationPlace) => {
                 new S11FormationPlace(
-                    line, currentPlace.getPlayer(), currentPlace.getNumber(), 
+                    line, currentPlace.getPlayer(), currentPlace.getNumber(), currentPlace.marketValue,
                     currentPlace.getTotals()
                 );                
             });
@@ -125,7 +130,13 @@ export class S11FormationCalculator {
                 );
                 const placeNumber = asSubstitute ? 0 : currentLine.getStartingPlaces().length + 1;
                 // console.log('add Place to lineNr ' + line.getNumber() + ' as placeNr ' + placeNumber);
-                new S11FormationPlace(line, newS11Player, placeNumber, new Totals());                
+                new S11FormationPlace(
+                  line,
+                  newS11Player,
+                  placeNumber,
+                  player.getMarketValue(),
+                  new Totals()
+                );                
             }  
         });
         return newFormation;
@@ -152,7 +163,7 @@ export class S11FormationCalculator {
                 if( removed && currentPlace.getNumber() > 0 ) {
                     newPlaceNumber--;
                 }
-                new S11FormationPlace(line, currentPlace.getPlayer(), newPlaceNumber, currentPlace.getTotals() );                
+                new S11FormationPlace(line, currentPlace.getPlayer(), newPlaceNumber, currentPlace.marketValue, currentPlace.getTotals() );                
             });    
         });
         return newFormation;
@@ -172,7 +183,7 @@ export class S11FormationCalculator {
 
             places.forEach((currentPlace: S11FormationPlace) => {
                 let newPlaceNumber = currentPlace.getNumber();
-                new S11FormationPlace(line, currentPlace.getPlayer(), newPlaceNumber, currentPlace.getTotals() );                
+                new S11FormationPlace(line, currentPlace.getPlayer(), newPlaceNumber, currentPlace.marketValue, currentPlace.getTotals() );                
             });    
             
         });

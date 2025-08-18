@@ -13,14 +13,13 @@ import { CompetitionConfig } from '../../lib/competitionConfig';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TitleComponent } from '../../shared/commonmodule/title/title.component';
-import { NgIf } from '@angular/common';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
   selector: 'app-pool-new',
   standalone: true,
-  imports: [NgIf,FontAwesomeModule,NgbAlertModule,TitleComponent, ReactiveFormsModule],
+  imports: [FontAwesomeModule,NgbAlertModule,TitleComponent, ReactiveFormsModule],
   templateUrl: './new.component.html',
   styleUrls: ['./new.component.scss']
 })

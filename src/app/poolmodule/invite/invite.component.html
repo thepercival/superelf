@@ -6,7 +6,7 @@
         <fa-icon [icon]=faEnvelope></fa-icon> uitnodigen
       </h2>
 
-      @if(alert){
+      @if(!processing() && alert){
       <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
       }
 
@@ -21,7 +21,7 @@
           <div class="form-group row mt-3 justify-content-end">
             <div class="col-10">
               <button ngxClipboard type="button" class="btn btn-primary btn-block" (cbOnSuccess)="showCopiedToClipboard()"
-                cbContent="form.controls.url.value">
+                [cbContent]=form.controls.url.value>
                 <fa-icon [icon]=faClipboardCheck></fa-icon> de link kopieren naar het klembord
               </button>
             </div>
@@ -36,7 +36,7 @@
   </div>
 </div>
 
-@if(pool){
+@if(!processing() && pool){
 <app-pool-navbar [current]="Invite" [pool]="pool" [poolUser]="poolUserFromSession">
 </app-pool-navbar>
 }

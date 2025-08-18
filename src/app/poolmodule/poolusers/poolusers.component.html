@@ -4,27 +4,31 @@
       <fa-icon [icon]=faUsers></fa-icon> deelnemers
     </h2>
 
-    <h2 *ngIf="processing" class="text-center">
-      <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
-    </h2>
+    @if(processing()) {
+      <h2 class="text-center">
+        <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+      </h2>
+    }
+    
 
     @if(alert) {
     <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
     }
-    <ngb-alert *ngIf="pool && pool.getAssemblePeriod().isIn()" type="warning">Let op: wanneer je team incompleet is, doet het
-      NIET mee</ngb-alert>
+    @if(pool && pool.getAssemblePeriod().isIn()) {
+      <ngb-alert type="warning">Let op: wanneer je team incompleet is, doet het NIET mee</ngb-alert>
+    }
 
     @if(!processing() && pool) {
     <table class="table">
       <thead>
         <tr>
           <th>naam</th>
-          <th *ngIf="pool.transferPeriodNotStarted()">
-            gekozen spelers
-          </th>
-          <th *ngIf="pool.getTransferPeriod().isIn()">
-            transfers
-          </th>
+          @if(pool.transferPeriodNotStarted()) {
+            <th>gekozen spelers</th>
+          }
+          @if(pool.getTransferPeriod().isIn()) {
+            <th>transfers</th>
+          }
           <!-- <th></th> -->
         </tr>
       </thead>
@@ -34,16 +38,23 @@
           <td>
             {{poolUser.getName()}}
           </td>
-          <td *ngIf="pool.transferPeriodNotStarted()">
-            <fa-icon *ngIf="poolUser.getNrOfAssembled() < 15" [icon]=faTimesCircle class="text-danger">
-            </fa-icon>
-            <fa-icon *ngIf="poolUser.getNrOfAssembled() == 15" [icon]=faCheckCircle class="text-success">
-            </fa-icon>
-            {{poolUser.getNrOfAssembled()}}/15
-          </td>
-          <td *ngIf="pool.getTransferPeriod().isIn()">
-            {{poolUser.getNrOfTransfers()}}/{{pool.getTransferPeriod().getMaxNrOfTransfers()}}
-          </td>
+          @if(pool.transferPeriodNotStarted()) {
+            <td>
+              @if(poolUser.getNrOfAssembled() < 15) {
+                <fa-icon [icon]=faTimesCircle class="text-danger"></fa-icon>
+              } 
+              @else {
+                <fa-icon [icon]=faCheckCircle class="text-success"></fa-icon>
+              }              
+              {{poolUser.getNrOfAssembled()}}/15
+            </td>
+          }
+          @if(pool.getTransferPeriod().isIn()) {
+            <td>
+              {{poolUser.getNrOfTransfers()}}/{{pool.getTransferPeriod().getMaxNrOfTransfers()}}
+            </td>
+          }
+          
           <!-- <td class="text-end">
             <button *ngIf="!poolUser.getAdmin() && canBeRemoved()" type="button" class="btn btn-sm btn-danger"
               [disabled]="processing" (click)="openRemoveApprovalModal(poolUser)">
@@ -58,6 +69,6 @@
   </div>
 </div>
 
-@if(pool) { 
+@if(!processing() && pool) {
 <app-pool-navbar [current]="PoolUsers" [pool]="pool" [poolUser]="poolUserFromSession"></app-pool-navbar>
 }

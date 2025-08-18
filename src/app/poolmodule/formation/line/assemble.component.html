@@ -1,45 +1,70 @@
-<div *ngIf="line()" class="card mt-0 border-0">
-
-  <div class="card-body pb-0">
-    <h5 class="card-title">
-      <app-lineicon [line]="line().getNumber()" [abbreviate]="false"></app-lineicon>
-    </h5>
-    <table class="table {{getLineClass('border')}}">
-      <tbody>
-        @for(place of line().getStartingPlaces(); track place.getId){
-          <ng-container *ngTemplateOutlet="placeRow; context: {place:place, s11Player: place.getPlayer(), currentTeam: getCurrentTeam(place.getPlayer())}">
-          </ng-container>
-          <ng-container *ngTemplateOutlet="placeRow; context: {place:line().getSubstitute(), s11Player: line().getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line().getSubstitute().getPlayer())}">
-          </ng-container>
-        }
-      </tbody>
-    </table>
-  </div>
-</div>
-<ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentTeam="currentTeam">
-  <tr *ngIf="processing()">
-    <td colspan=3 class="text-center">
-      <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+@if(!processing()) {
+  <tr class="mt-3">
+    <td colspan="3" class="table-no-bottom-border">
+      <h5 class="card-title">
+        <app-lineicon [line]="line().getNumber()" [abbreviate]="false"></app-lineicon>
+      </h5>
+    </td>  
+    <td class="table-no-bottom-border text-end">
+      @let tmplTotalMarketValue = totalMarketValue(); 
+      @if(tmplTotalMarketValue) {
+        <se-marketvalue [marketValue]="tmplTotalMarketValue"></se-marketvalue>
+      }
+    </td>
+    <td class="table-no-bottom-border">      
     </td>
   </tr>
-  <tr *ngIf="!processing()" (click)="maybeLinkToPlayer(place)" ngClass="{'pointer': s11Player}">
-    <td class="{{getSubstituteClass(place.isSubstitute())}}">
-      <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
-      <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="editPlace.emit(place)">
-        kies een {{place.isSubstitute() ? 'wissel' : 'speler'}}
-      </button>
-      <span *ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
+
+  @for(place of line().getStartingPlaces(); track place.getId()){
+    <ng-container *ngTemplateOutlet="placeRow; context: {place:place, s11Player: place.getPlayer(), currentPlayer: getCurrentPlayer(place.getPlayer())}">
+    </ng-container>            
+  }
+  <ng-container *ngTemplateOutlet="placeRow; context: {place:line().getSubstitute(), s11Player: line().getSubstitute().getPlayer(), currentPlayer: getCurrentPlayer(line().getSubstitute().getPlayer())}">
+  </ng-container>
+
+}
+
+
+<ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentPlayer="currentPlayer">
+
+  <tr (click)="maybeLinkToPlayer(place)" ngClass="{'pointer': s11Player}">
+    <td [attr.colspan]="place.isSubstitute() ? 1 : 2" class="{{getSubstituteClass(place.isSubstitute())}}">
+      @if(s11Player) {
+        <span>{{s11Player.getPerson().getName()}}</span>
+      } @else {
+        <button type="button" class="btn btn-outline-danger btn-sm" (click)="editPlace.emit(place)">
+          kies een {{place.isSubstitute() ? 'wissel' : 'speler'}}
+        </button>
+      }
+      
     </td>
+    @if(place.isSubstitute()) {
+      <td class="{{getSubstituteClass(place.isSubstitute())}}">      
+        <span class="badge badge-substitute-unknown">r</span>
+      </td>
+    }
+
     <td class="{{getSubstituteClass(place.isSubstitute())}}">
-      <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
+      @if( currentPlayer ) {
+        <app-team-name [team]="currentPlayer.getTeam()" [fullName]="false"></app-team-name>
+      }
+    </td>
+    <td class="{{getSubstituteClass(place.isSubstitute())}} text-end">
+      @if(currentPlayer) {
+        <se-marketvalue [marketValue]="place.marketValue"></se-marketvalue>
+      }
     </td>
     <td class="text-end" (click)="$event.stopPropagation()" class="{{getSubstituteClass(place.isSubstitute())}}">
-      <button *ngIf="!s11Player" type="button" class="btn btn-sm" (click)="editPlace.emit(place)">
-        <fa-icon [icon]=faPencilAlt></fa-icon>
-      </button>
-      <button *ngIf="s11Player" type="button" class="btn btn-sm" (click)="emptyPlace(place)">
-        <fa-icon [icon]=faTrashAlt></fa-icon>
-      </button>
+      @if( s11Player ) {
+        <button type="button" class="btn btn-sm" (click)="emptyPlace(place)">
+          <fa-icon [icon]=faTrashAlt></fa-icon>
+        </button>
+      } @else {
+        <button type="button" class="btn btn-sm" (click)="editPlace.emit(place)">
+          <fa-icon [icon]=faPencilAlt></fa-icon>
+        </button>
+      }
     </td>
   </tr>
+ 
 </ng-template>

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, model, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
@@ -23,9 +23,9 @@ import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.c
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TeamNameComponent } from '../team/name.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
-import { NgIf } from '@angular/common';
 import { faSearch, faSignInAlt, faSpinner, faTrashAlt, faUsers, faUserSecret } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../lib/sportExtensions';
+import { PlayerLink } from '../formation/line/view.component';
 
 @Component({
   standalone: true,
@@ -35,7 +35,7 @@ import { SportExtensions } from '../../lib/sportExtensions';
     FontAwesomeModule,
     TeamNameComponent,
     NgbAlertModule,
-    NgIf,
+    RouterLink,
   ],
   selector: "app-pool-scouting-list",
   templateUrl: "./list.component.html",
@@ -48,7 +48,7 @@ export class ScoutedPlayerListComponent
   scoutingList: ScoutingList = {
     scoutedPlayers: [] /*, mappedPersons: new PersonMap()*/,
   };
-  public assembleFormation: S11Formation | undefined;
+  public assembleFormation = model<S11Formation | undefined>();
   public faSpinner = faSpinner;
   public faTrashAlt = faTrashAlt;
   public faSignInAlt = faSignInAlt;
@@ -85,15 +85,12 @@ export class ScoutedPlayerListComponent
     this.poolUserRepository.getObjectFromSession(pool).subscribe({
       next: (poolUser: PoolUser | undefined) => {
         this.poolUserFromSession = poolUser;
-        if (
-          pool.getAssemblePeriod().isIn() &&
-          poolUser?.hasAssembleFormation()
-        ) {
+        if (poolUser && pool.getAssemblePeriod().isIn()) {
           this.formationRepository
             .getObject(poolUser, pool.getAssembleViewPeriod())
             .subscribe({
               next: (formation: S11Formation) => {
-                this.assembleFormation = formation;
+                this.assembleFormation.set(formation);
               },
               error: (e: string) => {
                 this.setAlert("danger", e);
@@ -248,17 +245,39 @@ export class ScoutedPlayerListComponent
   }
 
   linkToPlayer(pool: Pool, s11Player: S11Player | undefined): void {
-    //console.log(s11Player);
     if (!s11Player) {
       return;
     }
-
-    this.router.navigate(
-      ["/pool/player/", pool.getId(), s11Player.getId(), 0] /*, {
-      state: { s11Player, "pool": this.pool, currentGameRound: undefined }
-    }*/
-    );
+    // DISABLED BECAUSE  openPlayerModal(BENEATH) is not callable without gameRoundNumber
   }
+
+  // openPlayerModal(link: PlayerLink, competitionConfig: CompetitionConfig): void {
+
+  //   this.getSourceStructure(competitionConfig.getSourceCompetition()).subscribe(
+  //     {
+  //       next: (sourceStructure: Structure) => {
+  //         const poule = sourceStructure.getSingleCategory().getRootRound().getFirstPoule();
+
+  //         this.sourceAgainstGamesGetter.getGameRoundGames(poule, link.gameRound).subscribe({
+  //             next: (games: AgainstGame[]) => {
+  //               const sourceAgainstGame = this.findGame(games, link.s11Player);
+  //               if(sourceAgainstGame) {
+  //                 const activeModal = this.modalService.open(S11PlayerModalComponent);
+  //                 activeModal.componentInstance.s11Player = link.s11Player;
+  //                 activeModal.componentInstance.sourceAgainstGame = sourceAgainstGame;
+  //                 activeModal.componentInstance.scorePointsMap = competitionConfig.getScorePointsMap();
+  //                 activeModal.result.then(
+  //                   () => {},
+  //                   (reason) => {}
+  //                 );
+  //               }
+  //             },
+  //           });
+  //       },
+  //     }
+  //   );
+
+  // }
 
   linkToSearch(pool: Pool) {
     this.router.navigate(["/pool/scouting/search/", pool.getId()]);

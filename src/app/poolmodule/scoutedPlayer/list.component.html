@@ -5,13 +5,15 @@
       <h2 class="me-2 text-truncate">
         <fa-icon [icon]=faUserSecret></fa-icon> scoutingslijst
       </h2>
-      @if(pool) {
+      @if(!processing() && pool) {
         <div>
-          <button *ngIf="!processing() && pool.getAssemblePeriod().isIn()" class="btn btn-secondary mx-2"
-            routerLink="['/pool/formation/assemble', pool.getId()]">
-            <fa-icon [icon]=faUsers></fa-icon> <span class="ms-1 d-none d-sm-inline">
-              mijn team</span>
-          </button>
+          @if( pool.getAssemblePeriod().isIn()) {
+            <button class="btn btn-secondary mx-2"
+              [routerLink]="['/pool/formation/assemble', pool.getId()]">
+              <fa-icon [icon]=faUsers></fa-icon> <span class="ms-1 d-none d-sm-inline">
+                mijn team</span>
+            </button>
+          }
           <button (click)="linkToSearch(pool)" type="button" class="btn btn-secondary ms-2">
             <fa-icon [icon]=faSearch></fa-icon> <span class="d-none d-sm-inline ms-1">zoeken</span>
           </button>
@@ -20,15 +22,16 @@
     </div>
     
     @if(processing()){
-    <h2 class="text-center">
-      <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
-    </h2>
+      <h2 class="text-center">
+        <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+      </h2>
     }
     @if(alert){
     <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
     }
-    <ngb-alert *ngIf="scoutingList && scoutingList.scoutedPlayers.length === 0" type="info">
-      je hebt nog geen spelers gescout, begin met zoeken</ngb-alert>
+    @if(scoutingList && scoutingList.scoutedPlayers.length === 0) {
+      <ngb-alert type="info">je hebt nog geen spelers gescout, begin met zoeken</ngb-alert>
+    }
 
     @if(!processing() && pool) {
     <table class="table">
@@ -36,14 +39,17 @@
         @for (scoutedPlayer of scoutingList.scoutedPlayers; track scoutedPlayer.getId()) {
         <tr (click)="linkToPlayer(pool,scoutedPlayer.getS11Player())" class="pointer">
           <!-- <ng-template let-player="scoutedPlayer.getPlayer()"> -->
-          @if(assembleFormation){
-          <td class="text-end" (click)="$event.stopPropagation()">
-            <button *ngIf="showCopyToTeam(assembleFormation, scoutedPlayer.getS11Player())"
-              (click)="copyToTeam(assembleFormation, scoutedPlayer.getS11Player())" type="button" class="btn btn-sm btn-secondary">
-              <fa-icon [icon]=faSignInAlt></fa-icon>
-              <span class="d-none d-sm-inline ms-1">plaats in team</span>
-            </button>
-          </td>
+          @let tmplAssembleFormation = assembleFormation();          
+          @if(tmplAssembleFormation){            
+            <td class="text-end" (click)="$event.stopPropagation()">
+              @if(showCopyToTeam(tmplAssembleFormation, scoutedPlayer.getS11Player())) {
+                <button 
+                (click)="copyToTeam(tmplAssembleFormation, scoutedPlayer.getS11Player())" type="button" class="btn btn-sm btn-secondary">
+                <fa-icon [icon]=faSignInAlt></fa-icon>
+                <span class="d-none d-sm-inline ms-1">plaats in team</span>
+              </button>
+              }
+            </td>
           }
           <td>
             <app-lineicon [line]="scoutedPlayer.getS11Player().getLine()"></app-lineicon>
@@ -75,7 +81,7 @@
     }
   </div>
 </div>
-@if(pool) {
+@if(!processing() && pool) {
 <app-pool-navbar [current]="Scouting" [pool]="pool" [poolUser]="poolUserFromSession">
 </app-pool-navbar>
 }

@@ -11,7 +11,7 @@ import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { S11Player } from '../../lib/player';
 import { FootballLine, Person, Team, TeamCompetitor } from 'ngx-sport';
 import { HttpParams } from '@angular/common/http';
-import { Location, NgIf } from '@angular/common';
+import { Location } from '@angular/common';
 import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addremovemodal.component';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { ChoosePlayersFilter, S11PlayerChooseComponent } from '../player/choose.component';
@@ -28,7 +28,6 @@ import { faLevelUpAlt, faSpinner, faUsers } from '@fortawesome/free-solid-svg-ic
   selector: "app-pool-scouted-player-add",
   standalone: true,
   imports: [
-    NgIf,
     PoolNavBarComponent,
     NgbAlert,
     FontAwesomeModule,

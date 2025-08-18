@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, model, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router, RouterLink } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
@@ -21,7 +21,6 @@ import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormationLineAssembleComponent } from './line/assemble.component';
-import { NgIf } from '@angular/common';
 import { faUserSecret, faUsers, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -32,7 +31,7 @@ import { faUserSecret, faUsers, faSpinner } from '@fortawesome/free-solid-svg-ic
     NgbAlertModule,
     FontAwesomeModule,
     FormationLineAssembleComponent,
-    NgIf,
+    RouterLink,
   ],
   templateUrl: "./assemble.component.html",
   styleUrls: ["./assemble.component.scss"],
@@ -41,7 +40,7 @@ export class FormationAssembleComponent
   extends PoolComponent
   implements OnInit
 {
-  assembleFormation: S11Formation | undefined;
+  public assembleFormation = model<S11Formation | undefined>();
   nameService = new NameService();
   teamPersonMap = new PersonMap();
   selectedPlace: S11FormationPlace | undefined;
@@ -78,7 +77,7 @@ export class FormationAssembleComponent
               .getObject(poolUser, pool.getAssembleViewPeriod())
               .subscribe({
                 next: (formation: S11Formation) =>
-                  (this.assembleFormation = formation),
+                  this.assembleFormation.set(formation),
                 error: (e: string) => {
                   this.setAlert("danger", e);
                   this.processing.set(false);
@@ -104,6 +103,10 @@ export class FormationAssembleComponent
     });
   }
 
+  get GoalKeeper(): FootballLine {
+    return FootballLine.GoalKeeper;
+  }
+  
   get MyTeam(): NavBarItem {
     return NavBarItem.MyTeam;
   }

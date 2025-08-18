@@ -6,81 +6,73 @@ import { LeagueName } from '../leagueName';
 import { TransferPeriodActionList } from '../editAction';
 
 export class PoolUser extends Identifiable {
-    private admin: boolean = false;
-    protected competitors: PoolCompetitor[] = [];
-    protected nrOfAssembled: number = 0;
-    protected nrOfTransfers: number = 0;
-    protected hasAssembleFormationProp: boolean = false;
-    protected hasTransferFormationProp: boolean = false;
-    protected transferPeriodActionList = new TransferPeriodActionList();
+  private admin: boolean = false;
+  protected competitors: PoolCompetitor[] = [];
+  protected hasAssembleFormationProp: boolean = false;
+  protected nrOfAssembled: number = 0;
+  protected nrOfTransfers: number = 0;
+  // protected hasTransferFormationProp: boolean = false;
+  protected transferPeriodActionList = new TransferPeriodActionList();
 
-    constructor(protected pool: Pool, protected user: User) {
-        super();
-    }
+  constructor(protected pool: Pool, protected user: User) {
+    super();
+  }
 
-    getPool(): Pool {
-        return this.pool;
-    }
+  getPool(): Pool {
+    return this.pool;
+  }
 
-    getUser(): User {
-        return this.user;
-    }
+  getUser(): User {
+    return this.user;
+  }
 
-    getName(): string | undefined {
-        return this.user.getName();
-    }
+  getName(): string | undefined {
+    return this.user.getName();
+  }
 
-    getAdmin(): boolean {
-        return this.admin;
-    }
+  getAdmin(): boolean {
+    return this.admin;
+  }
 
-    setAdmin(admin: boolean) {
-        this.admin = admin;;
-    }
+  setAdmin(admin: boolean) {
+    this.admin = admin;
+  }
 
-    getCompetitors(): PoolCompetitor[] {
-        return this.competitors;
-    }
+  getCompetitors(): PoolCompetitor[] {
+    return this.competitors;
+  }
 
-    getCompetitor(leagueName: LeagueName): PoolCompetitor | undefined {
-        return this.competitors.find((competitor: PoolCompetitor): boolean => {
-            return competitor.getCompetition().getLeague().getName() === leagueName;
-        });
-    }
+  getCompetitor(leagueName: LeagueName): PoolCompetitor | undefined {
+    return this.competitors.find((competitor: PoolCompetitor): boolean => {
+      return competitor.getCompetition().getLeague().getName() === leagueName;
+    });
+  }
 
-    getNrOfAssembled(): number {
-        return this.nrOfAssembled;
-    }
+  hasAssembleFormationNew(): boolean {
+    return this.hasAssembleFormationProp;
+  }
 
-    setNrOfAssembled(nrOfAssembled: number) {
-        this.nrOfAssembled = nrOfAssembled;
-    }
+  setHasAssembleFormation(hasAssembleFormation: boolean): void {
+    this.hasAssembleFormationProp = hasAssembleFormation;
+  }
 
-    getNrOfTransfers(): number {
-        return this.nrOfTransfers;
-    }
+  getNrOfAssembled(): number {
+    return this.nrOfAssembled;
+  }
 
-    setNrOfTransfers(nrOfTransfers: number) {
-        this.nrOfTransfers = nrOfTransfers;
-    }
+  setNrOfAssembled(nrOfAssembled: number) {
+    this.nrOfAssembled = nrOfAssembled;
+  }
 
-    hasAssembleFormation(): boolean {
-        return this.hasAssembleFormationProp;
-    }
+  getNrOfTransfers(): number {
+    return this.nrOfTransfers;
+  }
 
-    setAssembleFormation(hasAssembleFormation: boolean) {
-        this.hasAssembleFormationProp = hasAssembleFormation;
-    }
+  setNrOfTransfers(nrOfTransfers: number) {
+    this.nrOfTransfers = nrOfTransfers;
+  }
 
-    getTransferPeriodActionList(): TransferPeriodActionList {
-        return this.transferPeriodActionList;
-    }
-    
-    hasTransferFormation(): boolean {
-        return this.hasTransferFormationProp;
-    }
-
-    setTransferFormation(hasTransferFormation: boolean) {
-        this.hasTransferFormationProp = hasTransferFormation;
-    }
+  getTransferPeriodActionList(): TransferPeriodActionList {
+    return this.transferPeriodActionList;
+  }
 }

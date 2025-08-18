@@ -1,14 +1,14 @@
 import { Component, input } from '@angular/core';
 import { Router } from '@angular/router';
-import { IconDefinition, IconName } from '@fortawesome/fontawesome-svg-core';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 import { MyNavigation } from '../../commonmodule/navigation';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgIf } from '@angular/common';
+import { faLevelUpAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
-  imports: [NgIf, FontAwesomeModule],
+  imports: [FontAwesomeModule],
   selector: "app-title",
   templateUrl: "./title.component.html",
 })
@@ -17,6 +17,8 @@ export class TitleComponent {
   readonly center = input<boolean>(false);
   readonly title = input<string>("");
   readonly poolId = input<number>();
+
+  public faLevelUpAlt = faLevelUpAlt;
 
   constructor(private router: Router, private myNavigation: MyNavigation) {}
 

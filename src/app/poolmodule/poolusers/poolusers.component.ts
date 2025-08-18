@@ -14,14 +14,13 @@ import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
-import { NgIf } from '@angular/common';
 import { faCheckCircle, faSpinner, faTimesCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
   selector: "app-pool-users",
   standalone: true,
-  imports: [FontAwesomeModule, NgbAlertModule, PoolNavBarComponent, NgIf],
+  imports: [FontAwesomeModule, NgbAlertModule, PoolNavBarComponent],
   templateUrl: "./poolusers.component.html",
   styleUrls: ["./poolusers.component.scss"],
 })

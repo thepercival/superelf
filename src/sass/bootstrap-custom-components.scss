@@ -18,6 +18,9 @@ $line-4: $green-500;
 $line-8: $green-400;
 $totals: #673AB7;
 $points: #2211B7;
+$marketvalue-sm: #2193b0;
+$marketvalue-md: #2a5298;
+$marketvalue-lg: #1e3c72;
 $notappeared: $danger;
 
 @import "../../node_modules/bootstrap/scss/variables";
@@ -26,6 +29,9 @@ $notappeared: $danger;
 $custom-theme-colors: (
   "totals": $totals,
   "points": $points,
+  "marketvalue-sm": $marketvalue-sm,
+  "marketvalue-md": $marketvalue-md,
+  "marketvalue-lg": $marketvalue-lg,
   "notappeared": $notappeared,
   "line-1": $line-1,
   "line-2": $line-2,

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Person, Team } from 'ngx-sport';
+import { Person, Player, Team } from 'ngx-sport';
 import { S11FormationLine } from '../../../lib/formation/line';
 import { S11FormationPlace } from '../../../lib/formation/place';
 import { FormationRepository } from '../../../lib/formation/repository';
@@ -12,20 +12,21 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TeamNameComponent } from '../../team/name.component';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { faSpinner, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../../lib/sportExtensions';
+import { MarketValueComponent } from "../../../shared/commonmodule/marketvalue/marketvalue.component";
 
 @Component({
-  selector: "app-pool-formationline-assemble",
+  selector: "[app-pool-formationline-assemble]",
   standalone: true,
   imports: [
-    NgIf,
     LineIconComponent,
     FontAwesomeModule,
     TeamNameComponent,
     NgTemplateOutlet,
-  ],
+    MarketValueComponent
+],
   templateUrl: "./assemble.component.html",
   styleUrls: ["./assemble.component.scss"],
 })
@@ -33,6 +34,7 @@ export class FormationLineAssembleComponent implements OnInit {
   public readonly line = input.required<S11FormationLine>();
   public readonly selectedPlace = input<S11FormationPlace>();
   public readonly viewGameRound = input<GameRound>();
+  readonly totalMarketValue = input<number>();
   public readonly processing = model<boolean>(true);
   @Output() editPlace = new EventEmitter<S11FormationPlace>();
   @Output() linkToPlayer = new EventEmitter<S11Player>();
@@ -61,19 +63,15 @@ export class FormationLineAssembleComponent implements OnInit {
   }
 
   getTeamImageUrl(s11Player: S11Player): string {
-    const team = this.getCurrentTeam(s11Player);
-    return team ? this.imageRepository.getTeamUrl(team) : "";
+    const player = this.getCurrentPlayer(s11Player);
+    return player !== undefined ? this.imageRepository.getTeamUrl(player.getTeam()) : "";
   }
 
-  getCurrentTeam(s11Player: S11Player | undefined): Team | undefined {
+  getCurrentPlayer(s11Player: S11Player | undefined): Player | undefined {
     if (!s11Player) {
       return undefined;
     }
-    const player = this.sportExtensions.getCurrentPlayer(s11Player);
-    if (!player) {
-      return undefined;
-    }
-    return player.getTeam();
+    return this.sportExtensions.getCurrentPlayer(s11Player);
   }
 
   emptyPlace(place: S11FormationPlace) {

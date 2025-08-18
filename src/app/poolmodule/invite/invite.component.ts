@@ -14,12 +14,19 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { faSpinner, faClipboardCheck, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { ClipboardModule } from 'ngx-clipboard';
 
 
 @Component({
   selector: "app-pool-invite",
   standalone: true,
-  imports: [FontAwesomeModule, PoolNavBarComponent, NgbAlertModule, ReactiveFormsModule],
+  imports: [
+    FontAwesomeModule,
+    PoolNavBarComponent,
+    NgbAlertModule,
+    ReactiveFormsModule,
+    ClipboardModule,
+  ],
   templateUrl: "./invite.component.html",
   styleUrls: ["./invite.component.scss"],
 })

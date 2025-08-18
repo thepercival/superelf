@@ -13,14 +13,14 @@ import { S11Storage } from '../../../lib/storage';
 import { NavBarItem } from './items';
 import { SuperElfIconComponent } from '../icon/icon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
-import { faCalendarAlt, faEnvelope, faInfoCircle, faUsers, faUserSecret } from '@fortawesome/free-solid-svg-icons';
+import { NgTemplateOutlet } from '@angular/common';
+import { faCalendarAlt, faEnvelope, faInfoCircle, faRightLeft, faUsers, faUserSecret } from '@fortawesome/free-solid-svg-icons';
 import { facStructure, facTrophy } from '../icons';
 
 @Component({
   standalone: true,
   selector: "app-pool-navbar",
-  imports: [NgIf, FontAwesomeModule, SuperElfIconComponent, NgTemplateOutlet],
+  imports: [FontAwesomeModule, SuperElfIconComponent, NgTemplateOutlet],
   templateUrl: "./poolNavBar.component.html",
   styleUrls: ["./poolNavBar.component.scss"],
 })
@@ -40,6 +40,7 @@ export class PoolNavBarComponent implements OnInit, OnChanges {
   public faUsers = faUsers;
   public faUserSecret = faUserSecret;
   public faEnvelope = faEnvelope;
+  public faRightLeft = faRightLeft;
 
   constructor(
     public authService: AuthService,

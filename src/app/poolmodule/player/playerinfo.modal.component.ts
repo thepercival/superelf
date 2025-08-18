@@ -40,8 +40,8 @@ import { facSofaScore } from '../../shared/poolmodule/icons';
 })
 export class S11PlayerModalComponent implements OnInit {
   @Input() s11Player: S11Player | undefined;
+  @Input() scorePointsMap!: ScorePointsMap;
   @Input() sourceAgainstGame: AgainstGame | undefined;
-  @Input() scorePointsMap: ScorePointsMap | undefined;
 
   public sofaScoreLink: WritableSignal<string | undefined> = signal(undefined);
 
@@ -59,8 +59,7 @@ export class S11PlayerModalComponent implements OnInit {
     public cssService: CSSService,
     public sportExtensions: SportExtensions,
     public modal: NgbActiveModal
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     if (this.s11Player !== undefined) {

@@ -1,4 +1,4 @@
-import { Location, NgIf } from '@angular/common';
+import { Location } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
@@ -20,13 +20,13 @@ import { MyNavigation } from '../../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../../shared/poolmodule/component';
 import { ChoosePlayersFilter, S11PlayerChooseComponent } from '../../player/choose.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSpinner, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faLevelUpAlt, faSpinner, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../../lib/sportExtensions';
 
 @Component({
   selector: "app-pool-scouted-player-edit",
   standalone: true,
-  imports: [FontAwesomeModule, NgbAlertModule, S11PlayerChooseComponent, NgIf],
+  imports: [FontAwesomeModule, NgbAlertModule, S11PlayerChooseComponent],
   templateUrl: "./edit.component.html",
   styleUrls: ["./edit.component.scss"],
 })
@@ -46,8 +46,9 @@ export class FormationPlaceEditComponent
   public selectableLines: FootballLine[];
   public selectableTeams: Team[] = [];
   public faSpinner = faSpinner;
+  public faLevelUpAlt = faLevelUpAlt;
   public faUsers = faUsers;
-  
+
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -90,6 +91,7 @@ export class FormationPlaceEditComponent
         next: (poolUser: PoolUser) => {
           this.route.params.subscribe((params) => {
             if (params.placeId === undefined) {
+              this.processing.set(false);
               return;
             }
             this.formationRepository
@@ -98,6 +100,7 @@ export class FormationPlaceEditComponent
                 next: (assembleFormation: S11Formation) => {
                   this.assembleFormation = assembleFormation;
                   this.initPlace(assembleFormation, +params.placeId);
+                  this.processing.set(false);
                 },
                 error: (e: string) => {
                   this.setAlert("danger", e);
@@ -117,7 +120,6 @@ export class FormationPlaceEditComponent
           this.setAlert("danger", e);
           this.processing.set(false);
         },
-        complete: () => this.processing.set(false),
       });
     });
   }
@@ -260,14 +262,19 @@ export class FormationPlaceEditComponent
   }
 
   linkToPlayer(pool: Pool, s11Player: S11Player): void {
-    this.router.navigate(
-      ["/pool/player/", pool.getId(), s11Player.getId(), 0] /*, {
-      state: { s11Player, "pool": this.pool, currentGameRound: undefined }
-    }*/
-    );
+    // SHOULD MAKE A NICE OVERVIEW IN MODAL
+    // this.router.navigate(
+    //   ["/pool/player/", pool.getId(), s11Player.getId(), 0] /*, {
+    //   state: { s11Player, "pool": this.pool, currentGameRound: undefined }
+    // }*/
+    // );
   }
 
   toggleShowAll() {}
+
+  navigateBack() {
+    this.myNavigation.back();
+  }
 }
 
 interface ScoutingList {

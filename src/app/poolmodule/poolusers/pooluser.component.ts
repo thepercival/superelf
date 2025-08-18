@@ -501,7 +501,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
           this.sourceAgainstGamesGetter.getGameRoundGames(poule, link.gameRound).subscribe({
               next: (games: AgainstGame[]) => {
                 const sourceAgainstGame = this.findGame(games, link.s11Player);
-                if(sourceAgainstGame) {
+                if(sourceAgainstGame) {                  
                   const activeModal = this.modalService.open(S11PlayerModalComponent);
                   activeModal.componentInstance.s11Player = link.s11Player;
                   activeModal.componentInstance.sourceAgainstGame = sourceAgainstGame;

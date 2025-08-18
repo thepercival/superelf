@@ -15,7 +15,7 @@ export class FormationPlaceMapper {
 
     toObject(json: JsonS11FormationPlace, line: S11FormationLine, competition: Competition, viewPeriod: ViewPeriod): S11FormationPlace {
         const s11Player = json.player ? this.playerMapper.toObject(json.player, competition, viewPeriod) : undefined;
-        const place = new S11FormationPlace(line, s11Player, json.number, this.totalsMapper.toObject(json.totals));
+        const place = new S11FormationPlace(line, s11Player, json.number, json.marketValue, this.totalsMapper.toObject(json.totals));
         place.setId(json.id);
         place.setPenaltyPoints(json.penaltyPoints);
         return place;
@@ -28,6 +28,7 @@ export class FormationPlaceMapper {
             number: place.getNumber(),
             player: player ? this.playerMapper.toJson(player) : player,
             penaltyPoints: place.getPenaltyPoints(),
+            marketValue: place.marketValue,
             totals: {
                 nrOfWins: 0,
                 nrOfDraws: 0,

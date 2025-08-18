@@ -4,8 +4,8 @@
       <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
     }
     @if(!processingMyShells()) {         
-      <div class="mt-3">        
-        @if(canCreateAndJoin || canAssemble){
+      <div class="mt-3">                
+        @if(canCreateAndJoin || canAssemble){          
           @if( myShells.length > 0){
             <!-- header -->
             <div class="mt-3 d-flex justify-content-between">
@@ -29,18 +29,18 @@
           <div class="mt-3">
             <h2 class="text-center">mijn pools</h2>
           </div>
-          <!-- myShells -->
-          <table class="table mt-2">
-            <tbody>
-              @for(shell of myShells; track shell){
-              <tr class="pointer" (click)="linkToPool(shell)">
-                <td>{{shell.name}}</td>
-                <td>{{shell.seasonName}}</td>
-              </tr>
-              }
-            </tbody>
-          </table>
         }
+        <!-- myShells -->
+        <table class="table mt-2">
+          <tbody>
+            @for(shell of myShells; track shell){
+            <tr class="pointer" (click)="linkToPool(shell)">
+              <td>{{shell.name}}</td>
+              <td>{{shell.seasonName}}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
       </div>      
     } @else {
       <h2 class="text-center">

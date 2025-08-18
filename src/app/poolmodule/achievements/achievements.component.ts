@@ -190,7 +190,10 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     list.sort((item1: AchievementListItem, item2: AchievementListItem) => {
       return item1.goatTotalPoints < item2.goatTotalPoints ? 1 : -1;
     });
-    list[0].isGoat = true;
+    const goat: AchievementListItem|undefined = list[0];
+    if( goat !== undefined ) {
+      goat.isGoat = true;
+    }
     return list;
   }
 

@@ -38,7 +38,7 @@ export class FormationLineViewComponent implements OnInit {
   readonly statisticsGetter = input.required<StatisticsGetter>();
   readonly processing = model<boolean>(true);
   readonly previousFormation = input<S11Formation|undefined>();
-  readonly totalPoints = input<number>();  
+  readonly totalPoints = input<number>();    
   @Output() linkToPlayer = new EventEmitter<PlayerLink>();
 
   public faSpinner = faSpinner;

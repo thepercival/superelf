@@ -14,46 +14,55 @@ competities  | programma | prijzenkast | spelregels | beheer
 <nav class="fixed-bottom navbar-dark bg-dark border-top ">
 
   @let tmplUpperNavbar = upperNavBar();
-  <div *ngIf="Competitions === current() && tmplUpperNavbar">
-    <ng-container *ngTemplateOutlet="tmplUpperNavbar"></ng-container>    
-  </div>
+  @if(Competitions === current() && tmplUpperNavbar) {
+    <div>
+      <ng-container *ngTemplateOutlet="tmplUpperNavbar"></ng-container>    
+    </div>
+  }
+  
 
   @let competitionConfig = pool().getCompetitionConfig();
   <div class="navbar-parent justify-content-center">
 
     <!-- invite -->
-    <h2 *ngIf="poolUser() && poolUser()?.getAdmin() && pool().getCreateAndJoinPeriod().isIn()"
-      class="mb-0 pt-cus navbar-item">
-      <a type="button" class="btn {{getTextColorClass(Admin)}} pt-cus" (click)="linkTo(Invite)">
-        <fa-icon [icon]=faEnvelope></fa-icon> <br /><span>uitnodigen</span>
-      </a>
-    </h2>
-        
-        
+     @if(poolUser() && poolUser()?.getAdmin() && pool().getCreateAndJoinPeriod().isIn()) {
+      <h2
+        class="mb-0 pt-cus navbar-item">
+        <a type="button" class="btn {{getTextColorClass(Admin)}} pt-cus" (click)="linkTo(Invite)">
+          <fa-icon [icon]=faEnvelope></fa-icon> <br /><span>uitnodigen</span>
+        </a>
+      </h2>
+    }        
 
     <!-- poolusers -->
-    <h2 *ngIf="competitionConfig.isInCreateOrJoinOrAssemblePeriod()" class="mb-0 navbar-item">
-      <a type="button" class="btn {{getTextColorClass(PoolUsers)}} pt-cus" (click)="linkTo(PoolUsers)">
-        <fa-icon style="display: 'inline-block'; font-size: 1.3rem" [icon]=faCalendarAlt></fa-icon>
-        <br /><span>deelnemers</span>
-      </a>
-    </h2>
-  
+    @if( competitionConfig.isInCreateOrJoinOrAssemblePeriod() ) {
+      <h2 class="mb-0 navbar-item">
+        <a type="button" class="btn {{getTextColorClass(PoolUsers)}} pt-cus" (click)="linkTo(PoolUsers)">
+          <fa-icon style="display: 'inline-block'; font-size: 1.3rem" [icon]=faCalendarAlt></fa-icon>
+          <br /><span>deelnemers</span>
+        </a>
+      </h2>  
+    }
+    
     <!-- competitions -->
-    <h2 *ngIf="competitionConfig.afterAssemblePeriod()" class="mb-0 navbar-item">
-      <a type="button" class="btn {{getTextColorClass(Competitions)}}" (click)="linkTo(Competitions)">
-        <app-superelf-icon [large]="true" [icon]=facStructure></app-superelf-icon><br /><span class="">competities</span>
-      </a>
-    </h2>
+    @if( competitionConfig.afterAssemblePeriod() ) {
+      <h2 class="mb-0 navbar-item">
+        <a type="button" class="btn {{getTextColorClass(Competitions)}} pt-cus" (click)="linkTo(Competitions)">
+          <app-superelf-icon size="2xl" [icon]=facStructure></app-superelf-icon><br /><span class="">competities</span>
+        </a>
+      </h2>
+    }
 
     <!--schedule -->
     <!-- and if scheduleGameRoundNumber ??-->
-    <h2 *ngIf="competitionConfig.afterAssemblePeriod()" class="mb-0 navbar-item">
-      <a type="button" class="btn {{getTextColorClass(Schedule)}} pt-cus" (click)="linkTo(Schedule)">
-        <fa-icon style="display: 'inline-block'; font-size: 1.3rem" [icon]=faCalendarAlt></fa-icon>          
-        <br /><span>programma</span>
-      </a>
-    </h2>
+    @if(competitionConfig.afterAssemblePeriod()){
+      <h2 class="mb-0 navbar-item">
+        <a type="button" class="btn {{getTextColorClass(Schedule)}} pt-cus" (click)="linkTo(Schedule)">
+          <fa-icon style="display: 'inline-block'; font-size: 1.3rem" [icon]=faCalendarAlt></fa-icon>          
+          <br /><span>programma</span>
+        </a>
+      </h2>
+    }
 
     @if(competitionConfig.getAssemblePeriod().isIn()){    
       <!-- my team -->
@@ -63,22 +72,23 @@ competities  | programma | prijzenkast | spelregels | beheer
           <br /><span>mijn team</span>
         </a>
       </h2>    
-    } @else {
+    } @else if (competitionConfig.getCreateAndJoinPeriod().isIn()) {
       <!-- scouting -->
-      <h2 *ngIf="competitionConfig.getCreateAndJoinPeriod().isIn()" class="mb-0 navbar-item">
+      <h2 class="mb-0 navbar-item">
         <a type="button" class="btn {{getTextColorClass(Scouting)}} pt-cus" (click)="linkTo(Scouting)">
           <fa-icon style="display: 'inline-block'; font-size: 1.3rem" [icon]=faUserSecret></fa-icon>
           <br /><span>scouting</span>
         </a>
       </h2>
     }
+     
 
     @if(poolUser() && competitionConfig.getTransferPeriod().isIn()){    
       <!-- transfers -->
       <h2 class="mb-0 navbar-item">
-        <a type="button" class="btn {{getTextColorClass(Transfers)}} long-and-truncated position-relative"
+        <a type="button" class="btn {{getTextColorClass(Transfers)}} long-and-truncated position-relative pt-cus"
           (click)="linkTo(Transfers)">
-          <app-superelf-icon [large]="true" [icon]=facTrophy></app-superelf-icon>
+          <app-superelf-icon size="2xl" [icon]=faRightLeft></app-superelf-icon>
           <br /><span>transfers</span>
         </a>
       </h2>
@@ -86,14 +96,15 @@ competities  | programma | prijzenkast | spelregels | beheer
     @else {
       <!--achievements -->
       <h2 class="mb-0 navbar-item">
-        <a type="button" class="btn {{getTextColorClass(Achievements)}} long-and-truncated position-relative"
+        <a type="button" class="btn {{getTextColorClass(Achievements)}} long-and-truncated position-relative pt-cus"
           (click)="linkTo(Achievements)">
-          <app-superelf-icon [large]="true" [icon]=facTrophy></app-superelf-icon>
+          <app-superelf-icon size="2xl" [icon]=facTrophy></app-superelf-icon>
           <br /><span>prijzenkast</span>
-          <span *ngIf="hasUnviewedAchievements"
-            class="position-absolute top-0 start-75 translate-middle p-2 mt-2 me-2 bg-danger border border-light rounded-circle">
-            <span class="visually-hidden">nieuwe prijzen</span>
-          </span>
+          @if( hasUnviewedAchievements ) {
+            <span class="position-absolute top-0 start-75 translate-middle p-2 mt-2 me-2 bg-danger border border-light rounded-circle">
+              <span class="visually-hidden">nieuwe prijzen</span>
+            </span>
+          }
         </a>
       </h2>
     }

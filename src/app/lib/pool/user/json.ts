@@ -5,15 +5,14 @@ import { JsonTransfer } from '../../editAction/transfer/json';
 import { JsonReplacement } from '../../editAction/replacement/json';
 
 export interface JsonPoolUser {
-    id: number;
-    user: JsonUser;
-    admin: boolean;
-    competitors: JsonPoolCompetitor[];
-    nrOfAssembled?: number;
-    nrOfTransfers?: number;
-    replacements?: JsonReplacement[];
-    transfers?: JsonTransfer[];
-    substitutions?: JsonSubstitution[];
-    hasAssembleFormation: boolean;
-    hasTransferFormation: boolean;
+  id: number;
+  user: JsonUser;
+  admin: boolean;
+  competitors: JsonPoolCompetitor[];
+  hasAssembleFormation: boolean;
+  nrOfAssembled?: number;
+  nrOfTransfers?: number;
+  replacements?: JsonReplacement[];
+  transfers?: JsonTransfer[];
+  substitutions?: JsonSubstitution[];
 }

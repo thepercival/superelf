@@ -1,4 +1,3 @@
-
 import { FootballLine, Formation, FormationLine, Identifiable, Person } from 'ngx-sport';
 import { BadgeCategory } from './achievement/badge/category';
 import { S11FormationLine } from './formation/line';
@@ -104,5 +103,11 @@ export class S11Formation extends Identifiable {
             points += line.getTotalPoints(badgeCategory);
         }
         return points;
+    }
+
+    public calculateTotalMarketValue(): number {
+        return this.getPlaces()
+            .map((place: S11FormationPlace): number => place.marketValue)
+            .reduce((sum, val) => sum + val, 0);
     }
 }

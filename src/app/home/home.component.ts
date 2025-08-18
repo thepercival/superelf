@@ -79,7 +79,6 @@ export class HomeComponent implements OnInit {
             },
             complete: () => {
               this.processingMyShells.set(false);
-              console.log(this.processingMyShells);
             },
           });
       },

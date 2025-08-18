@@ -11,10 +11,13 @@
         <div class="row justify-content-center">                    
             <!-- @if(alert){
                 <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
-            } -->                            
-            @if(s11Player){
-                @let player = this.sportExtensions.getCurrentPlayer(s11Player);                                
-                @if (player && sourceAgainstGame && scorePointsMap) {                       
+            } -->                                            
+            @if(s11Player && scorePointsMap){
+                @let player = sourceAgainstGame !== undefined ?
+                    this.sportExtensions.getPlayer(s11Player, sourceAgainstGame.getStartDateTime()) :
+                    this.sportExtensions.getCurrentPlayer(s11Player);
+                                
+                @if (player && sourceAgainstGame) {
                     <div class="card card-person border-0">
                         <div class="card-body py-1 px-2">    
                             <div class="d-flex flex-column">

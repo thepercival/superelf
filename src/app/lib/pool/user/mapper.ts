@@ -33,8 +33,8 @@ export class PoolUserMapper {
             poolUser.setNrOfTransfers(json.nrOfTransfers);
         }
         const association = pool.getSourceCompetition().getAssociation();
-        poolUser.setAssembleFormation(json.hasAssembleFormation);
-        poolUser.setTransferFormation(json.hasTransferFormation);
+        poolUser.setHasAssembleFormation(json.hasAssembleFormation ?? false);
+        // poolUser.setTransferFormation(json.hasTransferFormation);
         // if (json.assembleFormation) {
         //     const formation = this.formationMapper.toObject(json.assembleFormation, poolUser, pool.getAssemblePeriod().getViewPeriod());
         //     poolUser.setAssembleFormation(formation);

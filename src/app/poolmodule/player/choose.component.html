@@ -19,16 +19,19 @@
     <form name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
       <div class="d-flex justify-content-around">
         <select class="form-control me-1" formControlName="searchTeam" (change)="updateFilter()">
-          <option ngValue="undefined" selected>
+          <option [ngValue]="undefined" selected>
             alle clubs
           </option>
           @for (team of selectableTeams(); track team.getId()) {
-          <option ngValue="team">{{team.getName()}}</option>
+          <option [ngValue]="team">{{team.getName()}}</option>
           }
         </select>
         <select class="form-control ms-1" formControlName="searchLine" (change)="updateFilter()">
+          <option [ngValue]="undefined" selected>
+            alle linies
+          </option>
           @for (line of selectableLines(); track line) {
-          <option ngValue="line">{{nameService.getFormationLineName(line)}}</option>
+          <option [ngValue]="line">{{nameService.getFormationLineName(line)}}</option>
           }
         </select>
       </div>
@@ -36,7 +39,7 @@
   
     <table class="table">
       <tbody>
-        @for (choosePersonItem of choosePersonItems; track choosePersonItem) {    
+        @for (choosePersonItem of choosePersonItems(); track choosePersonItem) {    
           @if(showAll() || isChoosable(choosePersonItem.player)) {
             <tr (click)="linkToPlayer(choosePersonItem)" class="pointer">
               <td>
@@ -48,7 +51,10 @@
               <td>
                 <app-team-name [team]="choosePersonItem.player.getTeam()"></app-team-name>
               </td>
-              <td class="text-end">
+              <td class="text-end pe-0">
+                <se-marketvalue [marketValue]="choosePersonItem.player.getMarketValue()"></se-marketvalue>
+              </td>
+              <td class="text-end pe-0">
                 <span class="badge bg-totals">{{getTotalPoints(choosePersonItem.s11Player)}}</span>
               </td>
               <td class="text-end" (click)="$event.stopPropagation()">

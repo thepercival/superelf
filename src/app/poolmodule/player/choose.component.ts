@@ -13,14 +13,21 @@ import { CompetitionConfig } from '../../lib/competitionConfig';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { TeamNameComponent } from '../team/name.component';
-import { NgIf } from '@angular/common';
 import { faChevronRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../lib/sportExtensions';
+import { MarketValuePipe } from '../../shared/market-value.pipe';
+import { MarketValueComponent } from '../../shared/commonmodule/marketvalue/marketvalue.component';
 
 @Component({
   selector: "app-pool-player-choose",
   standalone: true,
-  imports: [FontAwesomeModule,LineIconComponent,TeamNameComponent,ReactiveFormsModule],
+  imports: [
+    FontAwesomeModule,
+    LineIconComponent,
+    TeamNameComponent,
+    ReactiveFormsModule,
+    MarketValueComponent,
+  ],
   templateUrl: "./choose.component.html",
   styleUrls: ["./choose.component.scss"],
 })
@@ -30,7 +37,7 @@ export class S11PlayerChooseComponent implements OnInit {
   readonly alreadyChosenPersons = input<Person[]>();
   readonly alreadyChosenTeams = input<Team[]>();
   readonly selectableTeams = input.required<Team[]>();
-  readonly selectableLines = input.required<(FootballLine)[]>();
+  readonly selectableLines = input.required<FootballLine[]>();
   readonly filter = model.required<ChoosePlayersFilter>();
   readonly showAll = input<boolean>(false);
   readonly viewPeriodType = input.required<ViewPeriodType>();
@@ -41,7 +48,7 @@ export class S11PlayerChooseComponent implements OnInit {
   @Output() linkToS11Player = new EventEmitter<S11Player>();
   @Output() filterUpdate = new EventEmitter<ChoosePlayersFilter>();
   form: UntypedFormGroup;
-  choosePersonItems: ChoosePersonItem[] = [];
+  choosePersonItems = model<ChoosePersonItem[]>();
   nameService = new NameService();
   public alert: IAlert | undefined;
   public processing: WritableSignal<boolean> = signal(true);
@@ -49,7 +56,7 @@ export class S11PlayerChooseComponent implements OnInit {
   private alreadyChosenTeamsMap!: TeamMap;
 
   public faSpinner = faSpinner;
-  
+
   constructor(
     protected playerRepository: S11PlayerRepository,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
@@ -105,6 +112,7 @@ export class S11PlayerChooseComponent implements OnInit {
   // }
 
   searchPersons() {
+    console.log(this.filter());
     this.playerRepository
       .getObjects(
         this.competitionConfig().getSourceCompetition(),
@@ -120,7 +128,7 @@ export class S11PlayerChooseComponent implements OnInit {
           this.setAlert("danger", e);
           this.processing.set(false);
         },
-        complete: () => (this.processing.set(false)),
+        complete: () => this.processing.set(false),
       });
   }
 
@@ -143,7 +151,7 @@ export class S11PlayerChooseComponent implements OnInit {
         ? 1
         : -1
     );
-    this.choosePersonItems = choosePersonItems;
+    this.choosePersonItems.set(choosePersonItems);
   }
 
   getTotalPoints(s11Player: S11Player): number {
@@ -209,6 +217,7 @@ export class S11PlayerChooseComponent implements OnInit {
     });
     this.searchPersons();
     this.filterUpdate.emit(this.filter());
+    console.log("updateFilter");
   }
 }
 

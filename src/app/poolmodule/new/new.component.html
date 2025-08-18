@@ -4,13 +4,15 @@
       <app-title title="pool organiseren"></app-title>
 
       @if(alert){
-      <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
       }
 
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
-      </h2>
-      
+      @if(processing()){
+        <h2 class="text-center">
+          <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+        </h2>
+      }
+
       @if(!processing() && competitionConfig){
       <form name="form" class="max-form-width" (ngSubmit)="create(competitionConfig)" [formGroup]="form" novalidate>
         <div class="row g-3">
