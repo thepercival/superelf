@@ -11,7 +11,7 @@ import { NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormationRepository } from '../../lib/formation/repository';
 import { S11Player } from '../../lib/player';
 import { ViewPeriod } from '../../lib/periods/viewPeriod';
-import { Person, Team } from 'ngx-sport';
+import { Person, Player, Team } from 'ngx-sport';
 import { PlayerAction, S11PlayerAddRemoveModalComponent } from '../player/addremovemodal.component';
 import { PoolUser } from '../../lib/pool/user';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
@@ -26,6 +26,7 @@ import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavB
 import { faSearch, faSignInAlt, faSpinner, faTrashAlt, faUsers, faUserSecret } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../lib/sportExtensions';
 import { PlayerLink } from '../formation/line/view.component';
+import { MarketValueComponent } from "../../shared/commonmodule/marketvalue/marketvalue.component";
 
 @Component({
   standalone: true,
@@ -36,7 +37,8 @@ import { PlayerLink } from '../formation/line/view.component';
     TeamNameComponent,
     NgbAlertModule,
     RouterLink,
-  ],
+    MarketValueComponent
+],
   selector: "app-pool-scouting-list",
   templateUrl: "./list.component.html",
   styleUrls: ["./list.component.scss"],
@@ -144,15 +146,11 @@ export class ScoutedPlayerListComponent
     );
   }
 
-  getCurrentTeam(s11Player: S11Player | undefined): Team | undefined {
+  getCurrentPlayer(s11Player: S11Player | undefined): Player | undefined {
     if (!s11Player) {
       return undefined;
     }
-    const player = this.sportExtensions.getCurrentPlayer(s11Player);
-    if (!player) {
-      return undefined;
-    }
-    return player.getTeam();
+    return this.sportExtensions.getCurrentPlayer(s11Player);
   }
 
   openRemoveModal(scoutedPlayer: ScoutedPlayer, pool: Pool) {

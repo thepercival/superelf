@@ -57,13 +57,18 @@
           <td>
             <span>{{scoutedPlayer.getPerson().getName()}}</span>
           </td>
-          <td>
-            @let currentTeam = getCurrentTeam(scoutedPlayer.getS11Player());
-            @if(currentTeam){
-              <app-team-name [team]="currentTeam"></app-team-name>
+          @let currentPlayer = getCurrentPlayer(scoutedPlayer.getS11Player());
+          <td>            
+            @if(currentPlayer){
+              <app-team-name [team]="currentPlayer.getTeam()"></app-team-name>
             }
           </td>
-          <td class="text-end">
+          <td class="text-end pe-0">
+            @if(currentPlayer){
+              <se-marketvalue [marketValue]="currentPlayer.getMarketValue()"></se-marketvalue>
+            }
+          </td>
+          <td class="text-end pe-0">
             <span class="badge bg-totals" style="width: 2rem">{{getTotalPoints(pool,scoutedPlayer.getS11Player())}}</span>
           </td>
           <td (click)="$event.stopPropagation()">
