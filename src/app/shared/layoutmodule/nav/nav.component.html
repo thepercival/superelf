@@ -42,16 +42,16 @@
   <div class="collapse navbar-collapse " [ngbCollapse]="navbarCollapsed " id="navbarResponsive ">
     <ul class="navbar-nav ">
       <li *ngIf="isLoggedIn() " class="nav-item ">
-        <a class="nav-link " routerLink="/admin " routerLinkActive="active " (click)="navbarCollapsed=! navbarCollapsed ">admin</a>
+        <a class="nav-link " [routerLink]="/admin " [routerLinkActive]="active " (click)="navbarCollapsed=! navbarCollapsed ">admin</a>
       </li>
     </ul>
 
     <ul class="nav navbar-nav ms-auto ">
       <li *ngIf="!isLoggedIn() " class="nav-item ">
-        <a class="nav-link" routerLink="/user/login " routerLinkActive="active " (click)="navbarCollapsed=!navbarCollapsed ">inloggen</a>
+        <a class="nav-link" [routerLink]="/user/login " [routerLinkActive]="active " (click)="navbarCollapsed=!navbarCollapsed ">inloggen</a>
       </li>
       <li *ngIf="isLoggedIn() " class="nav-item ">
-        <a class="nav-link" routerLink="/user/logout " routerLinkActive="active " (click)="navbarCollapsed=!navbarCollapsed ">uitloggen</a>
+        <a class="nav-link" [routerLink]="/user/logout " [routerLinkActive]="active " (click)="navbarCollapsed=!navbarCollapsed ">uitloggen</a>
       </li>
     </ul>
   </div> -->

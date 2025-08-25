@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
@@ -12,7 +12,7 @@ import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
-  imports: [NgbAlertModule, UserTitleComponent, FontAwesomeModule],
+  imports: [NgbAlertModule, UserTitleComponent, FontAwesomeModule,RouterLink],
   selector: "app-validate",
   templateUrl: "./validate.component.html",
   styleUrls: ["./validate.component.css"],

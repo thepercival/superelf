@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { StartSessionService } from '../../shared/commonmodule/startSessionService';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSignInAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: "app-pool-prenew",
   standalone: true,
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule,RouterLink],
   templateUrl: "./prenew.component.html",
   styleUrls: ["./prenew.component.scss"],
 })

@@ -75,14 +75,14 @@
                         <td class="border-bottom-0"></td>
                         <td class="border-bottom-0 text-end pt-3 pb-0 ps-0"> 
                           @if(getCurrentPoolGame(tmplCurrentGameRound)?.getState() !== Created) {
-                            <a routerLink="['/pool/user', homeCompetitor.getPoolUser().getPool().getId(), homeCompetitor.getPoolUser().getId(), tmplCurrentGameRound.number]"
+                            <a [routerLink]="['/pool/user', homeCompetitor.getPoolUser().getPool().getId(), homeCompetitor.getPoolUser().getId(), tmplCurrentGameRound.number]"
                                class="badge bg-totals">{{getPoolGamePoints(tmplCurrentGameRound, homeCompetitor)}}</a>
                           }                            
                         </td>
                         <td class="border-bottom-0"></td>
                         <td class="border-bottom-0 pt-3 pb-0 pe-0"> 
                             @if(getCurrentPoolGame(tmplCurrentGameRound)?.getState() !== Created) {
-                              <a routerLink="['/pool/user', awayCompetitor.getPoolUser().getPool().getId(), awayCompetitor.getPoolUser().getId(), tmplCurrentGameRound.number]"
+                              <a [routerLink]="['/pool/user', awayCompetitor.getPoolUser().getPool().getId(), awayCompetitor.getPoolUser().getId(), tmplCurrentGameRound.number]"
                                 class="badge bg-totals">{{getPoolGamePoints(tmplCurrentGameRound, awayCompetitor)}}</a>
                             }
                         </td>
@@ -222,7 +222,7 @@
 </ng-template> <!-- End      PlayerName, Team And Line -->
 
 <!-- Start      PlayerScore -->
-<ng-template #contentForamtionPlaceScore let-formationPlace="formationPlace" let-sourceGame="sourceGame" let-gameRound="gameRound">
+<!-- <ng-template #contentForamtionPlaceScore let-formationPlace="formationPlace" let-sourceGame="sourceGame" let-gameRound="gameRound">
     @if(formationPlace){
 
         @if(!formationPlace.isSubstitute()){
@@ -241,7 +241,7 @@
             
                 }@else {
                     <span class="badge text-bg-danger">
-                        <a routerLink="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
+                        <a [routerLink]="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
                             &nbsp;
                         </a>
                     </span>
@@ -249,7 +249,8 @@
             }
         }
     }
-</ng-template> <!-- End      PlayerScore -->
+</ng-template>  -->
+<!-- End      PlayerScore -->
 
 <ng-template #contentPlayer let-s11Player="s11Player">
   @if(s11Player !== undefined){
@@ -264,10 +265,10 @@
     }
 </ng-template>
 
-<ng-template #lineupScore let-formationPlace="formationPlace" let-sourceGame="sourceGame" let-gameRound="gameRound">
+<!-- <ng-template #lineupScore let-formationPlace="formationPlace" let-sourceGame="sourceGame" let-gameRound="gameRound">
     @if(statisticsGetter.hasAppeared(formationPlace,gameRound)) {
         <span class="badge bg-points">
-            <a routerLink="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
+            <a [routerLink]="['/pool/sourcegame', pool.getId(), sourceGame.getGameRoundNumber(), sourceGame.getId()]">
                 @if(gameRound){
                 <span>
                     {{statisticsGetter.getFormationPlaceGameRoundPoints(formationPlace,gameRound, undefined)}}
@@ -278,4 +279,4 @@
     } @else {
         <button type="button" class="btn btn-sm btn-notappeared">&nbsp;</button>
     }
-</ng-template>
+</ng-template> -->

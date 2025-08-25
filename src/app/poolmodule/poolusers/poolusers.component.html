@@ -58,10 +58,12 @@
             }
             
             <!-- <td class="text-end">
-              <button *ngIf="!poolUser.getAdmin() && canBeRemoved()" type="button" class="btn btn-sm btn-danger"
+              @if(!poolUser.getAdmin() && canBeRemoved()){
+              <button type="button" class="btn btn-sm btn-danger"
                 [disabled]="processing" (click)="openRemoveApprovalModal(poolUser)">
                 <fa-icon [icon]=faTrashAlt></fa-icon>
               </button>
+              }
             </td> -->
           </tr>
           }
