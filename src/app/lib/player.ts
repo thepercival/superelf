@@ -59,7 +59,7 @@ export class S11Player extends Identifiable {
         }).slice();
     }
 
-    public getPlayer(team: Team, date?: Date): Player | undefined {
+    public getPlayer(team: Team, date: Date|undefined): Player | undefined {
         const checkDate = date ? date : new Date();
         const filters: { (player: Player): boolean; }[] = [
             (player: Player) => player.getTeam() === team,

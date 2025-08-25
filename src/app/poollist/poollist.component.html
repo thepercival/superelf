@@ -5,13 +5,12 @@
     }    
 
     @if(!processing()){
-      <form name="form" (ngSubmit)="false" formGroup="typedForm" novalidate>
+      <form name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
         <div class="d-flex justify-content-between">
           <h1>pools</h1>
-          <select class="form-control ms-1 pointer input-sm seasonlist flex-shrink-1" formControlName="season"
-            (change)="updatePools()">
+          <select class="form-control ms-1 pointer input-sm seasonlist flex-shrink-1" formControlName="season" (change)="updatePools()">
             @for(selectableSeason of selectableSeasons; track selectableSeason.getId()){
-            <option ngValue="selectableSeason">{{selectableSeason.getName()}}</option>
+              <option [ngValue]="selectableSeason">{{selectableSeason.getName()}}</option>
             }
           </select>
         </div>

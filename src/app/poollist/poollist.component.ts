@@ -7,27 +7,28 @@ import { PoolShell,  PoolShellRepository } from '../lib/pool/shell/repository';
 import { GlobalEventsManager } from '../shared/commonmodule/eventmanager';
 import { Season } from 'ngx-sport';
 import { SeasonRepository } from '../lib/season/repository';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { User } from '../lib/user';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { PoolActions } from '../home/home.component';
 
 @Component({
   selector: "app-pools",
   standalone: true,
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, ReactiveFormsModule],
   templateUrl: "./poollist.component.html",
   styleUrls: ["./poollist.component.scss"],
 })
 export class PoolListComponent implements OnInit {
-  // public user: WritableSignal<boolean> = signal(true);  
+  // public user: WritableSignal<boolean> = signal(true);
   public processing: WritableSignal<boolean> = signal(true);
   public searching: WritableSignal<boolean> = signal(true);
   // linethroughDate: Date;
   public selectableSeasons: Season[] | undefined;
   public poolShells: PoolShell[] = [];
   public alert: IAlert | undefined;
-  public typedForm: FormGroup<{
+  public form: FormGroup<{
     season: FormControl<Season | null>;
   }>;
   public faSpinner = faSpinner;
@@ -40,7 +41,7 @@ export class PoolListComponent implements OnInit {
     protected globalEventsManager: GlobalEventsManager
   ) {
     this.globalEventsManager.navHeaderInfo.emit(undefined);
-    this.typedForm = new FormGroup({
+    this.form = new FormGroup({
       season: new FormControl<Season | null>(null, {
         nonNullable: false,
       }),
@@ -61,7 +62,7 @@ export class PoolListComponent implements OnInit {
             );
           })
           .slice();
-        this.typedForm.controls.season.setValue(this.selectableSeasons[0]);
+        this.form.controls.season.setValue(this.selectableSeasons[0]);
         this.updatePools();
 
         this.processing.set(false);
@@ -74,8 +75,7 @@ export class PoolListComponent implements OnInit {
   }
 
   updatePools() {
-    // console.log(this.typedForm.controls.season.value);
-    const season = this.typedForm.controls.season.value;
+    const season = this.form.controls.season.value;
     if (season === null) {
       return;
     }
@@ -91,7 +91,7 @@ export class PoolListComponent implements OnInit {
         this.setAlert("danger", e);
         this.searching.set(false);
       },
-      complete: () => (this.searching.set(false)),
+      complete: () => this.searching.set(false),
     });
   }
 
@@ -165,7 +165,25 @@ export class PoolListComponent implements OnInit {
   }
 
   linkToPool(shell: PoolShell) {
-    this.router.navigate(["/pool", shell.poolId]);
+    const year: number = new Date().getFullYear();
+    const shellYear: number = +shell.seasonName.substring(0, 4);
+    if (year == shellYear) {
+      this.poolShellRepos.canCreateAndJoinPool().subscribe({
+        next: (poolActions: number) => {
+          if ((poolActions & PoolActions.Assemble) === PoolActions.Assemble) {
+            this.router.navigate(["/pool/formation/assemble", shell.poolId]);
+          } else if (
+            (poolActions & PoolActions.CreateAndJoin) ===
+            PoolActions.CreateAndJoin
+          ) {
+            this.router.navigate(["/pool/users", shell.poolId]);
+            return;
+          }
+        },
+      });
+    } else {
+      this.router.navigate(["/pool", shell.poolId]);
+    }
   }
 
   //   private extendHourRange(pastFuture: number, hoursToAdd: number): PoolShellFilter {

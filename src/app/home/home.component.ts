@@ -117,8 +117,6 @@ export class HomeComponent implements OnInit {
     const year = new Date().getFullYear();
     const shellYear = shell.seasonName.substring(0, 4);
     if (year == +shellYear) {
-      // console.log(this.canAssemble);
-      // console.log(this.canCreateAndJoin);
       if (this.canAssemble) {
         this.router.navigate(["/pool/formation/assemble", shell.poolId]);
         return;

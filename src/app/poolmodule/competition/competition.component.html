@@ -39,7 +39,7 @@
                 </button>
               }
               <button (click)="openChooseBadgeCategoryModal()" type="button"
-                class="btn {{badgeCategory !== undefined ? 'btn-success' : 'btn-outline-dark'}} me-0 position-relative">
+                class="btn {{badgeCategory() !== undefined ? 'btn-success' : 'btn-outline-dark'}} me-0 position-relative">
                 <app-superelf-icon [icon]=facTrophy></app-superelf-icon>
               </button>          
             </div>
@@ -81,7 +81,7 @@
 @if(!processing() && pool){
   <ng-template #competitionsNavBar>
     @if(pool && leagueName !== WorldCupLeagueName){
-    <app-competitions-navbar [pool]="pool" [current]="PouleRankingTogetherSport">
+    <app-competitions-navbar [pool]="pool" [current]="PouleRankingTogetherSport" [currentGameRound]="initalCurrentGameRound()">
     </app-competitions-navbar>
     }
   </ng-template>

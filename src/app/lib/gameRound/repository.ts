@@ -10,6 +10,7 @@ import { GameRoundMapper } from './mapper';
 import { GameRound } from '../gameRound';
 import { JsonGameRound } from './json';
 import { GameRoundViewType } from './viewType';
+import { Competition } from 'ngx-sport';
 
 @Injectable({
   providedIn: "root",
@@ -49,8 +50,7 @@ export class GameRoundRepository extends APIRepository {
     viewPeriod: ViewPeriod,
     viewType: GameRoundViewType
   ): Observable<GameRound> {
-    const url =
-      this.getUrl(competitionConfig, viewPeriod) + "/gamerounds/active";
+    const url = this.getUrl(competitionConfig, viewPeriod) + "/gamerounds/active";
     return this.http.get<CurrentGameRounds>(url, this.getOptions()).pipe(
       map((json: CurrentGameRounds): GameRound => {
         let activeGameRound: GameRound | undefined;
@@ -76,9 +76,29 @@ export class GameRoundRepository extends APIRepository {
       catchError((err) => this.handleError(err))
     );
   }
+
+  isActive(competition: Competition, gameRoundNr: number): Observable<boolean> {
+    
+    const url =
+      this.getApiUrl() +
+      "public/competitions/" +
+      competition.getId() +
+      "/active/" +
+      gameRoundNr;
+
+      return this.http.get<JsonLeagueActive>(url, this.getOptions()).pipe(
+        map((json: JsonLeagueActive) => json.active),
+        catchError((err) => this.handleError(err))
+      );
+    }
+
 }
 
 export interface CurrentGameRounds {
     firstCreatedOrInProgress?: GameRound | undefined,
     lastFinishedOrInProgress?: GameRound | undefined
+}
+
+export interface JsonLeagueActive {
+  active: boolean;
 }

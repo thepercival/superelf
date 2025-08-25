@@ -18,7 +18,7 @@ export class FormationPlacesGetter {
     return formation
       .getPlaces()
       .filter((formationPlace: S11FormationPlace): boolean => {
-        return formationPlace.getPlayer()?.getPlayer(team) !== undefined;
+        return formationPlace.getPlayer()?.getPlayer(team, againstGame.getStartDateTime()) !== undefined;
       });
   }
 

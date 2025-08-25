@@ -64,6 +64,8 @@ import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
   styleUrls: ["./competition.component.scss"],
 })
 export class PoolCompetitionComponent extends PoolComponent implements OnInit {
+  public initalCurrentGameRound: WritableSignal<GameRound | undefined> =
+    signal(undefined);
   public currentGameRound: WritableSignal<GameRound | undefined> =
     signal(undefined);
   public viewGameRounds: WritableSignal<GameRound[]> = signal([]);
@@ -94,12 +96,10 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   public number: number = 0;
 
   public increase() {
-    console.log(123);
     this.number++;
   }
 
   public decrease() {
-    console.log(98);
     if (this.number === 0) return;
     this.number--;
   }
@@ -169,7 +169,10 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
               currentViewPeriod
             ).subscribe({
               next: (activeGameRound: GameRound) => {
-                console.log("setting currentGameRound ..", activeGameRound);
+                // console.log("setting currentGameRound ..", activeGameRound);
+                // this.initialActiveGameRound.set(activeGameRound);
+                // is this activeGameRound Also an SuperCupActiveGameRound
+                this.initalCurrentGameRound.set(activeGameRound);
                 this.currentGameRound.set(activeGameRound);
               },
             });
@@ -257,10 +260,17 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     // get viewPeriod totals
     {
       const competitionConfig = pool.getCompetitionConfig();
-      if (viewPeriod === competitionConfig.getTransferPeriod().getViewPeriod()) {
-        const assembleViewPeriod = competitionConfig.getAssemblePeriod().getViewPeriod();
+      if (
+        viewPeriod === competitionConfig.getTransferPeriod().getViewPeriod()
+      ) {
+        const assembleViewPeriod = competitionConfig
+          .getAssemblePeriod()
+          .getViewPeriod();
         totals.push(
-          this.poolUsersTotalsGetter.getViewPeriodTotals(pool,assembleViewPeriod)
+          this.poolUsersTotalsGetter.getViewPeriodTotals(
+            pool,
+            assembleViewPeriod
+          )
         );
       }
     }
@@ -306,7 +316,10 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
                   };
                 }
               );
-            const competitors = Pool.getCompetitors(poolUsers, LeagueName.Competition);
+            const competitors = Pool.getCompetitors(
+              poolUsers,
+              LeagueName.Competition
+            );
             const competitor: PoolCompetitor | undefined = competitors.find(
               (competitor) => competitor.getPoolUser() === poolUser
             );

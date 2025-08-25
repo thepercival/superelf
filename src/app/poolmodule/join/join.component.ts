@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Pool } from '../../lib/pool';
 
@@ -9,14 +9,13 @@ import { StartSessionService } from '../../shared/commonmodule/startSessionServi
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgIf } from '@angular/common';
 import { faEnvelope, faSpinner, faUserCircle, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
   selector: "app-pool-join",
   standalone: true,
-  imports: [NgIf, FontAwesomeModule, NgbAlertModule],
+  imports: [FontAwesomeModule, NgbAlertModule, RouterModule],
   templateUrl: "./join.component.html",
   styleUrls: ["./join.component.scss"],
 })
