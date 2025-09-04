@@ -8,7 +8,7 @@
   @let tmplHeaderInfo = headerInfo();
   @if(tmplHeaderInfo) {
     <div>
-      <h1 class="h3 text-truncate me-1 d-flex mb-0 pointer" (click)="navigateToPoolHome(tmplHeaderInfo.id)">
+      <h1 class="h3 text-truncate me-1 d-flex mb-0 pointer" (click)="navigateToPoolHome(tmplHeaderInfo.urlSuffix, tmplHeaderInfo.id)">
         <span class="me-1">{{tmplHeaderInfo.name}}</span>
     
         <small class="d-flex flex-column p-0" style="font-size: 11px;">

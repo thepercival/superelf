@@ -50,6 +50,7 @@ export class PoolComponent {
       id: +pool.getId(),
       name: pool.getName(),
       start: pool.getSeason().getStartDateTime(),
+      urlSuffix: this.getMostRecentEndedEditPeriod(pool) === undefined ? 'pool/users' : 'pool/competition'
     });
     // this.globalEventsManager.showFooter.emit(false);
   }

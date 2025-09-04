@@ -57,8 +57,8 @@ export class NavComponent implements OnInit {
     return this.dateFormatter.toString(dDate, { year: "2-digit" });
   }
 
-  navigateToPoolHome(id: number): void {
-    this.router.navigate(["pool", id]);
+  navigateToPoolHome(urlSuffix: string, id: number): void {
+    this.router.navigate([urlSuffix, id]);
   }
 
   navigateToLogin(): void {
@@ -78,5 +78,6 @@ export interface NavHeaderInfo {
   id: number;
   name: string;
   start: Date;
+  urlSuffix: string;
   showBackBtn?: boolean;
 }
