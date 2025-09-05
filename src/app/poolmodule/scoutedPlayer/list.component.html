@@ -19,7 +19,7 @@
           </button>
         </div>
       }
-    </div>
+    </div>    
     
     @if(processing()){
       <h2 class="text-center">
@@ -27,7 +27,7 @@
       </h2>
     }
     @if(alert){
-    <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+    <ngb-alert [type]="alert.type" (closed)="alert = undefined">{{ alert.message }}</ngb-alert>
     }
     @if(scoutingList && scoutingList.scoutedPlayers.length === 0) {
       <ngb-alert type="info">je hebt nog geen spelers gescout, begin met zoeken</ngb-alert>
