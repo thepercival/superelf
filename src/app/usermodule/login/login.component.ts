@@ -91,7 +91,7 @@ export class LoginComponent extends AuthComponent implements OnInit {
       next: (p: boolean) => {
         this.startSessionService.navigate();
       },
-      error: (e) => {
+      error: (e: string) => {
         this.setAlert("danger", e);
         this.processing.set(false);
       },

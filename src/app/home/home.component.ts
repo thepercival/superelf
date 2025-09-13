@@ -64,7 +64,7 @@ export class HomeComponent implements OnInit {
           return;
         }
 
-        const filter = { roles: Role.COMPETITOR + Role.ADMIN };
+        const filter = { roles: Role.COMPETITOR };
         this.poolShellRepos
           .getObjects(this.authService.getUser(), filter)
           .subscribe({

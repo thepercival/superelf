@@ -149,11 +149,17 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
                 this.poolUserFromSession =
                   poolUser.getUser() === user ? poolUser : undefined;
 
+                if (pool.getCompetitions().length === 0) {              
+                  this.setAlert('danger', 'de competities zijn nog niet vrijgegeven');
+                  this.processing.set(false);
+                  return;
+                }
                 const competition = pool.getCompetition(this.leagueName);
                 if (competition === undefined) {
-                  // this.processing.set(false);
-                  throw Error("competitionSport not found");
-                }      
+                  this.setAlert('danger', 'competitionSport not found');
+                  this.processing.set(false);
+                  return;
+                }
                 
                 forkJoin(this.setFormations(poolUser)).subscribe({
                   next: (formations: S11Formation[]) => {

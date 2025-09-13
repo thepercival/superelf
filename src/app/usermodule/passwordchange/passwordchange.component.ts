@@ -75,7 +75,7 @@ export class PasswordchangeComponent extends AuthComponent implements OnInit {
 
   changePassword(): boolean {
     this.processing.set(true);
-    this.setAlert('info', 'het wachtwoord wordt gewijzigd');
+    this.setAlert('info', 'het wachtwoord wordt gewijzigd ..');
 
     const code = this.form.controls.code.value;
     const password = this.form.controls.password.value;
@@ -89,8 +89,8 @@ export class PasswordchangeComponent extends AuthComponent implements OnInit {
         this.passwordChanged = true;
         this.resetAlert();
       },
-      error: (e) => {
-        this.setAlert('danger', 'het wijzigen van het wachtwoord is niet gelukt: ' + e);
+      error: (e: string) => {
+        this.setAlert('danger', e);
         this.processing.set(false);
       },
       complete: () => this.processing.set(false)

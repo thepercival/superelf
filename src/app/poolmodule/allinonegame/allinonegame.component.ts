@@ -162,12 +162,17 @@ export class PoolAllInOneGameScheduleComponent
             this.poolUserFromSession = poolUsers.find(
               (poolUser: PoolUser) => poolUser.getUser() === user
             );
+            if (pool.getCompetitions().length === 0) {              
+              this.setAlert('danger', 'de competities zijn nog niet vrijgegeven');
+              this.processing.set(false);
+              return;
+            }
             const competition = pool.getCompetition(this.leagueName);
             if (competition === undefined) {
-              // this.processing.set(false);
-              throw Error("competitionSport not found");
+              this.setAlert('danger', 'competitionSport not found');
+              this.processing.set(false);
+              return;
             }
-
             this.determineActiveGameRound(
               competitionConfig,
               currentViewPeriod

@@ -57,7 +57,7 @@ export class APIRepository {
 }
 
 export class AppErrorHandler {
-    public handleError(error: HttpErrorResponse | Error): Observable<any> {
+    public handleError(error: HttpErrorResponse | Error): Observable<string> {
         let errortext: string = 'onbekende fout(';
         if (!navigator.onLine) {
             errortext = 'er kan geen internet verbinding gemaakt worden';
@@ -87,7 +87,6 @@ export class AppErrorHandler {
         else {
             errortext = error.message;
         }
-        const err = new Error(errortext);
-        return throwError(() => err);
+        return throwError(() => errortext);
     }
 }

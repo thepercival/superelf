@@ -78,10 +78,16 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
               (poolUser: PoolUser) => poolUser.getUser() === user
             );
 
+            if (pool.getCompetitions().length === 0) {              
+              this.setAlert('danger', 'de competities zijn nog niet vrijgegeven');
+              this.processing.set(false);
+              return;
+            }
             const competition = pool.getCompetition(this.leagueName);
             if (competition === undefined) {
+              this.setAlert('danger', 'competitionSport not found');
               this.processing.set(false);
-              throw Error("competitionSport not found");
+              return;
             }
 
             this.structureRepository.getObject(competition).subscribe({

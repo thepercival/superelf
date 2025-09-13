@@ -161,11 +161,18 @@ export class PoolPouleAgainstGamesComponent
       this.route.params.subscribe((params) => {
         this.leagueName = params["leagueName"];
 
+        if (pool.getCompetitions().length === 0) {              
+          this.setAlert('danger', 'de competities zijn nog niet vrijgegeven');
+          this.processing.set(false);
+          return;
+        }
         const poolCompetition = pool.getCompetition(this.leagueName);
         if (poolCompetition === undefined) {
+          this.setAlert('danger', 'competitionSport not found');
           this.processing.set(false);
-          throw Error("competitionSport not found");
+          return;
         }
+
         const user = this.authService.getUser();
         const competitionConfig = pool.getCompetitionConfig();
 
