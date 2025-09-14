@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit {
           .subscribe({
             next: (shells: PoolShell[]) => {
               this.myShells = this.sortShellsByDateDesc(
-                shells.filter((shell) => shell.seasonName > "2021")
+                shells.filter((shell) => shell.seasonName > "2021" && shell.name !== 'WorldCup')
               );
             },
             error: (e) => {

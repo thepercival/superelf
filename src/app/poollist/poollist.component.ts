@@ -1,4 +1,4 @@
-import { Component, input, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
@@ -85,7 +85,7 @@ export class PoolListComponent implements OnInit {
     const filter = { seasonId: season.getId() };
     this.poolShellRepos.getObjects(undefined, filter).subscribe({
       next: (shells: PoolShell[]) => {
-        this.poolShells = shells.filter((shell) => shell.seasonName > "2021");
+        this.poolShells = shells.filter((shell) => shell.seasonName > "2021" && shell.name !== 'WorldCup');
       },
       error: (e) => {
         this.setAlert("danger", e);
@@ -172,18 +172,14 @@ export class PoolListComponent implements OnInit {
         next: (poolActions: number) => {
           if ((poolActions & PoolActions.Assemble) === PoolActions.Assemble) {
             this.router.navigate(["/pool/formation/assemble", shell.poolId]);
-          } else if (
-            (poolActions & PoolActions.CreateAndJoin) ===
-            PoolActions.CreateAndJoin
-          ) {
+          } else if ((poolActions & PoolActions.CreateAndJoin) ===PoolActions.CreateAndJoin ) {
             this.router.navigate(["/pool/users", shell.poolId]);
             return;
           }
         },
       });
-    } else {
-      this.router.navigate(["/pool", shell.poolId]);
     }
+    this.router.navigate(["/pool", shell.poolId]);
   }
 
   //   private extendHourRange(pastFuture: number, hoursToAdd: number): PoolShellFilter {
