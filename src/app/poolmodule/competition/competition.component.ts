@@ -1,4 +1,4 @@
-import { Component, effect, OnChanges, OnInit, signal, SimpleChanges, WritableSignal } from '@angular/core';
+import { Component, effect, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
@@ -18,14 +18,12 @@ import { CompetitionConfig } from '../../lib/competitionConfig';
 import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
 import { AuthService } from '../../lib/auth/auth.service';
-import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { BadgeCategory } from '../../lib/achievement/badge/category';
 import { ChooseBadgeCategoryModalComponent } from '../badge/choosecategory-modal.component';
-import { GameRoundTotalsMap, PoolTotalsRepository, PoolUsersTotalsMap } from '../../lib/totals/repository';
+import { PoolTotalsRepository, PoolUsersTotalsMap } from '../../lib/totals/repository';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { PoolCompetitionsNavBarComponent } from '../../shared/poolmodule/competitionsNavBar/competitionsNavBar.component';
-import { WorldCupNavBarComponent } from '../../shared/poolmodule/poolNavBar/worldcupNavBar.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
 import { GameRoundScrollerComponent } from '../gameRound/gameRoundScroller.component';
@@ -38,7 +36,6 @@ import { ActiveViewGameRoundsCalculator } from '../../lib/gameRound/activeViewGa
 import { GameRoundViewType } from '../../lib/gameRound/viewType';
 import { concatMap, forkJoin, Observable, of } from 'rxjs';
 import { PoolUsersTotalsGetter } from '../../lib/pool/user/totalsGetter';
-import { EditPeriod } from '../../lib/periods/editPeriod';
 import { CompetitorWithGameRoundsPoints, GameRoundsPoints } from '../../lib/views/togetherRankingView/competitorWithGameRoundsPoints';
 import { PoolCompetitor } from '../../lib/pool/competitor';
 import { FormationActionOverviewModalComponent } from '../formation/actionoverview.modal.component';
@@ -50,9 +47,7 @@ import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
   standalone: true,
   imports: [
     FontAwesomeModule,
-    PoolCompetitionsNavBarComponent,
     NgbAlertModule,
-    WorldCupNavBarComponent,
     PoolNavBarComponent,
     SuperElfIconComponent,
     GameRoundScrollerComponent,
@@ -214,14 +209,8 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     });
   }
 
-  get Competitions(): NavBarItem {
-    return NavBarItem.Competitions;
-  }
-  get PouleRankingTogetherSport(): CompetitionsNavBarItem {
-    return CompetitionsNavBarItem.PouleRankingTogetherSport;
-  }
-  get WorldCupLeagueName(): LeagueName {
-    return LeagueName.WorldCup;
+  get Competition(): NavBarItem {
+    return NavBarItem.Competition;
   }
 
   openPoolUserTransfersModal(poolUser: PoolUser) {

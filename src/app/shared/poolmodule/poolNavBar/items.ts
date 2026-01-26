@@ -1,7 +1,11 @@
 export enum NavBarItem {
-    Competitions = 'competities',
+    Competition = 'competitie',
+    Cup = 'beker',
+    SuperCup = 'supercup',
     
     Schedule = 'programma', 
+
+    ContextMenu = 'menu',
 
     Achievements = 'prijzen',
 
@@ -14,11 +18,4 @@ export enum NavBarItem {
     PoolUsers = 'deelnemers',
     MyTeam = 'mijn team',
     Transfers = 'transfers',
-}
-
-export enum CompetitionsNavBarItem {
-    PouleRankingTogetherSport = 'competitiestand', 
-    CupStructure = 'beker',
-    SuperCupGame = 'supercup', 
-    WorldCupStructure = 'wereldbeker'
 }

@@ -1,9 +1,10 @@
-import { Component, OnChanges, OnInit, SimpleChanges, TemplateRef, input } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, ViewEncapsulation, input, model } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgainstGame, Competition, Poule, Round, Structure, TogetherGame, TogetherGamePlace } from 'ngx-sport';
 import { Badge } from '../../../lib/achievement/badge';
 import { AchievementRepository } from '../../../lib/achievement/repository';
 import { Trophy } from '../../../lib/achievement/trophy';
+import { SuperElfTrophyIconComponent } from '../icon/trophy.component';
 
 import { AuthService } from '../../../lib/auth/auth.service';
 import { LeagueName } from '../../../lib/leagueName';
@@ -13,26 +14,33 @@ import { S11Storage } from '../../../lib/storage';
 import { NavBarItem } from './items';
 import { SuperElfIconComponent } from '../icon/icon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgTemplateOutlet } from '@angular/common';
-import { faCalendarAlt, faEnvelope, faInfoCircle, faRightLeft, faUsers, faUserSecret } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt, faEnvelope, faInfoCircle, faRightLeft, faUsers, faUserSecret, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import { facStructure, facTrophy } from '../icons';
+import { forkJoin } from 'rxjs';
+import { GameRound } from '../../../lib/gameRound';
+import { GameRoundRepository } from '../../../lib/gameRound/repository';
+import { SuperElfNameService } from '../../../lib/nameservice';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   standalone: true,
   selector: "app-pool-navbar",
-  imports: [FontAwesomeModule, SuperElfIconComponent, NgTemplateOutlet],
+  imports: [FontAwesomeModule, SuperElfIconComponent, SuperElfTrophyIconComponent, NgbPopoverModule],
   templateUrl: "./poolNavBar.component.html",
   styleUrls: ["./poolNavBar.component.scss"],
 })
 export class PoolNavBarComponent implements OnInit, OnChanges {
-  readonly upperNavBar = input<TemplateRef<any>>();
   readonly pool = input.required<Pool>();
   readonly poolUser = input<PoolUser>();
   readonly current = input<NavBarItem>();
+  readonly currentGameRound = input<GameRound>();
+  readonly cupActive = model<boolean>(false);
+  readonly superCupActive = model<boolean>(false);
 
   public structureMap = new Map<number, Structure>();
   public hasUnviewedAchievements: boolean = false;
-  public latestGetUnviewedRequest: Date | undefined;
+  public latestGetUnviewedRequest: Date | undefined;  
+  public hasSuperCup = true;
   public faInfoCircle = faInfoCircle;
   public facTrophy = facTrophy;
   public facStructure = facStructure;
@@ -41,15 +49,56 @@ export class PoolNavBarComponent implements OnInit, OnChanges {
   public faUserSecret = faUserSecret;
   public faEnvelope = faEnvelope;
   public faRightLeft = faRightLeft;
+  public faEllipsisVertical = faEllipsisVertical;
 
   constructor(
     public authService: AuthService,
     private router: Router,
     private achievementRepository: AchievementRepository,
-    private s11Storage: S11Storage
+    public gameRoundRepository: GameRoundRepository,
+    private s11Storage: S11Storage,
+    public nameService: SuperElfNameService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    const gameRound = this.currentGameRound();
+    if( gameRound === undefined ) {
+      return;
+    }
+    const gameRoundNrs = [gameRound.number];
+    if( gameRound.created) {
+      gameRoundNrs.push(gameRound.number-1);
+    }
+    if (gameRound.finished) {
+      gameRoundNrs.push(gameRound.number+1);
+    }
+
+    const superCup = this.pool().getCompetition(LeagueName.SuperCup);
+    this.hasSuperCup = superCup !== undefined;
+    if (superCup !== undefined) {
+  
+      const superCupRequests = gameRoundNrs.map((gameRoundNr: number) => {
+        return this.gameRoundRepository.isActive(superCup, gameRoundNr)          
+      });
+      forkJoin(superCupRequests).subscribe({
+        next: (actives: boolean[]) => {
+          this.superCupActive.set(actives.some((active) => active));
+        },
+      });
+    }
+
+    const cup = this.pool().getCompetition(LeagueName.Cup);
+    if (cup !== undefined) {
+      const cupRequests = gameRoundNrs.map((gameRoundNr: number) => {
+        return this.gameRoundRepository.isActive(cup, gameRoundNr);
+      });
+      forkJoin(cupRequests).subscribe({
+        next: (actives: boolean[]) => {
+          this.cupActive.set(actives.some((active) => active));
+        },
+      });
+    }
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (
@@ -89,8 +138,24 @@ export class PoolNavBarComponent implements OnInit, OnChanges {
     }
   }
 
-  get Competitions(): NavBarItem {
-    return NavBarItem.Competitions;
+  get CompetitionName(): LeagueName {
+    return LeagueName.Competition;
+  }
+  get CupName(): LeagueName {
+    return LeagueName.Cup;
+  }
+  get SuperCupName(): LeagueName {
+    return LeagueName.SuperCup;
+  }
+
+  get Competition(): NavBarItem {
+    return NavBarItem.Competition;
+  }
+  get Cup(): NavBarItem {
+    return NavBarItem.Cup;
+  }
+  get SuperCup(): NavBarItem {
+    return NavBarItem.SuperCup;
   }
   get Schedule(): NavBarItem {
     return NavBarItem.Schedule;
@@ -119,18 +184,20 @@ export class PoolNavBarComponent implements OnInit, OnChanges {
   get Transfers(): NavBarItem {
     return NavBarItem.Transfers;
   }
-
-  getTextColorClass(item: NavBarItem): string {
-    if (item === NavBarItem.Transfers) {
-      return "btn-outline-warning";
-    }
-    return this.current() !== item ? "btn-outline-success" : "text-white";
+  get ContextMenu(): NavBarItem {
+    return NavBarItem.ContextMenu;
   }
 
   linkTo(navBarItem: NavBarItem): void {
     switch (navBarItem) {
-      case NavBarItem.Competitions:
+      case NavBarItem.Competition:
         this.router.navigate(["/pool/competition", this.pool().getId()]);
+        return;
+      case NavBarItem.Cup:
+        this.router.navigate(["/pool/cup", this.pool().getId()]);
+        return;
+      case NavBarItem.SuperCup:
+        this.router.navigate(["/pool/poule-againstgames",this.pool().getId(), LeagueName.SuperCup, 0]);
         return;
       case NavBarItem.Schedule:
         this.linkToSchedule();
@@ -251,4 +318,15 @@ export class PoolNavBarComponent implements OnInit, OnChanges {
   // getFavSuffix(): string {
   //   return this.showNrOfItems() > 4 ? 'd-none d-sm-inline' : '';
   // }
+
+  getTrophyIconClass(item: NavBarItem): string {
+    return this.current() !== item ? "text-success" : "text-silver";
+  }
+    
+  getTextColorClass(item: NavBarItem): string {
+    if (item === NavBarItem.Transfers) {
+      return "btn-outline-warning";
+    }
+    return this.current() === item ? "btn-outline-success text-silver" : "btn-outline-success";
+  }
 }

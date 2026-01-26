@@ -89,14 +89,9 @@
                     <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
                 </h2>
             }
-            @if(pool){
-                @if(leagueName === WorldCupLeagueName){
-                    <app-worldcup-navbar [current]="Schedule" [pool]="pool" [poolUser]="poolUserFromSession">
-                    </app-worldcup-navbar>
-                } @else {
-                    <app-pool-navbar [current]="Schedule" [pool]="pool" [poolUser]="poolUserFromSession">
-                    </app-pool-navbar>
-                }
+            @if(pool){                
+                <app-pool-navbar [current]="Schedule" [pool]="pool" [poolUser]="poolUserFromSession">
+                </app-pool-navbar>                
             }
         } @else {
             <h2 class="text-center">

@@ -137,15 +137,9 @@
     </div>
 </div>
 
-@if(!processing() && pool){
-    @if(leagueName === WorldCup) {
-        <app-worldcup-navbar [current]="Achievements" [pool]="pool" [poolUser]="poolUserFromSession">
-        </app-worldcup-navbar>
-    } @else {
-        <app-pool-navbar [current]="Achievements" [pool]="pool" [poolUser]="poolUserFromSession">
-        </app-pool-navbar>
-    }
-    
+@if(!processing() && pool){    
+    <app-pool-navbar [current]="Achievements" [pool]="pool" [poolUser]="poolUserFromSession">
+    </app-pool-navbar>    
 }
 
 <!-- <ng-template #contentMessageTitle let-message="message" let-end="end">

@@ -1,6 +1,6 @@
 import { Component, effect, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AgainstGame, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Poule, SportRoundRankingItem, StartLocationMap, Structure, TeamCompetitor } from 'ngx-sport';
+import { AgainstGame, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Poule, Structure, TeamCompetitor } from 'ngx-sport';
 import { concatMap, forkJoin, Observable, of } from 'rxjs';
 import { AuthService } from '../../lib/auth/auth.service';
 import { ChatMessageRepository } from '../../lib/chatMessage/repository';
@@ -23,7 +23,6 @@ import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { NgbAlertModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { GameRoundScrollerComponent } from '../gameRound/gameRoundScroller.component';
-import { WorldCupNavBarComponent } from '../../shared/poolmodule/poolNavBar/worldcupNavBar.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { DateFormatter } from '../../lib/dateFormatter';
@@ -52,7 +51,6 @@ import { StatisticsRepository } from '../../lib/statistics/repository';
     NgbAlertModule,
     FontAwesomeModule,
     GameRoundScrollerComponent,
-    WorldCupNavBarComponent,
     PoolNavBarComponent,
     NgbNavModule,
     AgainstGamesTableComponent,
@@ -369,9 +367,6 @@ export class PoolAllInOneGameScheduleComponent
       : LeagueName.Competition;
   }
 
-  get WorldCupLeagueName(): LeagueName {
-    return LeagueName.WorldCup;
-  }
   get Schedule(): NavBarItem {
     return NavBarItem.Schedule;
   }

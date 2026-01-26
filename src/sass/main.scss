@@ -299,6 +299,22 @@ tr>td.sourceGame {
   stroke: #{$body-bg};
 }*/
 
+.navbar-context-menu-list-group-item {
+  @extend .bg-dark;  
+  @extend .text-success;  
+  cursor: pointer;
+}
+.navbar-context-menu-list-group-item:hover,
+.navbar-context-menu-list-group-item:focus {
+  color: var(--bs-secondary) !important;
+}
+
+.navbar-context-menu-list-group {
+  margin: -1rem;  
+  @extend .border-0;
+}
+
+
 .pointer {
   cursor: pointer;
 }

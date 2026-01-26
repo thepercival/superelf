@@ -11,91 +11,100 @@ competities  | programma | prijzenkast | spelregels | beheer
 
 <div>&nbsp;</div>
 <div class="mt-3">&nbsp;</div>
-<nav class="fixed-bottom navbar-dark bg-dark border-top ">
-
-  @let tmplUpperNavbar = upperNavBar();
-  @if(Competitions === current() && tmplUpperNavbar) {
-    <div>
-      <ng-container *ngTemplateOutlet="tmplUpperNavbar"></ng-container>    
-    </div>
-  }
-  
-
+<nav class="fixed-bottom navbar-dark bg-dark border-top">
   @let competitionConfig = pool().getCompetitionConfig();
   <div class="navbar-parent justify-content-center">
+    
+    <!-- context menu -->
+    <h2 class="mb-0 navbar-item">
+      <a
+        type="button"
+        class="btn {{getTextColorClass(ContextMenu)}} pt-cus"
+        autoClose="'outside'"
+        [ngbPopover]="popContent"
+        popoverClass="navbar-popover"
+      >
+        <fa-icon size="2xl" [icon]="faEllipsisVertical"></fa-icon>
+      </a>
+    </h2>
 
     <!-- invite -->
-     @if(poolUser() && poolUser()?.getAdmin() && pool().getCreateAndJoinPeriod().isIn()) {
-      <h2
-        class="mb-0 pt-cus navbar-item">
-        <a type="button" class="btn {{getTextColorClass(Admin)}} pt-cus" (click)="linkTo(Invite)">
-          <fa-icon [icon]=faEnvelope></fa-icon> <br /><span>uitnodigen</span>
-        </a>
-      </h2>
-    }        
+    @if(poolUser() && poolUser()?.getAdmin() && pool().getCreateAndJoinPeriod().isIn()) {
+    <h2 class="mb-0 pt-cus navbar-item">
+      <a
+        type="button"
+        class="btn {{getTextColorClass(Admin)}} pt-cus"
+        (click)="linkTo(Invite)"
+      >
+        <fa-icon [icon]="faEnvelope"></fa-icon> <br /><span>uitnodigen</span>
+      </a>
+    </h2>
+    }
 
     <!-- poolusers -->
     @if( competitionConfig.isInCreateOrJoinOrAssemblePeriod() ) {
-      <h2 class="mb-0 navbar-item">
-        <a type="button" class="btn {{getTextColorClass(PoolUsers)}} pt-cus" (click)="linkTo(PoolUsers)">
-          <fa-icon style="display: 'inline-block'; font-size: 1.3rem" [icon]=faCalendarAlt></fa-icon>
-          <br /><span>deelnemers</span>
-        </a>
-      </h2>  
-    }
-    
-    <!-- competitions -->
-    @if( competitionConfig.afterAssemblePeriod() ) {
-      <h2 class="mb-0 navbar-item">
-        <a type="button" class="btn {{getTextColorClass(Competitions)}} pt-cus" (click)="linkTo(Competitions)">
-          <app-superelf-icon size="2xl" [icon]=facStructure></app-superelf-icon><br /><span class="">competities</span>
-        </a>
-      </h2>
-    }
-
-    <!--schedule -->
-    <!-- and if scheduleGameRoundNumber ??-->
-    @if(competitionConfig.afterAssemblePeriod()){
-      <h2 class="mb-0 navbar-item">
-        <a type="button" class="btn {{getTextColorClass(Schedule)}} pt-cus" (click)="linkTo(Schedule)">
-          <fa-icon style="display: 'inline-block'; font-size: 1.3rem" [icon]=faCalendarAlt></fa-icon>          
-          <br /><span>programma</span>
-        </a>
-      </h2>
-    }
-
-    @if(competitionConfig.getAssemblePeriod().isIn()){    
-      <!-- my team -->
-      <h2 class="mb-0 navbar-item">
-        <a type="button" class="btn {{getTextColorClass(MyTeam)}} pt-cus" (click)="linkTo(MyTeam)">
-          <fa-icon [icon]=faUsers></fa-icon>
-          <br /><span>mijn team</span>
-        </a>
-      </h2>    
+    <h2 class="mb-0 navbar-item">
+      <a
+        type="button"
+        class="btn {{ getTextColorClass(PoolUsers) }} pt-cus"
+        (click)="linkTo(PoolUsers)"
+      >
+        <fa-icon
+          style="display: 'inline-block'; font-size: 1.3rem"
+          [icon]="faCalendarAlt"
+        ></fa-icon>
+        <br /><span>deelnemers</span>
+      </a>
+    </h2>
+    } 
+    @if(competitionConfig.getAssemblePeriod().isIn()){
+    <!-- my team -->
+    <h2 class="mb-0 navbar-item">
+      <a
+        type="button"
+        class="btn {{ getTextColorClass(MyTeam) }} pt-cus"
+        (click)="linkTo(MyTeam)"
+      >
+        <fa-icon [icon]="faUsers"></fa-icon>
+        <br /><span>mijn team</span>
+      </a>
+    </h2>
     } @else if (competitionConfig.getCreateAndJoinPeriod().isIn()) {
-      <!-- scouting -->
-      <h2 class="mb-0 navbar-item">
-        <a type="button" class="btn {{getTextColorClass(Scouting)}} pt-cus" (click)="linkTo(Scouting)">
-          <fa-icon style="display: 'inline-block'; font-size: 1.3rem" [icon]=faUserSecret></fa-icon>
-          <br /><span>scouting</span>
-        </a>
-      </h2>
-    }
-     
-
-    @if(poolUser() && competitionConfig.getTransferPeriod().isIn()){    
-      <!-- transfers -->
-      <h2 class="mb-0 navbar-item">
-        <a type="button" class="btn {{getTextColorClass(Transfers)}} long-and-truncated position-relative pt-cus"
-          (click)="linkTo(Transfers)">
-          <app-superelf-icon size="2xl" [icon]=faRightLeft></app-superelf-icon>
-          <br /><span>transfers</span>
-        </a>
-      </h2>
-    }
-    @else {
+    <!-- scouting -->
+    <h2 class="mb-0 navbar-item">
+      <a
+        type="button"
+        class="btn {{ getTextColorClass(Scouting) }} pt-cus"
+        (click)="linkTo(Scouting)"
+      >
+        <fa-icon
+          style="display: 'inline-block'; font-size: 1.3rem"
+          [icon]="faUserSecret"
+        ></fa-icon>
+        <br /><span>scouting</span>
+      </a>
+    </h2>
+    } 
+    
+    @if(poolUser() && competitionConfig.getTransferPeriod().isIn()){
+    <!-- transfers -->
+    <h2 class="mb-0 navbar-item">
+      <a
+        type="button"
+        class="btn {{
+          getTextColorClass(Transfers)
+        }} long-and-truncated position-relative pt-cus"
+        (click)="linkTo(Transfers)"
+      >
+        <app-superelf-icon size="2xl" [icon]="faRightLeft"></app-superelf-icon>
+        <br /><span>transfers</span>
+      </a>
+    </h2>
+    } 
+    
+    @if(poolUser()){
       <!--achievements -->
-      <h2 class="mb-0 navbar-item">
+      <!-- <h2 class="mb-0 navbar-item">
         <a type="button" class="btn {{getTextColorClass(Achievements)}} long-and-truncated position-relative pt-cus"
           (click)="linkTo(Achievements)">
           <app-superelf-icon size="2xl" [icon]=facTrophy></app-superelf-icon>
@@ -106,17 +115,113 @@ competities  | programma | prijzenkast | spelregels | beheer
             </span>
           }
         </a>
-      </h2>
+      </h2> -->
     }
-
     <!--rules (no admin)-->
-    <h2 class="mb-0 pt-cus navbar-item">
+    <!-- <h2 class="mb-0 pt-cus navbar-item">
       <a type="button" class="btn {{getTextColorClass(Rules)}} pt-cus" (click)="linkTo(Rules)">
         <fa-icon [icon]=faInfoCircle></fa-icon>
         <br />spelr<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">egels</span>
       </a>
+    </h2> -->
+
+    <!--SuperCupGame -->
+    @if(hasSuperCup) {
+    <h2 class="mb-0 navbar-item">
+      <a
+        type="button"
+        class="btn {{ getTextColorClass(SuperCup) }} pt-cus"
+        (click)="linkTo(SuperCup)"
+      >
+        <app-superelf-trophy-icon
+          size="2x"
+          [leagueName]="SuperCupName"
+        ></app-superelf-trophy-icon>
+        <br /><span>{{ nameService.getLeagueName(SuperCupName) }}</span>
+        @if( superCupActive() ) {
+        <span
+          class="position-absolute top-0 translate-middle p-2 mt-3 bg-info border border-light rounded-circle"
+        >
+          <span class="visually-hidden">actief</span>
+        </span>
+        }
+      </a>
+    </h2>
+    }
+
+    <!--Cup -->
+    <h2 class="mb-0 navbar-item">
+      <a
+        type="button"
+        class="btn {{ getTextColorClass(Cup) }} pt-cus"
+        (click)="linkTo(Cup)"
+      >
+        <app-superelf-trophy-icon
+          size="2x"
+          [leagueName]="CupName"
+        ></app-superelf-trophy-icon>
+        <br /><span>{{ nameService.getLeagueName(CupName) }}</span>
+        @if( cupActive() ) {
+        <span
+          class="position-absolute top-0 translate-middle p-2 mt-3 bg-info border border-light rounded-circle"
+        >
+          <span class="visually-hidden">actief</span>
+        </span>
+        }
+      </a>
     </h2>
 
+    <!-- Competition -->
+    <h2 class="mb-0 navbar-item">
+      <a
+        type="button"
+        class="btn {{ getTextColorClass(Competition) }} pt-cus"
+        (click)="linkTo(Competition)"
+      >
+        <app-superelf-trophy-icon
+          size="2x"
+          [leagueName]="CompetitionName"
+        ></app-superelf-trophy-icon>
+        <br /><span>{{ nameService.getLeagueName(CompetitionName) }}</span>
+      </a>
+    </h2>
+
+    <!--schedule -->
+    <!-- and if scheduleGameRoundNumber ??-->
+    @if(competitionConfig.afterAssemblePeriod()){
+      <h2 class="mb-0 navbar-item">        
+      <a
+        type="button"
+        class="btn {{ getTextColorClass(Schedule) }} pt-cus-fa"
+        (click)="linkTo(Schedule)"
+      >
+        <fa-icon
+          style="display: 'inline-block'; font-size: 1.3rem"
+          [icon]="faCalendarAlt"
+        ></fa-icon>
+        <br /><span>programma</span>
+      </a>
+    </h2>
+    }
   </div>
-  
 </nav>
+
+<ng-template #popContent>
+  <ul class="list-group navbar-context-menu-list-group">
+    @if(poolUser()){
+      <li class="list-group-item navbar-context-menu-list-group-item" (click)="linkTo(Achievements)">
+        <app-superelf-icon size="2xl" [icon]=facTrophy></app-superelf-icon> 
+        <span class="ms-1">prijzenkast</span>
+        @if( hasUnviewedAchievements ) {
+          <span class="position-absolute top-0 start-75 translate-middle p-2 mt-2 me-2 bg-danger border border-light rounded-circle">
+            <span class="visually-hidden">nieuwe prijzen</span>
+          </span>
+        }
+      </li>
+    }
+    <li class="list-group-item navbar-context-menu-list-group-item" (click)="linkTo(Rules)">
+      <fa-icon [icon]=faInfoCircle></fa-icon>
+      <span class="ms-1">spelregels</span>
+    </li>
+  </ul>
+</ng-template>

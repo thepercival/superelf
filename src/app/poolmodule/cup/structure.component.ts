@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
@@ -12,16 +11,13 @@ import { CompetitionSport, Poule, StartLocationMap, Structure, StructureEditor, 
 import { LeagueName } from '../../lib/leagueName';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
-import { GameRoundRepository } from '../../lib/gameRound/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
-import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolCupRoundComponent } from './round.component';
-import { PoolCompetitionsNavBarComponent } from '../../shared/poolmodule/competitionsNavBar/competitionsNavBar.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
 
 
 @Component({
@@ -30,7 +26,6 @@ import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
   imports: [
     FontAwesomeModule,
     PoolCupRoundComponent,
-    PoolCompetitionsNavBarComponent,
     PoolNavBarComponent
   ],
   templateUrl: "./structure.component.html",
@@ -125,11 +120,8 @@ export class PoolCupComponent extends PoolComponent implements OnInit {
     });
   }
 
-  get Competitions(): NavBarItem {
-    return NavBarItem.Competitions;
-  }
-  get CupStructure(): CompetitionsNavBarItem {
-    return CompetitionsNavBarItem.CupStructure;
+  get CupStructure(): NavBarItem {
+    return NavBarItem.Cup;
   }
 
   navigateBack() {

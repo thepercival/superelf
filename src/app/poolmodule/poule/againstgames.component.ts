@@ -25,10 +25,9 @@ import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
-import { CompetitionsNavBarItem, NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
+import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { PoolCompetitionsNavBarComponent } from '../../shared/poolmodule/competitionsNavBar/competitionsNavBar.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { NgTemplateOutlet } from '@angular/common';
@@ -56,7 +55,6 @@ import { GameRound } from '../../lib/gameRound';
     SuperElfIconComponent,
     FontAwesomeModule,
     PouleTitleWithGameRoundsComponent,
-    PoolCompetitionsNavBarComponent,
     AgainstGamesTableComponent,
     PoolNavBarComponent,
     LineIconComponent,
@@ -216,14 +214,18 @@ export class PoolPouleAgainstGamesComponent
                   );
                 }
 
-                // -- GETTING POOLUSERS FOR STARTLOCATIONS
                 this.poolUserRepository
-                  .getObjects(pool, this.leagueName, startLocations)
+                  .getObjects(pool, LeagueName.Competition, startLocations)
                   .subscribe((poolUsers: PoolUser[]) => {
                     this.poolUserFromSession = poolUsers.find(
                       (poolUser: PoolUser) => poolUser.getUser() === user
                     );
-
+                  });
+                
+                // -- GETTING POOLUSERS FOR STARTLOCATIONS
+                this.poolUserRepository
+                  .getObjects(pool, this.leagueName, startLocations)
+                  .subscribe((poolUsers: PoolUser[]) => {
                     const getPoolGameRounds: Observable<GameRound>[] =
                       poolGameRoundNrs.map(
                         (poolGameRoundNr: number): Observable<GameRound> => {
@@ -561,15 +563,8 @@ export class PoolPouleAgainstGamesComponent
   //   }
   // }
 
-  get Competitions(): NavBarItem {
-    return NavBarItem.Competitions;
-  }
-
-  getCompetitionNavBarItem(): CompetitionsNavBarItem {
-    if (this.leagueName === LeagueName.Cup) {
-      return CompetitionsNavBarItem.CupStructure;
-    }
-    return CompetitionsNavBarItem.SuperCupGame;
+  get NavCup(): NavBarItem {
+    return NavBarItem.Cup;
   }
 
   private getStartLocationsFromGameRoundNrs(

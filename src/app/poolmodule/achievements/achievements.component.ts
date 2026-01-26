@@ -18,8 +18,6 @@ import { LeagueName } from '../../lib/leagueName';
 import { Competition, Season } from 'ngx-sport';
 import { UserBadgesModalComponent } from './userbadges-modal.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
-import { WorldCupComponent } from '../worldcup/worldcup.component';
-import { WorldCupNavBarComponent } from '../../shared/poolmodule/poolNavBar/worldcupNavBar.component';
 import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SuperElfTrophyIconComponent } from '../../shared/poolmodule/icon/trophy.component';
@@ -31,8 +29,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
   selector: "app-pool-achievements",
   standalone: true,
   imports: [
-    PoolNavBarComponent,
-    WorldCupNavBarComponent,
+    PoolNavBarComponent,    
     SuperElfIconComponent,
     FontAwesomeModule,
     SuperElfTrophyIconComponent,

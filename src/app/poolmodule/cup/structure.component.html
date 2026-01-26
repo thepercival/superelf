@@ -14,12 +14,8 @@
   </div>
 </div>
 
-<div class="competitionsNavBarHeight"></div>
+
 @if(!processing() && pool){
-  <ng-template #competitionsNavBar>  
-    <app-competitions-navbar [pool]="pool" [current]="CupStructure">
-    </app-competitions-navbar>  
-  </ng-template>
-  <app-pool-navbar [current]="Competitions" [pool]="pool" [poolUser]="poolUserFromSession" [upperNavBar]="competitionsNavBar">
+  <app-pool-navbar [current]="CupStructure" [pool]="pool" [poolUser]="poolUserFromSession">
   </app-pool-navbar>
 }

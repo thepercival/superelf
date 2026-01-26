@@ -24,3 +24,30 @@ fa-icon {
 a.pt-cus {
   padding-top: 12px;
 }
+
+a.pt-cus-fa {
+  padding-top: 17px;
+}
+
+// Disable hover color changes for navbar buttons
+// .btn-outline-success:hover,
+// .btn-outline-success:focus {
+//   color: var(--bs-success);
+//   background-color: transparent;
+// }
+
+// .btn-outline-warning:hover,
+// .btn-outline-warning:focus {
+//   color: var(--bs-warning);
+//   background-color: transparent;
+// }
+
+.text-silver:hover,
+.text-silver:focus {
+  color: var(--bs-primary) !important;
+}
+
+.btn-outline-success:hover,
+.btn-outline-success:focus {
+  color: var(--bs-primary) !important;
+}

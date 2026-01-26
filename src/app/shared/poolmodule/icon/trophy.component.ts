@@ -14,6 +14,7 @@ import { facCup, facPlate, facSuperCup, facWorldCup } from '../icons';
 export class SuperElfTrophyIconComponent {
     readonly leagueName = input.required<LeagueName>();
     readonly size = input<SizeProp>();    
+    readonly class = input<string>();
 
     public getIconDefinition(): IconDefinition {
         switch (this.leagueName()) {
@@ -26,9 +27,5 @@ export class SuperElfTrophyIconComponent {
             case LeagueName.WorldCup:
                 return facWorldCup;
         }
-    }
-    
-    get color(): string { 
-        return 'text-silver';
     }
 }

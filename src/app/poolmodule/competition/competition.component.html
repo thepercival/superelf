@@ -77,21 +77,7 @@
   </div>
 </div>
 
-<div class="competitionsNavBarHeight"></div>
 @if(!processing() && pool){
-  <ng-template #competitionsNavBar>
-    @if(pool && leagueName !== WorldCupLeagueName){
-    <app-competitions-navbar [pool]="pool" [current]="PouleRankingTogetherSport" [currentGameRound]="initalCurrentGameRound()">
-    </app-competitions-navbar>
-    }
-  </ng-template>
-  
-  @if(leagueName === WorldCupLeagueName){
-    <app-worldcup-navbar [current]="Competitions" [pool]="pool" [poolUser]="poolUserFromSession">
-    </app-worldcup-navbar>
-  } @else {
-    <app-pool-navbar [current]="Competitions" [pool]="pool" [poolUser]="poolUserFromSession"
-      [upperNavBar]="competitionsNavBar">
-    </app-pool-navbar>
-  }
+  <app-pool-navbar [current]="Competition" [pool]="pool" [poolUser]="poolUserFromSession" [currentGameRound]="initalCurrentGameRound()">
+  </app-pool-navbar>
 }

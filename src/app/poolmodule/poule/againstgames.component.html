@@ -199,11 +199,9 @@
     </div>
 </div>
 
-<div class="competitionsNavBarHeight"></div>
+
 @if(!processing() && pool){
-  <app-pool-navbar [current]="Competitions" [pool]="pool" [poolUser]="poolUserFromSession"
-    [upperNavBar]="competitionsNavBar">
-  </app-pool-navbar>
+  <app-pool-navbar [current]="NavCup" [pool]="pool" [poolUser]="poolUserFromSession"></app-pool-navbar>  
 }
 
  <!-- Start      PlayerName, Team And Line -->
@@ -258,12 +256,6 @@
   }
 </ng-template>
 
-<ng-template #competitionsNavBar>
-    @if(pool){
-    <app-competitions-navbar [pool]="pool" [current]="getCompetitionNavBarItem()">
-    </app-competitions-navbar>
-    }
-</ng-template>
 
 <!-- <ng-template #lineupScore let-formationPlace="formationPlace" let-sourceGame="sourceGame" let-gameRound="gameRound">
     @if(statisticsGetter.hasAppeared(formationPlace,gameRound)) {
