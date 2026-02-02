@@ -73,6 +73,13 @@ export class CompetitionConfig extends Identifiable {
     return this.getAssemblePeriod().getEndDateTime().getTime() < date.getTime();
   }
 
+  afterTransferPeriod(date?: Date): boolean {
+    if (date === undefined) {
+      date = new Date();
+    }
+    return this.getTransferPeriod().getEndDateTime().getTime() < date.getTime();
+  }
+
   public getTransferPeriod(): TransferPeriod {
     return this.transferPeriod;
   }

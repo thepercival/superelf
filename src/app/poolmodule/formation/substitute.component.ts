@@ -25,7 +25,10 @@ import { JsonSubstitution } from '../../lib/editAction/substitution/json';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { FormationLineSubstitutionsComponent } from './line/substitutions.component';
-import { faChevronLeft, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faInfoCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { TransferPeriodStepperComponent } from './stepper/transferperiod-stepper.component';
+import { TransferPeriodAction } from './stepper/transferPeriodAction';
+import { FormationActionOverviewModalComponent } from './actionoverview.modal.component';
 
 @Component({
   selector: "app-pool-substitute",
@@ -35,6 +38,7 @@ import { faChevronLeft, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
     NgbAlertModule,
     PoolNavBarComponent,
     FormationLineSubstitutionsComponent,
+    TransferPeriodStepperComponent
   ],
   templateUrl: "./substitute.component.html",
   styleUrls: ["./substitute.component.scss"],
@@ -52,8 +56,11 @@ export class FormationSubstituteComponent
   public transferPeriod!: TransferPeriod;
   public assembleFormation: S11Formation | undefined;
   public calcFormation: S11Formation | undefined;
+  public activeAction = TransferPeriodAction.Substitute;
+
   public faInfoCircle = faInfoCircle;
   public faChevronLeft = faChevronLeft;
+  public faSpinner = faSpinner;
 
   constructor(
     route: ActivatedRoute,
@@ -84,6 +91,7 @@ export class FormationSubstituteComponent
               .subscribe({
                 next: (assembleFormation: S11Formation) => {
                   this.assembleFormation = assembleFormation;
+                  console.log(assembleFormation);
                   const calculator = new S11FormationCalculator();
                   if (
                     !calculator.areAllPlacesWithoutTeamReplaced(
@@ -103,13 +111,13 @@ export class FormationSubstituteComponent
                   this.setAlert("danger", e);
                   this.processing.set(false);
                 },
+                complete: () => this.processing.set(false),
               });
           },
           error: (e: string) => {
             this.setAlert("danger", e);
             this.processing.set(false);
-          },
-          complete: () => this.processing.set(false),
+          }
         });
       },
       error: (e) => {
@@ -242,5 +250,17 @@ export class FormationSubstituteComponent
         console.log(e);
       },
     });
+  }
+
+  openActionsOverviewModal(poolUser: PoolUser) {
+    const modalRef = this.modalService.open(
+      FormationActionOverviewModalComponent,
+      { size: "xl" }
+    );
+    modalRef.componentInstance.poolUser = poolUser;
+    modalRef.result.then(
+      () => {},
+      (reason) => {}
+    );
   }
 }

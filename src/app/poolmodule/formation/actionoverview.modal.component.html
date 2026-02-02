@@ -2,7 +2,7 @@
     @if(!processing() && poolUser) {
       <h4 class="me-2 text-truncate">
         <fa-icon [icon]=faUserCircle></fa-icon> 
-        <span>{{poolUser.getName()}} - transferacties</span>
+        <span>{{poolUser.getName()}} - transferperiode-acties</span>
       </h4>          
     }    
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
@@ -63,7 +63,7 @@
                   <span>{{transfer.getPlayerOut().getPerson().getName()}}</span>
                 </td>
                 <td>
-                  <fa-icon [icon]=faChevronLeft></fa-icon>
+                  <fa-icon [icon]=faChevronRight></fa-icon>
                 </td>
                 <td class="text-nowrap">
                   <app-team-name [team]="transfer.getPlayerIn().getTeam()" [fullName]="false"></app-team-name>

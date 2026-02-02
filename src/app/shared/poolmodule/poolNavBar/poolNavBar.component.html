@@ -188,7 +188,7 @@ competities  | programma | prijzenkast | spelregels | beheer
 
     <!--schedule -->
     <!-- and if scheduleGameRoundNumber ??-->
-    @if(competitionConfig.afterAssemblePeriod()){
+    @if(competitionConfig.afterAssemblePeriod() && !competitionConfig.getTransferPeriod().isIn()){
       <h2 class="mb-0 navbar-item">        
       <a
         type="button"

@@ -43,8 +43,8 @@ export class GameRoundScrollerComponent implements OnInit {
     // this.segments = Array.from({ length: nrOfSegments }, (_, i) => i + 1);
   }
 
-  isCurrentBeforeTransferPeriod(): boolean {
-    return this.CurrentViewPeriod != this.TransferPeriod.getViewPeriod();
+  isCurrentViewPeriodTheTransferViewPeriod(): boolean {
+    return this.CurrentViewPeriod == this.TransferPeriod.getViewPeriod();
   }
 
   get CurrentViewPeriod(): ViewPeriod | undefined {

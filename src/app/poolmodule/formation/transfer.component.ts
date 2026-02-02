@@ -26,6 +26,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormationLineTransfersComponent } from './line/transfers.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { faChevronLeft, faChevronRight, faEnvelope, faTrashAlt, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { TransferPeriodStepperComponent } from './stepper/transferperiod-stepper.component';
+import { TransferPeriodAction } from './stepper/transferPeriodAction';
 
 @Component({
   selector: "app-pool-transfer",
@@ -35,6 +37,7 @@ import { faChevronLeft, faChevronRight, faEnvelope, faTrashAlt, faUserCircle, fa
     NgbAlertModule,
     FormationLineTransfersComponent,
     PoolNavBarComponent,
+    TransferPeriodStepperComponent
   ],
   templateUrl: "./transfer.component.html",
   styleUrls: ["./transfer.component.scss"],
@@ -54,6 +57,9 @@ export class FormationTransferComponent
   public calcFormation: S11Formation | undefined;
   public transferEditMode = TransferEditMode.Single;
   public goalKeeperPlace: S11FormationPlace | undefined;
+
+  public activeAction = TransferPeriodAction.Transfer;
+  
   public faEnvelope = faEnvelope;
   public faChevronLeft = faChevronLeft;
   public faChevronRight = faChevronRight;

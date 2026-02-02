@@ -21,7 +21,11 @@ import { Replacement } from '../../lib/editAction/replacement';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { FormationLineReplacementsComponent } from './line/replacements.component';
-import { NgIf } from '@angular/common';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TransferPeriodStepperComponent } from './stepper/transferperiod-stepper.component';
+import { TransferPeriodAction } from './stepper/transferPeriodAction';
+
 
 @Component({
   selector: "app-pool-replace",
@@ -29,8 +33,9 @@ import { NgIf } from '@angular/common';
   imports: [
     NgbAlertModule,
     PoolNavBarComponent,
-    FormationLineReplacementsComponent,
-    NgIf
+    FormationLineReplacementsComponent, 
+    FontAwesomeModule,
+    TransferPeriodStepperComponent
   ],
   templateUrl: "./replace.component.html",
   styleUrls: ["./replace.component.scss"],
@@ -46,6 +51,10 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
   public assembleFormation: S11Formation | undefined;
   public calculator = new S11FormationCalculator();
 
+  public activeAction = TransferPeriodAction.Replace;
+
+  public faSpinner = faSpinner;
+
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -56,7 +65,7 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
     protected poolUserRepository: PoolUserRepository,
     protected formationRepository: FormationRepository,
     fb: UntypedFormBuilder,
-    private modalService: NgbModal
+    private modalService: NgbModal,    
   ) {
     super(route, router, poolRepository, globalEventsManager);
   }
@@ -84,6 +93,14 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
                       assembleFormation,
                       poolUser.getTransferPeriodActionList()
                     );
+                    const replacements = poolUser.getTransferPeriodActionList().replacements;
+                    if( this.calculator.areAllPlacesWithoutTeamReplaced(assembleFormation, replacements)
+                    && replacements.length === 0 ) {
+                      this.router.navigate([
+                        "/pool/formation/transfers/",
+                        pool.getId(),
+                      ]);
+                    }
                   },
                   error: (e: string) => {
                     this.setAlert("danger", e);
@@ -171,4 +188,6 @@ export class FormationReplaceComponent extends PoolComponent implements OnInit {
         },
       });
   }
+
+
 }

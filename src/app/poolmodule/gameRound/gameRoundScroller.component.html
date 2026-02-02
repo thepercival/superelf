@@ -4,7 +4,7 @@
 
     <div class="btn-group" role="group" aria-label="aantal">
  
-        @if(!isCurrentBeforeTransferPeriod()){
+        @if(isCurrentViewPeriodTheTransferViewPeriod()){
             <div>
                 <button type="button" class="btn text-nowrap btn-outline-primary me-2" (click)="selectViewPeriod.emit(AssembleViewPeriod)">
                     <fa-icon [icon]=faChevronLeft></fa-icon>
@@ -17,8 +17,9 @@
 
             <div>
                 <button type="button" class="btn btn-outline-primary me-4" (click)="selectTransferPeriod.emit(TransferPeriod)">
-                    T
+                T
                 </button>
+                
                 <div class="me-2">
                     <ngb-progressbar class="d-none" [value]="0" [max]="100"></ngb-progressbar>
                 </div>
@@ -62,11 +63,8 @@
             </div>
         </div>
 
-        @if(isCurrentBeforeTransferPeriod()){
+        @if(isCurrentViewPeriodTheTransferViewPeriod()){
             <div>
-                <button type="button" class="btn btn-outline-primary ms-4" (click)="selectTransferPeriod.emit(TransferPeriod)">
-                    T
-                </button>
                 <div class="ms-4">
                     <ngb-progressbar class="d-none" [value]="0" [max]="100"></ngb-progressbar>
                 </div>

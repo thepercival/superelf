@@ -19,7 +19,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbActiveModal, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TeamNameComponent } from '../team/name.component';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
-import { faChevronLeft, faRightLeft, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faRightLeft, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { IAlert } from '../../shared/commonmodule/alert';
 
 @Component({
@@ -47,6 +47,7 @@ export class FormationActionOverviewModalComponent implements OnInit {
   substitutions: Substitution[] | undefined;
   public calcFormation: S11Formation | undefined;
   public faChevronLeft = faChevronLeft;
+  public faChevronRight = faChevronRight;
   public faRightLeft = faRightLeft;
   public faUsers = faUsers;
   public faUserCircle = faUserCircle;

@@ -1,20 +1,9 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
 
-    <div class="d-flex justify-content-between mt-3 mb-1">
+    <app-transferperiod-stepper [activeAction]="activeAction"></app-transferperiod-stepper>
 
-      <h2 class="me-2 text-truncate">
-        2. transfer
-      </h2>
-      @if(!processing() && pool && calcFormation){
-      <div>
-        <button class="btn btn-secondary" disabled>
-          {{calcFormation.getName()}}
-        </button>
-      </div>
-      }
-    </div>
-
+    
     <!-- start header --> 
     @if(!processing() && poolUser && assembleFormation){
       <div class="d-flex justify-content-between mt-3 mb-1">
@@ -47,12 +36,16 @@
             <fa-icon [icon]=faTrashAlt></fa-icon>
           </button>
           }
+          @if(pool && calcFormation){            
+            <button class="btn btn-secondary mx-2" disabled>
+              {{calcFormation.getName()}}
+            </button>
+          }
         </div>
 
         <!-- right -->    
-        <button class="btn btn-outline-primary ms-1"
-          (click)="linkToSubstitutions(poolUser.getPool())">
-          <fa-icon [icon]=faChevronRight></fa-icon>
+        <button class="btn btn-outline-primary mx-1" (click)="linkToSubstitutions(poolUser.getPool())">
+          naar wisselen <fa-icon [icon]=faChevronRight></fa-icon>
           <fa-icon [icon]=faChevronRight></fa-icon>
         </button>
         
@@ -80,7 +73,7 @@
   </div>
 </div>
 
-@if(pool){
+@if(!processing() && pool){
 <app-pool-navbar [pool]="pool" [poolUser]="poolUser"></app-pool-navbar>
 }
 

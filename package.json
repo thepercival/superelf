@@ -33,6 +33,7 @@
     "bootstrap": "^5.0.0",
     "hammerjs": "^2.0.8",
     "ng-particles": "^3.9.3",
+    "ng-wizard": "^19.0.1",
     "ngx-clipboard": "^16.0.0",
     "ngx-sport": "^1.0.101",
     "rxjs": "^7.4",

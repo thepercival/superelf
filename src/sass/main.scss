@@ -4,6 +4,16 @@ $enable-responsive-font-sizes: true !default;
 @import "./bootstrap-custom-components"; // "~bootstrap/scss/bootstrap";
 @import "./bootswatch/bootswatch";
 
+/* Mandatory */
+// @import '~ng-wizard/themes/ng_wizard.min.css';
+@import "../../node_modules/ng-wizard/themes/ng_wizard.min.css";
+
+/* Optional */
+/* If a theme other than default is used, the css file for that theme is required. */
+@import '../../node_modules/ng-wizard/themes/ng_wizard_theme_arrows.min.css';
+@import '../../node_modules/ng-wizard/themes/ng_wizard_theme_circles.min.css';
+@import '../../node_modules/ng-wizard/themes/ng_wizard_theme_dots.min.css';
+
 // $custom-theme-colors: (
 //   "totals": #673AB7,
 //   "points": pink
