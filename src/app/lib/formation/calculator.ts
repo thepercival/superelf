@@ -175,14 +175,16 @@ export class S11FormationCalculator {
             const line = new S11FormationLine(newFormation, currentLine.getNumber());
             
             let places;
+            let delta = 0;
             if( line.getNumber() === lineNumber ) {
                 places = currentLine.getStartingPlaces();
+                delta++;
             } else {
                 places = currentLine.getPlaces();
             }
 
             places.forEach((currentPlace: S11FormationPlace) => {
-                let newPlaceNumber = currentPlace.getNumber();
+                let newPlaceNumber = currentPlace.getNumber() - delta;
                 new S11FormationPlace(line, currentPlace.getPlayer(), newPlaceNumber, currentPlace.marketValue, currentPlace.getTotals() );                
             });    
             
