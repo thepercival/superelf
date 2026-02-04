@@ -72,7 +72,8 @@ export class S11FormationCalculator {
         // remove
         currentFormation = this.removePlace(currentFormation, substitution.getLineNumberOut(), place.getNumber() );
         // remove substitute
-        currentFormation = this.removePlace(currentFormation, substitution.getLineNumberOut(), substitutePlace.getNumber() );
+        const useDeltaForSubstitute = false;
+        currentFormation = this.removePlace(currentFormation, substitution.getLineNumberOut(), substitutePlace.getNumber(), useDeltaForSubstitute );
 
         const player = this.getPlayerDescendingStart(place.getPlayer());
         const playerSubstitute = this.getPlayerDescendingStart(substitutePlace.getPlayer());
@@ -142,9 +143,11 @@ export class S11FormationCalculator {
         return newFormation;
     }
 
-    private removePlace(currentFormation: S11Formation, lineNumber: FootballLine, placeNumber: number): S11Formation {
+    private removePlace(
+        currentFormation: S11Formation, lineNumber: FootballLine, placeNumber: number,
+        useDeltaForSubstitute: boolean = true): S11Formation {
         if( placeNumber === 0 ) {
-            return this.removeSubstitutePlace(currentFormation, lineNumber);
+            return this.removeSubstitutePlace(currentFormation, lineNumber, useDeltaForSubstitute);
         }
         return this.removeStartingPlace(currentFormation, lineNumber, placeNumber);
     }
@@ -169,7 +172,9 @@ export class S11FormationCalculator {
         return newFormation;
     }
 
-    private removeSubstitutePlace(currentFormation: S11Formation, lineNumber: FootballLine): S11Formation {
+    private removeSubstitutePlace(
+        currentFormation: S11Formation, lineNumber: FootballLine,
+        useDeltaForSubstitute: boolean): S11Formation {
         const newFormation = new S11Formation(currentFormation.getPoolUser(), currentFormation.getViewPeriod());
         currentFormation.getLines().forEach((currentLine: S11FormationLine) => {
             const line = new S11FormationLine(newFormation, currentLine.getNumber());
@@ -178,7 +183,9 @@ export class S11FormationCalculator {
             let delta = 0;
             if( line.getNumber() === lineNumber ) {
                 places = currentLine.getStartingPlaces();
-                delta++;
+                if( useDeltaForSubstitute ) {
+                    delta++;
+                }
             } else {
                 places = currentLine.getPlaces();
             }
