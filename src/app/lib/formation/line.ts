@@ -37,6 +37,12 @@ export class S11FormationLine extends Identifiable {
         return this.getPlace(S11FormationLine.SUBSTITUTE_NUMBER);
     }
 
+    public hasSubstitute(): boolean {
+        return this.places.some((formationPlace: S11FormationPlace): boolean => {
+            return formationPlace.getNumber() === S11FormationLine.SUBSTITUTE_NUMBER;
+        });
+    }
+
     public hasFreeSlot(): boolean {
         return this.places.some((formationPlace: S11FormationPlace): boolean => {
             return formationPlace.getPlayer() === undefined;

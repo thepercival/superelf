@@ -118,9 +118,13 @@ export class S11FormationCalculator {
         const newFormation = new S11Formation(currentFormation.getPoolUser(), currentFormation.getViewPeriod());
         currentFormation.getLines().forEach((currentLine: S11FormationLine) => {
             const line = new S11FormationLine(newFormation, currentLine.getNumber());
+            let delta = 0;
+            if(line.getNumber() === playerLineNumber && asSubstitute && currentLine.hasSubstitute() ) {
+                delta++;
+            }
             currentLine.getPlaces().forEach((currentPlace: S11FormationPlace) => {
                 new S11FormationPlace(
-                    line, currentPlace.getPlayer(), currentPlace.getNumber(), currentPlace.marketValue,
+                    line, currentPlace.getPlayer(), currentPlace.getNumber() + delta, currentPlace.marketValue,
                     currentPlace.getTotals()
                 );                
             });
