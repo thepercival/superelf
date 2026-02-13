@@ -1,13 +1,9 @@
 import { Component, OnInit, signal, WritableSignal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 
-import { PoolRepository } from '../../lib/pool/repository';
-import { PoolComponent } from '../../shared/poolmodule/component';
-import { FootballLine, Formation, NameService, Player } from 'ngx-sport';
+import { FootballLine, NameService, Player } from 'ngx-sport';
 import { Pool } from '../../lib/pool';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
 import { PoolUser } from '../../lib/pool/user';
-import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { Replacement } from '../../lib/editAction/replacement';
 import { Transfer } from '../../lib/editAction/transfer';
 import { Substitution } from '../../lib/editAction/substitution';
@@ -46,7 +42,6 @@ export class FormationActionOverviewModalComponent implements OnInit {
   transfers: Transfer[] | undefined;
   substitutions: Substitution[] | undefined;
   public calcFormation: S11Formation | undefined;
-  public faChevronLeft = faChevronLeft;
   public faChevronRight = faChevronRight;
   public faRightLeft = faRightLeft;
   public faUsers = faUsers;

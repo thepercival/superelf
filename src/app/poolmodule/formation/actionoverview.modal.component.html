@@ -33,7 +33,7 @@
                   <span>{{replacement.getPlayerOut().getPerson().getName()}}</span>
                 </td>
                 <td>
-                  <fa-icon [icon]=faChevronLeft></fa-icon>
+                  <fa-icon [icon]=faChevronRight></fa-icon>
                 </td>
                 <td>
                   <app-lineicon [line]="replacement.getPlayerIn().getLine()"></app-lineicon>
@@ -98,7 +98,7 @@
                   <span class="text-break">{{getPlayerIn(calcFormation, substitution).getPerson().getName()}}</span>
                 </td>
                 <td>
-                  <fa-icon [icon]=faChevronLeft></fa-icon>
+                  <fa-icon [icon]=faChevronRight></fa-icon>
                 </td>
                 <td class="text-nowrap">
                   <app-team-name [team]="getPlayerIn(calcFormation, substitution).getTeam()" [fullName]="false"></app-team-name>

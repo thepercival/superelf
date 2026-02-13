@@ -675,7 +675,7 @@ export class PoolPouleAgainstGamesComponent
       return poule
         .getAgainstGames()
         .map((game: AgainstGame) => game.getGameRoundNumber());
-    } else {
+    } else {      
       return poule.getTogetherGames().map((game: TogetherGame): number => {
         return game.getTogetherPlaces()[0].getGameRoundNumber();
       });
