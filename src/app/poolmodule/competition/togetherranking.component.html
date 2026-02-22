@@ -1,5 +1,24 @@
 
-<table class="table table-striped mb-2 mt-3">   
+<table class="table table-striped mb-2 mt-3"> 
+    <colgroup style="width: 100%">
+      <col style="width: 5%">
+      <col style="width: 44%;">
+      @for(competitorWithGameRoundsPoints of competitorsWithGameRoundsPoints(); track competitorWithGameRoundsPoints) {
+        <col style="width: 17%">
+      }
+      <col style="width: 17%">
+    </colgroup>
+    <thead app-simple-gameround-scroller         
+          [viewPeriod]="viewPeriod()"
+          [previousGameRound]="previousGameRound()"
+          [gameRounds]="gameRounds()"
+          [nextGameRound]="nextGameRound()"
+          [activeGameRound]="activeGameRound()"
+          (previousPressed)="previousGameRoundPressed.emit()"          
+          (gameRoundPressed)="gameRoundPressed.emit($event)"          
+          (nextPressed)="nextGameRoundPressed.emit()"
+        >      
+    </thead>   
     <tbody>
       @for(competitorWithGameRoundsPoints of competitorsWithGameRoundsPoints(); track $index)
       {
@@ -18,20 +37,21 @@
             </td>
             <td class="text-break ps-0" [class]="{ 'favitem': false}"
                 (click)="linkToCompetitor.emit(competitorWithGameRoundsPoints)">
-                <span>{{poolUser.getUser().getName()}}</span>
+                <span class="fs-5">{{poolUser.getUser().getName()}}</span>
                 <!-- <app-superelf-icon *ngIf="rankingItem.poolUser.getUser().getName() === 'storm'" 
                 class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon> -->
             </td>
             @for(gameRoundPoints of competitorWithGameRoundsPoints.gameRoundsPoints; track $index; let last=$last)
             {
               <td class="text-end ps-0 pointer" (click)="linkToCompetitor.emit(competitorWithGameRoundsPoints)">
-                <button type="button" class="btn btn-sm {{getBestWorstBadgeClass(poolUser, gameRoundPoints.number)}}">
+                @let bestWorstBadgeClass = getBestWorstBadgeClass(poolUser, gameRoundPoints.number);
+                <button type="button" class="btn btn-sm {{bestWorstBadgeClass}}">
                   {{gameRoundPoints.points}}
                 </button>
               </td>
             }
             <td class="text-end ps-0" (click)="linkToCompetitor.emit(competitorWithGameRoundsPoints)">
-                <button type="button" class="btn btn-sm btn-large-totals">
+                <button type="button" class="btn btn-sm btn-large-totals fw-bold">
                   {{competitorWithGameRoundsPoints.viewPeriodsPoints}}
                 </button>
             </td>

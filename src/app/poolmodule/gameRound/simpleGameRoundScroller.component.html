@@ -1,0 +1,45 @@
+<tr>    
+    <th class="rankingnr text-end ps-0">    
+    </th>
+
+    <!-- previous -->
+    <th class="text-end ps-0" [class]="{ 'favitem': false}">
+        <div>
+            <ngb-progressbar class="d-none" [value]="0" [max]="100"></ngb-progressbar>
+        </div>
+        <button type="button" [disabled]="previousGameRound() == undefined" 
+            class="btn btn-outline-{{previousGameRound() == undefined ? 'secondary' : 'primary'}}" (click)="previousPressed.emit()">
+            <fa-icon [icon]=faChevronLeft></fa-icon>
+        </button>
+    </th>
+
+    <!-- gamerounds -->
+    @for(gameRound of gameRounds(); track gameRound)
+    {
+        <th class="text-end">                        
+            <div  class="d-flex flex-column align-items-end">
+                <ngb-progressbar-stacked class="mb-1" style="height: 5px; width: 100%; max-width:2.5rem;">
+                    <ngb-progressbar type="primary" [value]="this.getPercentageFinished(gameRound)" height="0.5rem"></ngb-progressbar>
+                    <ngb-progressbar type="warning" [value]="this.getPercentageInProgress(gameRound)" height="0.5rem"></ngb-progressbar>
+                    <ngb-progressbar type="secondary" [value]="this.getPercentageCreated(gameRound)" height="0.5rem"></ngb-progressbar>                        
+                </ngb-progressbar-stacked>                
+            </div>                            
+            <button type="button" class="btn btn-{{ activeGameRound() === gameRound ? 'primary' : 'outline-primary' }}" 
+                (click)="gameRoundPressed.emit(gameRound)">
+                {{gameRound.number}}
+            </button>
+        </th>
+    }
+    
+    <th class="text-end ps-0">
+        <!-- next -->        
+        <div>
+            <ngb-progressbar class="d-none" [value]="0" [max]="100"></ngb-progressbar>
+        </div>
+        <button type="button" [disabled]="nextGameRound() == undefined" 
+            class="btn btn-outline-{{nextGameRound() == undefined ? 'secondary' : 'primary'}}" (click)="nextPressed.emit()">
+            <fa-icon [icon]=faChevronRight></fa-icon>
+        </button>
+        
+    </th>
+</tr>

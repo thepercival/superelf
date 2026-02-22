@@ -26,10 +26,8 @@ import { SuperElfNameService } from '../../lib/nameservice';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
-import { GameRoundScrollerComponent } from '../gameRound/gameRoundScroller.component';
 import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.component';
 import { TogetherRankingComponent } from './togetherranking.component';
-import { NgIf } from '@angular/common';
 import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { facTrophy } from '../../shared/poolmodule/icons';
 import { ActiveViewGameRoundsCalculator } from '../../lib/gameRound/activeViewGameRoundsCalculator';
@@ -40,6 +38,9 @@ import { CompetitorWithGameRoundsPoints, GameRoundsPoints } from '../../lib/view
 import { PoolCompetitor } from '../../lib/pool/competitor';
 import { FormationActionOverviewModalComponent } from '../formation/actionoverview.modal.component';
 import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
+import { PeriodSelectorComponent } from '../periods/periodSelector.component';
+import { TransferPeriod } from '../../lib/periods/transferPeriod';
+import { GameRoundScheduleModalComponent } from '../gameRound/gameRoundScheduleModal.component';
 
 
 @Component({
@@ -50,11 +51,10 @@ import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
     NgbAlertModule,
     PoolNavBarComponent,
     SuperElfIconComponent,
-    GameRoundScrollerComponent,
     SuperElfBadgeIconComponent,
     TogetherRankingComponent,
-    NgIf,
-  ],
+    PeriodSelectorComponent
+],
   templateUrl: "./competition.component.html",
   styleUrls: ["./competition.component.scss"],
 })
@@ -75,7 +75,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   public badgeCategory: WritableSignal<BadgeCategory | undefined> =
     signal(undefined);
   public showTransfers: WritableSignal<boolean> = signal(false);
-
+  
   public poolUsers: PoolUser[] = [];
 
   public poolPouleId: string | number | undefined;
@@ -244,7 +244,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     const scorePointsMap = pool.getCompetitionConfig().getScorePointsMap();
     // const totals: Observable<PoolUsersTotalsMap[]> = [];
 
-    // get gameround totals
+    // get gameround totals    
     const totals = gameRounds.map((gameRound: GameRound) => {
       return this.poolUsersTotalsGetter.getGameRoundTotals(pool, gameRound);
     });
@@ -369,6 +369,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     competitionConfig: CompetitionConfig,
     currentGameRound: GameRound
   ): void {
+    console.log("selectPreviousGameRound", currentGameRound);
     this.activeGameRoundsCalculator
       .getPreviousGameRound(
         competitionConfig,
@@ -489,7 +490,6 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
             )
             .subscribe({
               next: (gameRound: GameRound | undefined) => {
-                console.log();
                 this.previousGameRound.set(gameRound);
               },
             });
@@ -510,23 +510,22 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
       });
   }
 
-  selectViewPeriod(
+  selectPeriod(
     pool: Pool,
-    poolUsers: PoolUser[],
-    viewPeriod: ViewPeriod
+    period: ViewPeriod|TransferPeriod
   ): void {
     // this.processing.set(true);
     this.previousGameRound.set(undefined);
     this.nextGameRound.set(undefined);
-    console.log("reset prev next");
-    this.determineActiveGameRound(
-      pool.getCompetitionConfig(),
-      viewPeriod
-    ).subscribe({
-      next: (activeGameRound: GameRound) => {
-        this.currentGameRound.set(activeGameRound);
-      },
-    });
+    if( period instanceof ViewPeriod) {
+      this.determineActiveGameRound(pool.getCompetitionConfig(), period ).subscribe({
+        next: (activeGameRound: GameRound) => {
+          this.currentGameRound.set(activeGameRound);
+        },
+      });
+    } else {
+      this.showTransfers.set(true);
+    }    
   }
 
   navigateToChat(pool: Pool, pouleId: string | number): void {
@@ -556,5 +555,25 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
       },
       (reason) => {}
     );
+  }
+
+  openGameRoundInfoModal(
+    competitionConfig: CompetitionConfig,
+    gameRound: GameRound) 
+  {
+    const modalRef = this.modalService.open(GameRoundScheduleModalComponent);
+
+    modalRef.componentInstance.competitionConfig = competitionConfig;
+    modalRef.componentInstance.gameRound = gameRound;
+    
+    modalRef.result.then(
+        (result) => {},
+        (reason) => {}
+      );
+    }
+
+  isNowAfterTransferPeriod(competitionConfig: CompetitionConfig): boolean {
+    const end = competitionConfig.getTransferPeriod().getEndDateTime().getTime();
+    return Date.now() > end;
   }
 }

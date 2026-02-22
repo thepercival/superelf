@@ -1,0 +1,21 @@
+<table class="table">
+  <colgroup>
+      <col><!--homePlayer.sub -->
+      <col><!--homePlayer.name -->
+      <col><!--homePlayer.line -->
+      <col><!--homePlayer.points -->
+      <col><!--poolUserName -->
+      <col><!--awayPlayer.points -->
+      <col><!--awayPlayer.line -->
+      <col><!--awayPlayer.name -->
+      <col><!--awayPlayer.sub -->
+  </colgroup>
+
+<!-- maak eerst een data-structuur (json-interface) zoals hierboven en itereer hier doorheen -->
+  @for(againstGame of sourceAgainstGames(); track againstGame.getId()){
+    <thead class="">
+        <tr s11-game-tableheader [againstGame]="againstGame">
+        </tr>
+    </thead>        
+}
+</table>

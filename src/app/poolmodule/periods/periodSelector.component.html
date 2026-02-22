@@ -1,0 +1,16 @@
+<div class="btn-group" role="group" aria-label="aantal">        
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" 
+        [checked]="activePeriod() === AssembleViewPeriod"
+        (click)="processSelectPeriod(AssembleViewPeriod)">
+    <label class="btn btn-outline-primary" for="btnradio1">1</label>
+
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" 
+        [checked]="activePeriod() === TransferPeriod"
+        (click)="processSelectPeriod(TransferPeriod)">
+    <label class="btn btn-outline-primary" for="btnradio2">T</label>
+
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" 
+        [checked]="activePeriod() === TransferViewPeriod"
+        (click)="processSelectPeriod(TransferViewPeriod)">
+    <label class="btn btn-outline-primary" for="btnradio3">2</label>
+</div>

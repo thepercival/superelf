@@ -5,3 +5,8 @@ td {
 td.unitdiff, td.rankingnr {
     white-space: nowrap;
 }
+
+.table {
+  width: 100%;
+  table-layout: auto;
+}

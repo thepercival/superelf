@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, input } from '@angular/core';
+import { Component, EventEmitter, Output, TemplateRef, effect, input, model } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BadgeCategory } from '../../lib/achievement/badge/category';
@@ -9,23 +9,32 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { CompetitorWithGameRoundsPoints, GameRoundsPoints } from '../../lib/views/togetherRankingView/competitorWithGameRoundsPoints';
+import { SimpleGameRoundScrollerComponent } from '../gameRound/simpleGameRoundScroller.component';
+import { GameRound } from '../../lib/gameRound';
 
 @Component({
   selector: "app-together-ranking",
   standalone: true,
-  imports: [SuperElfBadgeIconComponent, FontAwesomeModule],
+  imports: [SuperElfBadgeIconComponent, FontAwesomeModule,SimpleGameRoundScrollerComponent],
   templateUrl: "./togetherranking.component.html",
   styleUrls: ["./togetherranking.component.scss"],
 })
-export class TogetherRankingComponent implements OnInit, OnChanges {
+export class TogetherRankingComponent {
   readonly competitorsWithGameRoundsPoints = input.required<CompetitorWithGameRoundsPoints[]>();
   readonly viewPeriod = input.required<ViewPeriod>();
-  readonly header = input.required<boolean>();
+  readonly previousGameRound = input.required<GameRound|undefined>();
+  readonly gameRounds = input.required<GameRound[]>();
+  readonly nextGameRound = input.required<GameRound|undefined>();
+  readonly activeGameRound = input.required<GameRound>();
   readonly badgeCategory = input<BadgeCategory>();
   readonly showTransfers = input<boolean>(false);
 
   @Output() showCompetitorTransfers = new EventEmitter<PoolUser>();
   @Output() linkToCompetitor = new EventEmitter<CompetitorWithGameRoundsPoints>();
+
+  @Output() previousGameRoundPressed = new EventEmitter();
+  @Output() gameRoundPressed = new EventEmitter<GameRound>();
+  @Output() nextGameRoundPressed = new EventEmitter();
 
   protected bestWorstGameRoundMap = new Map<number, MinMaxItem>();
   public faSpinner = faSpinner;
@@ -34,20 +43,15 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
     private router: Router,
     private modalService: NgbModal,
     public nameService: SuperElfNameService
-  ) {}
-
-  ngOnInit() {}
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (
-      changes.competitorsWithGameRoundsPoints !== undefined &&
-      changes.competitorsWithGameRoundsPoints.currentValue !== changes.competitorsWithGameRoundsPoints.previousValue 
-    ) {
-      this.updateBestWorstGameRoundMap();
-    }
+  ) {
+    effect(() => {
+      this.competitorsWithGameRoundsPoints();      
+      this.updateBestWorstGameRoundMap();    
+    });
   }
 
   updateBestWorstGameRoundMap() {
+
     const minMaxGameRoundMap = new Map<number, MinMaxItem>();
 
     this.competitorsWithGameRoundsPoints().forEach( (competitor: CompetitorWithGameRoundsPoints) => {
@@ -99,7 +103,7 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
     this.bestWorstGameRoundMap = minMaxGameRoundMap;
   }
 
-  getBestWorstBadgeClass(poolUser: PoolUser, gameRoundNr: number): string {    
+  getBestWorstBadgeClass(poolUser: PoolUser, gameRoundNr: number): string|undefined {    
     const bestWorstGameRoundMap = this.bestWorstGameRoundMap.get(gameRoundNr);    
     if (bestWorstGameRoundMap) {      
       if (bestWorstGameRoundMap.max.poolUsersMap.has(+poolUser.getId())) {
@@ -109,7 +113,7 @@ export class TogetherRankingComponent implements OnInit, OnChanges {
         return "btn-points-danger";
       }
     }
-    return "btn-points";
+    return "btn-points-normal";
   }
 
   // hasAchievement(rank: number): boolean {

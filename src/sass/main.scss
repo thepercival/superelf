@@ -30,6 +30,7 @@ $enable-responsive-font-sizes: true !default;
   @extend .text-white;
   @extend .text-end;
   width: 1.7rem;
+  min-width: 2rem;
 }
 
 .btn-notappeared {
@@ -39,17 +40,30 @@ $enable-responsive-font-sizes: true !default;
 
 .btn-points {
   @extend .btn-points-base;
-  @extend .bg-points;
+  @extend .bg-points;  
+  min-width: 2rem;
+}
+
+.btn-points-new {
+  @extend .text-end;
+  min-width: 2rem;
 }
 
 .btn-points-success {
-  @extend .btn-points-base;
+  @extend .text-white;
   @extend .bg-success;
+  @extend .btn-points-new;
 }
 
 .btn-points-danger {
-  @extend .btn-points-base;
+  @extend .text-white;
   @extend .bg-danger;
+  @extend .btn-points-new;
+}
+
+.btn-points-normal {
+  @extend .btn-outline-primary;
+  @extend .btn-points-new;
 }
 
 .btn-small-totals {

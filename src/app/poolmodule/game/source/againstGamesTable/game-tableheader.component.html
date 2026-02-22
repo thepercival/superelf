@@ -1,16 +1,28 @@
-<th colspan=4 class="text-end">
+@let tmplAgainstGame = againstGame();
+@if(tmplAgainstGame) {        
+<th class="pb-0 pt-4 fw-light"
+    [class]="{'text-decoration-line-through': tmplAgainstGame.getState() === Finished}">
+    <small>
+        @let dateTitle = dateFormatter.toString(tmplAgainstGame.getStartDateTime(),dateFormatter.date());
+        @let timeTitle = dateFormatter.toString(tmplAgainstGame.getStartDateTime(),dateFormatter.time());
+        {{dateTitle}} {{timeTitle}}
+    </small>
+</th>
+}
+
+<th class="text-end">
     <ng-container *ngTemplateOutlet="side; context: {side: HomeSide}"></ng-container>
 </th>
 
 <th class="text-center px-0">    
     @if(againstGame().getState() === Finished) {        
-        {{s11NameService.getAgainstScore(againstGame())}}
+        <span class="text-nowrap">{{s11NameService.getAgainstScore(againstGame())}}</span>
     } @else {
         VS        
     }
 </th>
 
-<th colspan="4">
+<th>
     <ng-container *ngTemplateOutlet="side; context: {side: AwaySide}"></ng-container>
 </th>
 
