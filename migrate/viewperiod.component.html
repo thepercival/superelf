@@ -55,22 +55,24 @@
 
     <div class="border-0 d-flex justify-content-center">
         <!-- card-defense -->
-        <div *ngIf="sheetActive" class="card m-2 align-self-start {{getBorderClass(categoryPoints.sheet)}}">
-            <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.sheet)}}">
-                <span>tegengoals</span>
-                <span class="badge {{getBadgeClass(categoryPoints.sheet)}} float-end ms-1">{{categoryPoints.sheet}}</span>
-            </div>
-            <div class="card-body">
-                <div>
-                    <span>de nul</span>
-                    <span class="float-end ms-1">{{totals().getNrOfCleanSheets()}}x</span>
+        @if(sheetActive) {
+            <div class="card m-2 align-self-start {{getBorderClass(categoryPoints.sheet)}}">
+                <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.sheet)}}">
+                    <span>tegengoals</span>
+                    <span class="badge {{getBadgeClass(categoryPoints.sheet)}} float-end ms-1">{{categoryPoints.sheet}}</span>
                 </div>
-                <div>
-                    <span>> 3</span>
-                    <span class="float-end ms-1">{{totals().getNrOfSpottySheets()}}x</span>
+                <div class="card-body">
+                    <div>
+                        <span>de nul</span>
+                        <span class="float-end ms-1">{{totals().getNrOfCleanSheets()}}x</span>
+                    </div>
+                    <div>
+                        <span>> 3</span>
+                        <span class="float-end ms-1">{{totals().getNrOfSpottySheets()}}x</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
         <!-- card-cards -->
         <div class="card m-2 align-self-start {{getBorderClass(categoryPoints.card)}}">
             <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.card)}}">

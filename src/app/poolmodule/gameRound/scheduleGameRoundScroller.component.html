@@ -1,0 +1,42 @@
+<div class="d-flex flex-row flex-nowrap">
+    <!-- previous -->    
+     <div class="me-1">
+        <button type="button" [disabled]="previousGameRound() == undefined" 
+            class="btn btn-outline-{{previousGameRound() == undefined ? 'secondary' : 'primary'}}" (click)="previousPressed.emit()">
+            <fa-icon [icon]=faChevronLeft></fa-icon>
+        </button>
+        <div>
+            <ngb-progressbar class="d-none" [value]="0" [max]="100"></ngb-progressbar>
+        </div>        
+    </div>
+
+    <!-- gamerounds -->
+    @for(gameRound of gameRounds(); track gameRound)
+    {
+        <div class="text-end me-1">                        
+            <button type="button" class="btn mb-1 btn-{{ activeGameRound() === gameRound ? 'primary' : 'outline-primary' }}" 
+                >
+                {{gameRound.number}}
+            </button>
+            <div  class="d-flex flex-column align-items-end">
+                <ngb-progressbar-stacked class="mb-1" style="height: 5px; width: 100%; max-width:2.5rem;">
+                    <ngb-progressbar type="primary" [value]="this.getPercentageFinished(gameRound)" height="0.5rem"></ngb-progressbar>
+                    <ngb-progressbar type="warning" [value]="this.getPercentageInProgress(gameRound)" height="0.5rem"></ngb-progressbar>
+                    <ngb-progressbar type="secondary" [value]="this.getPercentageCreated(gameRound)" height="0.5rem"></ngb-progressbar>                        
+                </ngb-progressbar-stacked>                
+            </div>                                        
+        </div>
+    }
+    
+    <div class="text-end ps-0 me-1">
+        <!-- next -->        
+        <button type="button" [disabled]="nextGameRound() == undefined" 
+            class="btn btn-outline-{{nextGameRound() == undefined ? 'secondary' : 'primary'}}" (click)="nextPressed.emit()">
+            <fa-icon [icon]=faChevronRight></fa-icon>
+        </button>
+        <div>
+            <ngb-progressbar class="d-none" [value]="0" [max]="100"></ngb-progressbar>
+        </div>
+        
+    </div>
+</div>

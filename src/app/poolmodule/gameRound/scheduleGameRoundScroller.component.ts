@@ -6,13 +6,13 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import { NgbModal, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: "[app-simple-gameround-scroller]",
+  selector: "app-schedule-gameround-scroller",
   standalone: true,
   imports: [FontAwesomeModule, NgbProgressbarModule],
-  templateUrl: "./simpleGameRoundScroller.component.html",
-  styleUrls: ["./simpleGameRoundScroller.component.scss"],
+  templateUrl: "./scheduleGameRoundScroller.component.html",
+  styleUrls: ["./scheduleGameRoundScroller.component.scss"],
 })
-export class SimpleGameRoundScrollerComponent implements OnInit {
+export class ScheduleGameRoundScrollerComponent implements OnInit {
   readonly viewPeriod = input.required<ViewPeriod>();
   readonly gameRounds = input.required<GameRound[]>();
   readonly previousGameRound = input.required<GameRound|undefined>();
@@ -20,7 +20,6 @@ export class SimpleGameRoundScrollerComponent implements OnInit {
   readonly activeGameRound = input.required<GameRound>();  
 
   @Output() previousPressed = new EventEmitter();
-  @Output() gameRoundPressed = new EventEmitter<GameRound>();
   @Output() nextPressed = new EventEmitter();
 
   modalService: NgbModal = inject(NgbModal);

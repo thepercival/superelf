@@ -11,11 +11,11 @@ import { ScoutedPlayerRepository } from '../src/app/lib/scoutedPlayer/repository
 import { ScoutedPlayer } from '../src/app/lib/scoutedPlayer';
 import { Pool } from '../src/app/lib/pool';
 import { TeamCompetitor } from 'ngx-sport/src/competitor/team';
-import { ConfirmS11PlayerChoiceModalComponent } from '../chooseplayers/confirmchoicemodal.component';
 import { S11Player } from '../src/app/lib/player';
 import { ViewPeriod } from '../src/app/lib/periods/viewPeriod';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TitleComponent } from '../src/app/shared/commonmodule/title/title.component';
+import { GlobalEventsManager } from '../src/app/shared/commonmodule/eventmanager';
 
 
 @Component({
@@ -39,10 +39,11 @@ export class TeamComponent extends PoolComponent implements OnInit {
     poolRepository: PoolRepository,
     protected playerRepository: PlayerRepository,
     protected scoutedPlayerRepository: ScoutedPlayerRepository,
+    globalEventsManager: GlobalEventsManager,
     fb: FormBuilder,
     private modalService: NgbModal
   ) {
-    super(route, router, poolRepository);
+    super(route, router, poolRepository, globalEventsManager);
     this.form = fb.group({
       searchTeam: [undefined],
       searchLine: [FootballLine.All],

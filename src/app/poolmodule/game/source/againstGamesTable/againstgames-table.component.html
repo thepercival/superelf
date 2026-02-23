@@ -14,20 +14,6 @@
 <!-- maak eerst een data-structuur (json-interface) zoals hierboven en itereer hier doorheen -->
   @for(againstGame of sourceAgainstGames(); track againstGame.getId()){
     <thead class="">
-        <tr class="bg-secondary">
-            <th colspan=4 class="ps-3 pb-0 pt-4 fw-light">
-                <small>speelronde {{againstGame.getGameRoundNumber()}}</small>
-            </th>
-            <th></th>
-            <th colspan=4 class="ps-3 pb-0 pt-4 fw-light text-end"
-                [class]="{'text-decoration-line-through': againstGame.getState() === Finished}">
-                <small>
-                  @let dateTitle = dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.date());
-                  @let timeTitle = dateFormatter.toString(againstGame.getStartDateTime(),dateFormatter.time());
-                  {{dateTitle}} {{timeTitle}}
-                </small>
-            </th>
-        </tr>
         <tr s11-game-tableheader [againstGame]="againstGame">
         </tr>
     </thead>    

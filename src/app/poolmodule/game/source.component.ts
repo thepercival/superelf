@@ -22,7 +22,7 @@ import { NgbAlert, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
 import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
 import { AgainstGameTitleComponent } from './source/title.component';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faFutbol, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { facCard } from '../../shared/poolmodule/icons';
@@ -36,7 +36,6 @@ import { facCard } from '../../shared/poolmodule/icons';
     LineIconComponent,
     SuperElfIconComponent,
     AgainstGameTitleComponent,
-    NgIf,
     NgTemplateOutlet,
   ],
   templateUrl: "./source.component.html",

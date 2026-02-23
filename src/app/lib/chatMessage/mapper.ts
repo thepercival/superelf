@@ -14,7 +14,9 @@ export class ChatMessageMapper {
         if (poolUser === undefined) {
             throw new Error('unknown pooluser');
         }
-        return new ChatMessage(poolUser.getUser(), new Date(json.date), json.message);
+        const msg = new ChatMessage(poolUser.getUser(), new Date(json.date), json.message);
+        msg.setId(json.id);
+        return msg;
     }
 
 

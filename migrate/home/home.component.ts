@@ -24,12 +24,11 @@ import { SuperElfNameService } from '../../src/app/lib/nameservice';
 import { CompetitionConfigRepository } from '../../src/app/lib/competitionConfig/repository';
 import { S11FormationCalculator } from '../../src/app/lib/formation/calculator';
 import { NavBarItem } from '../../src/app/shared/poolmodule/poolNavBar/items';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: "app-pool-public",
   standalone: true,
-  imports: [NgIf],
+  imports: [],
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.scss"],
 })
@@ -203,6 +202,10 @@ export class HomeComponent extends PoolComponent implements OnInit {
 
   getCupCompetitors(pool: Pool): PoolCompetitor[] {
     return pool.getCompetitors(LeagueName.Cup);
+  }
+
+  afterAssemblePeriod(pool: Pool): boolean {
+    return pool.getCompetitionConfig().afterAssemblePeriod();
   }
 
   openModal(modalContent: TemplateRef<any>) {

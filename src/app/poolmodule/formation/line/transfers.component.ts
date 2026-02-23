@@ -14,7 +14,7 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
 import { TeamNameComponent } from '../../team/name.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { faSpinner, faRightLeft, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../../lib/sportExtensions';
 
@@ -25,7 +25,6 @@ import { SportExtensions } from '../../../lib/sportExtensions';
     LineIconComponent,
     TeamNameComponent,
     FontAwesomeModule,
-    NgIf,
     NgTemplateOutlet,
   ],
   templateUrl: "./transfers.component.html",

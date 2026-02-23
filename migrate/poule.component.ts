@@ -1,7 +1,6 @@
 import { Component, OnInit, input } from '@angular/core';
 import { Poule, Place, StructureNameService } from 'ngx-sport';
 import { AuthService } from '../src/app/lib/auth/auth.service';
-import { NgIf } from '@angular/common';
 
 import { CSSService } from '../src/app/shared/commonmodule/cssservice';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -15,9 +14,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 })
 export class PouleRankingComponent implements OnInit {
   // public rankingItems: RankedRoundItem[] = [];
-  readonly poule = input<Poule>();
+  readonly poule = input.required<Poule>();
   // @Input() placeLocationMap: PlaceLocationMap | undefined;
-  readonly header = input<boolean>();
+  readonly header = input.required<boolean>();
   // public placeLocationMap: PlaceLocationMap;
   public structureNameService: StructureNameService | undefined;
   public showDifferenceDetail = false;

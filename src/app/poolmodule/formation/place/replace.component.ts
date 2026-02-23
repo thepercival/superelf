@@ -1,4 +1,4 @@
-import { Location, NgIf } from '@angular/common';
+import { Location } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { concatMap } from 'rxjs/operators';
@@ -35,8 +35,7 @@ import { faRightLeft, faSpinner } from '@fortawesome/free-solid-svg-icons';
     LineIconComponent,
     FontAwesomeModule,
     NgbAlertModule,
-    S11PlayerChooseComponent,
-    NgIf
+    S11PlayerChooseComponent
   ],
   templateUrl: "./replace.component.html",
   styleUrls: ["./replace.component.scss"],

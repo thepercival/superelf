@@ -9,13 +9,13 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { CompetitorWithGameRoundsPoints, GameRoundsPoints } from '../../lib/views/togetherRankingView/competitorWithGameRoundsPoints';
-import { SimpleGameRoundScrollerComponent } from '../gameRound/simpleGameRoundScroller.component';
 import { GameRound } from '../../lib/gameRound';
+import { CompetitionGameRoundScrollerComponent } from '../gameRound/competitionGameRoundScroller.component';
 
 @Component({
   selector: "app-together-ranking",
   standalone: true,
-  imports: [SuperElfBadgeIconComponent, FontAwesomeModule,SimpleGameRoundScrollerComponent],
+  imports: [SuperElfBadgeIconComponent, FontAwesomeModule,CompetitionGameRoundScrollerComponent],
   templateUrl: "./togetherranking.component.html",
   styleUrls: ["./togetherranking.component.scss"],
 })

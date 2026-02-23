@@ -24,7 +24,7 @@ import { NgbAlertModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { GameRoundScrollerComponent } from '../gameRound/gameRoundScroller.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
-import { faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt, faMessage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { ActiveViewGameRoundsCalculator } from '../../lib/gameRound/activeViewGameRoundsCalculator';
 import { GameRoundRepository } from '../../lib/gameRound/repository';
@@ -42,6 +42,7 @@ import { StatisticsGetter } from '../../lib/statistics/getter';
 import { AgainstGamesTableComponent } from '../game/source/againstGamesTable/againstgames-table.component';
 import { CompetitorPoolUserAndFormation } from '../poule/againstgames.component';
 import { StatisticsRepository } from '../../lib/statistics/repository';
+import { ScheduleGameRoundScrollerComponent } from "../gameRound/scheduleGameRoundScroller.component";
 
 
 @Component({
@@ -50,11 +51,12 @@ import { StatisticsRepository } from '../../lib/statistics/repository';
   imports: [
     NgbAlertModule,
     FontAwesomeModule,
-    GameRoundScrollerComponent,
+    ScheduleGameRoundScrollerComponent,
     PoolNavBarComponent,
     NgbNavModule,
     AgainstGamesTableComponent,
-  ],
+    ScheduleGameRoundScrollerComponent
+],
   templateUrl: "./allinonegame.component.html",
   styleUrls: ["./allinonegame.component.scss"],
 })
@@ -95,12 +97,11 @@ export class PoolAllInOneGameScheduleComponent
 
   public sourceAgainstGamesMap: Map<number, AgainstGame[]> = new Map();
 
-  public poolPouleId: string | number | undefined;
-  public nrOfUnreadMessages = 0;
   public active = 1;
 
   public faMessage = faMessage;
   public faSpinner = faSpinner;
+  public faCalendarAlt = faCalendarAlt;
 
   constructor(
     route: ActivatedRoute,
@@ -179,23 +180,6 @@ export class PoolAllInOneGameScheduleComponent
                 this.currentGameRound.set(activeGameRound);
               },
             });
-
-            if (this.poolUserFromSession) {
-              this.structureRepository.getFirstPouleId(competition).subscribe({
-                next: (poolPouleId: string | number | undefined) => {
-                  if (poolPouleId) {
-                    this.chatMessageRepository
-                      .getNrOfUnreadObjects(poolPouleId, pool)
-                      .subscribe({
-                        next: (nrOfUnreadMessages: number) => {
-                          this.nrOfUnreadMessages = nrOfUnreadMessages;
-                        },
-                      });
-                  }
-                  this.poolPouleId = poolPouleId;
-                },
-              });
-            }
           },
           error: (e: string) => {
             this.setAlert("danger", e);
@@ -681,15 +665,6 @@ export class PoolAllInOneGameScheduleComponent
       pool.getId(),
       game.getGameRoundNumber(),
       game.getId(),
-    ]);
-  }
-
-  navigateToChat(pool: Pool, poolPouleId: string | number | undefined): void {
-    this.router.navigate([
-      "/pool/chat",
-      pool.getId(),
-      this.leagueName,
-      poolPouleId,
     ]);
   }
 

@@ -208,8 +208,10 @@
 <ng-template #contentForamtionPlace let-formationPlace="formationPlace" let-away="away">
     @if( formationPlace ){
         <div class="d-flex align-items-start" ngClass="{'flex-row-reverse': away}">
-            <app-lineicon *ngIf="formationPlace.getPlayer()" [line]="formationPlace.getPlayer().getLine()">
+            @if(formationPlace.getPlayer()){
+            <app-lineicon [line]="formationPlace.getPlayer().getLine()">
             </app-lineicon>
+            }
             <ng-container *ngTemplateOutlet="contentPlayer; context: {s11Player:formationPlace.getPlayer()}">
             </ng-container>
             @if(formationPlace.isSubstitute()){

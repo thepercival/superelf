@@ -8,7 +8,8 @@
         {{badge.getCategory()}} => {{badge.getScopeDescription()}}
     </div> -->
 
-    <table *ngIf="!processing()" class="table">
+    @if(!processing()) {
+    <table class="table">
         <thead>
             <tr>
                 <th class="text-center">
@@ -47,29 +48,40 @@
             @for(badgeLineNr of getMaxLineNumbers(); track badgeLineNr){
             <tr>
                 <td class="text-center">
-                    <div *ngIf="getBadgeSeasonShortName(Goal, badgeLineNr)" class="badge bg-secondary mb-1 ms-1 px-1">
-                    {{getBadgeSeasonShortName(Goal, badgeLineNr)}}</div>
+                    @if(getBadgeSeasonShortName(Goal, badgeLineNr)) {
+                        <div class="badge bg-secondary mb-1 ms-1 px-1">
+                        {{getBadgeSeasonShortName(Goal, badgeLineNr)}}</div>
+                    }
                 </td>
                 <td class="text-center">
-                    <div *ngIf="getBadgeSeasonShortName(Assist, badgeLineNr)" class="badge bg-secondary mb-1 ms-1 px-1">
-                        {{getBadgeSeasonShortName(Assist, badgeLineNr)}}</div>
+                    @if(getBadgeSeasonShortName(Assist, badgeLineNr)) {
+                        <div class="badge bg-secondary mb-1 ms-1 px-1">
+                            {{getBadgeSeasonShortName(Assist, badgeLineNr)}}</div>
+                    }
                 </td>
                 <td class="text-center">
-                    <div *ngIf="getBadgeSeasonShortName(Result, badgeLineNr)" class="badge bg-secondary mb-1 ms-1 px-1">
-                        {{getBadgeSeasonShortName(Result, badgeLineNr)}}</div>
+                    @if(getBadgeSeasonShortName(Result, badgeLineNr)) {
+                        <div class="badge bg-secondary mb-1 ms-1 px-1">
+                            {{getBadgeSeasonShortName(Result, badgeLineNr)}}</div>
+                    }
                 </td>
                 <td class="text-center">
-                    <div *ngIf="getBadgeSeasonShortName(Sheet, badgeLineNr)" class="badge bg-secondary mb-1 ms-1 px-1">
-                        {{getBadgeSeasonShortName(Sheet, badgeLineNr)}}</div>
+                    @if(getBadgeSeasonShortName(Sheet, badgeLineNr)) {
+                        <div class="badge bg-secondary mb-1 ms-1 px-1">
+                            {{getBadgeSeasonShortName(Sheet, badgeLineNr)}}</div>
+                    }
                 </td>
                 <td class="text-center">
-                    <div *ngIf="getBadgeSeasonShortName(Card, badgeLineNr)" class="badge bg-secondary mb-1 ms-1 px-1">
-                        {{getBadgeSeasonShortName(Card, badgeLineNr)}}</div>
+                    @if(getBadgeSeasonShortName(Card, badgeLineNr)) {
+                        <div class="badge bg-secondary mb-1 ms-1 px-1">
+                            {{getBadgeSeasonShortName(Card, badgeLineNr)}}</div>
+                    }
                 </td>
             </tr>
             }
         </tbody>
     </table>
+    }
 
     <!-- <div *ngIf="currentTrophy" class="text-center">    
         <div><h4>{{getTrophyTitle(currentTrophy)}}</h4></div>

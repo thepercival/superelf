@@ -4,13 +4,19 @@
         @if(tmplPlayer){
             <div class="player-img d-flex justify-content-between"
                 style="background-image: url('{{getPlayerImageUrl(tmplPlayer)}}');">
-                <app-lineicon *ngIf="player()" [line]="tmplPlayer.getLine()"></app-lineicon>
+                @if(player()) {
+                    <app-lineicon [line]="tmplPlayer.getLine()"></app-lineicon>
+                }
                 <div>
-                    <span *ngIf="points() !== undefined" class="badge bg-totals">{{points()}}</span>
+                    @if(points() !== undefined) {
+                        <span class="badge bg-totals">{{points()}}</span>
+                    }
                 </div>
             </div>
         }
-        <fa-icon *ngIf="!player()" [icon]=faUserCircle size="10x"></fa-icon>
+        @if(!player()) {
+            <fa-icon [icon]=faUserCircle size="10x"></fa-icon>
+        }
     </div>
     <div class="d-flex justify-content-center mt-1">        
         @if(tmplPlayer){

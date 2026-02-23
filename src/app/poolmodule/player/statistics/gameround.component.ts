@@ -16,12 +16,11 @@ import { faCheckCircle, faFutbol, faHandshakeAngle } from '@fortawesome/free-sol
 @Component({
   selector: "s11-player-statistics",
   standalone: true,
-  imports: [NgIf,SuperElfIconComponent, FontAwesomeModule],
+  imports: [SuperElfIconComponent, FontAwesomeModule],
   templateUrl: "./gameround.component.html",
   styleUrls: ["./gameround.component.scss"],
 })
-export class S11PlayerStatisticsComponent
-  implements OnInit, OnChanges
+export class S11PlayerStatisticsComponent implements OnInit, OnChanges
 {
   public readonly statistics = input.required<Statistics>();
   public readonly line = input.required<FootballLine>();
@@ -57,8 +56,7 @@ export class S11PlayerStatisticsComponent
     // this.updateCurrentGame();
     // console.log('init pointsCaLCulator', this.pointsCalculator);
     const line = this.line();
-    this.sheetActive =
-      line === FootballLine.GoalKeeper || line === FootballLine.Defense;
+    this.sheetActive = line === FootballLine.GoalKeeper || line === FootballLine.Defense;
     this.processing.set(false);
   }
 

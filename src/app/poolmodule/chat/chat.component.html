@@ -5,8 +5,11 @@
 
             <button (click)="navigateBack()" type="button" class="btn btn-outline-dark ms-3 position-relative">
                 <span class="me-1">terug naar</span>
-                <fa-icon *ngIf="!CupOrSuperCup" [icon]=faListOl></fa-icon>
-                <app-superelf-icon *ngIf="CupOrSuperCup" [icon]=facSuperCup></app-superelf-icon>
+                @if(CupOrSuperCup){
+                    <app-superelf-icon [icon]=facSuperCup></app-superelf-icon>
+                } @else {
+                    <fa-icon [icon]=faListOl></fa-icon>
+                }
                 <span class="ms-1">{{nameService.getLeagueName(leagueName)}}</span>
             </button>
         </div>
@@ -64,7 +67,7 @@
     </div>
 </ng-template>
 
-@if(pool){
+@if(!processing && pool){
 <app-pool-navbar [pool]="pool" [poolUser]="poolUserFromSession">
 </app-pool-navbar>
 }

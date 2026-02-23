@@ -5,13 +5,12 @@ import { S11Player } from '../../lib/player';
 import { ScorePointsMap } from '../../lib/score/points';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { PlayerBasicsComponent } from './basics.component';
-import { NgIf } from '@angular/common';
 import { SportExtensions } from '../../lib/sportExtensions';
 
 @Component({
   selector: "app-modal-s11player-addremove",
   standalone: true,
-  imports: [NgIf, PlayerBasicsComponent],
+  imports: [PlayerBasicsComponent],
   templateUrl: "./addremovemodal.component.html",
   styleUrls: ["./addremovemodal.component.scss"],
 })

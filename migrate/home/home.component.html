@@ -6,11 +6,16 @@
     </h2> -->
 
     <!-- competities: start -->
-    <div *ngIf="!processing() && pool" class="d-flex flex-wrap justify-content-center mt-3">
+    @if(!processing() && pool) {
+      <div class="d-flex flex-wrap justify-content-center mt-3">
 
-      <div *ngIf="afterAssemblePeriod(pool) && 
-      (currentGameRoundNumbers?.firstCreatedOrInProgress || currentGameRoundNumbers?.lastFinishedOrInPorgress)"
-        class="d-flex flex-wrap no-wrap gap-3 justify-content-center">                  
+        @if(afterAssemblePeriod(pool) && 
+        (currentGameRoundNumbers?.firstCreatedOrInProgress || currentGameRoundNumbers?.lastFinishedOrInPorgress)) {
+          <div class="d-flex flex-wrap no-wrap gap-3 justify-content-center">                  
+          </div>
+        }
+      </div>
+    }
           
         <!-- competitie -->
         <!-- <div *ngIf="pool.getCompetition(Competition)" class="card card-competition pointer px-0"
@@ -59,7 +64,8 @@
             <div>nemers</div>
           </div>
         </div>
-      </div>
+          </div>
+        }
     </div> -->
     <!-- competities: end -->
     
@@ -177,7 +183,8 @@
           <span *ngIf="inBeforeAssemble()">{{getStartAssembleDate()}}</span>
         </p>
       </div>
-    </div>
+      </div>
+    }
     <div *ngIf="scoutingEnabled" class="card border-secondary pointer mt-3 mx-2"
       [routerLink]="['/pool/scouting/list', pool.getId()]">
       <div class="card-body">

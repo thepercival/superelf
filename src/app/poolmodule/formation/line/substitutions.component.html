@@ -17,29 +17,45 @@
   </div>
 </div>
 <ng-template #placeRow let-place="place" let-s11Player="s11Player" let-currentTeam="currentTeam">
-  <tr *ngIf="processing()">
-    <td colspan=3 class="text-center">
-      <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
-    </td>
-  </tr>
-  <tr *ngIf="!processing()" (click)="substituteAction(place)" ngClass="{'pointer': s11Player}">
-    <td class="{{getSubstituteClass(place.isSubstitute())}}">
-      <span *ngIf="s11Player">{{s11Player.getPerson().getName()}}</span>
-      <button *ngIf="!s11Player" type="button" class="btn btn-outline-danger btn-sm" (click)="substitute.emit(place)">
-        kies een {{place.isSubstitute() ? 'wissel' : 'speler'}}
-      </button>
-      <span *ngIf="place.isSubstitute()" class="badge badge-reserve ms-1">r</span>
-    </td>
-    <td class="{{getSubstituteClass(place.isSubstitute())}}">
-      <app-team-name *ngIf="currentTeam" [team]="currentTeam" [fullName]="false"></app-team-name>
-    </td>
-    <td class="text-end" class="{{getSubstituteClass(place.isSubstitute())}}">
-      <button *ngIf="!hasLineSubstitution(place.getLine()) && !place.isSubstitute()" type="button" class="btn btn-primary btn-sm">
-        <fa-icon [icon]=faSignOutAlt></fa-icon>
-      </button>      
-      <button *ngIf="hasLineSubstitution(place.getLine()) && place.isSubstitute()" type="button" class="btn btn-primary btn-sm">
-        <fa-icon [icon]=faTrashAlt></fa-icon>
-      </button>
-    </td>    
-  </tr>
+  @if(processing()) {
+    <tr>
+      <td colspan=3 class="text-center">
+        <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+      </td>
+    </tr>
+  }
+  @if(!processing()) {
+    <tr (click)="substituteAction(place)" ngClass="{'pointer': s11Player}">
+      <td class="{{getSubstituteClass(place.isSubstitute())}}">
+        @if(s11Player) {
+          <span>{{s11Player.getPerson().getName()}}</span>
+        }
+        @if(!s11Player) {
+          <button type="button" class="btn btn-outline-danger btn-sm" (click)="substitute.emit(place)">
+            kies een {{place.isSubstitute() ? 'wissel' : 'speler'}}
+          </button>
+        }
+        @if(place.isSubstitute()) {
+          <span class="badge badge-reserve ms-1">r</span>
+        }
+      </td>
+      <td class="{{getSubstituteClass(place.isSubstitute())}}">
+        @if(currentTeam) {
+          <app-team-name [team]="currentTeam" [fullName]="false"></app-team-name>
+        }
+      </td>
+      <td class="text-end" class="{{getSubstituteClass(place.isSubstitute())}}">
+        @if(!hasLineSubstitution(place.getLine()) && !place.isSubstitute()) {
+          <button type="button" class="btn btn-primary btn-sm">
+            <fa-icon [icon]=faSignOutAlt></fa-icon>
+          </button>
+        }
+        @if(hasLineSubstitution(place.getLine()) && place.isSubstitute()) {
+          <button type="button" class="btn btn-primary btn-sm">
+            <fa-icon [icon]=faTrashAlt></fa-icon>
+          </button>
+        }
+      </td>
+    </tr>
+  }
 </ng-template>

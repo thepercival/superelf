@@ -1,56 +1,69 @@
-<div ngIf="poule && structureNameService" class="card border-1">
-    <div ngIf="header" class="card-header">
-        {{structureNameService.getPouleName(poule(), true)}}
-    </div>
-    <div class="card-body p-0">
-        <h2 ngIf="processing" class="text-center">
-            <fa-icon [icon]="['fas', 'spinner']" spin=true></fa-icon>
-        </h2>
-        <div *ngIf="!processing" class="card-text">
-            <table class="table fixed mb-0">
-                <colgroup>
-                    <col>
-                    <col class="width-30">
-                    <col>
-                    <col>
-                    <col>
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th class="text-end ps-0">pl</th>
-                        <th class="place ps-0">deelnemer</th>
-                        <th class="text-end ps-0" title="gespeeld">g</th>
-                        <th class="text-end ps-0" title="punten">p</th>
-                        <th class="text-center text-info ps-0 pointer"
-                            (click)="showDifferenceDetail = !showDifferenceDetail" title="doelsaldo">&Delta;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- <ng-template ngFor let-rankingItem let-place="rankingItem.getPlace()" [ngForOf]="rankingItems">
-                        <tr>
-                            <td class="rankingnr text-end ps-0">
-                                <span
-                                    class="badge bg-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
-                            </td>
-                            <td class="place ps-0" [ngClass]="{ 'current-user': isCurrentUser(place) }">
-                                <span *ngIf="place"></span>{{nameService.getPlaceFromName(place, true, true)}}
-                            </td>
-                            <td class="text-end ps-0">{{rankingItem.getUnranked().getGames()}}</td>
-                            <td class="text-end ps-0">{{rankingItem.getUnranked().getPoints()}}</td>
-                            <td class="text-center unitdiff ps-0">
-                                <div>
-                                    {{rankingItem.getUnranked().getDiff() > 0 ? '+' : ''}}{{rankingItem.getUnranked().getDiff()}}
-                                </div>
-                                <div *ngIf="showDifferenceDetail">( {{rankingItem.getUnranked().getScored()}} -
-                                    {{rankingItem.getUnranked().getReceived()}} )</div>
-                                <div *ngIf="showDifferenceDetail && useSubScore()">(
-                                    {{rankingItem.getUnranked().getSubScored()}} -
-                                    {{rankingItem.getUnranked().getSubReceived()}} )</div>
-                            </td>
-                        </tr>
-                    </ng-template> -->
-                </tbody>
-            </table>
+@if(structureNameService) {
+    <div class="card border-1">
+        @if(header()) {
+            <div class="card-header">
+                {{structureNameService.getPouleName(poule(), true)}}
+            </div>
+        }
+        <div class="card-body p-0">
+            @if(processing) {
+                <h2 class="text-center">
+                    <fa-icon [icon]="['fas', 'spinner']" spin=true></fa-icon>
+                </h2>
+            }
+            @if(!processing) {
+                <div class="card-text">
+                    <table class="table fixed mb-0">
+                        <colgroup>
+                            <col>
+                            <col class="width-30">
+                            <col>
+                            <col>
+                            <col>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="text-end ps-0">pl</th>
+                                <th class="place ps-0">deelnemer</th>
+                                <th class="text-end ps-0" title="gespeeld">g</th>
+                                <th class="text-end ps-0" title="punten">p</th>
+                                <th class="text-center text-info ps-0 pointer"
+                                    (click)="showDifferenceDetail = !showDifferenceDetail" title="doelsaldo">&Delta;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- @for(rankingItem of rankingItems; track rankingItem) {
+                                @let place = rankingItem.getPlace();
+                                <tr>
+                                    <td class="rankingnr text-end ps-0">
+                                        <span
+                                            class="badge bg-rank {{cssService.getQualifyPlace(poule.getPlace(rankingItem.getUniqueRank()))}}">{{rankingItem.getUniqueRank()}}</span>
+                                    </td>
+                                    <td class="place ps-0" [ngClass]="{ 'current-user': isCurrentUser(place) }">
+                                        @if(place) {
+                                            <span></span>
+                                        }
+                                        {{nameService.getPlaceFromName(place, true, true)}}
+                                    </td>
+                                    <td class="text-end ps-0">{{rankingItem.getUnranked().getGames()}}</td>
+                                    <td class="text-end ps-0">{{rankingItem.getUnranked().getPoints()}}</td>
+                                    <td class="text-center unitdiff ps-0">
+                                        <div>
+                                            {{rankingItem.getUnranked().getDiff() > 0 ? '+' : ''}}{{rankingItem.getUnranked().getDiff()}}
+                                        </div>
+                                        @if(showDifferenceDetail) {
+                                            <div>( {{rankingItem.getUnranked().getScored()}} - {{rankingItem.getUnranked().getReceived()}} )</div>
+                                        }
+                                        @if(showDifferenceDetail && useSubScore()) {
+                                            <div>( {{rankingItem.getUnranked().getSubScored()}} - {{rankingItem.getUnranked().getSubReceived()}} )</div>
+                                        }
+                                    </td>
+                                </tr>
+                            } -->
+                        </tbody>
+                    </table>
+                </div>
+            }
         </div>
     </div>
-</div>
+}

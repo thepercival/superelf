@@ -14,7 +14,7 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TeamNameComponent } from '../../team/name.component';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { faSpinner, faPencilAlt, faTrashAlt, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../../lib/sportExtensions';
 
@@ -22,7 +22,6 @@ import { SportExtensions } from '../../../lib/sportExtensions';
   selector: "app-pool-formationline-replacements",
   standalone: true,
   imports: [
-    NgIf,
     FontAwesomeModule,
     TeamNameComponent,
     LineIconComponent,

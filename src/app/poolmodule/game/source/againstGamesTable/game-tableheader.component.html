@@ -5,8 +5,19 @@
 <th class="text-center px-0">    
     @if(againstGame().getState() === Finished) {        
         <span class="text-nowrap">{{s11NameService.getAgainstScore(againstGame())}}</span>
-    } @else {
-        VS        
+    } @else {        
+        <div class="text-nowrap">
+            <small>
+                @let dateTitle = dateFormatter.toString(againstGame().getStartDateTime(),dateFormatter.date());
+                {{dateTitle}}
+            </small>
+        </div>
+        <div class="text-nowrap">
+            <small>
+                @let timeTitle = dateFormatter.toString(againstGame().getStartDateTime(),dateFormatter.time());
+                {{timeTitle}}
+            </small>
+        </div>
     }
 </th>
 

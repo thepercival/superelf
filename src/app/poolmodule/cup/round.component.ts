@@ -5,7 +5,7 @@ import { PoolCompetitor } from '../../lib/pool/competitor';
 import { PoolUser } from '../../lib/pool/user';
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { EscapeHtmlPipe } from '../../shared/commonmodule/escapehtmlpipe';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: "app-superelf-cup-round",

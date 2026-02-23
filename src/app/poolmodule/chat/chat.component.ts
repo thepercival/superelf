@@ -24,7 +24,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
 import { PouleTitleComponent } from '../poule/title.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { facSuperCup } from '../../shared/poolmodule/icons';
 import { faListOl, faSpinner, faPaperPlane, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { PoolCompetitor } from '../../lib/pool/competitor';

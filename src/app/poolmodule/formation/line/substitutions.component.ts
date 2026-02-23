@@ -14,7 +14,7 @@ import { CSSService } from '../../../shared/commonmodule/cssservice';
 import { TeamNameComponent } from '../../team/name.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LineIconComponent } from '../../../shared/commonmodule/lineicon/lineicon.component';
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { faSpinner, faPencilAlt, faTrashAlt, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../../lib/sportExtensions';
 
@@ -25,7 +25,6 @@ import { SportExtensions } from '../../../lib/sportExtensions';
     TeamNameComponent,
     FontAwesomeModule,
     LineIconComponent,
-    NgIf,
     NgTemplateOutlet,
   ],
   templateUrl: "./substitutions.component.html",

@@ -1,9 +1,13 @@
 <div class="row justify-content-center g-0">
     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-        <h2 *ngIf="processing" class="text-center">
-            <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
-        </h2>
-        <ngb-alert *ngIf="!processing() && !game" type="danger">de wedstrijd kan niet gevonden worden</ngb-alert>
+        @if(processing()) {
+            <h2 class="text-center">
+                <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+            </h2>
+        }
+        @if(!processing() && !game) {
+            <ngb-alert type="danger">de wedstrijd kan niet gevonden worden</ngb-alert>
+        }
         
         @if(!processing() && game){
         <div>
@@ -19,12 +23,15 @@
 
             <h4 class="text-center">opstellingen</h4>
 
-            <h2 *ngIf="processingLineups" class="text-center">
-                <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
-            </h2>
+            @if(processingLineups) {
+                <h2 class="text-center">
+                    <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+                </h2>
+            }
 
 
-            <div *ngIf="!processingLineups" class="d-flex justify-content-center">
+            @if(!processingLineups) {
+            <div class="d-flex justify-content-center">
 
 
                 <div class="me-3">
@@ -35,14 +42,18 @@
                     </ng-container>
                 </div>
             </div>
+            }
 
             <h4 class="text-center mt-3">gebeurtenissen</h4>
 
-            <h2 *ngIf="processingEvents" class="text-center">
-                <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
-            </h2>
+            @if(processingEvents) {
+                <h2 class="text-center">
+                    <fa-icon [icon]=faSpinner [animation]="'spin'"></fa-icon>
+                </h2>
+            }
 
-            <div *ngIf="!processingEvents" class="d-flex justify-content-center">
+            @if(!processingEvents) {
+            <div class="d-flex justify-content-center">
 
 
                 <div class="me-3">
@@ -54,6 +65,7 @@
                     </ng-container>
                 </div>
             </div>
+            }
 
         </div>
         }
@@ -69,16 +81,20 @@
                 <app-lineicon [line]="lineupItem.player.getLine()"></app-lineicon>
                 <span class="ps-1">{{lineupItem.player.getPerson().getName()}}</span>
             </div>
-            <div *ngIf="lineupItem.substitute">
-                <span class="px-2">{{lineupItem.substitute.minute}}'</span>
-                <app-lineicon [line]="lineupItem.substitute.player.getLine()"></app-lineicon>
-                <span class="ps-1">{{lineupItem.substitute.player.getPerson().getName()}}</span>
-            </div>
-            <div *ngIf="lineupItem.substitute && lineupItem.substitute.substitute">
-                <span class="ps-4 pe-2">{{lineupItem.substitute.substitute.minute}}'</span>
-                <app-lineicon [line]="lineupItem.substitute.substitute.player.getLine()"></app-lineicon>
-                <span class="ps-1">{{lineupItem.substitute.substitute.player.getPerson().getName()}}</span>
-            </div>
+            @if(lineupItem.substitute) {
+                <div>
+                    <span class="px-2">{{lineupItem.substitute.minute}}'</span>
+                    <app-lineicon [line]="lineupItem.substitute.player.getLine()"></app-lineicon>
+                    <span class="ps-1">{{lineupItem.substitute.player.getPerson().getName()}}</span>
+                </div>
+            }
+            @if(lineupItem.substitute && lineupItem.substitute.substitute) {
+                <div>
+                    <span class="ps-4 pe-2">{{lineupItem.substitute.substitute.minute}}'</span>
+                    <app-lineicon [line]="lineupItem.substitute.substitute.player.getLine()"></app-lineicon>
+                    <span class="ps-1">{{lineupItem.substitute.substitute.player.getPerson().getName()}}</span>
+                </div>
+            }
         </li>
         }
     </ul>
@@ -94,9 +110,11 @@
                         <span class="px-1">{{eventItem.minute}}'</span>
                         <span>{{eventItem.player.getPerson().getName()}}</span>
                     </div>
-                    <div *ngIf="eventItem.assistPlayer">
-                        <small class="px-3">a: {{eventItem.assistPlayer.getPerson().getName()}}</small>
-                    </div>
+                    @if(eventItem.assistPlayer) {
+                        <div>
+                            <small class="px-3">a: {{eventItem.assistPlayer.getPerson().getName()}}</small>
+                        </div>
+                    }
                 </li>
             }
         } @else {
