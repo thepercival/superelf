@@ -61,9 +61,32 @@ $enable-responsive-font-sizes: true !default;
   @extend .btn-points-new;
 }
 
+.btn-not-appeared {
+  @extend .btn-points-new;
+  @extend .btn-outline-secondary;  
+}
+
 .btn-points-normal {
   @extend .btn-outline-primary;
   @extend .btn-points-new;
+}
+
+.btn-points-new-2-digits {
+  @extend .text-end;
+  @extend .py-0;
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
+  min-width: 1.3rem;
+}
+
+.btn-points-normal-2-digits {
+  @extend .btn-points-new-2-digits;
+  @extend .btn-outline-primary;  
+}
+
+.btn-not-appeared-2-digits {
+  @extend .btn-points-new-2-digits;
+  @extend .btn-outline-secondary;  
 }
 
 .btn-small-totals {
@@ -77,9 +100,9 @@ $enable-responsive-font-sizes: true !default;
   width: 2.2rem;
 }
 
-.btn-large-totals {  
+.btn-large-points {  
   @extend .btn-points-base;
-  @extend .bg-totals;
+  @extend .bg-points;
   width: 2.2rem;
 }
 .text-gold {

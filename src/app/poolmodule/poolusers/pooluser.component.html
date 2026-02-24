@@ -3,27 +3,33 @@
 
     @if(!processing()) {
       @if(pool && poolUser){
-        <div class="d-flex justify-content-between mb-1 mx-1">
-          <h2 class="me-2 mt-3 text-truncate">
-            <fa-icon [icon]=faUsers></fa-icon> {{getHeaderForPoolUser(poolUser)}}
-          </h2>
-          <div class="mt-0">
-            <!-- <button *ngIf="pool.getAssemblePeriod().isIn()" class="btn btn-secondary mx-2"
-              [routerLink]="['/pool/scouting/list', pool.getId()]">
-              <fa-icon [icon]=faUserSecret></fa-icon> <span class="ms-1 d-none d-sm-inline">
-                scoutingslijst</span>
-            </button> -->
-            <!-- @if(inAfterTransfer(pool)) {
-              <button class="btn btn-outline-info me-1">
-                <fa-icon [icon]=faRightLeft></fa-icon>
-              </button>            
-            }
-            <button class="btn btn-secondary" disabled>
-              {{getFormationName()}}
-            </button> -->
+          @let tmplCurrentGameRound = currentGameRound();
+          <div class="d-flex flex-nowrap justify-content-between mt-2 mx-1">
+            <h1 class="me-2 text-truncate">            
+              <fa-icon [icon]=faUser></fa-icon> {{getHeaderForPoolUser(poolUser)}}
+            </h1>
+            
+            @if(tmplCurrentGameRound && isNowAfterTransferPeriod(pool.getCompetitionConfig())){  
+              <app-period-selector
+                [competitionConfig]="pool.getCompetitionConfig()"
+                [activePeriod]="tmplCurrentGameRound.viewPeriod"
+                (selectPeriod)="selectPeriod(pool, $event)"
+              ></app-period-selector>
+            }            
+                      
+            <div>
+              <button (click)="openChooseBadgeCategoryModal()" type="button"
+                class="btn {{badgeCategory() !== undefined ? 'btn-success' : 'btn-outline-dark'}} me-0 position-relative">
+                <app-superelf-icon [icon]=facTrophy></app-superelf-icon>
+              </button>
+            </div>
+          </div>   
 
-            @let tmplCurrentGameRound = currentGameRound();
-            @if(tmplCurrentGameRound){
+        <div class="d-flex justify-content-between mb-1 mx-1">
+          
+          <div class="mt-0">         
+            
+            <!-- @if(tmplCurrentGameRound){
               <div class="d-flex justify-content-between mt-3 mb-1 mx-1">
                 <app-gameround-scroller 
                   [viewPeriod]="tmplCurrentGameRound.viewPeriod"
@@ -39,7 +45,7 @@
                   (selectTransferPeriod)="openPoolUserTransfersModal()"
                 ></app-gameround-scroller>
               </div>
-            } 
+            }  -->
           </div>
         </div>
 
@@ -53,6 +59,26 @@
             @let viewFormation = tmplTransferFormation ?? tmplAssembleFormation;
             @if(tmplCurrentGameRound && viewFormation && pool){
               <table class="table">
+                <colgroup style="width: 100%">
+                  <col style="width: 35%">
+                  <col style="width: 14%;">
+                  @for(viewGameRound of viewGameRounds(); track $index) {
+                    <col style="width: 17%">
+                  }
+                  <col style="width: 17%">
+                </colgroup>
+                <thead app-competition-gameround-scroller         
+                      [viewPeriod]="tmplCurrentGameRound.viewPeriod"
+                      [previousGameRound]="previousGameRound()"
+                      [gameRounds]="viewGameRounds()"
+                      [nextGameRound]="nextGameRound()"
+                      [activeGameRound]="tmplCurrentGameRound"
+                      [previousColSpan]="2"
+                      (previousPressed)="selectPreviousGameRound(pool.getCompetitionConfig(), tmplCurrentGameRound)"
+                      (gameRoundPressed)="openGameRoundInfoModal(pool.getCompetitionConfig(), $event)"          
+                      (nextPressed)="selectNextGameRound(pool.getCompetitionConfig(), tmplCurrentGameRound)"                      
+                    >      
+                </thead>   
                 @for(line of viewFormation.getLines();track line.getNumber()) {                  
                   <tbody app-pool-formationline-view [line]="line"
                       [statisticsGetter]="statisticsGetter" [gameRounds]="viewGameRounds()" 

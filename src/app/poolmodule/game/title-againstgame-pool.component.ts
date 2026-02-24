@@ -9,6 +9,7 @@ import { CompetitorPoolUserAndFormation } from '../poule/againstgames.component'
 import { AgainstPoule, AgainstSide, GameState, Poule, StartLocationMap } from 'ngx-sport';
 import { StatisticsGetter } from '../../lib/statistics/getter';
 import { Router } from '@angular/router';
+import { GameRoundProgressColumn } from '../gameRound/scheduleGameRoundScroller.component';
 
 @Component({
   selector: "app-title-againstgame-pool",
@@ -137,6 +138,25 @@ export class PouleTitleWithGameRoundsComponent implements OnInit {
 
   getPercentageFinished(gameRound: GameRound): number {
     return Math.floor((gameRound.finished / gameRound.totalNrOfGames) * 100);
+  }
+
+  public getGameRoundProgressColumns(gameRound: GameRound): GameRoundProgressColumn[] {
+    const columnsDelta: GameRoundProgressColumn[] = [];
+
+    const finished = this.getPercentageFinished(gameRound);
+    columnsDelta.push({
+        gameState: GameState.Finished,
+        percentage: finished
+    });
+    columnsDelta.push({
+        gameState: GameState.Created,
+        percentage: 100 - finished
+    });
+    return columnsDelta;
+  }
+
+  get GameStateFinished(): GameState {
+    return GameState.Finished;
   }
 
   public linkToPoolUser(

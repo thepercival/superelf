@@ -18,11 +18,11 @@
                 >
                 {{gameRound.number}}
             </button>
-            <div  class="d-flex flex-column align-items-end">
+            <div class="d-flex flex-column align-items-end">
                 <ngb-progressbar-stacked class="mb-1" style="height: 5px; width: 100%; max-width:2.5rem;">
-                    <ngb-progressbar type="primary" [value]="this.getPercentageFinished(gameRound)" height="0.5rem"></ngb-progressbar>
-                    <ngb-progressbar type="warning" [value]="this.getPercentageInProgress(gameRound)" height="0.5rem"></ngb-progressbar>
-                    <ngb-progressbar type="secondary" [value]="this.getPercentageCreated(gameRound)" height="0.5rem"></ngb-progressbar>                        
+                    @for(progressColumn of getGameRoundProgressColumns(gameRound); track $index){
+                        <ngb-progressbar type="{{progressColumn.gameState === GameStateFinished ? 'primary' : 'secondary'}}" [value]="progressColumn.percentage" height="0.5rem"></ngb-progressbar>
+                    }
                 </ngb-progressbar-stacked>                
             </div>                                        
         </div>

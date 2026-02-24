@@ -14,6 +14,7 @@
           [gameRounds]="gameRounds()"
           [nextGameRound]="nextGameRound()"
           [activeGameRound]="activeGameRound()"
+          [previousColSpan]="1"
           (previousPressed)="previousGameRoundPressed.emit()"          
           (gameRoundPressed)="gameRoundPressed.emit($event)"          
           (nextPressed)="nextGameRoundPressed.emit()"
@@ -37,7 +38,7 @@
             </td>
             <td class="text-break ps-0" [class]="{ 'favitem': false}"
                 (click)="linkToCompetitor.emit(competitorWithGameRoundsPoints)">
-                <span class="fs-5">{{poolUser.getUser().getName()}}</span>
+                <span class="fs-6">{{poolUser.getUser().getName()}}</span>
                 <!-- <app-superelf-icon *ngIf="rankingItem.poolUser.getUser().getName() === 'storm'" 
                 class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon> -->
             </td>
@@ -51,7 +52,7 @@
               </td>
             }
             <td class="text-end ps-0" (click)="linkToCompetitor.emit(competitorWithGameRoundsPoints)">
-                <button type="button" class="btn btn-sm btn-large-totals fw-bold">
+                <button type="button" class="btn btn-sm btn-large-points fw-bold">
                   {{competitorWithGameRoundsPoints.viewPeriodsPoints}}
                 </button>
             </td>

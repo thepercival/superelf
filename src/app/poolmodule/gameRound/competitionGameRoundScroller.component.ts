@@ -18,6 +18,7 @@ export class CompetitionGameRoundScrollerComponent implements OnInit {
   readonly previousGameRound = input.required<GameRound|undefined>();
   readonly nextGameRound = input.required<GameRound|undefined>();
   readonly activeGameRound = input.required<GameRound>();  
+  readonly previousColSpan = input.required<number>();
 
   @Output() previousPressed = new EventEmitter();
   @Output() gameRoundPressed = new EventEmitter<GameRound>();

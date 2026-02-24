@@ -548,7 +548,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
 
   openChooseBadgeCategoryModal(): void {
     const modalRef = this.modalService.open(ChooseBadgeCategoryModalComponent);
-    modalRef.componentInstance.currentBadgeCategory = this.badgeCategory;
+    modalRef.componentInstance.currentBadgeCategory = this.badgeCategory();
     modalRef.result.then(
       (choosenBadgeCategory: BadgeCategory | undefined) => {
         this.badgeCategory.set(choosenBadgeCategory);

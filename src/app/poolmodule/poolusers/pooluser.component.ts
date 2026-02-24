@@ -27,8 +27,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { GameRoundScrollerComponent } from '../gameRound/gameRoundScroller.component';
 import { FormationLineViewComponent, PlayerLink } from '../formation/line/view.component';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
-import { NgIf } from '@angular/common';
-import { faRightLeft, faUsers, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faRightLeft, faSpinner, faUser } from '@fortawesome/free-solid-svg-icons';
 import { LeagueName } from '../../lib/leagueName';
 import { GameRoundViewType } from '../../lib/gameRound/viewType';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
@@ -38,12 +37,18 @@ import { FormationActionOverviewModalComponent } from '../formation/actionovervi
 import { ActiveViewGameRoundsCalculator } from '../../lib/gameRound/activeViewGameRoundsCalculator';
 import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
 import { S11PlayerModalComponent } from '../player/playerinfo.modal.component';
-import { ScorePointsMap } from '../../lib/score/points';
 import { SourceAgainstGamesGetter } from '../../lib/gameRound/sourceAgainstGamesGetter';
 import { GameRepository } from '../../lib/ngx-sport/game/repository';
 import { TeamFinder } from '../../lib/teamFinder';
 import { BadgeCategory } from '../../lib/achievement/badge/category';
 import { GameRound } from '../../lib/gameRound';
+import { PeriodSelectorComponent } from "../periods/periodSelector.component";
+import { TransferPeriod } from '../../lib/periods/transferPeriod';
+import { facTrophy } from '../../shared/poolmodule/icons';
+import { SuperElfIconComponent } from "../../shared/poolmodule/icon/icon.component";
+import { ChooseBadgeCategoryModalComponent } from '../badge/choosecategory-modal.component';
+import { CompetitionGameRoundScrollerComponent } from '../gameRound/competitionGameRoundScroller.component';
+import { GameRoundScheduleModalComponent } from '../gameRound/gameRoundScheduleModal.component';
 
 @Component({
   selector: "app-pool-user",
@@ -51,9 +56,11 @@ import { GameRound } from '../../lib/gameRound';
   imports: [
     NgbAlertModule,
     FontAwesomeModule,
-    GameRoundScrollerComponent,
     FormationLineViewComponent,
     PoolNavBarComponent,
+    PeriodSelectorComponent,
+    SuperElfIconComponent,
+    CompetitionGameRoundScrollerComponent
   ],
   templateUrl: "./pooluser.component.html",
   styleUrls: ["./pooluser.component.scss"],
@@ -70,6 +77,9 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
 
   public assembleFormation: WritableSignal<S11Formation | undefined> = signal(undefined);
   public transferFormation: WritableSignal<S11Formation | undefined> = signal(undefined);
+
+  public badgeCategory: WritableSignal<BadgeCategory | undefined> =
+    signal(undefined);
 
   public processingStatistics: WritableSignal<boolean> = signal(true);
 
@@ -92,7 +102,8 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   public nrOfUnreadMessages = 0;
 
   public faRightLeft = faRightLeft;
-  public faUsers = faUsers;
+  public faUser = faUser;
+  public facTrophy = facTrophy;
   public faSpinner = faSpinner;
 
   constructor(
@@ -426,31 +437,27 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   determineActiveGameRound(
     competitionConfig: CompetitionConfig,
     viewPeriod: ViewPeriod,
-    gameRoundNr: number
+    gameRoundNr: number|undefined = undefined
   ): Observable<GameRound> {
-    if (gameRoundNr > 0) {
-      return this.gameRoundGetter.getGameRound(
+    if (gameRoundNr === undefined || gameRoundNr === 0) {
+      return this.activeGameRoundsCalculator.determineActiveViewGameRound(
+        competitionConfig,
+        viewPeriod,
+        GameRoundViewType.Ranking
+      );
+    }
+    return this.gameRoundGetter.getGameRound(
         competitionConfig,
         viewPeriod,
         gameRoundNr
       );
-    }
-    return this.activeGameRoundsCalculator.determineActiveViewGameRound(
-      competitionConfig,
-      viewPeriod,
-      GameRoundViewType.Ranking
-    );
   }
 
   selectViewPeriod(pool: Pool, viewPeriod: ViewPeriod): void {
     // this.processing.set(true);
     this.previousGameRound.set(undefined);
     this.nextGameRound.set(undefined);
-    this.determineActiveGameRound(
-      pool.getCompetitionConfig(),
-      viewPeriod,
-      0
-    ).subscribe({
+    this.determineActiveGameRound(pool.getCompetitionConfig(), viewPeriod).subscribe({
       next: (activeGameRound: GameRound) => {
         this.currentGameRound.set(activeGameRound);
       },
@@ -555,9 +562,59 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     });
   }
 
-  inAfterTransfer(pool: Pool): boolean {
-    return (
-      pool.getTransferPeriod().getEndDateTime().getTime() < new Date().getTime()
-    );
+  // inAfterTransfer(pool: Pool): boolean {
+  //   return (
+  //     pool.getTransferPeriod().getEndDateTime().getTime() < new Date().getTime()
+  //   );
+  // }
+
+  isNowAfterTransferPeriod(competitionConfig: CompetitionConfig): boolean {
+    const end = competitionConfig.getTransferPeriod().getEndDateTime().getTime();
+    return Date.now() > end;
   }
+
+  selectPeriod(
+      pool: Pool,
+      period: ViewPeriod|TransferPeriod
+    ): void {
+      // this.processing.set(true);
+      this.previousGameRound.set(undefined);
+      this.nextGameRound.set(undefined);
+      if( period instanceof ViewPeriod) {
+        this.determineActiveGameRound(pool.getCompetitionConfig(), period ).subscribe({
+          next: (activeGameRound: GameRound) => {
+            this.currentGameRound.set(activeGameRound);
+          },
+        });
+      } else {
+        this.openPoolUserTransfersModal();
+      }    
+    }
+
+      openChooseBadgeCategoryModal(): void {
+        const modalRef = this.modalService.open(ChooseBadgeCategoryModalComponent);
+        modalRef.componentInstance.currentBadgeCategory = this.badgeCategory();
+        modalRef.result.then(
+          (choosenBadgeCategory: BadgeCategory | undefined) => {
+            this.badgeCategory.set(choosenBadgeCategory);
+          },
+          (reason) => {}
+        );
+      }
+      
+        openGameRoundInfoModal(
+          competitionConfig: CompetitionConfig,
+          gameRound: GameRound) 
+        {
+          const modalRef = this.modalService.open(GameRoundScheduleModalComponent);
+      
+          modalRef.componentInstance.competitionConfig = competitionConfig;
+          modalRef.componentInstance.gameRound = gameRound;
+          
+          modalRef.result.then(
+              (result) => {},
+              (reason) => {}
+            );
+          }
+  
 }

@@ -1,61 +1,68 @@
 import { Statistics } from "../../lib/statistics";
 
 export class MinutesAsGradientsService {
-  /**
-   * green 0%,
-   * green 50%,
-   * red 50%,
-   * red 100%
-   * 
-   * @param statistics 
-   * @returns 
-   */
-  public getAppearanceColumnsAsGradient(statistics: Statistics): string {
-    const x = this.getAppearanceColumns(statistics)
-      .map( (appearanceColumn: AppearanceColumn): string => {
-        return appearanceColumn.color + ' ' + appearanceColumn.percentage + '%';
-      })
-      .join(',');
-      if( x.length === 0 ) {
-        console.log(statistics);
-      }
-    return this.getAppearanceColumns(statistics)
-      .map( (appearanceColumn: AppearanceColumn): string => {
-        return appearanceColumn.color + ' ' + appearanceColumn.percentage + '%';
-      })
-      .join(',');
+  // /**
+  //  * green 0%,
+  //  * green 50%,
+  //  * red 50%,
+  //  * red 100%
+  //  * 
+  //  * @param statistics 
+  //  * @returns 
+  //  */
+  // public getAppearanceColumnsAsGradient(statistics: Statistics): string {
+  //   const x = this.getAppearanceColumns(statistics)
+  //     .map( (appearanceColumn: AppearanceColumn): string => {
+  //       return appearanceColumn.color + ' ' + appearanceColumn.percentage + '%';
+  //     })
+  //     .join(',');
+  //     if( x.length === 0 ) {
+  //       console.log(statistics);
+  //     }
+  //   return this.getAppearanceColumns(statistics)
+  //     .map( (appearanceColumn: AppearanceColumn): string => {
+  //       return appearanceColumn.color + ' ' + appearanceColumn.percentage + '%';
+  //     })
+  //     .join(',');
+  // }
+
+  public getAppearanceColumns(statistics: Statistics, asDeltas: boolean = true): AppearanceColumn[] {
+    const columns: AppearanceColumn[] = this.getAppearanceColumnsCummulative(statistics);
+    if( !asDeltas ) {
+      return columns;
+    }
+    const columnsDelta: AppearanceColumn[] = [];
+    let previousColumn: AppearanceColumn|undefined;
+    columns.forEach(column => {
+      columnsDelta.push({
+        playing: column.playing,
+        percentage: column.percentage - (previousColumn?.percentage ?? 0)
+      });
+      previousColumn = column;
+    });
+    return columnsDelta;
   }
 
-  public getAppearanceColumns(statistics: Statistics): AppearanceColumn[] {
-    const red = '#d9534f'; // danger
-    const green = '#75b798'; // green-300, success
+  private getAppearanceColumnsCummulative(statistics: Statistics): AppearanceColumn[] {
     if ( statistics.isSubstitute() && statistics.isSubstituted() ) {
       return  [
-        { color: red, percentage: 0},
-        { color: red, percentage: this.convertMinutesToPercentage(statistics.getBeginMinute())},
-        { color: green, percentage: this.convertMinutesToPercentage(statistics.getBeginMinute())},
-        { color: green, percentage: this.convertMinutesToPercentage(statistics.getEndMinute())},
-        { color: red, percentage: this.convertMinutesToPercentage(statistics.getEndMinute())},
-        { color: red, percentage: 100},
+        { playing: false, percentage: this.convertMinutesToPercentage(statistics.getBeginMinute())},
+        { playing: true, percentage: this.convertMinutesToPercentage(statistics.getEndMinute())},
+        { playing: false, percentage: 100},
       ];
     } else if ( statistics.isSubstitute() ) {
       return [
-        { color: red, percentage: 0},
-        { color: red, percentage: this.convertMinutesToPercentage(statistics.getBeginMinute())},
-        { color: green, percentage: this.convertMinutesToPercentage(statistics.getBeginMinute())},
-        { color: green, percentage: 100}
+        { playing: false, percentage: this.convertMinutesToPercentage(statistics.getBeginMinute())},
+        { playing: true, percentage: 100}
       ];
     } else if ( statistics.isSubstituted() ) {
       return [
-        { color: green, percentage: 0},
-        { color: green, percentage: this.convertMinutesToPercentage(statistics.getEndMinute())},
-        { color: red, percentage: this.convertMinutesToPercentage(statistics.getEndMinute())},
-        { color: red, percentage: 100}
+        { playing: true, percentage: this.convertMinutesToPercentage(statistics.getEndMinute())},
+        { playing: false, percentage: 100}
       ];
     }
     return [
-        { color: green, percentage: 0},
-        { color: green, percentage: 100}
+        { playing: true, percentage: 100}
     ];
   }
 
@@ -74,7 +81,7 @@ export class MinutesAsGradientsService {
   } 
 }
 
-interface AppearanceColumn { 
-  color: string,
+export interface AppearanceColumn { 
+  playing: boolean
   percentage: number
 }

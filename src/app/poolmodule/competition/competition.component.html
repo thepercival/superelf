@@ -19,19 +19,6 @@
                 (selectPeriod)="selectPeriod(pool, $event)"
               ></app-period-selector>
             }
-            <!-- <app-gameround-scroller 
-                      [viewPeriod]="tmplCurrentGameRound.viewPeriod"
-                      [gameRounds]="viewGameRounds()"
-                      [activeGameRound]="tmplCurrentGameRound"
-                      [previousGameRound]="previousGameRound()"
-                      (previous)="selectPreviousGameRound(pool.getCompetitionConfig(), tmplCurrentGameRound)"
-                      [nextGameRound]="nextGameRound()"                               
-                      (next)="selectNextGameRound(pool.getCompetitionConfig(), tmplCurrentGameRound)"         
-                      [competitionConfig]="pool.getCompetitionConfig()"
-                      (selectViewPeriod)="selectViewPeriod(pool, poolUsers, $event)"
-                      (selectGameRound)="selectGameRound(pool, poolUsers, $event)"
-                      (selectTransferPeriod)="showTransfers.set(!showTransfers())"
-            ></app-gameround-scroller> -->
             
             <div>
               @if(poolPouleId){

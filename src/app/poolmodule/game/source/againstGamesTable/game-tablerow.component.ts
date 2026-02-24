@@ -1,25 +1,25 @@
 import { Component, OnInit, input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { AgainstGame, AgainstSide, Competitor, CompetitorBase, GameState } from 'ngx-sport';
+import { AgainstGame, AgainstSide, Competitor, CompetitorBase, FootballLine, GameState } from 'ngx-sport';
 import { DateFormatter } from '../../../../lib/dateFormatter';
 import { NgTemplateOutlet } from '@angular/common';
 import { SuperElfNameService } from '../../../../lib/nameservice';
 import { LineIconComponent } from '../../../../shared/commonmodule/lineicon/lineicon.component';
 import { S11Player } from '../../../../lib/player';
 import { GameRound } from '../../../../lib/gameRound';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbProgressbarStacked, NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import { S11PlayerModalComponent } from '../../../player/playerinfo.modal.component';
 import { SportExtensions } from '../../../../lib/sportExtensions';
 import { StatisticsGetter } from '../../../../lib/statistics/getter';
 import { PoolUserRow } from './againstgames-table.component';
 import { RouterLink } from '@angular/router';
 import { Statistics } from '../../../../lib/statistics';
-import { MinutesAsGradientsService } from '../../../../shared/commonmodule/minutesAsGradientsService';
+import { AppearanceColumn, MinutesAsGradientsService } from '../../../../shared/commonmodule/minutesAsGradientsService';
 
 @Component({
   selector: "tr[s11-game-tablerow]",
   standalone: true,
-  imports: [FontAwesomeModule, NgTemplateOutlet, LineIconComponent, RouterLink],
+  imports: [FontAwesomeModule, NgTemplateOutlet, LineIconComponent, RouterLink, NgbProgressbarStacked, NgbProgressbar],
   templateUrl: "./game-tablerow.component.html",
   styleUrls: ["./game-tablerow.component.scss"],
 })
@@ -76,7 +76,22 @@ export class GameTableRowComponent implements OnInit {
     );
   }
 
-  getAppearanceColumnsAsGradient(statistics: Statistics): string {
-    return (new MinutesAsGradientsService()).getAppearanceColumnsAsGradient(statistics);
+  getAppearanceColumns(statistics: Statistics): AppearanceColumn[] {
+    // if( statistics.getPlayerLine() === FootballLine.GoalKeeper ) {
+    //   console.log((new MinutesAsGradientsService()).getAppearanceColumns(statistics));
+    // }
+    return (new MinutesAsGradientsService()).getAppearanceColumns(statistics);
+  }
+
+  getPercentageCreated(gameRound: GameRound): number {
+    return Math.floor((gameRound.created / gameRound.totalNrOfGames) * 100);
+  }
+
+  getPercentageInProgress(gameRound: GameRound): number {
+    return Math.floor((gameRound.inProgress / gameRound.totalNrOfGames) * 100);
+  }
+
+  getPercentageFinished(gameRound: GameRound): number {
+    return Math.floor((gameRound.finished / gameRound.totalNrOfGames) * 100);
   }
 }

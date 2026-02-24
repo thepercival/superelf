@@ -3,7 +3,7 @@
     </th>
 
     <!-- previous -->
-    <th class="text-end ps-0" [class]="{ 'favitem': false}">
+    <th [attr.colspan]="previousColSpan()" class="text-end ps-0" [class]="{ 'favitem': false}">
         <div>
             <ngb-progressbar class="d-none" [value]="0" [max]="100"></ngb-progressbar>
         </div>

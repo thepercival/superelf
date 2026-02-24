@@ -8,7 +8,7 @@
     @for(gameRound of gameRounds(); track $index ) {
       <td class="table-no-bottom-border text-end">
         @if( line().getNumber() === GoalKeeper ) {
-          <button type="button" class="btn btn-sm btn-small-totals">
+          <button type="button" class="btn btn-sm btn-large-points">
             {{calculateTotalGameRoundPoints(line().getFormation(), gameRound)}}
           </button>
         }      
@@ -66,7 +66,7 @@
               </ng-container>            
             }
             @else {
-              <button type="button" class="btn btn-sm btn-notappeared">&nbsp;</button>
+              <button type="button" class="btn btn-sm btn-not-appeared">NP</button>
             }
           }
         }
@@ -74,7 +74,7 @@
     }
     
     <td class="text-end {{getSubstituteClass(place.isSubstitute())}}">
-      <button type="button" class="btn btn-sm btn-large-totals">
+      <button type="button" class="btn btn-sm btn-large-points">
         {{place.getTotalPoints()}}
       </button>
     </td>
@@ -84,12 +84,17 @@
 <ng-template #appearedbtn let-formationPlace="formationPlace" let-s11Player="s11Player" let-gameRound="gameRound">
   @let statistics = statisticsGetter().getStatistics(s11Player, gameRound.number);
   @if( statistics !== undefined ) {
-    @let appearanceColumns = getAppearanceColumnsAsGradient(statistics);
-    <button type="button" class="btn btn-sm btn-points-base"     
-      (click)="linkToPlayer.emit({ s11Player, gameRound });"
-      [style]="'background: linear-gradient(to right, ' + appearanceColumns + ')'"
-    >
-      {{statisticsGetter().getFormationPlaceGameRoundPoints(formationPlace,gameRound, undefined)}}
-    </button>    
+    <div class="text-end me-1">                        
+      <button type="button" class="btn btn-sm btn-points-normal mb-1" (click)="linkToPlayer.emit({ s11Player, gameRound })">
+        {{statisticsGetter().getFormationPlaceGameRoundPoints(formationPlace,gameRound, undefined)}}
+      </button>
+      <div  class="d-flex flex-column align-items-end">        
+        <ngb-progressbar-stacked class="mb-1" style="height: 5px; width: 100%;">
+          @for(appColumn of getAppearanceColumns(statistics); track $index){
+            <ngb-progressbar type="{{appColumn.playing ? 'primary' : 'secondary'}}" [value]="appColumn.percentage" height="0.5rem"></ngb-progressbar>
+          }
+        </ngb-progressbar-stacked>                
+      </div>                                        
+    </div>
   }
 </ng-template>

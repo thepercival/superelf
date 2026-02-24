@@ -4,6 +4,7 @@ import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
+import { GameState } from 'ngx-sport';
 
 @Component({
   selector: "app-schedule-gameround-scroller",
@@ -66,15 +67,27 @@ export class ScheduleGameRoundScrollerComponent implements OnInit {
   //   return this.transferViewPeriod()?.isIn() ?? false;
   // }
 
-  getPercentageCreated(gameRound: GameRound): number {
-    return Math.floor((gameRound.created / gameRound.totalNrOfGames) * 100);
+  public getGameRoundProgressColumns(gameRound: GameRound): GameRoundProgressColumn[] {
+    const columnsDelta: GameRoundProgressColumn[] = [];
+
+    const finished = Math.floor((gameRound.finished / gameRound.totalNrOfGames) * 100);
+    columnsDelta.push({
+        gameState: GameState.Finished,
+        percentage: finished
+    });
+    columnsDelta.push({
+        gameState: GameState.Created,
+        percentage: 100 - finished
+    });
+    return columnsDelta;
   }
 
-  getPercentageInProgress(gameRound: GameRound): number {
-    return Math.floor((gameRound.inProgress / gameRound.totalNrOfGames) * 100);
+  get GameStateFinished(): GameState {
+    return GameState.Finished;
   }
+}
 
-  getPercentageFinished(gameRound: GameRound): number {
-    return Math.floor((gameRound.finished / gameRound.totalNrOfGames) * 100);
-  }
+export interface GameRoundProgressColumn { 
+  gameState: GameState
+  percentage: number
 }

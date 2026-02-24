@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
-import { NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbModal, NgbProgressbarStacked, NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import { FootballLine, Period, Person, Team } from 'ngx-sport';
 import { S11FormationLine } from '../../../lib/formation/line';
 import { S11FormationPlace } from '../../../lib/formation/place';
@@ -17,7 +17,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../../lib/sportExtensions';
 import { S11Formation } from '../../../lib/formation';
-import { MinutesAsGradientsService } from '../../../shared/commonmodule/minutesAsGradientsService';
+import { AppearanceColumn, MinutesAsGradientsService } from '../../../shared/commonmodule/minutesAsGradientsService';
 import { Statistics } from '../../../lib/statistics';
 
 @Component({
@@ -28,7 +28,9 @@ import { Statistics } from '../../../lib/statistics';
     FontAwesomeModule,
     TeamNameComponent,
     LineIconComponent,
-  ],
+    NgbProgressbarStacked,
+    NgbProgressbar
+],
   templateUrl: "./view.component.html",
   styleUrls: ["./view.component.scss"],
 })
@@ -137,8 +139,8 @@ export class FormationLineViewComponent implements OnInit {
     return isSubstitute ? "table-no-bottom-border" : "";
   }
 
-  getAppearanceColumnsAsGradient(statistics: Statistics): string {
-    return (new MinutesAsGradientsService()).getAppearanceColumnsAsGradient(statistics);
+  getAppearanceColumns(statistics: Statistics): AppearanceColumn[] {
+    return (new MinutesAsGradientsService()).getAppearanceColumns(statistics);
   }
 }
 

@@ -43,17 +43,19 @@
                         </button>  
                     }
                 </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-{{ activeGameRound() !== gameRound ? 'outline-primary' : 'outline-info' }} me-2 mb-1" (click)="selectGameRound.emit(gameRound)">
+                <td class="text-center px-1">          
+                    <button type="button" class="btn btn-{{ activeGameRound() === gameRound ? 'primary' : 'outline-primary' }} mb-1" (click)="selectGameRound.emit(gameRound)">
                         {{gameRound.number}}
                     </button>
-                    <div class="me-2">
-                        <ngb-progressbar-stacked>
-                            <ngb-progressbar type="success" [value]="this.getPercentageFinished(gameRound)"></ngb-progressbar>
-                            <ngb-progressbar type="warning" [value]="this.getPercentageInProgress(gameRound)"></ngb-progressbar>
-                            <ngb-progressbar type="danger" [value]="this.getPercentageCreated(gameRound)"></ngb-progressbar>                        
-                        </ngb-progressbar-stacked>
-                    </div>
+                    <div class="d-flex flex-column align-items-end">
+                        <ngb-progressbar-stacked class="mb-1" style="height: 5px; width: 100%; max-width:2.5rem;">
+                            @for(progressColumn of getGameRoundProgressColumns(gameRound); track $index){
+                                <ngb-progressbar type="{{progressColumn.gameState === GameStateFinished ? 'primary' : 'secondary'}}" [value]="progressColumn.percentage" height="0.5rem"></ngb-progressbar>
+                            }
+                        </ngb-progressbar-stacked>                
+                    </div>                                        
+        
+
                 </td>
                 <td class=" pt-3">
                     @if(100 === getPercentageFinished(gameRound) ) {
