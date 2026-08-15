@@ -101,7 +101,7 @@
               },
               "outputHashing": "all",
               "serviceWorker": "ngsw-config.json",
-              "outputPath": "dist/nl/",
+              "outputPath": "dist/",
               "localize": [
                 "nl"
               ],
@@ -125,7 +125,7 @@
                   "maximumWarning": "6kb"
                 }
               ],
-              "outputPath": "dist/nl/",
+              "outputPath": "dist/",
               "localize": [
                 "nl"
               ],
