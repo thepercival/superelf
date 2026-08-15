@@ -17,4 +17,16 @@ export interface JsonStatistics {
     directRedCard: boolean,
     playerLine: FootballLine,
     gameStart: string;
+    categories: JsonStatisticsCategory[];
+    manOfTheMatch: boolean;
+}
+
+export interface JsonStatisticsCategory {
+    name: string;
+    statistics: JsonGameParticipationStatistic[];
+}
+
+export interface JsonGameParticipationStatistic {
+    name: string;
+    value: number;
 }

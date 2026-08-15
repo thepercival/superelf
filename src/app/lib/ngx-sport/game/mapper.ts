@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Association, Competition, JsonPerson, Person, PersonMapper, Player, PlayerMapper } from 'ngx-sport';
+import { Association, Competition, JsonPerson, JsonPlayer, Person, PersonMapper, Player, PlayerMapper } from 'ngx-sport';
 import { ViewPeriod } from '../../periods/viewPeriod';
 import { JsonS11Player } from '../../player/json';
 import { AgainstGameCardEvent, AgainstGameEvent, AgainstGameGoalEvent, AgainstGameLineupItem, AgainstGameSubstitute, JsonAgainstGameCardEvent, JsonAgainstGameEvent, JsonAgainstGameGoalEvent, JsonAgainstGameLineupItem, JsonAgainstGameSubstitute } from './football';
@@ -31,6 +31,11 @@ export class AgainstGameMapper {
             lineupItem.substitute = this.toSubstitute(jsonLineupItem.substitute, competition);
         }
         return lineupItem;
+    }
+
+    toPlayer(jsonPlayer: JsonPlayer, competition: Competition): Player {
+        const person = this.toPerson(jsonPlayer.person, competition.getAssociation());
+        return this.playerMapper.toObject(jsonPlayer, competition.getAssociation(), person);
     }
 
    

@@ -1,4 +1,4 @@
-import { JsonPlayer, Player } from "ngx-sport";
+import { AgainstGame, JsonPlayer, Player } from "ngx-sport";
 import { FootballCard, FootballGoal } from "../../score";
 
 export interface JsonAgainstGameLineupItem {
@@ -45,4 +45,29 @@ export interface AgainstGameGoalEvent extends AgainstGameEvent {
 
 export interface AgainstGameCardEvent extends AgainstGameEvent {
     color: FootballCard;
+}
+
+export interface JsonAgainstGameMissingPlayer {
+    player: JsonPlayer;
+    type: string;
+    reason: number;
+    description: string;
+    externalType: number;
+    expectedEndDate?: string;
+    againstSide: string;
+}
+
+export interface AgainstGameMissingPlayer {
+    player: Player;
+    type: string;
+    reason: number;
+    description: string;
+    externalType: number;
+    expectedEndDate?: Date;
+    againstSide: string;
+}
+
+export interface AgainstGameMissingPlayers {
+    game: AgainstGame;
+    missingPlayers: AgainstGameMissingPlayer[];
 }

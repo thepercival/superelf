@@ -19,6 +19,9 @@ import { SportExtensions } from '../../../lib/sportExtensions';
 import { S11Formation } from '../../../lib/formation';
 import { AppearanceColumn, MinutesAsGradientsService } from '../../../shared/commonmodule/minutesAsGradientsService';
 import { Statistics } from '../../../lib/statistics';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faBan, faBriefcaseMedical, faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { AgainstGameMissingPlayer, AgainstGameMissingPlayers } from '../../../lib/ngx-sport/game/football';
 
 @Component({
   selector: "[app-pool-formationline-view]",
@@ -38,10 +41,12 @@ export class FormationLineViewComponent implements OnInit {
   readonly line = input.required<S11FormationLine>();
   readonly gameRounds = input.required<GameRound[]>();
   readonly statisticsGetter = input.required<StatisticsGetter>();
+  readonly missingPlayerGamesMap = input<Map<number, AgainstGameMissingPlayers[]>>(new Map());
   readonly processing = model<boolean>(true);
   readonly previousFormation = input<S11Formation|undefined>();
   readonly totalPoints = input<number>();    
   @Output() linkToPlayer = new EventEmitter<PlayerLink>();
+  @Output() linkToMissingPlayer = new EventEmitter<PlayerLink>();
 
   public faSpinner = faSpinner;
 
@@ -142,9 +147,50 @@ export class FormationLineViewComponent implements OnInit {
   getAppearanceColumns(statistics: Statistics): AppearanceColumn[] {
     return (new MinutesAsGradientsService()).getAppearanceColumns(statistics);
   }
+
+  getMissingPlayerGame(s11Player: S11Player, gameRound: GameRound): MissingPlayerGame | undefined {
+    const personId = s11Player.getPerson().getId();
+    for (const missingPlayerGame of this.missingPlayerGamesMap().get(gameRound.number) ?? []) {
+      const missingPlayer = missingPlayerGame.missingPlayers.find(
+        (candidate: AgainstGameMissingPlayer) => candidate.player.getPerson().getId() === personId
+      );
+      if (missingPlayer !== undefined) {
+        return { ...missingPlayerGame, missingPlayer };
+      }
+    }
+    return undefined;
+  }
+
+  getMissingPlayerIcon(missingPlayer: AgainstGameMissingPlayer): IconDefinition {
+    const reason = (missingPlayer.type + ' ' + missingPlayer.description).toLowerCase();
+    if (reason.includes('suspension') || reason.includes('card')) {
+      return faBan;
+    }
+    if (reason.includes('international')) {
+      return faGlobe;
+    }
+    return faBriefcaseMedical;
+  }
+
+  getMissingPlayerBorderClass(missingPlayerGame: MissingPlayerGame | undefined): string {
+    if (missingPlayerGame === undefined) {
+      return '';
+    }
+    const expectedEndDate = missingPlayerGame.missingPlayer.expectedEndDate;
+    if (expectedEndDate === undefined) {
+      return 'border-danger';
+    }
+    const tenDays = 10 * 24 * 60 * 60 * 1000;
+    const recoveryTime = expectedEndDate.getTime() - missingPlayerGame.game.getStartDateTime().getTime();
+    return recoveryTime < tenDays ? 'border-warning' : 'border-danger';
+  }
 }
 
 export interface PlayerLink {
   s11Player: S11Player;
   gameRound: GameRound
+}
+
+interface MissingPlayerGame extends AgainstGameMissingPlayers {
+  missingPlayer: AgainstGameMissingPlayer;
 }

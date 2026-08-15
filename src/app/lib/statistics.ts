@@ -3,7 +3,7 @@ import { BadgeCategory } from './achievement/badge/category';
 import { FootballCard, FootballGoal, FootballResult, FootballSheet } from './score';
 import { ScorePointsMap } from './score/points';
 import { Sheet } from './sheet';
-import { JsonStatistics } from './statistics/json';
+import { JsonStatistics, JsonStatisticsCategory } from './statistics/json';
 
 export class Statistics {
   protected readonly gameStartDate: Date;
@@ -90,6 +90,14 @@ export class Statistics {
 
   public getGameStartDate(): Date {
     return this.gameStartDate;
+  }
+
+  public getCategories(): JsonStatisticsCategory[] {
+    return this.json.categories ?? [];
+  }
+
+  public isManOfTheMatch(): boolean {
+    return this.json.manOfTheMatch ?? false;
   }
 
   public getPoints(

@@ -82,9 +82,11 @@
                 @for(line of viewFormation.getLines();track line.getNumber()) {                  
                   <tbody app-pool-formationline-view [line]="line"
                       [statisticsGetter]="statisticsGetter" [gameRounds]="viewGameRounds()" 
+                      [missingPlayerGamesMap]="missingPlayerGamesMap()"
                       [totalPoints]="line.getNumber() === GoalKeeper ? viewFormation.getTotalPoints(undefined) : undefined"
                       [previousFormation]="viewFormation === tmplTransferFormation ? tmplAssembleFormation : undefined"
-                      (linkToPlayer)="openPlayerModal($event, competitionConfig)">
+                      (linkToPlayer)="openPlayerModal($event, competitionConfig)"
+                      (linkToMissingPlayer)="openMissingPlayerHistoryModal($event, competitionConfig)">
                   </tbody>
                 }
               </table>

@@ -17,7 +17,7 @@ import { S11Player } from '../../lib/player';
 import { S11FormationPlace } from '../../lib/formation/place';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { AuthService } from '../../lib/auth/auth.service';
-import { concatMap, forkJoin, Observable, of } from 'rxjs';
+import { concatMap, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { GameRoundRepository } from '../../lib/gameRound/repository';
 import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { StatisticsRepository } from '../../lib/statistics/repository';
@@ -49,6 +49,8 @@ import { SuperElfIconComponent } from "../../shared/poolmodule/icon/icon.compone
 import { ChooseBadgeCategoryModalComponent } from '../badge/choosecategory-modal.component';
 import { CompetitionGameRoundScrollerComponent } from '../gameRound/competitionGameRoundScroller.component';
 import { GameRoundScheduleModalComponent } from '../gameRound/gameRoundScheduleModal.component';
+import { AgainstGameMissingPlayer, AgainstGameMissingPlayers } from '../../lib/ngx-sport/game/football';
+import { MissingPlayerHistoryGame, MissingPlayerHistoryModalComponent } from '../player/missingplayerhistory.modal.component';
 
 @Component({
   selector: "app-pool-user",
@@ -69,6 +71,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
   public currentGameRound: WritableSignal<GameRound | undefined> =
     signal(undefined);
   public viewGameRounds: WritableSignal<GameRound[]> = signal([]);
+  public missingPlayerGamesMap: WritableSignal<Map<number, AgainstGameMissingPlayers[]>> = signal(new Map());
 
   public previousGameRound: WritableSignal<GameRound | undefined> =
     signal(undefined);
@@ -119,7 +122,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     private structureRepository: StructureRepository,
     protected chatMessageRepository: ChatMessageRepository,
     gameRoundRepository: GameRoundRepository,    
-    gameRepository: GameRepository,
+    protected gameRepository: GameRepository,
     protected authService: AuthService,
     private modalService: NgbModal
   ) {
@@ -309,6 +312,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       .subscribe({
         next: (activeGameRounds: GameRound[]) => {
           this.viewGameRounds.set(activeGameRounds);
+          this.loadMissingPlayerGames(competitionConfig, activeGameRounds);
 
           forkJoin(this.setGameRoundsAndGetStatistics(activeGameRounds)).subscribe({
             next: () => {
@@ -363,6 +367,36 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
             });
         },
       });
+  }
+
+  private loadMissingPlayerGames(
+    competitionConfig: CompetitionConfig,
+    gameRounds: GameRound[]
+  ): void {
+    this.getSourceStructure(competitionConfig.getSourceCompetition()).pipe(
+      switchMap((sourceStructure: Structure) => {
+        const poule = sourceStructure.getSingleCategory().getRootRound().getFirstPoule();
+        return forkJoin(gameRounds.map((gameRound: GameRound) =>
+          this.sourceAgainstGamesGetter.getGameRoundGames(poule, gameRound).pipe(
+            switchMap((games: AgainstGame[]) => games.length === 0
+              ? of([])
+              : forkJoin(games.map((game: AgainstGame) =>
+                  this.gameRepository.getSourceObjectMissingPlayers(game).pipe(
+                    map((missingPlayers) => ({ game, missingPlayers }))
+                  )
+                ))
+            ),
+            map((missingPlayerGames: AgainstGameMissingPlayers[]) =>
+              [gameRound.number, missingPlayerGames] as const
+            )
+          )
+        ));
+      }),
+      map((entries) => new Map<number, AgainstGameMissingPlayers[]>(entries))
+    ).subscribe({
+      next: (missingPlayerGamesMap) => this.missingPlayerGamesMap.set(missingPlayerGamesMap),
+      error: (error) => this.setAlert('danger', error)
+    });
   }
 
   setFormations(poolUser: PoolUser): Observable<S11Formation>[] {
@@ -530,6 +564,76 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
       }
     );
     
+  }
+
+  openMissingPlayerHistoryModal(link: PlayerLink, competitionConfig: CompetitionConfig): void {
+    this.getSourceStructure(competitionConfig.getSourceCompetition()).pipe(
+      switchMap((sourceStructure: Structure) => {
+        const poule = sourceStructure.getSingleCategory().getRootRound().getFirstPoule();
+        return this.gameRoundGetter.getGameRounds(
+          competitionConfig,
+          link.gameRound.viewPeriod
+        ).pipe(
+          map((gameRounds: GameRound[]) => {
+            const selectedIndex = gameRounds.findIndex(
+              (gameRound: GameRound) => gameRound.number === link.gameRound.number
+            );
+            if (selectedIndex < 0) {
+              return [link.gameRound];
+            }
+            return gameRounds.slice(Math.max(0, selectedIndex - 3), selectedIndex + 3);
+          }),
+          switchMap((gameRounds: GameRound[]) => forkJoin(gameRounds.map((gameRound: GameRound) =>
+            this.sourceAgainstGamesGetter.getGameRoundGames(poule, gameRound).pipe(
+              map((games: AgainstGame[]) => ({
+                gameRound,
+                game: this.findGame(games, link.s11Player)
+              }))
+            )
+          )))
+        );
+      }),
+      switchMap((historyGames) => {
+        const games = historyGames.filter(
+          (historyGame): historyGame is { gameRound: GameRound; game: AgainstGame } =>
+            historyGame.game !== undefined
+        );
+        if (games.length === 0) {
+          return of([]);
+        }
+        return forkJoin(games.map(({ gameRound, game }) =>
+          this.gameRepository.getSourceObjectMissingPlayers(game).pipe(
+            map((missingPlayers: AgainstGameMissingPlayer[]): MissingPlayerHistoryGame => ({
+              gameRound,
+              game,
+              missingPlayer: this.findMissingPlayer(missingPlayers, link.s11Player)
+            }))
+          )
+        ));
+      })
+    ).subscribe({
+      next: (games: MissingPlayerHistoryGame[]) => {
+        games.sort((gameA, gameB) =>
+          gameB.game.getStartDateTime().getTime() - gameA.game.getStartDateTime().getTime()
+        );
+        const activeModal = this.modalService.open(MissingPlayerHistoryModalComponent, { scrollable: true });
+        activeModal.componentInstance.playerName = link.s11Player.getPerson().getName();
+        activeModal.componentInstance.playerLine = link.s11Player.getLine();
+        activeModal.componentInstance.currentGameRoundNumber = link.gameRound.number;
+        activeModal.componentInstance.games = games;
+      },
+      error: (error) => this.setAlert('danger', error)
+    });
+  }
+
+  private findMissingPlayer(
+    missingPlayers: AgainstGameMissingPlayer[],
+    s11Player: S11Player
+  ): AgainstGameMissingPlayer | undefined {
+    const personId = s11Player.getPerson().getId();
+    return missingPlayers.find(
+      (missingPlayer: AgainstGameMissingPlayer) => missingPlayer.player.getPerson().getId() === personId
+    );
   }
 
   getSourceStructure(competition: Competition): Observable<Structure> {

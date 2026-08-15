@@ -7,13 +7,15 @@ import { APIRepository } from '../../repository';
 import { AgainstGame, AgainstSide, Competition, GameMapper, JsonAgainstGame, JsonTogetherGame, Poule, TogetherGame } from 'ngx-sport';
 import { GameRound } from '../../gameRound';
 import { ViewPeriod } from '../../periods/viewPeriod';
-import { AgainstGameCardEvent, AgainstGameEvent, AgainstGameGoalEvent, AgainstGameLineupItem, JsonAgainstGameCardEvent, JsonAgainstGameEvent, JsonAgainstGameGoalEvent, JsonAgainstGameLineupItem } from './football';
+import { AgainstGameCardEvent, AgainstGameEvent, AgainstGameGoalEvent, AgainstGameLineupItem, AgainstGameMissingPlayer, JsonAgainstGameCardEvent, JsonAgainstGameEvent, JsonAgainstGameGoalEvent, JsonAgainstGameLineupItem, JsonAgainstGameMissingPlayer } from './football';
 import { AgainstGameMapper } from './mapper';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GameRepository extends APIRepository {
+
+    private missingPlayers = new Map<string | number, AgainstGameMissingPlayer[]>();
 
     constructor(
         private mapper: GameMapper, private againstMapper: AgainstGameMapper, private http: HttpClient) {
@@ -56,6 +58,33 @@ export class GameRepository extends APIRepository {
         return this.http.get<(JsonAgainstGameGoalEvent|JsonAgainstGameCardEvent)[]>(url, this.getOptions()).pipe(
             map((jsonAgainstGameEvents: (JsonAgainstGameGoalEvent|JsonAgainstGameCardEvent)[]) => {
                 return this.againstMapper.toEvents(jsonAgainstGameEvents, competition);
+            }),
+            catchError((err) => this.handleError(err))
+        );
+    }
+
+    getSourceObjectMissingPlayers(game: AgainstGame): Observable<AgainstGameMissingPlayer[]> {
+        const gameId = game.getId();
+        const cachedMissingPlayers = this.missingPlayers.get(gameId);
+        if (cachedMissingPlayers !== undefined) {
+            return of(cachedMissingPlayers);
+        }
+        const competition = game.getPoule().getCompetition();
+        const url = this.getUrl(competition) + '/sourcegames/' + game.getId() + '/missingplayers';
+
+        return this.http.get<JsonAgainstGameMissingPlayer[]>(url, this.getOptions()).pipe(
+            map((missingPlayers: JsonAgainstGameMissingPlayer[]) => {
+                const mappedMissingPlayers = missingPlayers.map(
+                    (missingPlayer: JsonAgainstGameMissingPlayer): AgainstGameMissingPlayer => ({
+                    ...missingPlayer,
+                    player: this.againstMapper.toPlayer(missingPlayer.player, competition),
+                    expectedEndDate: missingPlayer.expectedEndDate !== undefined
+                        ? new Date(missingPlayer.expectedEndDate)
+                        : undefined
+                    })
+                );
+                this.missingPlayers.set(gameId, mappedMissingPlayers);
+                return mappedMissingPlayers;
             }),
             catchError((err) => this.handleError(err))
         );

@@ -11,6 +11,7 @@ import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
 import { StatisticsGetter } from '../../lib/statistics/getter';
 import { StatisticsRepository } from '../../lib/statistics/repository';
+import { JsonGameParticipationStatistic } from '../../lib/statistics/json';
 
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
@@ -85,6 +86,21 @@ export class S11PlayerModalComponent implements OnInit {
 
   getLineClass(s11Player: S11Player): string {
     return this.cssService.getLine(s11Player.getLine());
+  }
+
+  formatStatisticName(name: string): string {
+    const labels: Record<string, string> = {
+      expectedGoals: 'xG',
+      expectedGoalsOnTarget: 'xG on target',
+      expectedAssists: 'xA',
+      'ratingVersions.original': 'Rating (original)',
+      'ratingVersions.alternative': 'Rating (alternative)',
+    };
+    return labels[name] ?? name.replace(/([a-z])([A-Z])/g, '$1 $2');
+  }
+
+  formatStatisticValue(statistic: JsonGameParticipationStatistic): string {
+    return new Intl.NumberFormat('nl-NL', { maximumFractionDigits: 2 }).format(statistic.value);
   }
 
   openExternalLink(url: string) {

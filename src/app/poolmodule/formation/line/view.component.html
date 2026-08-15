@@ -66,7 +66,17 @@
               </ng-container>            
             }
             @else {
-              <button type="button" class="btn btn-sm btn-not-appeared">NP</button>
+              @let missingPlayerGame = getMissingPlayerGame(s11Player, gameRound);
+              <button type="button"
+                class="btn btn-sm btn-not-appeared {{getMissingPlayerBorderClass(missingPlayerGame)}}"
+                [attr.title]="missingPlayerGame?.missingPlayer?.description ?? 'niet gespeeld'"
+                (click)="linkToMissingPlayer.emit({ s11Player, gameRound })">
+                @if(missingPlayerGame) {
+                  <fa-icon class="text-success" [icon]="getMissingPlayerIcon(missingPlayerGame.missingPlayer)"></fa-icon>
+                } @else {
+                  NP
+                }
+              </button>
             }
           }
         }
@@ -85,7 +95,7 @@
   @let statistics = statisticsGetter().getStatistics(s11Player, gameRound.number);
   @if( statistics !== undefined ) {
     <div class="text-end me-1">                        
-      <button type="button" class="btn btn-sm btn-points-normal mb-1" (click)="linkToPlayer.emit({ s11Player, gameRound })">
+      <button type="button" class="btn btn-sm btn-points-normal mb-1" [class.border-success]="statistics.isManOfTheMatch()" (click)="linkToPlayer.emit({ s11Player, gameRound })">
         {{statisticsGetter().getFormationPlaceGameRoundPoints(formationPlace,gameRound, undefined)}}
       </button>
       <div  class="d-flex flex-column align-items-end">        
