@@ -14,7 +14,10 @@
       "i18n": {
         "sourceLocale": "en",
         "locales": {
-          "nl": "src/locale/messages.nl.xlf"
+          "nl": {
+            "translation": "src/locale/messages.nl.xlf",
+            "subPath": ""
+          }
         }
       },
       "architect": {
