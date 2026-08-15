@@ -11,6 +11,12 @@
           "strict": true
         }
       },
+      "i18n": {
+        "sourceLocale": "en",
+        "locales": {
+          "nl": "src/locale/messages.nl.xlf"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
@@ -94,11 +100,12 @@
                 }
               },
               "outputHashing": "all",
-              "serviceWorker": true,
+              "serviceWorker": "ngsw-config.json",
               "outputPath": "dist/nl/",
-              "i18nFile": "src/locale/messages.nl.xlf",
-              "i18nLocale": "fr",
-              "i18nMissingTranslation": "error"
+              "localize": [
+                "nl"
+              ],
+              "i18nMissingTranslation": "warning"
             },
             "dev-nl": {
               "optimization": false,
@@ -119,9 +126,10 @@
                 }
               ],
               "outputPath": "dist/nl/",
-              "i18nFile": "src/locale/messages.nl.xlf",
-              "i18nLocale": "nl",
-              "i18nMissingTranslation": "error"
+              "localize": [
+                "nl"
+              ],
+              "i18nMissingTranslation": "warning"
             },
             "acc": {
               "budgets": [
