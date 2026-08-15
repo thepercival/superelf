@@ -27,6 +27,10 @@ import { faSearch, faSignInAlt, faSpinner, faTrashAlt, faUsers, faUserSecret } f
 import { SportExtensions } from '../../lib/sportExtensions';
 import { PlayerLink } from '../formation/line/view.component';
 import { MarketValueComponent } from "../../shared/commonmodule/marketvalue/marketvalue.component";
+import { GameRoundRepository } from '../../lib/gameRound/repository';
+import { GameRoundViewType } from '../../lib/gameRound/viewType';
+import { PlayerStateModalService } from '../player/playerstate.modal.service';
+import { CompetitionTimelineComponent } from '../../shared/poolmodule/competitionTimeline/competitionTimeline.component';
 
 @Component({
   standalone: true,
@@ -37,7 +41,8 @@ import { MarketValueComponent } from "../../shared/commonmodule/marketvalue/mark
     TeamNameComponent,
     NgbAlertModule,
     RouterLink,
-    MarketValueComponent
+    MarketValueComponent,
+    CompetitionTimelineComponent
 ],
   selector: "app-pool-scouting-list",
   templateUrl: "./list.component.html",
@@ -57,6 +62,7 @@ export class ScoutedPlayerListComponent
   public faSearch = faSearch;
   public faUsers = faUsers;
   public faUserSecret = faUserSecret;
+  public gameRoundNumber: number | undefined;
 
   constructor(
     route: ActivatedRoute,
@@ -67,6 +73,8 @@ export class ScoutedPlayerListComponent
     private modalService: NgbModal,
     private poolUserRepository: PoolUserRepository,
     private formationRepository: FormationRepository,
+    private gameRoundRepository: GameRoundRepository,
+    private playerStateModal: PlayerStateModalService,
     public sportExtensions: SportExtensions
   ) {
     super(route, router, poolRepository, globalEventsManager);
@@ -113,6 +121,14 @@ export class ScoutedPlayerListComponent
   }
 
   initScoutedPlayers(pool: Pool) {
+    this.gameRoundRepository.getActiveViewGameRound(
+      pool.getCompetitionConfig(),
+      pool.getCurrentViewPeriod(),
+      GameRoundViewType.Games
+    ).subscribe({
+      next: (gameRound) => this.gameRoundNumber = gameRound.number,
+      error: (error) => this.setAlert('danger', error)
+    });
     this.scoutedPlayerRepository
       .getObjects(pool.getSourceCompetition(), pool.getCreateAndJoinPeriod())
       .subscribe({
@@ -242,11 +258,16 @@ export class ScoutedPlayerListComponent
     return undefined;
   }
 
-  linkToPlayer(pool: Pool, s11Player: S11Player | undefined): void {
-    if (!s11Player) {
+  linkToPlayer(pool: Pool, s11Player: S11Player | undefined, gameRoundNumber: number | undefined): void {
+    if (!s11Player || gameRoundNumber === undefined) {
       return;
     }
-    // DISABLED BECAUSE  openPlayerModal(BENEATH) is not callable without gameRoundNumber
+    this.playerStateModal.open(
+      s11Player,
+      pool.getCompetitionConfig(),
+      pool.getCurrentViewPeriod(),
+      gameRoundNumber
+    ).subscribe({ error: (error) => this.setAlert('danger', error) });
   }
 
   // openPlayerModal(link: PlayerLink, competitionConfig: CompetitionConfig): void {
@@ -278,7 +299,7 @@ export class ScoutedPlayerListComponent
   // }
 
   linkToSearch(pool: Pool) {
-    this.router.navigate(["/pool/scouting/search/", pool.getId()]);
+    this.router.navigate(["/pool/sourcecompetition", pool.getId()]);
   }
 
   getTotalPoints(pool: Pool, s11Player: S11Player): number {

@@ -151,6 +151,9 @@ export class PoolNavBarComponent implements OnInit, OnChanges {
   get Competition(): NavBarItem {
     return NavBarItem.Competition;
   }
+  get SourceCompetition(): NavBarItem {
+    return NavBarItem.SourceCompetition;
+  }
   get Cup(): NavBarItem {
     return NavBarItem.Cup;
   }
@@ -190,6 +193,9 @@ export class PoolNavBarComponent implements OnInit, OnChanges {
 
   linkTo(navBarItem: NavBarItem): void {
     switch (navBarItem) {
+      case NavBarItem.SourceCompetition:
+        this.router.navigate(["/pool/sourcecompetition", this.pool().getId()]);
+        return;
       case NavBarItem.Competition:
         this.router.navigate(["/pool/competition", this.pool().getId()]);
         return;

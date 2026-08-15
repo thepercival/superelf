@@ -86,7 +86,7 @@
                       [totalPoints]="line.getNumber() === GoalKeeper ? viewFormation.getTotalPoints(undefined) : undefined"
                       [previousFormation]="viewFormation === tmplTransferFormation ? tmplAssembleFormation : undefined"
                       (linkToPlayer)="openPlayerModal($event, competitionConfig)"
-                      (linkToMissingPlayer)="openMissingPlayerHistoryModal($event, competitionConfig)">
+                      (linkToMissingPlayer)="openPlayerStateModal($event, competitionConfig)">
                   </tbody>
                 }
               </table>

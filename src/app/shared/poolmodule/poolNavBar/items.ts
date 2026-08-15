@@ -1,4 +1,5 @@
 export enum NavBarItem {
+    SourceCompetition = 'eredivisie',
     Competition = 'competitie',
     Cup = 'beker',
     SuperCup = 'supercup',

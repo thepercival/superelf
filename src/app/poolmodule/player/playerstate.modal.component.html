@@ -1,0 +1,38 @@
+<div class="modal-header border-bottom-0 text-white {{getLineClass()}}">
+  <h4 class="modal-title">{{s11Player.getPerson().getName()}} · ronde {{gameRoundNumber}}</h4>
+  <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
+</div>
+<div class="modal-body py-0">
+  @for(stateGame of games; track stateGame.game.getId()) {
+    <section class="py-3 border-bottom" [class.pointer]="stateGame.hasAppeared" (click)="openGame(stateGame)">
+      <div class="d-flex align-items-center">
+        <span class="small text-secondary text-nowrap me-2">ronde {{stateGame.gameRound.number}}</span>
+        <app-againstgame-title class="flex-grow-1" [againstGame]="stateGame.game"></app-againstgame-title>
+      </div>
+      @if(stateGame.missingPlayer; as missingPlayer) {
+        <dl class="row small mb-0 mt-2">
+          <dt class="col-5">type</dt>
+          <dd class="col-7">{{missingPlayer.type}}</dd>
+          <dt class="col-5">description</dt>
+          <dd class="col-7">{{missingPlayer.description}}</dd>
+          <dt class="col-5">expectedEndDate</dt>
+          <dd class="col-7 mb-0">{{formatExpectedEndDate(missingPlayer.expectedEndDate)}}</dd>
+        </dl>
+      } @else if(stateGame.hasAppeared && stateGame.statistics) {
+        @let statistics = stateGame.statistics;
+        @let rating = getStatistic(statistics, 'rating');
+        @let minutesPlayed = getStatistic(statistics, 'minutesPlayed');
+        <div class="d-flex gap-3 small mt-2">
+          @if(rating) {
+            <span><span class="text-secondary">wedstrijd-rating</span> {{formatStatisticValue(rating)}}</span>
+          }
+          @if(minutesPlayed) {
+            <span><span class="text-secondary">speeltijd</span> {{formatStatisticValue(minutesPlayed)}} min</span>
+          }
+        </div>
+      } @else {
+        <p class="small text-secondary mb-0 mt-2">geen informatie</p>
+      }
+    </section>
+  }
+</div>

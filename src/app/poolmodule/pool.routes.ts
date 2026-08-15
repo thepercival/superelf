@@ -28,6 +28,7 @@ import { FormationPlaceTransferComponent } from './formation/place/transfer.comp
 import { FormationSubstituteComponent } from './formation/substitute.component';
 import { PoolPouleAgainstGamesComponent } from './poule/againstgames.component';
 import { PoolAllInOneGameScheduleComponent } from './allinonegame/allinonegame.component';
+import { SourceCompetitionComponent } from './sourceCompetition/sourceCompetition.component';
 
 export const poolRoutes: Routes = [
   {
@@ -112,7 +113,12 @@ export const poolRoutes: Routes = [
   },
   {
     path: "pool/scouting/search/:id",
-    component: ScoutedPlayerAddComponent,
+    component: SourceCompetitionComponent,
+    canActivate: [AuthUserGuardService],
+  },
+  {
+    path: "pool/sourcecompetition/:id",
+    component: SourceCompetitionComponent,
     canActivate: [AuthUserGuardService],
   },
   {

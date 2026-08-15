@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -23,6 +23,10 @@ import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faLevelUpAlt, faSpinner, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { CompetitionTimelineComponent } from '../../shared/poolmodule/competitionTimeline/competitionTimeline.component';
+import { PlayerStateModalService } from '../player/playerstate.modal.service';
+import { GameRoundRepository } from '../../lib/gameRound/repository';
+import { GameRoundViewType } from '../../lib/gameRound/viewType';
 
 @Component({
   selector: "app-pool-scouted-player-add",
@@ -32,11 +36,14 @@ import { faLevelUpAlt, faSpinner, faUsers } from '@fortawesome/free-solid-svg-ic
     NgbAlert,
     FontAwesomeModule,
     S11PlayerChooseComponent,
+    CompetitionTimelineComponent,
   ],
   templateUrl: "./add.component.html",
   styleUrls: ["./add.component.scss"],
 })
 export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
+  readonly pageTitle = input('speler scouten');
+  readonly navBarItem = input<NavBarItem>(NavBarItem.Scouting);
   form: UntypedFormGroup;
   scoutingList: ScoutingList = {
     scoutedPlayers: [] /*, mappedPersons: new PersonMap()*/,
@@ -47,6 +54,7 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   public faSpinner = faSpinner;
   public faUsers = faUsers;
   public faLevelUpAlt = faLevelUpAlt;
+  private gameRoundNumber: number | undefined;
 
   constructor(
     route: ActivatedRoute,
@@ -58,7 +66,9 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
     fb: UntypedFormBuilder,
     private location: Location,
     public myNavigation: MyNavigation,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private gameRoundRepository: GameRoundRepository,
+    private playerStateModal: PlayerStateModalService
   ) {
     super(route, router, poolRepository, globalEventsManager);
     this.form = fb.group({
@@ -106,7 +116,11 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   }
 
   get Scouting(): NavBarItem {
-    return NavBarItem.Scouting;
+    return this.navBarItem();
+  }
+
+  get isSourceCompetition(): boolean {
+    return this.navBarItem() === NavBarItem.SourceCompetition;
   }
 
   getTeamById(pool: Pool, teamId: number): Team | undefined {
@@ -189,8 +203,12 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
   }
 
   linkToPlayer(pool: Pool, s11Player: S11Player | undefined): void {
-    //console.log(s11Player);
     if (!s11Player) {
+      return;
+    }
+
+    if (this.isSourceCompetition) {
+      this.openPlayerStateModal(pool, s11Player);
       return;
     }
 
@@ -199,6 +217,34 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
       state: { s11Player, "pool": this.pool, currentGameRound: undefined }
     }*/
     );
+  }
+
+  private openPlayerStateModal(pool: Pool, s11Player: S11Player): void {
+    if (this.gameRoundNumber !== undefined) {
+      this.showPlayerStateModal(pool, s11Player, this.gameRoundNumber);
+      return;
+    }
+
+    this.gameRoundRepository.getActiveViewGameRound(
+      pool.getCompetitionConfig(),
+      pool.getCurrentViewPeriod(),
+      GameRoundViewType.Games
+    ).subscribe({
+      next: (gameRound) => {
+        this.gameRoundNumber = gameRound.number;
+        this.showPlayerStateModal(pool, s11Player, gameRound.number);
+      },
+      error: (error) => this.setAlert('danger', error)
+    });
+  }
+
+  private showPlayerStateModal(pool: Pool, s11Player: S11Player, gameRoundNumber: number): void {
+    this.playerStateModal.open(
+      s11Player,
+      pool.getCompetitionConfig(),
+      pool.getCurrentViewPeriod(),
+      gameRoundNumber
+    ).subscribe({ error: (error) => this.setAlert('danger', error) });
   }
 
   updateState(choosePlayersFilter: ChoosePlayersFilter) {

@@ -40,6 +40,8 @@ export class S11PlayerChooseComponent implements OnInit {
   readonly selectableLines = input.required<FootballLine[]>();
   readonly filter = model.required<ChoosePlayersFilter>();
   readonly showAll = input<boolean>(false);
+  readonly showSelectButton = input<boolean>(true);
+  readonly maxResults = input<number | null>(50);
   readonly viewPeriodType = input.required<ViewPeriodType>();
   public faChevronRight = faChevronRight;
 
@@ -118,7 +120,8 @@ export class S11PlayerChooseComponent implements OnInit {
         this.competitionConfig().getSourceCompetition(),
         this.viewPeriod(),
         this.filter().team,
-        this.filter().line
+        this.filter().line,
+        this.maxResults()
       )
       .subscribe({
         next: (players: S11Player[]) => {

@@ -15,12 +15,13 @@ import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PoolNavBarComponent } from '../../shared/poolmodule/poolNavBar/poolNavBar.component';
 import { faCheckCircle, faSpinner, faTimesCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { CompetitionTimelineComponent } from '../../shared/poolmodule/competitionTimeline/competitionTimeline.component';
 
 
 @Component({
   selector: "app-pool-users",
   standalone: true,
-  imports: [FontAwesomeModule, NgbAlertModule, PoolNavBarComponent],
+  imports: [FontAwesomeModule, NgbAlertModule, PoolNavBarComponent, CompetitionTimelineComponent],
   templateUrl: "./poolusers.component.html",
   styleUrls: ["./poolusers.component.scss"],
 })

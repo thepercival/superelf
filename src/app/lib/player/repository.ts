@@ -35,11 +35,18 @@ export class S11PlayerRepository extends APIRepository {
         );
     }
 
-    getObjects(competiton: Competition, viewPeriod: ViewPeriod, team?: Team, line?: number): Observable<S11Player[]> {
+    getObjects(
+        competiton: Competition,
+        viewPeriod: ViewPeriod,
+        team?: Team,
+        line?: number,
+        maxResults: number | null = 50
+    ): Observable<S11Player[]> {
         const jsonFilter = {
             viewPeriodId: viewPeriod.getId(),
             teamId: team?.getId(),
-            line: line
+            line: line,
+            maxResults: maxResults
         };
         return this.http.post<JsonS11Player[]>(this.getUrl(), jsonFilter, this.getOptions()).pipe(
             map((jsonPlayers: JsonS11Player[]) => jsonPlayers.map(jsonPlayer => {

@@ -50,7 +50,7 @@ import { ChooseBadgeCategoryModalComponent } from '../badge/choosecategory-modal
 import { CompetitionGameRoundScrollerComponent } from '../gameRound/competitionGameRoundScroller.component';
 import { GameRoundScheduleModalComponent } from '../gameRound/gameRoundScheduleModal.component';
 import { AgainstGameMissingPlayer, AgainstGameMissingPlayers } from '../../lib/ngx-sport/game/football';
-import { MissingPlayerHistoryGame, MissingPlayerHistoryModalComponent } from '../player/missingplayerhistory.modal.component';
+import { PlayerStateModalService } from '../player/playerstate.modal.service';
 
 @Component({
   selector: "app-pool-user",
@@ -124,7 +124,8 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     gameRoundRepository: GameRoundRepository,    
     protected gameRepository: GameRepository,
     protected authService: AuthService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private playerStateModal: PlayerStateModalService
   ) {
     super(route, router, poolRepository, globalEventsManager);
     this.gameRoundGetter = new GameRoundGetter(gameRoundRepository);
@@ -566,64 +567,13 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
     
   }
 
-  openMissingPlayerHistoryModal(link: PlayerLink, competitionConfig: CompetitionConfig): void {
-    this.getSourceStructure(competitionConfig.getSourceCompetition()).pipe(
-      switchMap((sourceStructure: Structure) => {
-        const poule = sourceStructure.getSingleCategory().getRootRound().getFirstPoule();
-        return this.gameRoundGetter.getGameRounds(
-          competitionConfig,
-          link.gameRound.viewPeriod
-        ).pipe(
-          map((gameRounds: GameRound[]) => {
-            const selectedIndex = gameRounds.findIndex(
-              (gameRound: GameRound) => gameRound.number === link.gameRound.number
-            );
-            if (selectedIndex < 0) {
-              return [link.gameRound];
-            }
-            return gameRounds.slice(Math.max(0, selectedIndex - 3), selectedIndex + 3);
-          }),
-          switchMap((gameRounds: GameRound[]) => forkJoin(gameRounds.map((gameRound: GameRound) =>
-            this.sourceAgainstGamesGetter.getGameRoundGames(poule, gameRound).pipe(
-              map((games: AgainstGame[]) => ({
-                gameRound,
-                game: this.findGame(games, link.s11Player)
-              }))
-            )
-          )))
-        );
-      }),
-      switchMap((historyGames) => {
-        const games = historyGames.filter(
-          (historyGame): historyGame is { gameRound: GameRound; game: AgainstGame } =>
-            historyGame.game !== undefined
-        );
-        if (games.length === 0) {
-          return of([]);
-        }
-        return forkJoin(games.map(({ gameRound, game }) =>
-          this.gameRepository.getSourceObjectMissingPlayers(game).pipe(
-            map((missingPlayers: AgainstGameMissingPlayer[]): MissingPlayerHistoryGame => ({
-              gameRound,
-              game,
-              missingPlayer: this.findMissingPlayer(missingPlayers, link.s11Player)
-            }))
-          )
-        ));
-      })
-    ).subscribe({
-      next: (games: MissingPlayerHistoryGame[]) => {
-        games.sort((gameA, gameB) =>
-          gameB.game.getStartDateTime().getTime() - gameA.game.getStartDateTime().getTime()
-        );
-        const activeModal = this.modalService.open(MissingPlayerHistoryModalComponent, { scrollable: true });
-        activeModal.componentInstance.playerName = link.s11Player.getPerson().getName();
-        activeModal.componentInstance.playerLine = link.s11Player.getLine();
-        activeModal.componentInstance.currentGameRoundNumber = link.gameRound.number;
-        activeModal.componentInstance.games = games;
-      },
-      error: (error) => this.setAlert('danger', error)
-    });
+  openPlayerStateModal(link: PlayerLink, competitionConfig: CompetitionConfig): void {
+    this.playerStateModal.open(
+      link.s11Player,
+      competitionConfig,
+      link.gameRound.viewPeriod,
+      link.gameRound.number
+    ).subscribe({ error: (error) => this.setAlert('danger', error) });
   }
 
   private findMissingPlayer(

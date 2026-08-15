@@ -1,0 +1,17 @@
+@let config = competitionConfig();
+@if(!config.afterAssemblePeriod()) {
+  <div class="d-flex justify-content-between text-center small border-top border-bottom py-2 mb-3">
+    <div class="flex-fill" [class.text-primary]="config.getCreateAndJoinPeriod().isIn()">
+      <div class="fw-semibold">inschrijven</div>
+      <div class="text-secondary">{{formatDate(config.getCreateAndJoinPeriod().getStartDateTime())}}</div>
+    </div>
+    <div class="flex-fill border-start" [class.text-primary]="config.getAssemblePeriod().isIn()">
+      <div class="fw-semibold">team maken</div>
+      <div class="text-secondary">{{formatDate(config.getAssemblePeriod().getStartDateTime())}}</div>
+    </div>
+    <div class="flex-fill border-start">
+      <div class="fw-semibold">deadline</div>
+      <div class="text-secondary">{{formatDate(config.getAssemblePeriod().getEndDateTime())}}</div>
+    </div>
+  </div>
+}

@@ -57,14 +57,16 @@
               <td class="text-end pe-0">
                 <span class="badge bg-totals">{{getTotalPoints(choosePersonItem.s11Player)}}</span>
               </td>
-              <td class="text-end" (click)="$event.stopPropagation()">
+              @if(showSelectButton()) {
+                <td class="text-end" (click)="$event.stopPropagation()">
                 @if(isChoosable(choosePersonItem.player)) {
                   <button type="button" class="btn btn-primary btn-sm"
                     (click)="select(choosePersonItem.s11Player,choosePersonItem.player)">
                     <fa-icon [icon]=faChevronRight></fa-icon>
                   </button>
                 }
-              </td>
+                </td>
+              }
             </tr>
           }
         }

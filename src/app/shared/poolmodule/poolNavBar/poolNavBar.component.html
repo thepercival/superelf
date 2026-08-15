@@ -125,6 +125,22 @@ competities  | programma | prijzenkast | spelregels | beheer
       </a>
     </h2> -->
 
+    @if(!competitionConfig.afterAssemblePeriod()) {
+    <h2 class="mb-0 navbar-item">
+      <a
+        type="button"
+        class="btn {{ getTextColorClass(SourceCompetition) }} pt-cus"
+        style="padding-top: 7px;"
+        (click)="linkTo(SourceCompetition)"
+      >
+        <app-superelf-trophy-icon
+          size="2x"          
+          [leagueName]="CompetitionName"
+        ></app-superelf-trophy-icon>
+        <br /><span>Eredivisie</span>
+      </a>
+    </h2>  
+    } @else {
     <!--SuperCupGame -->
     @if(hasSuperCup) {
     <h2 class="mb-0 navbar-item">
@@ -185,6 +201,7 @@ competities  | programma | prijzenkast | spelregels | beheer
         <br /><span>{{ nameService.getLeagueName(CompetitionName) }}</span>
       </a>
     </h2>
+    }
 
     <!--schedule -->
     <!-- and if scheduleGameRoundNumber ??-->
