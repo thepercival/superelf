@@ -38,6 +38,8 @@
                 "output": "assets"
               },
               "src//assets/favicon/favicon.ico",
+              "src/2627ere-assemble.ics",
+              "src/2627ere-transfer.ics",
               "src/manifest.webmanifest",
               "src/robots.txt"
             ],
