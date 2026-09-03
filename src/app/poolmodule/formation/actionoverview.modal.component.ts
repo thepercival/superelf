@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 
 import { FootballLine, NameService, Player } from 'ngx-sport';
 import { Pool } from '../../lib/pool';
@@ -28,6 +28,7 @@ import { IAlert } from '../../shared/commonmodule/alert';
     LineIconComponent,
   ],
   templateUrl: "./actionoverview.modal.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./actionoverview.modal.component.scss"],
 })
 export class FormationActionOverviewModalComponent implements OnInit {

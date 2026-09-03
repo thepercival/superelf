@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, input, model } from '@angular/core';
+import { Component, Input, OnInit, input, model, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AgainstGame, Competition, GameState, Structure, VoetbalRange } from 'ngx-sport';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
@@ -16,6 +16,7 @@ import { GameRepository } from '../../lib/ngx-sport/game/repository';
     selector: 'app-modal-gameround-schedule',
     templateUrl: './gameRoundScheduleModal.component.html',
     styleUrls: ['./gameRoundScheduleModal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FaIconComponent,AgainstGamesTableSimpleComponent]
 })
 export class GameRoundScheduleModalComponent implements OnInit {

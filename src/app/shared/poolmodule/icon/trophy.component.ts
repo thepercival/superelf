@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { IconDefinition, IconName, IconPrefix, SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { LeagueName } from '../../../lib/leagueName';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -9,6 +9,7 @@ import { facCup, facPlate, facSuperCup, facWorldCup } from '../icons';
     imports: [FontAwesomeModule],
     selector: 'app-superelf-trophy-icon',
     templateUrl: './trophy.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./trophy.component.scss']
 })
 export class SuperElfTrophyIconComponent {

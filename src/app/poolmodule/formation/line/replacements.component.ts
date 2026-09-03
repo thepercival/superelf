@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input, model, ChangeDetectionStrategy } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Person, Team } from 'ngx-sport';
 import { Replacement } from '../../../lib/editAction/replacement';
@@ -28,6 +28,7 @@ import { SportExtensions } from '../../../lib/sportExtensions';
     NgTemplateOutlet,
   ],
   templateUrl: "./replacements.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./replacements.component.scss"],
 })
 export class FormationLineReplacementsComponent implements OnInit {

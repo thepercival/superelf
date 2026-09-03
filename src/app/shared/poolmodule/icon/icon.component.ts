@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { IconDefinition, IconName, IconPrefix, SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { FootballCard, FootballEvent, FootballGoal } from '../../../lib/score';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -8,6 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     imports: [FontAwesomeModule],
     selector: 'app-superelf-icon',
     templateUrl: './icon.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./icon.component.scss']
 })
 export class SuperElfIconComponent {

@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges, ViewEncapsulation, input, model } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, ViewEncapsulation, input, model, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AgainstGame, Competition, Poule, Round, Structure, TogetherGame, TogetherGamePlace } from 'ngx-sport';
 import { Badge } from '../../../lib/achievement/badge';
@@ -27,6 +27,7 @@ import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
   selector: "app-pool-navbar",
   imports: [FontAwesomeModule, SuperElfIconComponent, SuperElfTrophyIconComponent, NgbPopoverModule],
   templateUrl: "./poolNavBar.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./poolNavBar.component.scss"],
 })
 export class PoolNavBarComponent implements OnInit, OnChanges {

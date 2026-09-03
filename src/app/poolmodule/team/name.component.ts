@@ -1,10 +1,11 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
 import { Team } from 'ngx-sport';
 import { ImageRepository } from '../../lib/image/repository';
 
 @Component({
   selector: "app-team-name",
   templateUrl: "./name.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./name.component.scss"],
 })
 export class TeamNameComponent implements OnInit {

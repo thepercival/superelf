@@ -1,20 +1,21 @@
-import { Component, Input, OnInit, input } from '@angular/core';
+import { Component, Input, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Container, Engine } from 'tsparticles-engine';
+import { Container } from '@tsparticles/engine';
+import { NgParticlesService, NgxParticlesModule } from '@tsparticles/angular';
 import { Badge } from '../../lib/achievement/badge';
 import { Trophy } from '../../lib/achievement/trophy';
 import { SuperElfNameService } from '../../lib/nameservice';
-import { loadConfettiPreset } from 'tsparticles-preset-confetti';
+import { loadConfettiPreset } from '@tsparticles/preset-confetti';
 import { LeagueName } from '../../lib/leagueName';
 import { SuperElfTrophyIconComponent } from '../../shared/poolmodule/icon/trophy.component';
 import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.component';
-import { NgParticlesModule } from 'ng-particles';
 
 @Component({
     selector: 'app-ngbd-modal-unviewed',
     standalone: true,
-    imports: [SuperElfTrophyIconComponent,SuperElfBadgeIconComponent,NgParticlesModule],
+    imports: [SuperElfTrophyIconComponent,SuperElfBadgeIconComponent,NgxParticlesModule],
     templateUrl: './unviewed-modal.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./unviewed-modal.component.scss']
 })
 export class UnviewedAchievementsModalComponent implements OnInit {
@@ -30,10 +31,13 @@ export class UnviewedAchievementsModalComponent implements OnInit {
 
     constructor(
         public modal: NgbActiveModal,
-        public nameService: SuperElfNameService) {
+        public nameService: SuperElfNameService,
+        private readonly ngParticlesService: NgParticlesService) {
     }
 
     ngOnInit() {
+        void this.ngParticlesService.init(loadConfettiPreset);
+
         const achievements = this.achievements.slice().reverse();
 
         const current = achievements.pop(); 
@@ -108,15 +112,10 @@ export class UnviewedAchievementsModalComponent implements OnInit {
     }
 
 
-    particlesLoaded(container: Container): void {
-        if( this.container === undefined) {
+    particlesLoaded(container: Container|undefined): void {
+        if( this.container === undefined && container !== undefined) {
             this.container = container;
         }
-    }
-
-    async particlesInit(engine: Engine): Promise<void> {
-
-        await loadConfettiPreset(engine);
     }
     
     getHeader(nrOfNewAchievements: number): string {

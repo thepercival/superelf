@@ -1,4 +1,4 @@
-import { Component, effect, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, effect, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
@@ -56,6 +56,7 @@ import { GameRoundScheduleModalComponent } from '../gameRound/gameRoundScheduleM
     PeriodSelectorComponent
 ],
   templateUrl: "./competition.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./competition.component.scss"],
 })
 export class PoolCompetitionComponent extends PoolComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, TemplateRef, effect, inject, input, model } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, TemplateRef, effect, inject, input, model, ChangeDetectionStrategy } from '@angular/core';
 import { GameRound } from '../../lib/gameRound';
 import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -11,6 +11,7 @@ import { GameState } from 'ngx-sport';
   standalone: true,
   imports: [FontAwesomeModule, NgbProgressbarModule],
   templateUrl: "./scheduleGameRoundScroller.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./scheduleGameRoundScroller.component.scss"],
 })
 export class ScheduleGameRoundScrollerComponent implements OnInit {

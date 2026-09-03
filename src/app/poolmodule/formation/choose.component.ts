@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { concatMap } from 'rxjs/operators';
@@ -28,6 +28,7 @@ import { faCheckCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
     LineIconComponent
   ],
   templateUrl: "./choose.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./choose.component.scss"],
 })
 export class FormationChooseComponent extends PoolComponent implements OnInit {

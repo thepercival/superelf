@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -16,6 +16,7 @@ import { faEnvelope, faKey, faUserCircle } from '@fortawesome/free-solid-svg-ico
   selector: "app-register",
   imports: [NgbAlertModule, UserTitleComponent, FontAwesomeModule, ReactiveFormsModule],
   templateUrl: "./register.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./register.component.scss"],
 })
 export class RegisterComponent extends AuthComponent implements OnInit {

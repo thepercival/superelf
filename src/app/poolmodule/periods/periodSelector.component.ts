@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input, model, ChangeDetectionStrategy } from '@angular/core';
 import { GameRound } from '../../lib/gameRound';
 import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -12,6 +12,7 @@ import { TransferPeriod } from '../../lib/periods/transferPeriod';
   standalone: true,
   imports: [FontAwesomeModule, NgbProgressbarModule],
   templateUrl: "./periodSelector.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./periodSelector.component.scss"],
 })
 export class PeriodSelectorComponent implements OnInit {

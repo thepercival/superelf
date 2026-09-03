@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, WritableSignal, input, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges, WritableSignal, input, model, signal } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 import { Competition, FootballLine, NameService, Person, PersonMap, Player, Team, TeamMap } from 'ngx-sport';
@@ -29,9 +29,10 @@ import { MarketValueComponent } from '../../shared/commonmodule/marketvalue/mark
     MarketValueComponent,
   ],
   templateUrl: "./choose.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./choose.component.scss"],
 })
-export class S11PlayerChooseComponent implements OnInit {
+export class S11PlayerChooseComponent implements OnChanges, OnInit {
   readonly competitionConfig = input.required<CompetitionConfig>();
   readonly viewPeriod = input.required<ViewPeriod>();
   readonly alreadyChosenPersons = input<Person[]>();
@@ -40,6 +41,7 @@ export class S11PlayerChooseComponent implements OnInit {
   readonly selectableLines = input.required<FootballLine[]>();
   readonly filter = model.required<ChoosePlayersFilter>();
   readonly showAll = input<boolean>(false);
+  readonly orderByPoints = input<boolean>(false);
   readonly showSelectButton = input<boolean>(true);
   readonly maxResults = input<number | null>(50);
   readonly viewPeriodType = input.required<ViewPeriodType>();
@@ -102,6 +104,12 @@ export class S11PlayerChooseComponent implements OnInit {
     this.searchPersons();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["orderByPoints"] && !changes["orderByPoints"].firstChange) {
+      this.searchPersons();
+    }
+  }
+
   // ngOnChanges(changes: SimpleChanges) {
   //   // @TODO teams die je al hebt, moeten met een warning kunnen oplichten
   //   // dus een soort van selectWarningTeams
@@ -114,14 +122,16 @@ export class S11PlayerChooseComponent implements OnInit {
   // }
 
   searchPersons() {
+    this.processing.set(true);
     console.log(this.filter());
     this.playerRepository
       .getObjects(
         this.competitionConfig().getSourceCompetition(),
         this.viewPeriod(),
-        this.filter().team,
+        this.getTeamIds(),
         this.filter().line,
-        this.maxResults()
+        this.maxResults(),
+        this.orderByPoints()
       )
       .subscribe({
         next: (players: S11Player[]) => {
@@ -148,13 +158,38 @@ export class S11PlayerChooseComponent implements OnInit {
         choosePersonItems.push({ player: currentPlayer, s11Player: player });
       }
     });
-    choosePersonItems.sort((itemA, itemB) =>
-      this.getTotalPoints(itemA.s11Player) <
-      this.getTotalPoints(itemB.s11Player)
-        ? 1
-        : -1
-    );
+    if (this.orderByPoints()) {
+      choosePersonItems.sort((itemA, itemB) =>
+        this.getTotalPoints(itemA.s11Player) <
+        this.getTotalPoints(itemB.s11Player)
+          ? 1
+          : -1
+      );
+    }
     this.choosePersonItems.set(choosePersonItems);
+  }
+
+  private getTeamIds(): number[] | null {
+    const filteredTeam = this.filter().team;
+    if (filteredTeam !== undefined) {
+      return this.teamAlreadyChosen(filteredTeam) ? [] : [+filteredTeam.getId()];
+    }
+    const selectableTeamIds = this.selectableTeams()
+      .filter((team: Team): boolean => !this.teamAlreadyChosen(team))
+      .map((team: Team): number => +team.getId());
+    const allTeamIds = this.competitionConfig()
+      .getSourceCompetition()
+      .getTeamCompetitors()
+      .map((teamCompetitor): number => +teamCompetitor.getTeam().getId());
+    if (
+      selectableTeamIds.length === allTeamIds.length &&
+      selectableTeamIds.every((teamId: number): boolean =>
+        allTeamIds.includes(teamId)
+      )
+    ) {
+      return null;
+    }
+    return selectableTeamIds;
   }
 
   getTotalPoints(s11Player: S11Player): number {

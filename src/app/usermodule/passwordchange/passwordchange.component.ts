@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -18,6 +18,7 @@ import { faKey } from '@fortawesome/free-solid-svg-icons';
   selector: 'app-passwordchange',
   imports: [UserTitleComponent,FontAwesomeModule,NgbAlertModule, ReactiveFormsModule,RouterLink],
   templateUrl: './passwordchange.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./passwordchange.component.css']
 })
 export class PasswordchangeComponent extends AuthComponent implements OnInit {

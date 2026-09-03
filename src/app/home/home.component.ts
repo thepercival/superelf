@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, Inject, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
@@ -15,6 +15,7 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
   standalone: true,
   imports: [FontAwesomeModule, NgbAlertModule,RouterLink],
   templateUrl: "./home.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {

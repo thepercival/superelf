@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
@@ -18,6 +18,7 @@ import { PoolActions } from '../home/home.component';
   standalone: true,
   imports: [FontAwesomeModule, ReactiveFormsModule],
   templateUrl: "./poollist.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./poollist.component.scss"],
 })
 export class PoolListComponent implements OnInit {

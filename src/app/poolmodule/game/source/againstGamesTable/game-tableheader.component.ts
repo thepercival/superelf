@@ -1,4 +1,4 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AgainstGame, AgainstSide, Competitor, CompetitorBase, GameState, NameService, Team, TeamCompetitor } from 'ngx-sport';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +13,7 @@ import { TeamNameComponent } from '../../../team/name.component';
   standalone: true,
   imports: [FontAwesomeModule,TeamNameComponent,NgTemplateOutlet,NgClass],
   templateUrl: "./game-tableheader.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./game-tableheader.component.scss"],
 })
 export class GameTableHeaderComponent implements OnInit {

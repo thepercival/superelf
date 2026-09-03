@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -15,6 +15,7 @@ import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
   imports: [NgbAlertModule, UserTitleComponent, FontAwesomeModule,RouterLink],
   selector: "app-validate",
   templateUrl: "./validate.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./validate.component.css"],
 })
 export class ValidateComponent extends AuthComponent implements OnInit {

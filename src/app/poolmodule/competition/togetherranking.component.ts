@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, TemplateRef, effect, input, model } from '@angular/core';
+import { Component, EventEmitter, Output, TemplateRef, effect, input, model, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BadgeCategory } from '../../lib/achievement/badge/category';
@@ -17,6 +17,7 @@ import { CompetitionGameRoundScrollerComponent } from '../gameRound/competitionG
   standalone: true,
   imports: [SuperElfBadgeIconComponent, FontAwesomeModule,CompetitionGameRoundScrollerComponent],
   templateUrl: "./togetherranking.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./togetherranking.component.scss"],
 })
 export class TogetherRankingComponent {

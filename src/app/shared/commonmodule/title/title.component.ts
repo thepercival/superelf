@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
@@ -10,6 +10,7 @@ import { faLevelUpAlt } from '@fortawesome/free-solid-svg-icons';
   standalone: true,
   imports: [FontAwesomeModule],
   selector: "app-title",
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./title.component.html",
 })
 export class TitleComponent {

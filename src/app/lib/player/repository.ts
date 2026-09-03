@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AgainstGame, Competition, PersonMapper, Team } from 'ngx-sport';
+import { AgainstGame, Competition, PersonMapper } from 'ngx-sport';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../repository';
@@ -9,6 +9,7 @@ import { ViewPeriod } from '../periods/viewPeriod';
 import { S11PlayerMapper } from './mapper';
 import { JsonS11Player } from './json';
 import { S11Player } from '../player';
+import { JsonTotals } from '../totals/json';
 
 @Injectable({
     providedIn: 'root'
@@ -35,18 +36,28 @@ export class S11PlayerRepository extends APIRepository {
         );
     }
 
+    getTotals(id: number | string): Observable<JsonTotals> {
+        const url = this.getUrl() + '/' + id;
+        return this.http.get<JsonS11Player>(url, { headers: super.getHeaders() }).pipe(
+            map((jsonS11Player: JsonS11Player) => jsonS11Player.totals),
+            catchError((err: HttpErrorResponse) => this.handleError(err))
+        );
+    }
+
     getObjects(
         competiton: Competition,
         viewPeriod: ViewPeriod,
-        team?: Team,
+        teamIds: number[] | null,
         line?: number,
-        maxResults: number | null = 50
+        maxResults: number | null = 50,
+        orderByPoints: boolean = false
     ): Observable<S11Player[]> {
         const jsonFilter = {
             viewPeriodId: viewPeriod.getId(),
-            teamId: team?.getId(),
+            teamIds,
             line: line,
-            maxResults: maxResults
+            maxResults,
+            orderByPoints
         };
         return this.http.post<JsonS11Player[]>(this.getUrl(), jsonFilter, this.getOptions()).pipe(
             map((jsonPlayers: JsonS11Player[]) => jsonPlayers.map(jsonPlayer => {

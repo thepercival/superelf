@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input, model, ChangeDetectionStrategy } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Person, Player, Team } from 'ngx-sport';
 import { S11FormationLine } from '../../../lib/formation/line';
@@ -28,6 +28,7 @@ import { MarketValueComponent } from "../../../shared/commonmodule/marketvalue/m
     MarketValueComponent
 ],
   templateUrl: "./assemble.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./assemble.component.scss"],
 })
 export class FormationLineAssembleComponent implements OnInit {

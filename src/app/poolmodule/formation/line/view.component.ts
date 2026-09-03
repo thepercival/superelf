@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input, model, ChangeDetectionStrategy } from '@angular/core';
 import { NgbAlertModule, NgbModal, NgbProgressbarStacked, NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import { FootballLine, Period, Person, Team } from 'ngx-sport';
 import { S11FormationLine } from '../../../lib/formation/line';
@@ -35,6 +35,7 @@ import { AgainstGameMissingPlayer, AgainstGameMissingPlayers } from '../../../li
     NgbProgressbar
 ],
   templateUrl: "./view.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./view.component.scss"],
 })
 export class FormationLineViewComponent implements OnInit {

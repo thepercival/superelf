@@ -1,4 +1,4 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { BadgeCategory } from '../../lib/achievement/badge/category';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -11,6 +11,7 @@ import { SuperElfTrophyIconComponent } from '../../shared/poolmodule/icon/trophy
     standalone: true,
     imports: [SuperElfBadgeIconComponent,SuperElfTrophyIconComponent],
     templateUrl: './choosecategory-modal.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./choosecategory-modal.component.scss']
 })
 export class ChooseBadgeCategoryModalComponent implements OnInit {

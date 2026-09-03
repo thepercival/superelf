@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, Inject, Input, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -15,6 +15,7 @@ import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
   imports: [FontAwesomeModule,RouterLink],
   selector: "app-nav",
   templateUrl: "./nav.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./nav.component.css"],
 })
 export class NavComponent implements OnInit {

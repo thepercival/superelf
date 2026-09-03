@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgainstGame, AgainstGamePlace, AgainstSide, Competition, Competitor, CompetitorBase, StartLocationMap, Structure, Team, TeamCompetitor } from 'ngx-sport';
 import { forkJoin, map, Observable } from 'rxjs';
@@ -39,6 +39,7 @@ import { facCard } from '../../shared/poolmodule/icons';
     NgTemplateOutlet,
   ],
   templateUrl: "./source.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./source.component.scss"],
 })
 export class SourceGameComponent extends PoolComponent implements OnInit {

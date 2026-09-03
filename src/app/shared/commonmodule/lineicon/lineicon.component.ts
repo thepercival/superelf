@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { FootballLine } from 'ngx-sport';
 import { SuperElfNameService } from '../../../lib/nameservice';
 import { CSSService } from '../cssservice';
@@ -8,6 +8,7 @@ import { CSSService } from '../cssservice';
   standalone: true,
   imports: [],
   styleUrls: ['./lineicon.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './lineicon.component.html'
 })
 export class LineIconComponent {

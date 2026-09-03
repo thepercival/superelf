@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FootballLine, Formation } from 'ngx-sport';
 import { SuperElfNameService } from '../../lib/nameservice';
@@ -25,6 +25,7 @@ import { concatMap } from 'rxjs';
   imports: [FontAwesomeModule, NgbAlertModule, PoolNavBarComponent],
   templateUrl: "./rules.component.html",
   styleUrls: ["./rules.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
 })
 export class RulesComponent extends PoolComponent implements OnInit {

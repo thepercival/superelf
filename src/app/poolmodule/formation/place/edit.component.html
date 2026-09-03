@@ -22,8 +22,10 @@
       </div>   
        
       <div formGroup="form" class="d-flex justify-content-end mt-2 mb-0 me-2">
-        <input type="checkbox" class="form-check-input" (change)="updateShowAll()" id="showAll" formControlName="showAll">          
-        <label class="form-check-label px-2" for="showAll">toon alles</label>
+        <input #orderByPointsInput type="checkbox" class="form-check-input"
+          (change)="updateOrderByPoints(orderByPointsInput.checked)"
+          id="orderByPoints" formControlName="orderByPoints">          
+        <label class="form-check-label px-2" for="orderByPoints">meeste punten eerst</label>
       </div>
 
       @if(assembleFormation && selectableTeams.length > 0) {
@@ -33,7 +35,8 @@
             [alreadyChosenPersons]="alreadyChosenPersons"
             [alreadyChosenTeams]="alreadyChosenTeams" [selectableLines]="selectableLines" 
             [filter]="choosePlayersFilter" [selectableTeams]="selectableTeams"
-            [showAll]="form.controls.showAll.value" (selectS11Player)="editPlace(pool,$event)"
+            [orderByPoints]="orderByPoints"
+            (selectS11Player)="editPlace(pool,$event)"
             (linkToS11Player)="linkToPlayer(pool,$event)" (filterUpdate)="updateState($event)">
           </app-pool-player-choose>
         </div>

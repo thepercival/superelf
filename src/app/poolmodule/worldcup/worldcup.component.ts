@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
@@ -8,6 +8,7 @@ import { WorldCupPreviousService } from '../../shared/commonmodule/worldCupPrevi
 @Component({
     selector: 'app-pool-worldcup',
     templateUrl: './worldcup.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./worldcup.component.css']
 })
 export class WorldCupComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
@@ -29,6 +29,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     PoolNavBarComponent
   ],
   templateUrl: "./structure.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./structure.component.scss"],
 })
 export class PoolCupComponent extends PoolComponent implements OnInit {

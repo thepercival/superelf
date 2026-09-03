@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormControl,
   UntypedFormBuilder,
@@ -23,6 +23,7 @@ import { faEnvelope, faKey, faSignInAlt, faSpinner } from '@fortawesome/free-sol
   selector: "app-login",
   imports: [UserTitleComponent, FontAwesomeModule, NgbAlertModule,ReactiveFormsModule,RouterLink],
   templateUrl: "./login.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent extends AuthComponent implements OnInit {

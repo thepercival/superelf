@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
@@ -40,6 +40,7 @@ import { TransferPeriodAction } from './stepper/transferPeriodAction';
     TransferPeriodStepperComponent
   ],
   templateUrl: "./transfer.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./transfer.component.scss"],
 })
 export class FormationTransferComponent

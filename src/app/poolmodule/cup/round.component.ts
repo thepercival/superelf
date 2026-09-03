@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, input } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
 import { Round, Competitor, PlaceRanges, Place, StructureNameService, StartLocation, AgainstGame, Poule, GameState, AgainstSide } from 'ngx-sport';
 import { AgainstPoule } from '../../lib/againstPoule';
 import { PoolCompetitor } from '../../lib/pool/competitor';
@@ -12,6 +12,7 @@ import { NgTemplateOutlet } from '@angular/common';
   standalone: true,
   imports: [EscapeHtmlPipe, NgTemplateOutlet],
   templateUrl: "./round.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./round.component.scss"],
 })
 export class PoolCupRoundComponent implements OnInit {

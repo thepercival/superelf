@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, WritableSignal, model, input, effect } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, WritableSignal, model, input, effect, ChangeDetectionStrategy } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase, GameState, NameService, SportRoundRankingItem, StartLocation, StartLocationMap, StructureNameService, Team, TeamCompetitor } from 'ngx-sport';
 import { DateFormatter } from '../../../../lib/dateFormatter';
@@ -20,6 +20,7 @@ import { FormationPlacesGetter } from './formationPlacesGetter';
   standalone: true,
   imports: [FontAwesomeModule, GameTableHeaderComponent, GameTableRowComponent],
   templateUrl: "./againstgames-table.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./againstgames-table.component.scss"],
 })
 export class AgainstGamesTableComponent implements OnInit {

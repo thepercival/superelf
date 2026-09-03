@@ -1,4 +1,4 @@
-import { Component, effect, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, effect, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgainstGame, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Poule, Structure, TeamCompetitor } from 'ngx-sport';
 import { concatMap, forkJoin, Observable, of } from 'rxjs';
@@ -58,6 +58,7 @@ import { ScheduleGameRoundScrollerComponent } from "../gameRound/scheduleGameRou
     ScheduleGameRoundScrollerComponent
 ],
   templateUrl: "./allinonegame.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./allinonegame.component.scss"],
 })
 export class PoolAllInOneGameScheduleComponent

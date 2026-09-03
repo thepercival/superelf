@@ -1,5 +1,5 @@
 
-import { Component, effect, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, effect, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -65,6 +65,7 @@ import { PlayerStateModalService } from '../player/playerstate.modal.service';
     CompetitionGameRoundScrollerComponent
   ],
   templateUrl: "./pooluser.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./pooluser.component.scss"],
 })
 export class PoolUserComponent extends PoolComponent implements OnInit {

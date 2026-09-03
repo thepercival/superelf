@@ -1,10 +1,11 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 
 import { CompetitionConfig } from '../../../lib/competitionConfig';
 
 @Component({
   selector: 'app-competition-timeline',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './competitionTimeline.component.html'
 })
 export class CompetitionTimelineComponent {

@@ -1,4 +1,4 @@
-import { Component, input, OnInit } from '@angular/core';
+import { Component, input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { faArrowsRotate, faExchangeAlt, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TransferPeriodAction } from './transferPeriodAction';
@@ -10,6 +10,7 @@ import { TransferPeriodAction } from './transferPeriodAction';
     FontAwesomeModule
 ],
   templateUrl: './transferperiod-stepper.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./transferperiod-stepper.component.scss']
 })
 export class TransferPeriodStepperComponent implements OnInit {

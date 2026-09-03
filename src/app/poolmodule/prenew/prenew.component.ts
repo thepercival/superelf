@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { StartSessionService } from '../../shared/commonmodule/startSessionService';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSignInAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +9,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [FontAwesomeModule,RouterLink],
   templateUrl: "./prenew.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./prenew.component.scss"],
 })
 export class PreNewComponent implements OnInit {

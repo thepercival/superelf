@@ -1,4 +1,4 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
 import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase, ScoreConfigService, GameState, Team, TeamCompetitor, StartLocationMap } from 'ngx-sport';
 import { DateFormatter } from '../../../lib/dateFormatter';
 import { SuperElfNameService } from '../../../lib/nameservice';
@@ -9,6 +9,7 @@ import { TeamNameComponent } from '../../team/name.component';
   standalone: true,
   imports: [TeamNameComponent],
   templateUrl: './title.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./title.component.scss']
 })
 export class AgainstGameTitleComponent implements OnInit {

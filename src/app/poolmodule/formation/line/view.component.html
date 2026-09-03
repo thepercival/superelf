@@ -26,10 +26,10 @@
   @let firstGameRound = gameRounds()[0];  
   @for(place of line().getStartingPlaces(); track place.getId()){  
     @let s11Player = place.getPlayer();
-    <ng-container *ngTemplateOutlet="placeRow; context: {place, s11Player, currentTeam: getCurrentTeam(s11Player, firstGameRound?.period)}">
+    <ng-container *ngTemplateOutlet="placeRow; context: {place, s11Player, currentTeam: getCurrentTeam(s11Player, $safeNavigationMigration(firstGameRound?.period))}">
     </ng-container>
   }
-  <ng-container *ngTemplateOutlet="placeRow; context: {place:line().getSubstitute(), s11Player: line().getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line().getSubstitute().getPlayer(), firstGameRound?.period)}">
+  <ng-container *ngTemplateOutlet="placeRow; context: {place:line().getSubstitute(), s11Player: line().getSubstitute().getPlayer(), currentTeam: getCurrentTeam(line().getSubstitute().getPlayer(), $safeNavigationMigration(firstGameRound?.period))}">
   </ng-container>  
 }
 

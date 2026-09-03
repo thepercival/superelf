@@ -1,4 +1,4 @@
-import { Component, effect, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, effect, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AgainstGame, AgainstGamePlace, AgainstGpp, AgainstH2h, AgainstSide, AllInOneGame, Competition, Competitor, CompetitorBase, GamePlace, GameState, Poule, Single, StartLocation, StartLocationMap, Structure, StructureNameService, Team, TeamCompetitor, TogetherGame } from 'ngx-sport';
 import { concatMap, forkJoin, Observable, of } from 'rxjs';
@@ -63,6 +63,7 @@ import { GameRound } from '../../lib/gameRound';
     EscapeHtmlPipe
   ],
   templateUrl: "./againstgames.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./againstgames.component.scss"],
 })
 export class PoolPouleAgainstGamesComponent

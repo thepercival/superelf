@@ -6,12 +6,11 @@
 @if(current) {
 <div class="modal-body">    
 
-    <ng-particles
+    <ngx-particles
         [id]="tsparticlesId"
         [options]="particlesOptions"
-        [particlesInit]="particlesInit"            
         (particlesLoaded)="particlesLoaded($event)"
-    ></ng-particles>
+    ></ngx-particles>
     @if(currentTrophy){
         <div class="text-center">    
             <div><h4>{{getTrophyTitle(currentTrophy)}}</h4></div>

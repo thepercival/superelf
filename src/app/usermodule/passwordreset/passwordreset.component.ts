@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -16,6 +16,7 @@ import { RouterLink } from '@angular/router';
   selector: 'app-passwordreset',
   imports: [UserTitleComponent,FontAwesomeModule,NgbAlertModule,ReactiveFormsModule, RouterLink],
   templateUrl: './passwordreset.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./passwordreset.component.css']
 })
 export class PasswordresetComponent extends AuthComponent implements OnInit {

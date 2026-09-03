@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, Input, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash';
 import { AgainstGame } from 'ngx-sport';
@@ -37,6 +37,7 @@ import { facSofaScore } from '../../shared/poolmodule/icons';
     AgainstGameTitleComponent,
   ],
   templateUrl: "./playerinfo.modal.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./playerinfo.modal.component.scss"],
 })
 export class S11PlayerModalComponent implements OnInit {

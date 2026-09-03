@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
@@ -23,6 +23,7 @@ import { CompetitionTimelineComponent } from '../../shared/poolmodule/competitio
   standalone: true,
   imports: [FontAwesomeModule, NgbAlertModule, PoolNavBarComponent, CompetitionTimelineComponent],
   templateUrl: "./poolusers.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./poolusers.component.scss"],
 })
 export class PoolUsersComponent extends PoolComponent implements OnInit {

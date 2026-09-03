@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AgainstSide, AgainstSportRoundRankingCalculator, GameState, Poule, SportRoundRankingItem, Structure } from 'ngx-sport';
@@ -41,6 +41,7 @@ import { PoolCompetitor } from '../../lib/pool/competitor';
     NgTemplateOutlet
   ],
   templateUrl: "./chat.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./chat.component.scss"],
 })
 export class PoolChatComponent extends PoolComponent implements OnInit {

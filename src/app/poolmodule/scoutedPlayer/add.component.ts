@@ -1,4 +1,4 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -39,6 +39,7 @@ import { GameRoundViewType } from '../../lib/gameRound/viewType';
     CompetitionTimelineComponent,
   ],
   templateUrl: "./add.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./add.component.scss"],
 })
 export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
@@ -74,7 +75,7 @@ export class ScoutedPlayerAddComponent extends PoolComponent implements OnInit {
     this.form = fb.group({
       url: [{ value: "", disabled: true }, Validators.compose([])],
     });
-    const state = this.router.getCurrentNavigation()?.extras.state ?? undefined;
+    const state = this.router.currentNavigation()?.extras.state ?? undefined;
     this.choosePlayersFilter = state
       ? state.playerFilter
       : { line: undefined, team: undefined };

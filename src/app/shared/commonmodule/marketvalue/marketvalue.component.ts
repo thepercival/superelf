@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -8,6 +8,7 @@ import { MarketValuePipe } from "../../market-value.pipe";
   standalone: true,
   imports: [FontAwesomeModule, MarketValuePipe],
   selector: "se-marketvalue",
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: "./marketvalue.component.html",
 })
 export class MarketValueComponent {

@@ -1,4 +1,4 @@
-import { Component, model, OnInit } from '@angular/core';
+import { Component, model, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router, RouterLink } from '@angular/router';
 
@@ -34,6 +34,7 @@ import { faUserSecret, faUsers, faSpinner } from '@fortawesome/free-solid-svg-ic
     RouterLink,
   ],
   templateUrl: "./assemble.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./assemble.component.scss"],
 })
 export class FormationAssembleComponent

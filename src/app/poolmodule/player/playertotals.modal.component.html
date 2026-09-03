@@ -1,0 +1,47 @@
+<div class="modal-header border-bottom-0 text-white {{getLineClass()}}">
+  <h5>{{s11Player.getPerson().getName()}}</h5>
+  <button type="button" class="btn-close" aria-label="Sluiten" (click)="modal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  @if (error()) {
+    <ngb-alert type="danger" [dismissible]="false">{{error()}}</ngb-alert>
+  } @else if (totals(); as playerTotals) {
+    @let player = sportExtensions.getCurrentPlayer(s11Player);
+    @if (player) {
+      <app-player-basics class="text-center" [player]="player" [points]="points()"></app-player-basics>
+    }
+
+    <h6 class="border-bottom pb-1 mt-3">Inzet</h6>
+    <div class="table-responsive">
+      <table class="table table-sm mb-0">
+        <tbody>
+          <tr><th scope="row" class="fw-normal">Basisplaatsen</th><td class="text-end">{{playerTotals.nrOfTimesStarted}}</td></tr>
+          <tr><th scope="row" class="fw-normal">Ingevallen</th><td class="text-end">{{playerTotals.nrOfTimesSubstitute}}</td></tr>
+          <tr><th scope="row" class="fw-normal">Gewisseld</th><td class="text-end">{{playerTotals.nrOfTimesSubstituted}}</td></tr>
+          <tr><th scope="row" class="fw-normal">Niet gespeeld</th><td class="text-end">{{playerTotals.nrOfTimesNotAppeared}}</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h6 class="border-bottom pb-1 mt-3">Prestaties</h6>
+    <div class="table-responsive">
+      <table class="table table-sm mb-0">
+        <tbody>
+          <tr><th scope="row" class="fw-normal">Overwinningen</th><td class="text-end">{{playerTotals.nrOfWins}}</td></tr>
+          <tr><th scope="row" class="fw-normal">Gelijke spelen</th><td class="text-end">{{playerTotals.nrOfDraws}}</td></tr>
+          <tr><th scope="row" class="fw-normal">Doelpunten</th><td class="text-end">{{playerTotals.nrOfFieldGoals}}</td></tr>
+          <tr><th scope="row" class="fw-normal">Assists</th><td class="text-end">{{playerTotals.nrOfAssists}}</td></tr>
+          <tr><th scope="row" class="fw-normal">Penaltydoelpunten</th><td class="text-end">{{playerTotals.nrOfPenalties}}</td></tr>
+          <tr><th scope="row" class="fw-normal">Eigen doelpunten</th><td class="text-end">{{playerTotals.nrOfOwnGoals}}</td></tr>
+          <tr><th scope="row" class="fw-normal">Clean sheets</th><td class="text-end">{{playerTotals.nrOfCleanSheets}}</td></tr>
+          <tr><th scope="row" class="fw-normal">Spotty sheets</th><td class="text-end">{{playerTotals.nrOfSpottySheets}}</td></tr>
+          <tr><th scope="row" class="fw-normal">Gele kaarten</th><td class="text-end">{{playerTotals.nrOfYellowCards}}</td></tr>
+          <tr><th scope="row" class="fw-normal">Rode kaarten</th><td class="text-end">{{playerTotals.nrOfRedCards}}</td></tr>
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="text-center" aria-label="Spelerstotalen laden">Laden...</div>
+  }
+</div>

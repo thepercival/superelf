@@ -1,4 +1,4 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
 import { Player } from 'ngx-sport';
 import { ImageRepository } from '../../lib/image/repository';
 import { LineIconComponent } from '../../shared/commonmodule/lineicon/lineicon.component';
@@ -11,6 +11,7 @@ import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
   standalone: true,
   imports: [LineIconComponent, TeamNameComponent, FontAwesomeModule],
   templateUrl: "./basics.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./basics.component.scss"],
 })
 export class PlayerBasicsComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Pool } from '../../lib/pool';
@@ -17,6 +17,7 @@ import { faEnvelope, faSpinner, faUserCircle, faSignInAlt } from '@fortawesome/f
   standalone: true,
   imports: [FontAwesomeModule, NgbAlertModule, RouterModule],
   templateUrl: "./join.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./join.component.scss"],
 })
 export class JoinComponent extends PoolComponent implements OnInit {

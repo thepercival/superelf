@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { IconDefinition, IconName, IconPrefix, SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { BadgeCategory } from '../../../lib/achievement/badge/category';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -10,6 +10,7 @@ import { facCleanSheet, facCornerFlag, facScoreboard } from '../icons';
   imports: [FontAwesomeModule],
   selector: "app-superelf-badge-icon",
   templateUrl: "./badge.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./badge.component.scss"],
 })
 export class SuperElfBadgeIconComponent {

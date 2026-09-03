@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { GlobalEventsManager } from '../../commonmodule/eventmanager';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEnvelope, faCopyright } from '@fortawesome/free-solid-svg-icons';
@@ -8,6 +8,7 @@ import { faEnvelope, faCopyright } from '@fortawesome/free-solid-svg-icons';
   imports: [FontAwesomeModule],
   selector: "app-footer",
   templateUrl: "./footer.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./footer.component.scss"],
 })
 export class FooterComponent implements OnInit {

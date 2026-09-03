@@ -1,4 +1,4 @@
-import { Component, input, OnInit } from '@angular/core';
+import { Component, input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Badge } from '../../lib/achievement/badge';
@@ -36,6 +36,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     SuperElfBadgeIconComponent,
   ],
   templateUrl: "./achievements.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./achievements.component.scss"],
 })
 export class AchievementsComponent extends PoolComponent implements OnInit {

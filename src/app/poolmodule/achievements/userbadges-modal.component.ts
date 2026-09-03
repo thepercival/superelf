@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, WritableSignal, input, signal } from '@angular/core';
+import { Component, Input, OnInit, WritableSignal, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SuperElfNameService } from '../../lib/nameservice';
 import { Badge } from '../../lib/achievement/badge';
@@ -10,6 +10,7 @@ import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.c
     standalone: true,
     imports: [SuperElfBadgeIconComponent],
     templateUrl: './userbadges-modal.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./userbadges-modal.component.scss']
 })
 export class UserBadgesModalComponent implements OnInit {

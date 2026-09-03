@@ -1,4 +1,4 @@
-import { Component, model, OnInit } from '@angular/core';
+import { Component, model, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { PoolRepository } from '../../lib/pool/repository';
@@ -46,6 +46,7 @@ import { CompetitionTimelineComponent } from '../../shared/poolmodule/competitio
 ],
   selector: "app-pool-scouting-list",
   templateUrl: "./list.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./list.component.scss"],
 })
 export class ScoutedPlayerListComponent

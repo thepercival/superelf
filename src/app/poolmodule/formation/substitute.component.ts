@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
@@ -41,6 +41,7 @@ import { FormationActionOverviewModalComponent } from './actionoverview.modal.co
     TransferPeriodStepperComponent
   ],
   templateUrl: "./substitute.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./substitute.component.scss"],
 })
 export class FormationSubstituteComponent

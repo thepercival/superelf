@@ -1,4 +1,4 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AgainstGame, AgainstSide, Competitor, CompetitorBase, FootballLine, GameState } from 'ngx-sport';
 import { DateFormatter } from '../../../../lib/dateFormatter';
@@ -21,6 +21,7 @@ import { AppearanceColumn, MinutesAsGradientsService } from '../../../../shared/
   standalone: true,
   imports: [FontAwesomeModule, NgTemplateOutlet, LineIconComponent, RouterLink, NgbProgressbarStacked, NgbProgressbar],
   templateUrl: "./game-tablerow.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./game-tablerow.component.scss"],
 })
 export class GameTableRowComponent implements OnInit {

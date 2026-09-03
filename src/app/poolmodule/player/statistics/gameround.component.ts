@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges, WritableSignal, input, signal } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, WritableSignal, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FootballLine } from 'ngx-sport';
 import { BadgeCategory } from '../../../lib/achievement/badge/category';
 import { ImageRepository } from '../../../lib/image/repository';
@@ -9,7 +9,7 @@ import { Statistics } from '../../../lib/statistics';
 import { CSSService } from '../../../shared/commonmodule/cssservice';
 import { SuperElfIconComponent } from '../../../shared/poolmodule/icon/icon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgIf } from '@angular/common';
+
 import { facCard, facCleanSheet, facPenalty, facSpottySheet } from '../../../shared/poolmodule/icons';
 import { faCheckCircle, faFutbol, faHandshakeAngle } from '@fortawesome/free-solid-svg-icons';
 
@@ -18,6 +18,7 @@ import { faCheckCircle, faFutbol, faHandshakeAngle } from '@fortawesome/free-sol
   standalone: true,
   imports: [SuperElfIconComponent, FontAwesomeModule],
   templateUrl: "./gameround.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./gameround.component.scss"],
 })
 export class S11PlayerStatisticsComponent implements OnInit, OnChanges

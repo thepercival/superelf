@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input, ChangeDetectionStrategy } from '@angular/core';
 import { GameRound } from '../../lib/gameRound';
 import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -16,6 +16,7 @@ import { GameRoundProgressColumn } from '../gameRound/scheduleGameRoundScroller.
   standalone: true,
   imports: [FontAwesomeModule, NgbProgressbarModule],
   templateUrl: "./title-againstgame-pool.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./title-againstgame-pool.component.scss"],
 })
 export class PouleTitleWithGameRoundsComponent implements OnInit {

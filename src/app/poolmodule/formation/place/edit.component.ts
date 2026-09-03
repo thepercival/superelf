@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -22,12 +22,14 @@ import { ChoosePlayersFilter, S11PlayerChooseComponent } from '../../player/choo
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faLevelUpAlt, faSpinner, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../../lib/sportExtensions';
+import { S11PlayerTotalsModalComponent } from '../../player/playertotals.modal.component';
 
 @Component({
   selector: "app-pool-scouted-player-edit",
   standalone: true,
   imports: [FontAwesomeModule, NgbAlertModule, S11PlayerChooseComponent],
   templateUrl: "./edit.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./edit.component.scss"],
 })
 export class FormationPlaceEditComponent
@@ -45,6 +47,7 @@ export class FormationPlaceEditComponent
   public alreadyChosenTeams: Team[] = [];
   public selectableLines: FootballLine[];
   public selectableTeams: Team[] = [];
+  public orderByPoints = false;
   public faSpinner = faSpinner;
   public faLevelUpAlt = faLevelUpAlt;
   public faUsers = faUsers;
@@ -64,10 +67,10 @@ export class FormationPlaceEditComponent
   ) {
     super(route, router, poolRepository, globalEventsManager);
     this.form = fb.group({
-      showAll: false,
+      orderByPoints: false,
     });
 
-    const state = this.router.getCurrentNavigation()?.extras.state ?? undefined;
+    const state = this.router.currentNavigation()?.extras.state ?? undefined;
     this.choosePlayersFilter = state
       ? state.playerFilter
       : { line: undefined, team: undefined };
@@ -134,7 +137,8 @@ export class FormationPlaceEditComponent
   }
 
   initPlayerChooseFilter(pool: Pool, params: Params) {
-    this.form.controls.showAll.setValue(params.showAll === "true");
+    this.orderByPoints = params.orderByPoints === "true";
+    this.form.controls.orderByPoints.setValue(this.orderByPoints);
     if (params.line !== undefined) {
       this.choosePlayersFilter.line = +params.line;
     }
@@ -242,7 +246,9 @@ export class FormationPlaceEditComponent
       });
   }
 
-  updateShowAll() {
+  updateOrderByPoints(orderByPoints: boolean) {
+    this.orderByPoints = orderByPoints;
+    this.form.controls.orderByPoints.setValue(orderByPoints);
     this.updateState(this.choosePlayersFilter);
   }
 
@@ -256,21 +262,20 @@ export class FormationPlaceEditComponent
     if (choosePlayersFilter.team) {
       params = params.set("teamId", choosePlayersFilter.team.getId());
     }
-    params = params.set("showAll", this.form.controls.showAll.value);
+    params = params.set("orderByPoints", this.orderByPoints);
 
     this.location.replaceState(location.pathname, params.toString(), undefined);
   }
 
   linkToPlayer(pool: Pool, s11Player: S11Player): void {
-    // SHOULD MAKE A NICE OVERVIEW IN MODAL
-    // this.router.navigate(
-    //   ["/pool/player/", pool.getId(), s11Player.getId(), 0] /*, {
-    //   state: { s11Player, "pool": this.pool, currentGameRound: undefined }
-    // }*/
-    // );
+    const modalRef = this.modalService.open(S11PlayerTotalsModalComponent, {
+      scrollable: true,
+    });
+    modalRef.componentInstance.s11Player = s11Player;
+    modalRef.componentInstance.scorePointsMap = pool
+      .getCompetitionConfig()
+      .getScorePointsMap();
   }
-
-  toggleShowAll() {}
 
   navigateBack() {
     this.myNavigation.back();

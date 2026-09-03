@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ScoutedPlayerAddComponent } from '../scoutedPlayer/add.component';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
 
@@ -6,6 +6,7 @@ import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
   selector: 'app-pool-source-competition',
   standalone: true,
   imports: [ScoutedPlayerAddComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<app-pool-scouted-player-add pageTitle="Eredivisie" [navBarItem]="SourceCompetition"></app-pool-scouted-player-add>'
 })
 export class SourceCompetitionComponent {

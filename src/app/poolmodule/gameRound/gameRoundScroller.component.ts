@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input, ChangeDetectionStrategy } from '@angular/core';
 import { GameRound } from '../../lib/gameRound';
 import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -12,6 +12,7 @@ import { NgbProgressbar, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap
   standalone: true,
   imports: [FontAwesomeModule, NgbProgressbarModule],
   templateUrl: "./gameRoundScroller.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./gameRoundScroller.component.scss"],
 })
 export class GameRoundScrollerComponent implements OnInit {

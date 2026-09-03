@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
@@ -38,6 +38,7 @@ import { TransferPeriodAction } from './stepper/transferPeriodAction';
     TransferPeriodStepperComponent
   ],
   templateUrl: "./replace.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./replace.component.scss"],
 })
 export class FormationReplaceComponent extends PoolComponent implements OnInit {

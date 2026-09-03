@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AgainstGame } from 'ngx-sport';
 import { GameRound } from '../../lib/gameRound';
@@ -16,6 +16,7 @@ import { JsonGameParticipationStatistic } from '../../lib/statistics/json';
   selector: 's11-player-state-modal',
   standalone: true,
   imports: [AgainstGameTitleComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './playerstate.modal.component.html'
 })
 export class PlayerStateModalComponent {

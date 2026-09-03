@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -28,6 +28,7 @@ import { ClipboardModule } from 'ngx-clipboard';
     ClipboardModule,
   ],
   templateUrl: "./invite.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./invite.component.scss"],
 })
 export class InviteComponent extends PoolComponent implements OnInit {

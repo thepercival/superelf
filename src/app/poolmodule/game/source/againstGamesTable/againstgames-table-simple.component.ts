@@ -1,4 +1,4 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AgainstGame, AgainstSide, GameState } from 'ngx-sport';
 import { DateFormatter } from '../../../../lib/dateFormatter';
@@ -13,6 +13,7 @@ import { GameTableRowComponent } from './game-tablerow.component';
   standalone: true,
   imports: [FontAwesomeModule, GameTableHeaderComponent],
   templateUrl: "./againstgames-table-simple.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./againstgames-table-simple.component.scss"],
 })
 export class AgainstGamesTableSimpleComponent implements OnInit {

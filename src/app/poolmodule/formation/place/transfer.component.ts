@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { concatMap } from 'rxjs/operators';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -38,6 +38,7 @@ import { faRightLeft, faSpinner } from '@fortawesome/free-solid-svg-icons';
     S11PlayerChooseComponent
   ],
   templateUrl: "./transfer.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./transfer.component.scss"],
 })
 export class FormationPlaceTransferComponent
@@ -80,7 +81,7 @@ export class FormationPlaceTransferComponent
       showAll: false,
     });
 
-    const state = this.router.getCurrentNavigation()?.extras.state ?? undefined;
+    const state = this.router.currentNavigation()?.extras.state ?? undefined;
     this.choosePlayersFilter = state
       ? state.playerFilter
       : { line: undefined, team: undefined };

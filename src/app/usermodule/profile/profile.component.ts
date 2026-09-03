@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -19,6 +19,7 @@ import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
   selector: "app-profile",
   imports: [NgbAlertModule, UserTitleComponent, FontAwesomeModule, ReactiveFormsModule],
   templateUrl: "./profile.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./profile.component.scss"],
 })
 export class ProfileComponent extends AuthComponent implements OnInit {

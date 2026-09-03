@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, input } from '@angular/core';
+import { Component, Input, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Player } from 'ngx-sport';
 import { S11Player } from '../../lib/player';
@@ -12,6 +12,7 @@ import { SportExtensions } from '../../lib/sportExtensions';
   standalone: true,
   imports: [PlayerBasicsComponent],
   templateUrl: "./addremovemodal.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./addremovemodal.component.scss"],
 })
 export class S11PlayerAddRemoveModalComponent implements OnInit {

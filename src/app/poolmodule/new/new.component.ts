@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -21,6 +21,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
   standalone: true,
   imports: [FontAwesomeModule,NgbAlertModule,TitleComponent, ReactiveFormsModule],
   templateUrl: './new.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./new.component.scss']
 })
 export class NewComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input, ChangeDetectionStrategy } from '@angular/core';
 import { AgainstSide, GameState, Poule, StartLocationMap } from 'ngx-sport';
 import { AgainstPoule } from '../../lib/againstPoule';
 import { PoolCompetitor } from '../../lib/pool/competitor';
@@ -7,6 +7,7 @@ import { PoolUser } from '../../lib/pool/user';
 
 @Component({
   selector: 'app-poule-title',
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './title.component.html'
 })
 export class PouleTitleComponent implements OnInit {

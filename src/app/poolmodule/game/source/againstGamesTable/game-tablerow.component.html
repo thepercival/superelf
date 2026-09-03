@@ -18,7 +18,7 @@
 
 <ng-template #contentHome let-poolUserRow="poolUserRow" let-gameRound="gameRound" let-showPoints="showPoints">
   @let formationPlace = poolUserRow.homeFormationPlace;
-  @let s11Player = formationPlace?.getPlayer();  
+  @let s11Player = $safeNavigationMigration(formationPlace?.getPlayer());  
   <!-- sub -->
   <td class="px-0">              
     @if(formationPlace !== undefined && formationPlace.isSubstitute()) {
@@ -87,7 +87,7 @@
 
 <ng-template #contentAway let-poolUserRow="poolUserRow" let-gameRound="gameRound">
   @let formationPlace = poolUserRow.awayFormationPlace;
-  @let s11Player = formationPlace?.getPlayer();  
+  @let s11Player = $safeNavigationMigration(formationPlace?.getPlayer());  
 
   <!-- points -->
   @if(showPoints) {
