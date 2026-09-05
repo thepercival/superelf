@@ -7,12 +7,17 @@ export class DateFormatter {
     protected static readonly YMSD2TC: Intl.DateTimeFormatOptions = { year: "numeric", month: "short", day: "2-digit", hour12: false, hour: "2-digit", minute: "2-digit" };
     protected static readonly YMSD2: Intl.DateTimeFormatOptions = { year: "numeric", month: "short", day: "2-digit" };
     protected static readonly MSD2: Intl.DateTimeFormatOptions = { month: "short", "day": "2-digit" };
+    protected static readonly WMSD2: Intl.DateTimeFormatOptions = { weekday: "short", month: "short", day: "numeric" };
     protected static readonly NICEDATETIME: Intl.DateTimeFormatOptions = { month: "short", "day": "2-digit", hour12: false, hour: "2-digit", minute: "2-digit" };
     protected static readonly MSD2TC: Intl.DateTimeFormatOptions = { month: "short", day: "2-digit", hour12: false, hour: "2-digit", minute: "2-digit" };
     protected static readonly TC: Intl.DateTimeFormatOptions = { hour12: false, hour: "2-digit", minute: "2-digit" };
 
     date(): Intl.DateTimeFormatOptions {
         return DateFormatter.MSD2;
+    }
+
+    dateWithWeekday(): Intl.DateTimeFormatOptions {
+        return DateFormatter.WMSD2;
     }
 
     dateWithYear(): Intl.DateTimeFormatOptions {

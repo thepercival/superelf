@@ -8,7 +8,7 @@
     } @else {        
         <div class="text-nowrap">
             <small>
-                @let dateTitle = dateFormatter.toString(againstGame().getStartDateTime(),dateFormatter.date());
+                @let dateTitle = dateFormatter.toString(againstGame().getStartDateTime(),dateFormatter.dateWithWeekday());
                 {{dateTitle}}
             </small>
         </div>
