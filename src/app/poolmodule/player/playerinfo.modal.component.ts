@@ -11,20 +11,21 @@ import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
 import { StatisticsGetter } from '../../lib/statistics/getter';
 import { StatisticsRepository } from '../../lib/statistics/repository';
-import { JsonGameParticipationStatistic } from '../../lib/statistics/json';
 
 import { CSSService } from '../../shared/commonmodule/cssservice';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbActiveModal, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbAlertModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlayerBasicsComponent } from './basics.component';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { S11PlayerStatisticsComponent } from './statistics/gameround.component';
+import { faCircleInfo, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { SportExtensions } from '../../lib/sportExtensions';
 import { ScorePointsMap } from '../../lib/score/points';
 import { AgainstGameTitleComponent } from '../game/source/title.component';
 import { facSofaScore } from '../../shared/poolmodule/icons';
+import { Statistics } from '../../lib/statistics';
+import { S11PlayerStatisticsInfoModalComponent } from './statistics/info.modal.component';
+import { S11PlayerStatisticsComponent } from './statistics/gameround.component';
 
 @Component({
   selector: "s11-player-info",
@@ -52,6 +53,7 @@ export class S11PlayerModalComponent implements OnInit {
   public statisticsGetter = new StatisticsGetter();
 
   public faSpinner = faSpinner;
+  public faCircleInfo = faCircleInfo;
   public facSofaScore = facSofaScore;
 
   constructor(
@@ -60,7 +62,8 @@ export class S11PlayerModalComponent implements OnInit {
     public imageRepository: ImageRepository,
     public cssService: CSSService,
     public sportExtensions: SportExtensions,
-    public modal: NgbActiveModal
+    public modal: NgbActiveModal,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit() {
@@ -89,19 +92,10 @@ export class S11PlayerModalComponent implements OnInit {
     return this.cssService.getLine(s11Player.getLine());
   }
 
-  formatStatisticName(name: string): string {
-    const labels: Record<string, string> = {
-      expectedGoals: 'xG',
-      expectedGoalsOnTarget: 'xG on target',
-      expectedAssists: 'xA',
-      'ratingVersions.original': 'Rating (original)',
-      'ratingVersions.alternative': 'Rating (alternative)',
-    };
-    return labels[name] ?? name.replace(/([a-z])([A-Z])/g, '$1 $2');
-  }
-
-  formatStatisticValue(statistic: JsonGameParticipationStatistic): string {
-    return new Intl.NumberFormat('nl-NL', { maximumFractionDigits: 2 }).format(statistic.value);
+  openStatisticsInfo(statistics: Statistics): void {
+    const modalRef = this.modalService.open(S11PlayerStatisticsInfoModalComponent, { scrollable: true });
+    modalRef.componentInstance.playerName = this.s11Player?.getPerson().getName() ?? '';
+    modalRef.componentInstance.statistics = statistics;
   }
 
   openExternalLink(url: string) {

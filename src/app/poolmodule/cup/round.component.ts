@@ -128,6 +128,10 @@ export class PoolCupRoundComponent implements OnInit {
     }
   }
 
+  hasByes(): boolean {
+    return this.round().getPoules().some((poule: Poule): boolean => poule.getPlaces().length === 1);
+  }
+
   getCompetitor(startLocation: StartLocation): Competitor | undefined {
     return this.structureNameService()
       .getStartLocationMap()

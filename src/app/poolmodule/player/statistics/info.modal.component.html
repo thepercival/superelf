@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <h5 class="modal-title">Statistieken {{playerName}}</h5>
+  <button type="button" class="btn-close" aria-label="Sluiten" (click)="modal.dismiss()"></button>
+</div>
+<div class="modal-body">
+  @for(category of statistics.getCategories(); track category.name) {
+    <section class="mt-3">
+      <h6 class="border-bottom pb-1">{{category.name}}</h6>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <tbody>
+            @for(statistic of category.statistics; track statistic.name) {
+              <tr>
+                <th scope="row" class="fw-normal">{{formatStatisticName(statistic.name)}}</th>
+                <td class="text-end">{{formatStatisticValue(statistic)}}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+</div>

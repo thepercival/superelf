@@ -1,7 +1,9 @@
 @if(categoryPoints){
-    <div class="border-0 d-flex justify-content-center">
+    <div class="row row-cols-2 g-2 mx-0 mt-1">
+        <ng-content></ng-content>
         <!-- played -->
-        <div class="card m-2 align-self-start {{getBorderClass(categoryPoints.result)}}">
+        <div class="col">
+          <div class="card h-100 {{getBorderClass(categoryPoints.result)}}">
             <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.result)}}">
                 <span>wed. punten</span>
                 <span class="badge bg-points float-end ms-1">{{categoryPoints.result}}</span>
@@ -26,9 +28,11 @@
                     }
                 </div>
             </div>
+                    </div>
         </div>
         <!-- goals -->
-        <div class="card m-2 align-self-start {{getBorderClass(categoryPoints.goal)}}">
+                <div class="col">
+                    <div class="card h-100 {{getBorderClass(categoryPoints.goal)}}">
             <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.goal)}}">
                 <span>goals</span>
                 @if(categoryPoints.goalHasStats) {
@@ -77,13 +81,12 @@
                     }
                 </div>
             </div>
+          </div>
         </div>
-    </div>
-
-    <div class="border-0 d-flex justify-content-center">
         <!-- defense -->
         @if(sheetActive) {
-            <div class="card m-2 align-self-start {{getBorderClass(categoryPoints.sheet)}}">
+          <div class="col">
+            <div class="card h-100 {{getBorderClass(categoryPoints.sheet)}}">
                 <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.sheet)}}">
                     <span>tegengoals</span>
                     @if(categoryPoints.sheetHasStats) {
@@ -115,9 +118,11 @@
                     </div>
                 </div>
             </div>
+                    </div>
         }
         <!-- cards -->
-        <div class="card m-2 align-self-start {{getBorderClass(categoryPoints.card)}}">
+                <div class="col">
+                    <div class="card h-100 {{getBorderClass(categoryPoints.card)}}">
             <div class="card-header border-bottom-0 {{getBackgroundClass(categoryPoints.card)}}">
                 <span>kaarten</span>
                 @if(categoryPoints.cardHasStats) {
@@ -149,6 +154,7 @@
                     }
                 </div>
             </div>
+          </div>
         </div>
     </div>
 }

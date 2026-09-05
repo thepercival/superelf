@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, WritableSignal, model, input, effect, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, WritableSignal, model, input, output, effect, ChangeDetectionStrategy } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AgainstGame, AgainstGamePlace, AgainstSide, Competitor, CompetitorBase, GameState, NameService, SportRoundRankingItem, StartLocation, StartLocationMap, StructureNameService, Team, TeamCompetitor } from 'ngx-sport';
 import { DateFormatter } from '../../../../lib/dateFormatter';
@@ -29,6 +29,9 @@ export class AgainstGamesTableComponent implements OnInit {
   public statisticsGetter = input.required<StatisticsGetter>();
   public readonly competitorPoolUserAndFormations =
     input.required<CompetitorPoolUserAndFormation[]>();
+  public readonly comparisonPoolUser = input<PoolUser>();
+  public readonly selectedPoolUser = input<PoolUser>();
+  public readonly poolUserSelected = output<PoolUser>();
 
   private formationPlacesGetter = new FormationPlacesGetter();
 

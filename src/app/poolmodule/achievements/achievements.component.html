@@ -7,7 +7,7 @@
                 <span class="ms-1">prijzenkasten</span>
             </h2>
             <div class="form-check form-switch pointer">
-                <input type="checkbox" class="form-check-input pointer" id="goat-switch" (change)="toggleGoat()">
+                <input type="checkbox" class="form-check-input pointer" id="goat-switch" [checked]="goatToggle" (change)="toggleGoat()">
                 <label class="form-check-label pointer" for="goat-switch"><img height="40rem" src="assets/images/goat-small.png" /></label>
             </div>
             <!-- <div class="form-check form-switch">

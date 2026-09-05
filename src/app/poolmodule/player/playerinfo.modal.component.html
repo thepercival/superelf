@@ -1,6 +1,17 @@
 @if(!processing() && s11Player) {
     <div class="modal-header border-bottom-0 text-white {{getLineClass(s11Player)}}">
-        <h5 class="">{{s11Player.getPerson().getName()}}</h5>
+        <div class="d-flex align-items-center">
+            <h5 class="mb-0">{{s11Player.getPerson().getName()}}</h5>
+            @if(sourceAgainstGame) {
+                @let headerStatistics = statisticsGetter.getStatistics(s11Player, sourceAgainstGame.getGameRoundNumber());
+                @if(headerStatistics) {
+                    <button type="button" class="btn btn-link text-white p-0 ms-2" title="Wedstrijdstatistieken"
+                        aria-label="Wedstrijdstatistieken" (click)="openStatisticsInfo(headerStatistics)">
+                        <fa-icon [icon]="faCircleInfo"></fa-icon>
+                    </button>
+                }
+            }
+        </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
             (click)="modal.dismiss()"></button>
     </div>
@@ -24,11 +35,18 @@
         
                                 @let statistics = statisticsGetter.getStatistics(s11Player,sourceAgainstGame.getGameRoundNumber());                                        
                                 @let tmplPoints = $safeNavigationMigration(statistics?.getPoints(player.getLine(), scorePointsMap, undefined));
-                                <app-player-basics [player]="player"
-                                    [points]="tmplPoints" class="text-center">
-                                </app-player-basics>
-                                
                                 <app-againstgame-title class="mt-3" [againstGame]="sourceAgainstGame"></app-againstgame-title>
+
+                                @if(statistics) {
+                                    <s11-player-statistics
+                                        [statistics]="statistics"
+                                        [line]="s11Player.getLine()"
+                                        [scorePointsMap]="scorePointsMap">
+                                        <app-player-basics class="col text-center" [card]="true"
+                                            [player]="player" [points]="tmplPoints">
+                                        </app-player-basics>
+                                    </s11-player-statistics>
+                                }
         
                                 <!-- <div class="text-center mt-3 mb-2">
                                     <h2 *ngIf="processingGames" class="text-center">
@@ -42,38 +60,6 @@
                                     }
                                 </div>
                             -->
-                                <div>
-                                    <!-- toon laatste 3 gespeelde wedstrijden en 1e wegstrijd op het programma -->
-                                    <!-- ga uit van nu als tijd, 
-                                    kijk niet naar de speelronde-nummers maar liefst chronologisch-->
-                                    @if(statistics) {
-                                        <s11-player-statistics 
-                                            [statistics]="statistics"
-                                            [line]="s11Player.getLine()"
-                                            [scorePointsMap]="scorePointsMap">
-                                        </s11-player-statistics>
-
-                                        @for(category of statistics.getCategories(); track category.name) {
-                                            <section class="mt-3">
-                                                <h6 class="border-bottom pb-1">{{category.name}}</h6>
-                                                <div class="table-responsive">
-                                                    <table class="table table-sm mb-0">
-                                                        <tbody>
-                                                            @for(statistic of category.statistics; track statistic.name) {
-                                                                <tr>
-                                                                    <th scope="row" class="fw-normal">
-                                                                        {{formatStatisticName(statistic.name)}}
-                                                                    </th>
-                                                                    <td class="text-end">{{formatStatisticValue(statistic)}}</td>
-                                                                </tr>
-                                                            }
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </section>
-                                        }
-                                    }
-                                </div>
                             </div>
                         </div>
                     </div>

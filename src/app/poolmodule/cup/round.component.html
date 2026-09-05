@@ -5,29 +5,46 @@
       <span class="small"> ({{getGameRoundNumbers(round())}})</span>
     </div>
     <div class="card-body px-1">
-      <div class="d-flex flex-wrap gap-2 justify-content-around">
-        @for(poule of round().getPoules(); track poule.getId()){
-          <div class="btn-group mb-3" role="group" (click)="emitNavigateToPoule(poule)">
-
-            @if(hasCompetitors){
-              <button type="button" class="btn btn-outline-primary ps-1">{{structureNameService().getPouleName(poule,false)}}</button>
-              <button type="button" class="btn btn-outline-primary px-1 text-start">
-                <ng-container *ngTemplateOutlet="place; context: {poule, side: Home}"></ng-container>
-                @if(poule.getPlaces().length === 1) {
-                  <div>bye</div>
-                }
-                @if(poule.getPlaces().length === 2) {
+      @if(hasCompetitors){
+        <div class="d-flex flex-wrap gap-2 justify-content-around">
+          @for(poule of round().getPoules(); track poule.getId()){
+            @if(poule.getPlaces().length > 1) {
+              <div class="btn-group mb-3" role="group" (click)="emitNavigateToPoule(poule)">
+                <button type="button" class="btn btn-outline-primary ps-1">{{structureNameService().getPouleName(poule,false)}}</button>
+                <button type="button" class="btn btn-outline-primary px-1 text-start">
+                  <ng-container *ngTemplateOutlet="place; context: {poule, side: Home}"></ng-container>
                   <ng-container *ngTemplateOutlet="place; context: {poule, side: Away}"></ng-container>
+                </button>
+              </div>
+            }
+          }
+        </div>
+
+        @if(hasByes()) {
+          <div class="border-top pt-2 pb-2">
+            <div class="small text-center text-muted mb-1">byes</div>
+            <div class="d-flex flex-wrap gap-1 justify-content-center">
+              @for(poule of round().getPoules(); track poule.getId()){
+                @if(poule.getPlaces().length === 1) {
+                  <div class="btn-group btn-group-sm" role="group">
+                    <span class="btn btn-outline-primary py-0 px-1">{{structureNameService().getPouleName(poule,false)}}</span>
+                    <span class="btn btn-outline-primary py-0 px-1" [class.favitem]="isCurrentUser(poule, Home)">{{getCompetitorName(poule, Home)}}</span>
+                  </div>
                 }
-              </button>
-            }
-            @else {
-              <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Home)}}</button>
-              <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Away)}}</button>
-            }
+              }
+            </div>
           </div>
         }
-      </div>
+      } @else {
+        <div class="d-flex flex-wrap gap-2 justify-content-around">
+          @for(poule of round().getPoules(); track poule.getId()){
+            <div class="btn-group mb-3" role="group" (click)="emitNavigateToPoule(poule)">
+              <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Home)}}</button>
+              <button type="button" class="btn btn-outline-primary">{{getPreviousPouleName(poule, Away)}}</button>
+            </div>
+          }
+        </div>
+      }
     </div>
   </div>
 

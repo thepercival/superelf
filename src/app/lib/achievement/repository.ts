@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { catchError, map, shareReplay } from 'rxjs/operators';
 
 import { APIRepository } from '../repository';
 import { PoolUser } from '../pool/user';
@@ -13,11 +13,16 @@ import { JsonTrophy } from './trophy/json';
 import { PoolCollection } from '../pool/collection';
 import { Pool } from '../pool';
 
+export interface GoatSummary {
+    userId: number | null;
+    points: number;
+}
+
 @Injectable({
     providedIn: 'root'
 })
 export class AchievementRepository extends APIRepository {
-    
+    private readonly goatSummaries = new Map<number, Observable<GoatSummary>>();
 
     constructor(private mapper: AchievementMapper, private http: HttpClient) {
         super();
@@ -54,6 +59,20 @@ export class AchievementRepository extends APIRepository {
             })),
             catchError((err) => this.handleError(err))
         );
+    }
+
+    getGoat(poolCollection: PoolCollection): Observable<GoatSummary> {
+        const poolCollectionId = poolCollection.getId();
+        let goatSummary = this.goatSummaries.get(poolCollectionId);
+        if (goatSummary === undefined) {
+            const url = this.getApiUrl() + 'poolcollections/' + poolCollectionId + '/goat';
+            goatSummary = this.http.get<GoatSummary>(url, this.getOptions()).pipe(
+                catchError((err) => this.handleError(err)),
+                shareReplay(1)
+            );
+            this.goatSummaries.set(poolCollectionId, goatSummary);
+        }
+        return goatSummary;
     }
 
     // getNrOfUnreadObjects(poule: Poule, pool: Pool): Observable<number> {

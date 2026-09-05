@@ -16,8 +16,8 @@ import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 })
 export class PlayerBasicsComponent implements OnInit {
   readonly player = input<Player>();
-  // @Input() pool!: Pool;
   readonly points = input<number>();
+  readonly card = input(false);
   public faUserCircle = faUserCircle;
 
   constructor(public imageRepository: ImageRepository) {}

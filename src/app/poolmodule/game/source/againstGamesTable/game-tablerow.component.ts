@@ -1,4 +1,4 @@
-import { Component, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AgainstGame, AgainstSide, Competitor, CompetitorBase, FootballLine, GameState } from 'ngx-sport';
 import { DateFormatter } from '../../../../lib/dateFormatter';
@@ -15,6 +15,7 @@ import { PoolUserRow } from './againstgames-table.component';
 import { RouterLink } from '@angular/router';
 import { Statistics } from '../../../../lib/statistics';
 import { AppearanceColumn, MinutesAsGradientsService } from '../../../../shared/commonmodule/minutesAsGradientsService';
+import { PoolUser } from '../../../../lib/pool/user';
 
 @Component({
   selector: "tr[s11-game-tablerow]",
@@ -28,6 +29,9 @@ export class GameTableRowComponent implements OnInit {
   public readonly gameRound = input.required<GameRound>();
   public readonly sourceAgainstGame = input.required<AgainstGame>();
   public readonly poolUserRow = input.required<PoolUserRow>();  
+  public readonly comparisonPoolUser = input<PoolUser>();
+  public readonly selectedPoolUser = input<PoolUser>();
+  public readonly poolUserSelected = output<PoolUser>();
 
   public readonly statisticsGetter = input.required<StatisticsGetter>();
 
@@ -59,6 +63,30 @@ export class GameTableRowComponent implements OnInit {
     //   this.games().push(game);
     //   return true;
     // });
+  }
+
+  getPoolUserLink(poolUser: PoolUser): (string | number)[] | null {
+    const comparisonPoolUser = this.comparisonPoolUser();
+    if (comparisonPoolUser && comparisonPoolUser.getId() !== poolUser.getId()) {
+      return null;
+    }
+    return [
+      '/pool/user',
+      poolUser.getPool().getId(),
+      poolUser.getId(),
+      this.gameRound().number,
+    ];
+  }
+
+  selectPoolUser(poolUser: PoolUser): void {
+    const comparisonPoolUser = this.comparisonPoolUser();
+    if (comparisonPoolUser && comparisonPoolUser.getId() !== poolUser.getId()) {
+      this.poolUserSelected.emit(poolUser);
+    }
+  }
+
+  isSelectedPoolUser(poolUser: PoolUser): boolean {
+    return this.selectedPoolUser()?.getId() === poolUser.getId();
   }
 
   isCompetitor(sideCompetitor: Competitor | undefined): boolean {

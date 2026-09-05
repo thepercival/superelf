@@ -65,6 +65,8 @@
             (nextGameRoundPressed)="selectNextGameRound(pool.getCompetitionConfig(), tmplCurrentGameRound)"
             [activeGameRound]="tmplActiveGameRound" 
             [badgeCategory]="tmplBadgeCategory"
+            [goatUserId]="goatUserId()"
+            [poolId]="+pool.getId()"
             [showTransfers]="showTransfers()"
             (showCompetitorTransfers)="openPoolUserTransfersModal($event)"            
             (linkToCompetitor)="linkToPoolUser($event)"

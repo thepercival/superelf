@@ -564,8 +564,10 @@ export class PoolPouleAgainstGamesComponent
   //   }
   // }
 
-  get NavCup(): NavBarItem {
-    return NavBarItem.Cup;
+  get ActiveNavItem(): NavBarItem {
+    return this.leagueName === LeagueName.SuperCup
+      ? NavBarItem.SuperCup
+      : NavBarItem.Cup;
   }
 
   private getStartLocationsFromGameRoundNrs(

@@ -1,34 +1,38 @@
-<table class="table">
-  <colgroup>
-      <col><!--homePlayer.sub -->
-      <col><!--homePlayer.name -->
-      <col><!--homePlayer.line -->
-      <col><!--homePlayer.points -->
-      <col><!--poolUserName -->
-      <col><!--awayPlayer.points -->
-      <col><!--awayPlayer.line -->
-      <col><!--awayPlayer.name -->
-      <col><!--awayPlayer.sub -->
-  </colgroup>
-
 <!-- maak eerst een data-structuur (json-interface) zoals hierboven en itereer hier doorheen -->
-  @for(againstGame of sourceAgainstGames(); track againstGame.getId()){
-    <thead class="">
-        <tr s11-game-tableheader [againstGame]="againstGame">
-        </tr>
-    </thead>    
-    <tbody class="table-group-divider" >
-      @let poolUserRows = createPoolUserRows(againstGame, competitorPoolUserAndFormations());
-      @for(poolUserRow of poolUserRows; track $index) 
-      {
-        
-        <!-- maak hier rijen van zodat er makkelijk doorheen gelopen kan worden -->  
-        <tr s11-game-tablerow
-          [poolUserRow]="poolUserRow" [gameRound]="gameRound()"
-          [sourceAgainstGame]="againstGame"
-          [statisticsGetter] ="statisticsGetter()">
-        </tr>
-      }
-    </tbody>
+@for(againstGame of sourceAgainstGames(); track againstGame.getId()){
+  <div class="card game-card border-dark border-2 mb-3 overflow-hidden">
+    <table class="table game-card-table mb-0">
+      <colgroup>
+          <col><!--homePlayer.sub -->
+          <col><!--homePlayer.name -->
+          <col><!--homePlayer.line -->
+          <col><!--homePlayer.points -->
+          <col><!--poolUserName -->
+          <col><!--awayPlayer.points -->
+          <col><!--awayPlayer.line -->
+          <col><!--awayPlayer.name -->
+          <col><!--awayPlayer.sub -->
+      </colgroup>
+      <thead class="table-dark">
+          <tr s11-game-tableheader [againstGame]="againstGame">
+          </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        @let poolUserRows = createPoolUserRows(againstGame, competitorPoolUserAndFormations());
+        @for(poolUserRow of poolUserRows; track $index) 
+        {
+          
+          <!-- maak hier rijen van zodat er makkelijk doorheen gelopen kan worden -->  
+          <tr s11-game-tablerow
+            [poolUserRow]="poolUserRow" [gameRound]="gameRound()"
+            [sourceAgainstGame]="againstGame"
+            [statisticsGetter] ="statisticsGetter()"
+            [comparisonPoolUser]="comparisonPoolUser()"
+            [selectedPoolUser]="selectedPoolUser()"
+            (poolUserSelected)="poolUserSelected.emit($event)">
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 }
-</table>

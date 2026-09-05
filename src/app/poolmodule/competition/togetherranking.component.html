@@ -39,8 +39,11 @@
             <td class="text-break ps-0" [class]="{ 'favitem': false}"
                 (click)="linkToCompetitor.emit(competitorWithGameRoundsPoints)">
                 <span class="fs-6">{{poolUser.getUser().getName()}}</span>
-                <!-- <app-superelf-icon *ngIf="rankingItem.poolUser.getUser().getName() === 'storm'" 
-                class="ps-1" [name]="'crown'" title="GOAT"></app-superelf-icon> -->
+                <app-superelf-goat-icon
+                  [userId]="poolUser.getUser().getId()"
+                  [goatUserId]="goatUserId()"
+                  [poolId]="poolId()">
+                </app-superelf-goat-icon>
             </td>
             @for(gameRoundPoints of competitorWithGameRoundsPoints.gameRoundsPoints; track $index; let last=$last)
             {

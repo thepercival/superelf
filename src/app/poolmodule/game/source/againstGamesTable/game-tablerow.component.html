@@ -2,13 +2,11 @@
 <ng-container
     *ngTemplateOutlet="contentHome; context:{poolUserRow: poolUserRow(), gameRound: gameRound(), showPoints: showPoints}">
 </ng-container>
-<td class="text-center px-0">
-    <a [routerLink]="[
-      '/pool/user',
-      poolUserRow().poolUser.getPool().getId(),
-      poolUserRow().poolUser.getId(),
-      gameRound().number,
-    ]">
+<td class="text-center px-0" [class.table-success]="isSelectedPoolUser(poolUserRow().poolUser)">
+    <a class="text-decoration-underline pointer"
+      [class.fw-bold]="isSelectedPoolUser(poolUserRow().poolUser)"
+      [routerLink]="getPoolUserLink(poolUserRow().poolUser)"
+      (click)="selectPoolUser(poolUserRow().poolUser)">
         {{poolUserRow().poolUser.getName()}}
     </a>
 </td>

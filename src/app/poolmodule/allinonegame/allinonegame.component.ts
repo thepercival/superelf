@@ -79,6 +79,7 @@ export class PoolAllInOneGameScheduleComponent
   public competitorPoolUserAndFormations: WritableSignal<
     CompetitorPoolUserAndFormation[]
   > = signal([]);  
+  public comparedPoolUser: WritableSignal<PoolUser | undefined> = signal(undefined);
   public showTransfers: WritableSignal<boolean> = signal(false);
   public processingGames: WritableSignal<boolean> = signal(true);
   public processingStatistics: WritableSignal<boolean> = signal(true);
@@ -138,9 +139,13 @@ export class PoolAllInOneGameScheduleComponent
       const pool = this.pool;
       const poolUsers = this.poolUsers;
       const currentGameRound = this.currentGameRound();
+      const comparedPoolUser = this.comparedPoolUser();
 
       if (currentGameRound && pool && poolUsers) {
-        this.selectGameRound(pool, poolUsers, currentGameRound);
+        const visiblePoolUsers = comparedPoolUser && this.poolUserFromSession
+          ? [this.poolUserFromSession, comparedPoolUser]
+          : poolUsers;
+        this.selectGameRound(pool, visiblePoolUsers, currentGameRound);
       }
     });
   }
@@ -354,6 +359,13 @@ export class PoolAllInOneGameScheduleComponent
 
   get Schedule(): NavBarItem {
     return NavBarItem.Schedule;
+  }
+
+  compareWithPoolUser(poolUser: PoolUser): void {
+    const comparedPoolUser = this.comparedPoolUser();
+    this.comparedPoolUser.set(
+      comparedPoolUser?.getId() === poolUser.getId() ? undefined : poolUser
+    );
   }
 
   get HomeSide(): AgainstSide {

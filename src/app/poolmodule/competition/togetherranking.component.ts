@@ -11,11 +11,12 @@ import { ViewPeriod } from '../../lib/periods/viewPeriod';
 import { CompetitorWithGameRoundsPoints, GameRoundsPoints } from '../../lib/views/togetherRankingView/competitorWithGameRoundsPoints';
 import { GameRound } from '../../lib/gameRound';
 import { CompetitionGameRoundScrollerComponent } from '../gameRound/competitionGameRoundScroller.component';
+import { SuperElfGoatIconComponent } from '../../shared/poolmodule/icon/goat.component';
 
 @Component({
   selector: "app-together-ranking",
   standalone: true,
-  imports: [SuperElfBadgeIconComponent, FontAwesomeModule,CompetitionGameRoundScrollerComponent],
+  imports: [SuperElfBadgeIconComponent, SuperElfGoatIconComponent, FontAwesomeModule,CompetitionGameRoundScrollerComponent],
   templateUrl: "./togetherranking.component.html",
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./togetherranking.component.scss"],
@@ -28,6 +29,8 @@ export class TogetherRankingComponent {
   readonly nextGameRound = input.required<GameRound|undefined>();
   readonly activeGameRound = input.required<GameRound>();
   readonly badgeCategory = input<BadgeCategory>();
+  readonly goatUserId = input<number | null>(null);
+  readonly poolId = input.required<number>();
   readonly showTransfers = input<boolean>(false);
 
   @Output() showCompetitorTransfers = new EventEmitter<PoolUser>();

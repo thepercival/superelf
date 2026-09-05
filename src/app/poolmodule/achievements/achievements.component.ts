@@ -71,6 +71,7 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.goatToggle = this.route.snapshot.queryParamMap.get("goat") === "1";
     super.parentNgOnInit().subscribe((pool: Pool) => {
       this.setPool(pool);
       this.setLeagueName(pool.getCompetitions());
@@ -304,6 +305,12 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
 
   toggleGoat() {
     this.goatToggle = !this.goatToggle;
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { goat: this.goatToggle ? 1 : null },
+      queryParamsHandling: "merge",
+      replaceUrl: true,
+    });
   }
 
   navigateBack() {

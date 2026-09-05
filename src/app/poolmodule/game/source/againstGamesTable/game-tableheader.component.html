@@ -1,8 +1,8 @@
-<th colspan="4" class="text-end">
+<th colspan="4" class="text-end py-1">
     <ng-container *ngTemplateOutlet="side; context: {side: HomeSide}"></ng-container>
 </th>
 
-<th class="text-center px-0">    
+<th class="text-center px-0 py-1">    
     @if(againstGame().getState() === Finished) {        
         <span class="text-nowrap">{{s11NameService.getAgainstScore(againstGame())}}</span>
     } @else {        
@@ -21,7 +21,7 @@
     }
 </th>
 
-<th colspan="4">
+<th colspan="4" class="py-1">
     <ng-container *ngTemplateOutlet="side; context: {side: AwaySide}"></ng-container>
 </th>
 

@@ -37,7 +37,10 @@
                         [sourceAgainstGames]="sourceGameRoundGames"
                         [gameRound]="tmplCurrentGameRound"
                         [competitorPoolUserAndFormations]="competitorPoolUserAndFormations()"
-                        [statisticsGetter]="statisticsGetter">
+                        [statisticsGetter]="statisticsGetter"
+                        [comparisonPoolUser]="poolUserFromSession"
+                        [selectedPoolUser]="comparedPoolUser()"
+                        (poolUserSelected)="compareWithPoolUser($event)">
                         </againstgames-table>
                     </div>
                 }

@@ -41,6 +41,7 @@ import { GameRoundGetter } from '../../lib/gameRound/gameRoundGetter';
 import { PeriodSelectorComponent } from '../periods/periodSelector.component';
 import { TransferPeriod } from '../../lib/periods/transferPeriod';
 import { GameRoundScheduleModalComponent } from '../gameRound/gameRoundScheduleModal.component';
+import { AchievementRepository } from '../../lib/achievement/repository';
 
 
 @Component({
@@ -76,6 +77,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
   public badgeCategory: WritableSignal<BadgeCategory | undefined> =
     signal(undefined);
   public showTransfers: WritableSignal<boolean> = signal(false);
+  public goatUserId: WritableSignal<number | null> = signal(null);
   
   public poolUsers: PoolUser[] = [];
 
@@ -116,6 +118,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     protected chatMessageRepository: ChatMessageRepository,
     protected structureRepository: StructureRepository,
     public nameService: SuperElfNameService,
+    private achievementRepository: AchievementRepository,
     private authService: AuthService,
     private modalService: NgbModal
   ) {
@@ -141,6 +144,9 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
+        this.achievementRepository.getGoat(pool.getCollection()).subscribe({
+          next: (goat) => this.goatUserId.set(goat.userId),
+        });
 
         this.setLeagueName(pool.getCompetitions());
         const competitionConfig = pool.getCompetitionConfig();

@@ -1,8 +1,8 @@
-<div>
+<div [class]="card() ? 'card h-100 py-2' : ''">
     @let tmplPlayer = player();
     <div class="d-flex justify-content-center">        
         @if(tmplPlayer){
-            <div class="player-img d-flex justify-content-between"
+            <div class="player-img d-flex justify-content-between" [class.w-100]="card()"
                 style="background-image: url('{{getPlayerImageUrl(tmplPlayer)}}');">
                 @if(player()) {
                     <app-lineicon [line]="tmplPlayer.getLine()"></app-lineicon>

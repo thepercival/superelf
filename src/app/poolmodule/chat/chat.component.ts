@@ -28,6 +28,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { facSuperCup } from '../../shared/poolmodule/icons';
 import { faListOl, faSpinner, faPaperPlane, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { PoolCompetitor } from '../../lib/pool/competitor';
+import { AuthService } from '../../lib/auth/auth.service';
 
 @Component({
   selector: "app-pool-chat",
@@ -55,7 +56,7 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
   public leagueName!: LeagueName;
   public poolPoule: Poule | undefined;
   public processingMessage = false;
-  public chatMessages: ChatMessage[] | undefined;
+  public chatMessages: ChatMessage[] = [];
   // public processingPoolUsers = true;
   // public processingGames = true;
   public poolUsers!: PoolUser[];
@@ -80,6 +81,7 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
     public imageRepository: ImageRepository,
     public cssService: CSSService,
     private myNavigation: MyNavigation,
+    private authService: AuthService,
     fb: UntypedFormBuilder
   ) {
     super(route, router, poolRepository, globalEventsManager);
@@ -96,6 +98,10 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
         .getObjects(pool)
         .subscribe((poolUsers: PoolUser[]) => {
           this.poolUsers = poolUsers;
+          const user = this.authService.getUser();
+          this.poolUserFromSession = poolUsers.find(
+            (poolUser: PoolUser) => poolUser.getUser().getId() === user?.getId()
+          );
 
           this.route.params.subscribe((params: Params) => {
             this.leagueName = params.leagueName;
@@ -136,6 +142,10 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
                   .subscribe({
                     next: (chatMessages: ChatMessage[]) => {
                       this.chatMessages = chatMessages;
+                      this.processing.set(false);
+                    },
+                    error: (e: string) => {
+                      this.setAlert("danger", e);
                       this.processing.set(false);
                     },
                   });
@@ -181,8 +191,11 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
     }
 
   sendMessage(pool: Pool, poolUsers: PoolUser[], poule: Poule): void {
+    const message = String(this.form.controls.message.value ?? '').trim();
+    if (this.processingMessage || message === '' || this.isDuplicateMessage(message)) {
+      return;
+    }
     this.processingMessage = true;
-    const message = this.form.controls.message.value;
     this.chatMessageRepository
       .createObject(message, poule, pool, poolUsers)
       .subscribe({
@@ -196,6 +209,14 @@ export class PoolChatComponent extends PoolComponent implements OnInit {
           this.processingMessage = false;
         },
       });
+  }
+
+  private isDuplicateMessage(message: string): boolean {
+    const userId = this.poolUserFromSession?.getUser().getId();
+    const latestMessage = this.chatMessages[0];
+    return latestMessage !== undefined
+      && latestMessage.getUser().getId() === userId
+      && latestMessage.getText().trim() === message;
   }
 
   linkToPoolUser(poolUser: PoolUser): void {

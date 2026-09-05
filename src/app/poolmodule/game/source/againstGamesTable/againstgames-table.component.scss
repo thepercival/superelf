@@ -19,3 +19,34 @@ img.team {
     height: 150px;
     width: 150px;
 }
+
+.game-card-table {
+    table-layout: fixed;
+
+    col:nth-child(1),
+    col:nth-child(9) {
+        width: 4%;
+    }
+
+    col:nth-child(2),
+    col:nth-child(8) {
+        width: 22%;
+    }
+
+    col:nth-child(3),
+    col:nth-child(4),
+    col:nth-child(6),
+    col:nth-child(7) {
+        width: 7%;
+    }
+
+    col:nth-child(5) {
+        width: 20%;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .game-card {
+        margin-inline: 1px;
+    }
+}
