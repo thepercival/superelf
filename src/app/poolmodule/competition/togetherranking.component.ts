@@ -66,36 +66,46 @@ export class TogetherRankingComponent {
         let gameRoundMinMax = minMaxGameRoundMap.get(gameRoundsPoints.number);
         if( gameRoundMinMax === undefined) {
           const poolUserMapMin = new Map<string | number, PoolUser>()
-          poolUserMapMin.set(gameRoundsPoints.number, poolUser);
+          poolUserMapMin.set(poolUser.getId(), poolUser);
           const min = {
             value: gameRoundsPoints.points,
             poolUsersMap: poolUserMapMin,
           };
           const poolUserMapMax = new Map<string | number, PoolUser>();
-          poolUserMapMax.set(gameRoundsPoints.number, poolUser);
+          poolUserMapMax.set(poolUser.getId(), poolUser);
           const max = {
             value: gameRoundsPoints.points,
             poolUsersMap: poolUserMapMax,
           }; 
           const minMaxItem: MinMaxItem = { min, max };
           minMaxGameRoundMap.set(gameRoundsPoints.number, minMaxItem);
-        } else if( gameRoundsPoints.points <= gameRoundMinMax.min.value  ) {            
-          if( gameRoundsPoints.points < gameRoundMinMax.min.value ) {
-            gameRoundMinMax.min.value = gameRoundsPoints.points;
-            gameRoundMinMax.min.poolUsersMap.clear();
+        } else {
+          // a tie can match both min and max (e.g. when min.value === max.value), so these must not be else-if
+          if( gameRoundsPoints.points <= gameRoundMinMax.min.value  ) {            
+            if( gameRoundsPoints.points < gameRoundMinMax.min.value ) {
+              gameRoundMinMax.min.value = gameRoundsPoints.points;
+              gameRoundMinMax.min.poolUsersMap.clear();
+            }
+            gameRoundMinMax.min.poolUsersMap.set(poolUser.getId(), poolUser);
           }
-          gameRoundMinMax.min.poolUsersMap.set(poolUser.getId(), poolUser);
-        } else if( gameRoundsPoints.points >= gameRoundMinMax.max.value  ) {            
-          if( gameRoundsPoints.points > gameRoundMinMax.max.value ) {
-            gameRoundMinMax.max.value = gameRoundsPoints.points;
-            gameRoundMinMax.max.poolUsersMap.clear();
+          if( gameRoundsPoints.points >= gameRoundMinMax.max.value  ) {            
+            if( gameRoundsPoints.points > gameRoundMinMax.max.value ) {
+              gameRoundMinMax.max.value = gameRoundsPoints.points;
+              gameRoundMinMax.max.poolUsersMap.clear();
+            }
+            gameRoundMinMax.max.poolUsersMap.set(poolUser.getId(), poolUser);
           }
-          gameRoundMinMax.max.poolUsersMap.set(poolUser.getId(), poolUser);
         }
       })
     });
 
     Array.from(minMaxGameRoundMap.values()).forEach((minMaxItem: MinMaxItem) => {
+      if( minMaxItem.min.value === minMaxItem.max.value ) {
+        // no variation this round, so nobody is best or worst
+        minMaxItem.min.poolUsersMap.clear();
+        minMaxItem.max.poolUsersMap.clear();
+        return;
+      }
       if( minMaxItem.min.poolUsersMap.size > 3 ) {
         minMaxItem.min.poolUsersMap.clear();
       }
