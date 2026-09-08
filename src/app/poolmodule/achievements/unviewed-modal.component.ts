@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Container } from '@tsparticles/engine';
 import { NgParticlesService, NgxParticlesModule } from '@tsparticles/angular';
@@ -9,11 +10,13 @@ import { loadConfettiPreset } from '@tsparticles/preset-confetti';
 import { LeagueName } from '../../lib/leagueName';
 import { SuperElfTrophyIconComponent } from '../../shared/poolmodule/icon/trophy.component';
 import { SuperElfBadgeIconComponent } from '../../shared/poolmodule/icon/badge.component';
+import { SuperElfIconComponent } from '../../shared/poolmodule/icon/icon.component';
+import { facTrophy } from '../../shared/poolmodule/icons';
 
 @Component({
     selector: 'app-ngbd-modal-unviewed',
     standalone: true,
-    imports: [SuperElfTrophyIconComponent,SuperElfBadgeIconComponent,NgxParticlesModule],
+    imports: [SuperElfTrophyIconComponent,SuperElfBadgeIconComponent,SuperElfIconComponent,NgxParticlesModule],
     templateUrl: './unviewed-modal.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./unviewed-modal.component.scss']
@@ -26,12 +29,14 @@ export class UnviewedAchievementsModalComponent implements OnInit {
     public nextAchievements: (Trophy|Badge)[] = [];
     public currentTrophy: Trophy|undefined;
     public currentBadge: Badge|undefined;
+    public facTrophy = facTrophy;
 
     private container: Container|undefined;
 
     constructor(
         public modal: NgbActiveModal,
         public nameService: SuperElfNameService,
+        private readonly router: Router,
         private readonly ngParticlesService: NgParticlesService) {
     }
 
@@ -126,6 +131,14 @@ export class UnviewedAchievementsModalComponent implements OnInit {
             return '1 nieuwe prijs';
         }
         return nrOfNewAchievements + ' nieuwe prijzen';
+    }
+
+    goToAchievements(): void {
+        const poolId = this.current?.poolId;
+        this.modal.close();
+        if (poolId !== undefined) {
+            void this.router.navigate(['/pool/achievements', poolId]);
+        }
     }
 }
 

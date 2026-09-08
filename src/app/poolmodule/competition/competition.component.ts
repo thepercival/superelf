@@ -42,6 +42,10 @@ import { PeriodSelectorComponent } from '../periods/periodSelector.component';
 import { TransferPeriod } from '../../lib/periods/transferPeriod';
 import { GameRoundScheduleModalComponent } from '../gameRound/gameRoundScheduleModal.component';
 import { AchievementRepository } from '../../lib/achievement/repository';
+import { Trophy } from '../../lib/achievement/trophy';
+import { Badge } from '../../lib/achievement/badge';
+import { S11Storage } from '../../lib/storage';
+import { UnviewedAchievementsModalComponent } from '../achievements/unviewed-modal.component';
 
 
 @Component({
@@ -120,7 +124,8 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
     public nameService: SuperElfNameService,
     private achievementRepository: AchievementRepository,
     private authService: AuthService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private s11Storage: S11Storage
   ) {
     super(route, router, poolRepository, globalEventsManager);
     this.activeGameRoundsCalculator = new ActiveViewGameRoundsCalculator(
@@ -200,6 +205,20 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
                   this.poolPouleId = poolPouleId;
                 },
               });
+
+              this.achievementRepository
+                .getUnviewedObjects(this.poolUserFromSession.getPool())
+                .subscribe({
+                  next: (achievements: (Trophy | Badge)[]) => {
+                    if (achievements.length > 0 && this.poolUserFromSession) {
+                      this.achievementRepository
+                        .removeUnviewedObjects(this.poolUserFromSession)
+                        .subscribe({});
+                      this.openUnviewedModal(achievements);
+                      this.s11Storage.setLatest(pool, new Date(), false);
+                    }
+                  },
+                });
             }
             // this.initCurrentGameRound(pool, currentViewPeriod);
           },
@@ -218,6 +237,18 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
 
   get Competition(): NavBarItem {
     return NavBarItem.Competition;
+  }
+
+  openUnviewedModal(achievements: (Trophy | Badge)[]) {
+    const modalRef = this.modalService.open(
+      UnviewedAchievementsModalComponent,
+      { backdrop: "static" }
+    );
+    modalRef.componentInstance.achievements = achievements;
+    modalRef.result.then(
+      (result) => {},
+      (reason) => {}
+    );
   }
 
   openPoolUserTransfersModal(poolUser: PoolUser) {

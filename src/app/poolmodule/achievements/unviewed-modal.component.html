@@ -37,8 +37,11 @@
     @if(nextAchievements.length > 0) {
         <button type="button" class="btn btn-secondary" (click)="next()">volgende</button>
     }
-    @if(nextAchievements.length === 0) {
-        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('close')">sluiten</button>
+    @else {
+        <button type="button" class="btn btn-secondary" (click)="goToAchievements()">
+            <app-superelf-icon [icon]=facTrophy></app-superelf-icon>
+            <span class="ms-1">naar prijzenkast</span>
+        </button>
     }
 </div>
 

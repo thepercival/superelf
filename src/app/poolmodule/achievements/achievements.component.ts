@@ -8,12 +8,10 @@ import { Pool } from '../../lib/pool';
 import { PoolRepository } from '../../lib/pool/repository';
 import { PoolUser } from '../../lib/pool/user';
 import { PoolUserRepository } from '../../lib/pool/user/repository';
-import { S11Storage } from '../../lib/storage';
 import { GlobalEventsManager } from '../../shared/commonmodule/eventmanager';
 import { MyNavigation } from '../../shared/commonmodule/navigation';
 import { PoolComponent } from '../../shared/poolmodule/component';
 import { NavBarItem } from '../../shared/poolmodule/poolNavBar/items';
-import { UnviewedAchievementsModalComponent } from './unviewed-modal.component';
 import { LeagueName } from '../../lib/leagueName';
 import { Competition, Season } from 'ngx-sport';
 import { UserBadgesModalComponent } from './userbadges-modal.component';
@@ -55,8 +53,7 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
     private modalService: NgbModal,
     private poolUserRepository: PoolUserRepository,
     private myNavigation: MyNavigation,
-    private achievementRepository: AchievementRepository,
-    private s11Storage: S11Storage
+    private achievementRepository: AchievementRepository
   ) {
     super(route, router, poolRepository, globalEventsManager);
     this.goatPoints = {
@@ -101,19 +98,6 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
       this.poolUserRepository.getObjectFromSession(pool).subscribe({
         next: (poolUser: PoolUser) => {
           this.poolUserFromSession = poolUser;
-          this.achievementRepository
-            .getUnviewedObjects(poolUser.getPool())
-            .subscribe({
-              next: (achievements: (Trophy | Badge)[]) => {
-                if (achievements.length > 0) {
-                  this.achievementRepository
-                    .removeUnviewedObjects(poolUser)
-                    .subscribe({});
-                  this.openUnviewedModal(achievements);
-                  this.s11Storage.setLatest(pool, new Date(), false);
-                }
-              },
-            });
         }
       });
     });
@@ -206,19 +190,6 @@ export class AchievementsComponent extends PoolComponent implements OnInit {
       return this.goatPoints.supercupTrophy;
     }
     return 0;
-  }
-
-  openUnviewedModal(achievements: (Trophy | Badge)[]) {
-    console.log(achievements);
-    const modalRef = this.modalService.open(
-      UnviewedAchievementsModalComponent,
-      { backdrop: "static" }
-    );
-    modalRef.componentInstance.achievements = achievements;
-    modalRef.result.then(
-      (result) => {},
-      (reason) => {}
-    );
   }
 
   openLinkNewTab(pool: Pool, trophy: Trophy, leagueName: string) {

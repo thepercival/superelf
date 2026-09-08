@@ -19,7 +19,7 @@ competities  | programma | prijzenkast | spelregels | beheer
     <h2 class="mb-0 navbar-item">
       <a
         type="button"
-        class="btn {{getTextColorClass(ContextMenu)}} pt-cus"
+        class="btn {{getTextColorClass(ContextMenu)}} pt-cus px-1"
         autoClose="'outside'"
         [ngbPopover]="popContent"
         popoverClass="navbar-popover"
@@ -125,6 +125,24 @@ competities  | programma | prijzenkast | spelregels | beheer
       </a>
     </h2> -->
 
+    <!--schedule -->
+    <!-- and if scheduleGameRoundNumber ??-->
+    @if(competitionConfig.afterAssemblePeriod() && !competitionConfig.getTransferPeriod().isIn()){
+      <h2 class="mb-0 navbar-item">        
+      <a
+        type="button"
+        class="btn {{ getTextColorClass(Schedule) }} pt-cus-fa"
+        (click)="linkTo(Schedule)"
+      >
+        <fa-icon
+          style="display: 'inline-block'; font-size: 1.3rem"
+          [icon]="faCalendarAlt"
+        ></fa-icon>
+        <br /><span>programma</span>
+      </a>
+    </h2>
+    }
+
     @if(!competitionConfig.afterAssemblePeriod()) {
     <h2 class="mb-0 navbar-item">
       <a
@@ -141,29 +159,20 @@ competities  | programma | prijzenkast | spelregels | beheer
       </a>
     </h2>  
     } @else {
-    <!--SuperCupGame -->
-    @if(hasSuperCup) {
+    <!-- Competition -->
     <h2 class="mb-0 navbar-item">
       <a
         type="button"
-        class="btn {{ getTextColorClass(SuperCup) }} pt-cus"
-        (click)="linkTo(SuperCup)"
+        class="btn {{ getTextColorClass(Competition) }} pt-cus"
+        (click)="linkTo(Competition)"
       >
         <app-superelf-trophy-icon
           size="2x"
-          [leagueName]="SuperCupName"
+          [leagueName]="CompetitionName"
         ></app-superelf-trophy-icon>
-        <br /><span>{{ nameService.getLeagueName(SuperCupName) }}</span>
-        @if( superCupActive() ) {
-        <span
-          class="position-absolute top-0 translate-middle p-2 mt-3 bg-info border border-light rounded-circle"
-        >
-          <span class="visually-hidden">actief</span>
-        </span>
-        }
+        <br /><span>{{ nameService.getLeagueName(CompetitionName) }}</span>
       </a>
     </h2>
-    }
 
     <!--Cup -->
     <h2 class="mb-0 navbar-item">
@@ -187,38 +196,29 @@ competities  | programma | prijzenkast | spelregels | beheer
       </a>
     </h2>
 
-    <!-- Competition -->
+    <!--SuperCupGame -->
+    @if(hasSuperCup) {
     <h2 class="mb-0 navbar-item">
       <a
         type="button"
-        class="btn {{ getTextColorClass(Competition) }} pt-cus"
-        (click)="linkTo(Competition)"
+        class="btn {{ getTextColorClass(SuperCup) }} pt-cus"
+        (click)="linkTo(SuperCup)"
       >
         <app-superelf-trophy-icon
           size="2x"
-          [leagueName]="CompetitionName"
+          [leagueName]="SuperCupName"
         ></app-superelf-trophy-icon>
-        <br /><span>{{ nameService.getLeagueName(CompetitionName) }}</span>
+        <br /><span>{{ nameService.getLeagueName(SuperCupName) }}</span>
+        @if( superCupActive() ) {
+        <span
+          class="position-absolute top-0 translate-middle p-2 mt-3 bg-info border border-light rounded-circle"
+        >
+          <span class="visually-hidden">actief</span>
+        </span>
+        }
       </a>
     </h2>
     }
-
-    <!--schedule -->
-    <!-- and if scheduleGameRoundNumber ??-->
-    @if(competitionConfig.afterAssemblePeriod() && !competitionConfig.getTransferPeriod().isIn()){
-      <h2 class="mb-0 navbar-item">        
-      <a
-        type="button"
-        class="btn {{ getTextColorClass(Schedule) }} pt-cus-fa"
-        (click)="linkTo(Schedule)"
-      >
-        <fa-icon
-          style="display: 'inline-block'; font-size: 1.3rem"
-          [icon]="faCalendarAlt"
-        ></fa-icon>
-        <br /><span>programma</span>
-      </a>
-    </h2>
     }
   </div>
 </nav>
