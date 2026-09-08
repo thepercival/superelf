@@ -163,7 +163,7 @@ export class PoolUserComponent extends PoolComponent implements OnInit {
               next: (poolUser: PoolUser) => {
                 this.poolUser = poolUser;
                 this.poolUserFromSession =
-                  poolUser.getUser() === user ? poolUser : undefined;
+                  poolUser.getUser().getId() === user?.getId() ? poolUser : undefined;
 
                 if (pool.getCompetitions().length === 0) {              
                   this.setAlert('danger', 'de competities zijn nog niet vrijgegeven');

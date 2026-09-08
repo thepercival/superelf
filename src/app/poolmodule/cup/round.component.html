@@ -28,7 +28,7 @@
                 @if(poule.getPlaces().length === 1) {
                   <div class="btn-group btn-group-sm" role="group">
                     <span class="btn btn-outline-primary py-0 px-1">{{structureNameService().getPouleName(poule,false)}}</span>
-                    <span class="btn btn-outline-primary py-0 px-1" [class.favitem]="isCurrentUser(poule, Home)">{{getCompetitorName(poule, Home)}}</span>
+                    <span class="btn btn-outline-primary py-0 px-1" [class.current-user]="isCurrentUser(poule, Home)">{{getCompetitorName(poule, Home)}}</span>
                   </div>
                 }
               }
@@ -60,7 +60,7 @@
 
 <ng-template #place let-poule="poule" let-side="side">
   <div class="d-flex flex-wrap justify-content-between" 
-    [class]="{'favitem': isCurrentUser(poule, side), 'bg-success': hasQualified(poule, side) }">
+    [class]="{'current-user': isCurrentUser(poule, side), 'bg-success': hasQualified(poule, side) }">
     <span>{{getCompetitorName(poule, side)}}</span>
     @if(showScore(poule)){
       <span class="ms-1">{{getScore(poule, side)}}</span>

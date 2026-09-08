@@ -54,6 +54,10 @@ export class AgainstGamesTableComponent implements OnInit {
     return AgainstSide.Away;
   }
 
+  isCurrentUser(poolUser: PoolUser): boolean {
+    return poolUser.getId() === this.comparisonPoolUser()?.getId();
+  }
+
   ngOnInit() {
     // this.games().slice().every((game: AgainstGame): boolean => {
     //   if( game.getState() !== GameState.Finished ) {

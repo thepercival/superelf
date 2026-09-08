@@ -158,7 +158,7 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
           next: (poolUsers: PoolUser[]) => {
             this.poolUsers = poolUsers;
             this.poolUserFromSession = poolUsers.find(
-              (poolUser: PoolUser) => poolUser.getUser() === user
+              (poolUser: PoolUser) => poolUser.getUser().getId() === user?.getId()
             );
             if (pool.getCompetitions().length === 0) {              
               this.setAlert('danger', 'de competities zijn nog niet vrijgegeven');

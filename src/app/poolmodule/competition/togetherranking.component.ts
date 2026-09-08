@@ -32,6 +32,7 @@ export class TogetherRankingComponent {
   readonly goatUserId = input<number | null>(null);
   readonly poolId = input.required<number>();
   readonly showTransfers = input<boolean>(false);
+  readonly poolUserFromSession = input.required<PoolUser|undefined>();
 
   @Output() showCompetitorTransfers = new EventEmitter<PoolUser>();
   @Output() linkToCompetitor = new EventEmitter<CompetitorWithGameRoundsPoints>();
@@ -115,6 +116,10 @@ export class TogetherRankingComponent {
     });
 
     this.bestWorstGameRoundMap = minMaxGameRoundMap;
+  }
+
+  isCurrentUser(poolUser: PoolUser): boolean {
+    return poolUser.getId() === this.poolUserFromSession()?.getId();
   }
 
   getBestWorstBadgeClass(poolUser: PoolUser, gameRoundNr: number): string|undefined {    

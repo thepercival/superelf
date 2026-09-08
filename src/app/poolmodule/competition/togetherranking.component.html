@@ -24,7 +24,7 @@
       @for(competitorWithGameRoundsPoints of competitorsWithGameRoundsPoints(); track $index)
       {
         @let poolUser = competitorWithGameRoundsPoints.competitor.getPoolUser();
-        <tr class="pointer">            
+        <tr class="pointer" [class.current-user]="isCurrentUser(poolUser)">            
             <td class="rankingnr text-end ps-0"><!-- badge text-black -->
               @if(showTransfers()) {
                 <button type="button"
@@ -36,7 +36,8 @@
                 <span class="">{{competitorWithGameRoundsPoints.rank}}</span>
               } 
             </td>
-            <td class="text-break ps-0" [class]="{ 'favitem': false}"
+            
+            <td class="text-break ps-0"
                 (click)="linkToCompetitor.emit(competitorWithGameRoundsPoints)">
                 <span class="fs-6">{{poolUser.getUser().getName()}}</span>
                 <app-superelf-goat-icon

@@ -22,8 +22,8 @@ $enable-responsive-font-sizes: true !default;
 // $theme-colors: map-merge($custom-theme-colors, $theme-colors);
 
 .current-user {
-  @extend .text-primary !optional;
-  @extend .font-weight-bold !optional;
+  @extend .table-success !optional; // cascades background through table rows/cells
+  @extend .bg-success-subtle !optional; // visible background outside of tables
 }
 
 .btn-points-base {

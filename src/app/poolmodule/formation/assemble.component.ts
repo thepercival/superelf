@@ -71,6 +71,10 @@ export class FormationAssembleComponent
     super.parentNgOnInit().subscribe({
       next: (pool: Pool) => {
         this.setPool(pool);
+        if (pool.getCompetitionConfig().afterAssemblePeriod()) {
+          this.router.navigate(["/pool/competition", pool.getId()]);
+          return;
+        }
         this.poolUserRepository.getObjectFromSession(pool).subscribe({
           next: (poolUser: PoolUser) => {
             this.poolUserFromSession = poolUser;

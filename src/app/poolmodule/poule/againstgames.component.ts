@@ -219,7 +219,7 @@ export class PoolPouleAgainstGamesComponent
                   .getObjects(pool, LeagueName.Competition, startLocations)
                   .subscribe((poolUsers: PoolUser[]) => {
                     this.poolUserFromSession = poolUsers.find(
-                      (poolUser: PoolUser) => poolUser.getUser() === user
+                      (poolUser: PoolUser) => poolUser.getUser().getId() === user?.getId()
                     );
                   });
                 
