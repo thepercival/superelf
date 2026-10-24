@@ -1,4 +1,5 @@
 import { Component, effect, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { sortGamesUpcomingFirst } from '../../lib/gameRound/gamesSorter';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AgainstGame, AgainstGamePlace, AgainstGpp, AgainstH2h, AgainstSide, AllInOneGame, Competition, Competitor, CompetitorBase, GamePlace, GameState, Poule, Single, StartLocation, StartLocationMap, Structure, StructureNameService, Team, TeamCompetitor, TogetherGame } from 'ngx-sport';
 import { concatMap, forkJoin, Observable, of } from 'rxjs';
@@ -529,14 +530,7 @@ export class PoolPouleAgainstGamesComponent
             .getGameRoundGames(poule, gameRound)
             .subscribe({
               next: (games: AgainstGame[]) => {
-                games.sort((a: AgainstGame,b: AgainstGame)=> {
-                  if( a.getState() === GameState.Created && b.getState() === GameState.Created  ) {
-                    return b.getStartDateTime().getTime() - b.getStartDateTime().getTime();
-                  } else if( a.getState() === GameState.Created && b.getState() !== GameState.Created  ) {
-                    return -1;
-                  } 
-                  return b.getStartDateTime().getTime() - a.getStartDateTime().getTime();                  
-                });
+                sortGamesUpcomingFirst(games);
                 this.sourceGameRoundGames = games;
               },
               complete: () => {

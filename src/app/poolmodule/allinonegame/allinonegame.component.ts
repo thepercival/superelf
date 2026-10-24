@@ -1,4 +1,5 @@
 import { Component, effect, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { sortGamesUpcomingFirst } from '../../lib/gameRound/gamesSorter';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AgainstGame, AgainstSide, Competition, Competitor, CompetitorBase, GameState, Poule, Structure, TeamCompetitor } from 'ngx-sport';
 import { concatMap, forkJoin, Observable, of } from 'rxjs';
@@ -550,14 +551,7 @@ export class PoolAllInOneGameScheduleComponent
             .getGameRoundGames(poule, gameRound)
             .subscribe({
               next: (games: AgainstGame[]) => {
-                games.sort((a: AgainstGame,b: AgainstGame)=> {
-                  if( a.getState() === GameState.Created && b.getState() === GameState.Created  ) {
-                    return b.getStartDateTime().getTime() - b.getStartDateTime().getTime();
-                  } else if( a.getState() === GameState.Created && b.getState() !== GameState.Created  ) {
-                    return -1;
-                  } else 
-                    return b.getStartDateTime().getTime() - a.getStartDateTime().getTime();
-                  });
+                sortGamesUpcomingFirst(games);
                 this.sourceGameRoundGames = games;
               },
               complete: () => {

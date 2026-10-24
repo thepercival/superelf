@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, input, model, ChangeDetectionStrategy } from '@angular/core';
+import { sortGamesUpcomingFirst } from '../../lib/gameRound/gamesSorter';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AgainstGame, Competition, GameState, Structure, VoetbalRange } from 'ngx-sport';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
@@ -74,14 +75,7 @@ export class GameRoundScheduleModalComponent implements OnInit {
                 .getGameRoundGames(poule, gameRound)
                 .subscribe({
                   next: (games: AgainstGame[]) => {
-                    games.sort((a: AgainstGame,b: AgainstGame)=> {
-                      if( a.getState() === GameState.Created && b.getState() === GameState.Created  ) {
-                        return b.getStartDateTime().getTime() - b.getStartDateTime().getTime();
-                      } else if( a.getState() === GameState.Created && b.getState() !== GameState.Created  ) {
-                        return -1;
-                      } else 
-                        return b.getStartDateTime().getTime() - a.getStartDateTime().getTime();
-                      });
+                    sortGamesUpcomingFirst(games);
                     this.sourceAgainstGames.set(games);
                   },
                   complete: () => {
