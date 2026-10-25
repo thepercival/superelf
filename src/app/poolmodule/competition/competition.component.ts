@@ -138,6 +138,8 @@ export class PoolCompetitionComponent extends PoolComponent implements OnInit {
       const pool = this.pool;
       const poolUsers = this.poolUsers;
       const currentGameRound = this.currentGameRound();
+      // track badgeCategory so the ranking is recalculated when the points system changes
+      this.badgeCategory();
 
       if (currentGameRound && pool && poolUsers) {
         this.selectGameRound(pool, poolUsers, currentGameRound);
